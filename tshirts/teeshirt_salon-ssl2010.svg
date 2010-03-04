@@ -14,11 +14,11 @@
    height="921.25983"
    id="svg4044"
    version="1.1"
-   inkscape:version="0.47pre4 r22446"
+   inkscape:version="0.47 r22583"
    sodipodi:docname="teeshirt_salon-ssl2010.svg"
-   inkscape:export-filename="/Users/regis/Desktop/teeshirt_salon-ssl2010.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="D:\Mes Developpements\dolibarrasso\tshirts\teeshirt_salon-ssl2010.png"
+   inkscape:export-xdpi="149.95769"
+   inkscape:export-ydpi="149.95769">
   <defs
      id="defs4046">
     <inkscape:perspective
@@ -106,7 +106,9 @@
      inkscape:window-height="689"
      inkscape:window-x="0"
      inkscape:window-y="156"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     showborder="true"
+     inkscape:showpageshadow="false" />
   <metadata
      id="metadata4049">
     <rdf:RDF>
@@ -115,7 +117,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -123,7 +125,7 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-131.10106)">
+     transform="translate(0,-131.10263)">
     <text
        transform="scale(1.0026876,0.99731961)"
        id="text2828-4-7"
