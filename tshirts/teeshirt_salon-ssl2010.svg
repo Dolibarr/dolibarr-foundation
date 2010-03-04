@@ -14,7 +14,7 @@
    height="921.25983"
    id="svg4044"
    version="1.1"
-   inkscape:version="0.47 r22583"
+   inkscape:version="0.47pre4 r22446"
    sodipodi:docname="teeshirt_salon-ssl2010.svg"
    inkscape:export-filename="/Users/regis/Desktop/teeshirt_salon-ssl2010.png"
    inkscape:export-xdpi="90"
@@ -82,7 +82,7 @@
        x2="1221.0221"
        y1="1026.5248"
        x1="1223.7272"
-       gradientTransform="matrix(0.49790241,0,0,0.49790253,-141.62025,-179.93682)"
+       gradientTransform="matrix(0.49790241,0,0,0.49790253,-239.35761,-179.93682)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient4085"
        xlink:href="#linearGradient3734-4-5"
@@ -103,9 +103,9 @@
      showgrid="false"
      units="cm"
      inkscape:window-width="1280"
-     inkscape:window-height="752"
+     inkscape:window-height="689"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="156"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata4049">
@@ -115,7 +115,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -128,23 +128,23 @@
        transform="scale(1.0026876,0.99731961)"
        id="text2828-4-7"
        y="472.36749"
-       x="111.29168"
+       x="13.554392"
        style="font-size:328.19555664px;font-style:normal;font-weight:normal;fill:url(#linearGradient4085);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.68147886;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.45798322;stroke-dasharray:none;font-family:Bitstream Vera Sans"
        xml:space="preserve"><tspan
          style="font-size:191.91177368px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4085);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.68147886;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.45798322;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93"
          y="472.36749"
-         x="111.29168"
+         x="13.554392"
          id="tspan2830-8-1"
          sodipodi:role="line">Dolibarr</tspan></text>
     <text
        transform="scale(0.92379094,1.082496)"
        id="text5484-8-1"
        y="322.4837"
-       x="726.24536"
+       x="808.51447"
        style="font-size:35.13734055px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
        xml:space="preserve"><tspan
          y="322.4837"
-         x="726.24536"
+         x="808.51447"
          id="tspan5486-2-5"
          sodipodi:role="line"
          style="fill:#0b5b85;fill-opacity:1;font-family:Arial;-inkscape-font-specification:Arial">ERP/CRM</tspan></text>
