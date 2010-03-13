@@ -913,11 +913,11 @@ div.block h4 {
 	border-bottom:1px solid #595A5E;
 	padding-top:2px;
 	line-height:1.3em;
-	color: #374853;
+	color: #ffffff; ,,>>>>
 	height: 19px;
 	background: transparent url('../img/block_header.gif') no-repeat top left;
 }
-div.block h4 a { color: #374853; }
+div.block h4 a { color: #ffffff; }
 div.block ul { list-style: none; }
 div.block ul.tree li { padding-left:1.2em; }
 div.block a:hover { text-decoration: underline; }
