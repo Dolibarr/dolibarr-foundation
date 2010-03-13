@@ -926,7 +926,7 @@ div.block .block_content {
 	border-left: 1px #d0d3d8;
 	border-right: 1px #d0d3d8;
 	padding:0.5em 0.7em 0pt;
-	background: #f1f2f4 url('../img/block_bg.jpg') repeat-x bottom left;
+	background: #f7debf url('../img/block_bg.jpg') repeat-x bottom left;
 	min-height:20px;
 }
 div.block li {
