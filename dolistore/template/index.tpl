@@ -1,1 +1,0 @@
-{$HOOK_HOME}
