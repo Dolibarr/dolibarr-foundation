@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration version="1.0" name="PrestaShop" description="This is the default PrestaShop theme">
+
+	<image-sizes>
+		<size name="small" width="45" height="45">
+			<type name="product" />
+			<type name="category" />
+			<type name="manufacturer" />
+		</size>
+		<size name="medium" width="80" height="80">
+			<type name="product" />
+			<type name="category" />
+			<type name="manufacturer" />
+		</size>
+		<size name="large" width="300" height="300">
+			<type name="product" />
+			<type name="category" />
+			<type name="manufacturer" />
+		</size>
+		<size name="thickbox" width="600" height="600">
+			<type name="product" />
+		</size>
+		<size name="category" width="500" height="250">
+			<type name="category" />
+		</size>
+	</image-sizes>
+	
+	<ajax>
+		<functionnality name="blockcart" active="true" />
+		<functionnality name="blockcategories" active="true" />
+		<functionnality name="history" active="true" />
+	</ajax>
+	
+	<hook-positions>
+		<hook name="header">
+			<module name="blockcategorie" />
+			<module name="blockcart" />
+			<module name="blocklanguages" />
+		</hook>
+		<hook name="left-column">
+			<module name="blockcart" />
+			<module name="blocklanguages" />
+		</hook>
+		<hook name="right-column">
+			<module name="blockcategorie" />
+			<module name="blocklanguages" />
+		</hook>
+	</hook-positions>
+	
+	<modules-supported>
+		<module name="blockcategorie" />
+		<module name="blockcart" />
+	</modules-supported>
+	
+	<modules-installed>
+		<module name="blockcategorie" />
+		<module name="blockcart" />
+	</modules-installed>
+	
+</configuration>
