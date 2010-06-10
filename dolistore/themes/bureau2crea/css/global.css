@@ -2009,12 +2009,19 @@ float: left;
 #authentication #create-account_form p.text label{
 	width:100px;
 }
-#authentication input#SubmitCreate, #authentication input#SubmitLogin{ margin:0; }
+#authentication input#SubmitCreate, #authentication input#SubmitLogin{
+	margin:0;
+	margin-right: 10px;
+}
+
+#account-creation_form p.submit {
+	position: relative;
+}
+
 #authentication p.submit {
 	margin-right: 0;
 	text-align:left;
 	float: right;
-	width: 30%;
 	right: 0px;
 }
 
@@ -2047,6 +2054,21 @@ form#account-creation_form input.text, form#account-creation_form #id_country, f
 
 #my-account .orange_btn {
 	float: left;
+}
+
+#my-account #center_column li a {
+	background-image: url(../img/bg_greyBtn.jpg);
+	background-repeat: repeat-x;
+	height: 16px;
+	display: block;
+	width: auto;
+	border: 1px solid #444444;
+	padding: 0px 5px 0px 5px;
+	line-height: 16px;
+	color: #FFF !important;
+	text-decoration: none;
+	font-size: 10px !important;
+	float: none;
 }
 
 /* discount.tpl */
