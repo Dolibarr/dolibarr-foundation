@@ -309,7 +309,6 @@ h1#logo {
 	width: 460px;
 	height: auto;
 	position: relative;
-	border-left: 1px solid #333;
 	float: left;
 }
 
@@ -1210,7 +1209,6 @@ div.block {
 	position: relative;
 	float: right;
 	width: 190px;
-	min-height: 75px;
 	margin-bottom: 30px;
 	background-image: url(../img/bg_rightCategorie.jpg);
 	background-position: top left;
@@ -1421,7 +1419,8 @@ div.myaccount .block_content {
 	width:220px;
 /*	height:375px;*/
 	padding: 0;
-	margin: 0px 10px 30px 0px;
+	margin: 0px 10px 0px 0px;
+	border-left: 1px solid #999;
 }
 
 #center_column .products_block ul .product_accessories_description  {
@@ -1465,14 +1464,14 @@ div.myaccount .block_content {
 #center_column div.products_block p.product_desc {
 	height:150px;
 	color: #595a5e;
-	width: 83px;
+	width: 135px;
 	float: right;
 }
 #center_column div.products_block a.product_image {
 	display: block;
 	background-color: transparent;
-	width: 129px;
-	height: 129px;
+	width: 80px;
+	height: 80px;
 	margin-left:2px;
 	float: left;
 }
@@ -1497,7 +1496,7 @@ div.myaccount .block_content {
 }
 	
 #center_column div.products_block p.product_desc, #center_column div.products_block h5 {
-	
+	margin-top: 20px;
 }
 #center_column div.products_block ul li p.product_desc a { font-weight:normal; }
 #center_column .products_block span.price {
@@ -3300,4 +3299,16 @@ div.star a:hover{
 
 #page .rte {
 	background:transparent none repeat scroll 0 0;
+}
+
+#my-sales-submit-product hr {
+	display: none;
+}
+
+#my-sales-submit-product input {
+	width: 120px !important;
+}
+
+#my-sales-submit-product input[type=checkbox] {
+	width: auto !important;
 }
