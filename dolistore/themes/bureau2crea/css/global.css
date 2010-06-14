@@ -301,7 +301,7 @@ h1#logo {
 }
 #center_column {
 	width: 460px;
-	margin: 15px 0px 0px 15px;
+	margin: 15px 0px 15px 15px;
 	float: left;
 }
 
@@ -824,7 +824,7 @@ img.icon { margin-right: 0.5em; vertical-align: middle; }
 }
 
 /* pagination.tpl */
-div.pagination { margin: 1em 0; }
+div.pagination { positon: relative; float: left; margin: 10px; }
 ul.pagination {
 	list-style: none;
 	float: left;
@@ -1325,7 +1325,7 @@ div.myaccount .block_content {
 
 /* block in the center column */
 #center_column p { margin: 0.5em 0; padding-left:0.7em;}
-#center_column div.block { width: 470px; margin:auto;}
+#center_column div.block { width: 470px; margin:auto; position: relative; float: left; margin-bottom: 10px; }
 #center_column div.block h4 {
 	width: 460px;
 	height: 20px;
@@ -1412,6 +1412,11 @@ div.myaccount .block_content {
 #center_column .products_block .block_content {
 	margin: 0px;
 }
+
+#center_column .products_block .block_content ul {
+	height: auto !important;
+}
+
 #center_column .products_block ul li:hover { }
 #center_column .products_block ul li {
 	float: left;
@@ -1601,7 +1606,7 @@ div.paiement_logo_block a { text-decoration: none; }
 div.paiement_logo_block img { margin: 0 0.5em; }
 
 /* Block editorial */
-.editorial_block { margin-bottom: 2em; }
+.editorial_block { margin-bottom: 2em; position: relative; float: left; }
 .editorial_block .rte{
 	background:transparent none repeat scroll 0 0;
 }
