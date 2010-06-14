@@ -11,8 +11,8 @@
 		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,follow" />
-		<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_ps_dir}favicon.ico" />
-		<link rel="shortcut icon" type="image/x-icon" href="{$img_ps_dir}favicon.ico" />
+		<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_ps_dir}dolistore.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="{$img_ps_dir}dolistore.ico" />
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
 	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
