@@ -1,4 +1,8 @@
-﻿<?php
+<?php
+
+/* SSL Management */
+$useSSL = true;
+
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
@@ -34,7 +38,7 @@ function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
 
 ?>
 
-	
+
 
 <?php aff("<h2>Modifier mes modules/produits</h2>", "<h2>Manages my modules/plugins</h2>", $iso_langue_en_cours); ?>
 <br />
@@ -57,14 +61,14 @@ if (empty($datestart))
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 
 aff(
-"Les statistiques sont celles des téléchargements/ventes depuis le dernier paiement (<b>".date('Y-m-d',$datestart)."</b>) pour l'utilisateur courant (<b>".$publisher."</b>)",
-"Statistiques are for download/sells since the last payment (<b>".date('Y-m-d',$datestart)."</b>) for curent user (<b>".$publisher."</b>)",
+"Les statistiques sont celles des téléchargements/ventes depuis le dernier paiement reçu pour vos ventes (<b>".date('Y-m-d',$datestart)."</b>) pour l'utilisateur courant (<b>".$publisher."</b>)",
+"Statistics are for download/sells since the last payment received for your sells (<b>".date('Y-m-d',$datestart)."</b>) for curent user (<b>".$publisher."</b>)",
 $iso_langue_en_cours);
 
 ?>
 <br><br>
 
-<?php aff("- Pour changer les informations sur votre produit cliquez sur son nom,<br>- pour changer son image cliquez sur son image", "- To change your product information click on its name,<br>- to change its picture click on its picture", $iso_langue_en_cours); ?>
+<?php aff("- Pour changer les informations sur votre produit cliquez sur son nom,<br>- Pour changer son image cliquez sur son image", "- To change your product information click on its name,<br>- To change its picture click on its picture", $iso_langue_en_cours); ?>
 
 <FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="std">
 <table width="100%" >  
@@ -165,7 +169,7 @@ $iso_langue_en_cours);
 				aff(' de ',' of ',$iso_langue_en_cours);
 				echo '<br>';
 			}
-			echo round($nbr_amount,2); ?> €
+			echo round($nbr_amount,2); ?>&#8364;
 			</td>
             <!--<td>&nbsp;</td> -->  
 		</tr>
@@ -195,10 +199,12 @@ if ($totalamount > 0)
 {
 	aff("Date du dernier paiement: ","Last payment date: ", $iso_langue_en_cours);
 	print '<b>'.date('Y-m-d',$datestart).'</b><br>';
-	aff("Montant total gagné: ", "Total maoun earned: ", $iso_langue_en_cours);
-	print "<b>".$foundationfeerate." x ".$totalamount." = ".round($foundationfeerate*$totalamount,2)." €</b>";
+	aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
+	print "<b>".$foundationfeerate." x ".$totalamount." = ".round($foundationfeerate*$totalamount,2)."&#8364;</b>";
 	print '<br>';
 	aff("Il n'est pas possible de recevoir de paiements pour le moment.", "It is not possible to receive payments for the moment.", $iso_langue_en_cours);
+	print '<br>';
+	print '<br>';
 }
 else
 {

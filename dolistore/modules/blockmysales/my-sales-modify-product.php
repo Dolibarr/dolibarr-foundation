@@ -1,4 +1,8 @@
 <?php
+
+/* SSL Management */
+$useSSL = true;
+
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
@@ -267,10 +271,9 @@ echo '
 						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
 
 						// Theme options
-						theme_advanced_buttons1 : "fullscreen,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,help",
-						theme_advanced_buttons2 : "pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,cleanup,code,|,forecolor,backcolor",
-						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,image",
-						theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
+						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,formatselect,fontsizeselect",
+						theme_advanced_buttons2 : "search,replace,|,bullist,numlist,|,outdent,indent,|,link,unlink,anchor,|,forecolor,backcolor",
+						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,|,sub,sup,|,image,|,pagebreak",
 						
 						theme_advanced_toolbar_location : "top",
 						theme_advanced_toolbar_align : "left",
@@ -279,10 +282,10 @@ echo '
 						theme_advanced_resizing : true,
 						content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
 						// Drop lists for link/image/media/template dialogs
-						template_external_list_url : "lists/template_list.js",
+						//template_external_list_url : "lists/template_list.js",
 						external_link_list_url : "lists/link_list.js",
 						external_image_list_url : "lists/image_list.js",
-						media_external_list_url : "lists/media_list.js",
+						//media_external_list_url : "lists/media_list.js",
 						elements : "nourlconvert",
 						convert_urls : false,
 						language : "'.(file_exists(_PS_ROOT_DIR_.'/js/tinymce/jscripts/tiny_mce/langs/'.$iso_langue_en_cours.'.js') ? $iso_langue_en_cours : 'en').'"
@@ -318,7 +321,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
     	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="30" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
 			<?php echo $languageTAB[$x]['iso_code']; ?> 
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
         <?php } ?>
@@ -478,7 +481,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s <i>(utilis&eacute; par les <br> moteurs de recherches)</i>: ", "Keywords <i>(used by search engines)</i> : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">    	
         <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="32" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
 			<?php echo $languageTAB[$x]['iso_code']; ?> 
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
         <?php } ?>

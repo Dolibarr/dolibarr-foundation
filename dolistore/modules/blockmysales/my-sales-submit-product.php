@@ -1,4 +1,8 @@
 <?php
+
+/* SSL Management */
+$useSSL = true;
+
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
@@ -237,10 +241,9 @@ echo '
 						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
 
 						// Theme options
-						theme_advanced_buttons1 : "fullscreen,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,help",
-						theme_advanced_buttons2 : "pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,cleanup,code,|,forecolor,backcolor",
-						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,image",
-						theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
+						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,formatselect,fontsizeselect",
+						theme_advanced_buttons2 : "search,replace,|,bullist,numlist,|,outdent,indent,|,link,unlink,anchor,|,forecolor,backcolor",
+						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,|,sub,sup,|,image,|,pagebreak",
 						
 						theme_advanced_toolbar_location : "top",
 						theme_advanced_toolbar_align : "left",
@@ -249,10 +252,10 @@ echo '
 						theme_advanced_resizing : true,
 						content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
 						// Drop lists for link/image/media/template dialogs
-						template_external_list_url : "lists/template_list.js",
+						//template_external_list_url : "lists/template_list.js",
 						external_link_list_url : "lists/link_list.js",
 						external_image_list_url : "lists/image_list.js",
-						media_external_list_url : "lists/media_list.js",
+						//media_external_list_url : "lists/media_list.js",
 						elements : "nourlconvert",
 						convert_urls : false,
 						language : "'.(file_exists(_PS_ROOT_DIR_.'/js/tinymce/jscripts/tiny_mce/langs/'.$iso_langue_en_cours.'.js') ? $iso_langue_en_cours : 'en').'"
@@ -278,7 +281,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
     	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="30" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
 			<?php echo $languageTAB[$x]['iso_code']; ?> 
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
         <?php } ?>
@@ -288,11 +291,11 @@ echo '
   <tr>
     <td>Status : </td>
     <td>    
-    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] == "") echo "checked='checked'"; ?> type="radio" style="border:none">	
+    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] != "") echo 'checked="checked"'; ?>  disabled="true" type="radio" style="border:none">	
     <img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;"> <?php echo aff("Actif", "Enabled", $iso_langue_en_cours); ?>
     <br />    
-	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] != "") echo "checked='checked'"; ?> type="radio" style="border:none">							
-    <img src="../../img/os/6.gif" alt="Disabled" title="Disabled" style="padding: 0px 5px;"> <?php echo aff("Inactif", "Disabled", $iso_langue_en_cours); ?>
+	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] == "") echo 'checked="checked"'; ?> type="radio" style="border:none">							
+    <img src="../../img/os/6.gif" alt="Disabled" title="Disabled" style="padding: 0px 5px;"> <?php echo aff("Inactif (la soumission sera activé une fois validée par les modérateurs, ceci prend 2 à 10 jours)", "Disabled (submission will be enabled once validated by moderators, this takes 2 to 10 days)", $iso_langue_en_cours); ?>
     </td>
   </tr>
 
@@ -379,8 +382,8 @@ echo '
 
 
   <tr>
-    <td width="14%" valign="top" nowrap="nowrap">
-    <?php echo aff("Cocher toutes les categories<br />dans lesquelles le produit apparaitra : ", "Mark all checkbox(es) of categories<br />in which product is to appear : ", $iso_langue_en_cours); ?>
+    <td width="14%" valign="top">
+    <?php echo aff("Cocher toutes les categories dans lesquelles le produit apparaitra : ", "Mark all checkbox(es) of categories in which product is to appear : ", $iso_langue_en_cours); ?>
  	</td>
     <td width="86%">
 		<?php
@@ -454,7 +457,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s <i>(utilis&eacute; par les <br> moteurs de recherches)</i>: ", "Keywords <i>(used by search engines)</i> : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">    	
         <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="32" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
 			<?php echo $languageTAB[$x]['iso_code']; ?> 
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
         <?php } ?>
@@ -554,7 +557,7 @@ echo '
 			<?php echo aff("Valider ce produit", "Submit this product", $iso_langue_en_cours); ?>
 		</button>
 		 &nbsp; &nbsp; &nbsp; &nbsp;
-		<button type="button" onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Record canceled", $iso_langue_en_cours); ?>'); 
+		<button type="button" onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>'); 
         											document.fmysalessubprod.action='?cel=1';
                                                     document.fmysalessubprod.submit();">
 			<?php echo aff("Annuler", "Cancel", $iso_langue_en_cours); ?>

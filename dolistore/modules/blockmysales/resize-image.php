@@ -1,9 +1,6 @@
 <?php
 
 
-
-
- 
 /**
 * \brief Create 2 thumbnails from an image file: one small and one mini (Supported extensions are gif, jpg, png and bmp)
 * \param file Chemin du fichier image a redimensionner
