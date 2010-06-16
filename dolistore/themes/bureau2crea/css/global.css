@@ -1468,15 +1468,17 @@ div.myaccount .block_content {
 #center_column div.products_block p.product_desc {
 	height:150px;
 	color: #595a5e;
-	width: 135px;
+	width: 120px;
 	float: right;
+	margin-left: 0px !important;
+	margin-top: 0px !important;
 }
 #center_column div.products_block a.product_image {
 	display: block;
 	background-color: transparent;
 	width: 80px;
 	height: 80px;
-	margin-left:2px;
+	margin-left: 10px;
 	float: left;
 }
 #center_column div.products_block .product_accessories_description a.product_image {
@@ -1501,6 +1503,7 @@ div.myaccount .block_content {
 	
 #center_column div.products_block p.product_desc, #center_column div.products_block h5 {
 	margin-top: 20px;
+	margin-left: 10px;
 }
 #center_column div.products_block ul li p.product_desc a { font-weight:normal; }
 #center_column .products_block span.price {
@@ -2053,25 +2056,31 @@ form#account-creation_form input.text, form#account-creation_form #id_country, f
 #my-account #center_column ul { margin: 2em 0; }
 #my-account #center_column li {
 	list-style: none;
-	margin: 20px 50px; }
+	margin: 20px 50px;
+	background-image: url(../img/bg_greyBtn.jpg);
+	background-repeat: repeat-x;
+	display: block;
+	height: 16px;
+	line-height: 16px;
+	border: 1px solid #444444;
+}
 
 #my-account .orange_btn {
 	float: left;
 }
 
 #my-account #center_column li a {
-	background-image: url(../img/bg_greyBtn.jpg);
-	background-repeat: repeat-x;
-	height: 16px;
-	display: block;
-	width: auto;
-	border: 1px solid #444444;
-	padding: 0px 5px 0px 5px;
-	line-height: 16px;
+	background-image: none;
+	margin-left: 10px;
 	color: #FFF !important;
 	text-decoration: none;
 	font-size: 10px !important;
-	float: none;
+	border: none;
+	height: 16px;
+}
+
+#my-account #center_column li a:hover {
+	color: #DF7E00 !important;
 }
 
 /* discount.tpl */
