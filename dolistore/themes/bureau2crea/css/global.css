@@ -1187,7 +1187,6 @@ div.block {
 	position: relative;
 	float: left;
 	width: 220px;
-	min-height: 75px;
 	margin-bottom: 30px;
 	background-image: url(../img/bg_leftCategorie.jpg);
 	background-position: top left;
