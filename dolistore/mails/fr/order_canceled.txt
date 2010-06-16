@@ -1,0 +1,11 @@
+Bonjour {firstname} {lastname},
+
+Votre commande {id_order} a été annulée.
+
+Vous pouvez accéder à tout moment au suivi de votre commande dans "Historique des commandes" de la rubrique "Mon compte" sur notre site <a href="{shop_url}">{shop_name}</a>.
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

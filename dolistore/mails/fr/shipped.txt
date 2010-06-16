@@ -1,0 +1,13 @@
+Bonjour {firstname} {lastname},
+
+Votre commande {id_order} vient d'être expédiée.
+
+Vous recevrez prochainement un lien vous permettant le suivi de votre colis.
+
+Vous pouvez accéder à tout moment au suivi de votre commande dans "Historique de mes commandes" de la rubrique "Mon compte" sur notre site.
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

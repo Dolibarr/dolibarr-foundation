@@ -1,0 +1,13 @@
+	Hi {firstname} {lastname},
+		
+	Your order #{id_order} history
+	
+	We are processing your order.
+
+	You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website.
+	
+	{shop_name} - {shop_url}
+
+
+
+	{shop_url} powered by PrestaShop™

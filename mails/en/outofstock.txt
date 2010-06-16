@@ -1,0 +1,13 @@
+	Hi {firstname} {lastname},
+		
+	Your order #{id_order} history
+	
+Unfortunately, one or more items on your order #{id_order} is currently out of stock. This may cause a slight delay in delivery. Please accept our apologies and rest assured that we are working hard to rectify this.
+
+You can review this order and download your invoice from the "Order history" section of your account by clicking "My account" on our Website.
+		
+	{shop_name} - {shop_url}
+
+
+
+	{shop_url} powered by PrestaShop™

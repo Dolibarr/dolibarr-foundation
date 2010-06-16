@@ -1,0 +1,11 @@
+Bonjour {firstname} {lastname},
+
+Le paiement pour votre commande {id_order} a été acceptée.
+
+Vous pouvez accéder à tout moment au suivi de votre commande dans "Historique des commandes" de la rubrique "Mon compte" sur notre site.
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™

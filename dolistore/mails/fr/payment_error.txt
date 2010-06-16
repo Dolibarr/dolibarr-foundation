@@ -1,0 +1,11 @@
+Bonjour {firstname} {lastname},
+
+Un problème a été constaté pour le paiement de votre commande {id_order}.
+
+Vous pouvez à tout moment accéder au suivi de votre commande dans la rubrique "Mon compte" du site.
+
+{shop_name} - {shop_url}
+
+
+
+{shop_url} réalisé par PrestaShop™
