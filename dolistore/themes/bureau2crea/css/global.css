@@ -98,7 +98,7 @@ span.grower{ cursor:pointer; }
 /* Tabs */
 ul.idTabs {
 	list-style-type:none;
-	border-bottom:solid 1px #76839b;
+/*	border-bottom:solid 1px #76839b; */
 	height:21px;
 	margin-top:1em;
 }
@@ -163,7 +163,7 @@ h2 {
 	background-position: top left;
 	font-size: 14px;
 	color: #FFF;
-	width: 460px;
+	width: 465px;
 	height: 20px;
 	line-height: 20px;
 	padding-left: 10px;
@@ -181,7 +181,7 @@ h3 {
 	background-image: url(../img/bg_centerBlock-subtitle.jpg);
 	background-repeat: no-repeat;
 	background-position: top left;
-	width: 460px;
+	width: 465px;
 	height: 15px;
 	font-size: 11px;
 	line-height: 15px;
@@ -300,13 +300,13 @@ h1#logo {
 	margin-left: 15px;
 }
 #center_column {
-	width: 460px;
-	margin: 15px 0px 15px 15px;
+	width: 465px;
+	margin: 10px 0px 15px 10px;	/* t r b l */
 	float: left;
 }
 
 #center_column #category_block, #center_column #product_block {
-	width: 460px;
+	width: 465px;
 	height: auto;
 	position: relative;
 	float: left;
@@ -436,7 +436,7 @@ div.table_block {
 	background: transparent url('../img/table_footer.gif') no-repeat bottom left;
 	padding-bottom:6px;
 	margin:0 auto 2em;
-	width:460px;
+	width:465px;
 }
 table.std {
 	border-spacing: 0;
@@ -797,7 +797,7 @@ img.icon { margin-right: 0.5em; vertical-align: middle; }
 	font-size: 12px;
 	color:#666666;
 	margin-bottom: 10px;
-	width: 460px;
+	width: 465px;
 	height: 15px;
 	color: #DF7E00;
 	font-weight: bold;
@@ -1326,7 +1326,7 @@ div.myaccount .block_content {
 #center_column p { margin: 0.5em 0; padding-left:0.7em;}
 #center_column div.block { width: 470px; margin:auto; position: relative; float: left; margin-bottom: 10px; }
 #center_column div.block h4 {
-	width: 460px;
+	width: 465px;
 	height: 20px;
 	background-image: url(../img/bg_centerBlock-title.jpg);
 	background-position: top left;
@@ -1796,7 +1796,7 @@ li.payment_stepOk {
 }
 
 #carrier_box {
-	width: 460px;
+	width: 465px;
 	height: auto;
 	position: relative;
 	float: left;
@@ -1811,7 +1811,7 @@ ul.step li#step_end.step_current { }
 ul#order_step {
 	position: relative;
 	float: left;
-	width: 460px;
+	width: 465px;
 	height: 70px;
 	background-color: white;
 	margin-top: 20px;
@@ -2122,7 +2122,7 @@ ul#product_list{
 ul#product_list li {
 	height: auto;
 	float: left;
-	width: 460px;
+	width: 465px;
 	margin-bottom:45px;
 	position: relative;
 }
@@ -2237,7 +2237,7 @@ table.cart_last_product {
 }
 
 table.cart_last_product_content {
-	width: 460px;
+	width: 465px;
 	margin-bottom: 30px;
 }
 
@@ -2465,7 +2465,7 @@ div.categTree {
 #primary_block {
 	position: relative;
 	float: left;
-	width: 460px;
+	width: 465px;
 }
 
 #primary_block #pb-right-column{
@@ -2515,8 +2515,8 @@ div.categTree {
 #primary_block #pb-left-column{
 	float:left;
 	margin-left:5px;
-	width:200px;
-	margin-top: 20px;
+	width:210px;
+	margin-top: 0px;
 }
 #primary_block #short_description_block{
 	margin-bottom:1.5em;
@@ -2660,7 +2660,7 @@ form#buy_block p#add_to_cart input.exclusive {
 }
 
 div#more_info_block {
-	width: 460px;
+	width: 465px;
 	float: left;
 	position: relative;
 }
@@ -2668,9 +2668,10 @@ div#more_info_block {
 div#more_info_block ul#more_info_tabs {
 	position: relative;
 	float: left;
-	width: 460px;
+	width: 465px;
 	height: 15px;
 	background-image: url(../img/bg_centerBlock-subtitle.jpg);
+	background-repeat: repeat-y;
 	border-bottom: 0px;
 }
 
@@ -2685,6 +2686,7 @@ div#more_info_block ul#more_info_tabs li {
 	padding: 0px;
 }
 
+/*
 div#more_info_block ul#more_info_tabs li a {
 	margin: 0px;
 	padding: 0px 6px 0px 6px;
@@ -2702,6 +2704,7 @@ div#more_info_block ul#more_info_tabs li a.selected {
 	background-color: #333333;
 	color: #FFF;
 }
+*/
 
 /* prices */
 #primary_block form#buy_block p.price{
@@ -2819,7 +2822,7 @@ ul#suppliers_list li a.button, ul#manufacturers_list li a.button{ margin-top: 4e
 div.addresses {
 	position: relative;
 	float: left;
-	width: 460px;
+	width: 465px;
 	height: auto;
 }
 
@@ -2837,7 +2840,7 @@ ul.address {
 	padding-bottom:0.6em;
 	margin-bottom:1em;
 	position:relative;
-	width:460px;
+	width:465px;
 }
 
 ul.address li {
@@ -2854,7 +2857,7 @@ li.address_title {
 	line-height: 1.9em;
 }
 ul.item li.address_title {
-	width: 460px;
+	width: 465px;
 	height: 15px;
 	background-image: url(../img/bg_centerBlock-subtitle.jpg);
 	background-repeat: no-repeat;
@@ -2863,7 +2866,7 @@ ul.item li.address_title {
 }
 
 ul.alternate_item li.address_title {
-	width: 460px;
+	width: 465px;
 	height: 15px;
 	background-image: url(../img/bg_centerBlock-subtitle.jpg);
 	background-repeat: no-repeat;
@@ -3049,7 +3052,7 @@ ul.typedText {
 #productscategory_list{
 	overflow:hidden;
 	float:left;
-	width:96%;
+	width:90%;
 }
 #productscategory_list ul{
 	padding-left:0px;
@@ -3316,7 +3319,7 @@ div.star a:hover{
 }
 
 #my-sales-submit-product hr {
-	display: none;
+//	display: none;
 }
 
 #my-sales-submit-product input {
