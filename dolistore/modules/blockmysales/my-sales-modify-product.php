@@ -304,9 +304,6 @@ echo '
 <td>
 
 <table width="100%" border="0" cellspacing="10" cellpadding="0">  
-  <tr>
-    <td colspan="2"><hr></td>
-  </tr>
 
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Référence module/produit", "Ref module/product : ", $iso_langue_en_cours); ?> </td>
@@ -325,9 +322,13 @@ echo '
 			<?php echo $languageTAB[$x]['iso_code']; ?> 
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
         <?php } ?>
-        <br />
     </td>
   </tr>
+  
+  <tr>
+    <td colspan="2"><hr></td>
+  </tr>
+  
   <tr>
     <td>Status : </td>
     <td>    
@@ -392,7 +393,7 @@ echo '
    <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input size="11" maxlength="14" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo round($_POST["priceTI"],2); ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text"> Euros
+        <input size="11" maxlength="14" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo round($_POST["priceTI"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text"> Euros
     </td>
   </tr>   
 
@@ -581,9 +582,6 @@ echo '
 	</td>
   </tr>
   
-  <tr>
-    <td colspan="2"><hr></td>
-  </tr>
 </table>
 
 

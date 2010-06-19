@@ -274,9 +274,7 @@ echo '
 <td>
 
 <table width="100%" border="0" cellspacing="10" cellpadding="0">  
-  <tr>
-    <td colspan="2"><hr></td>
-  </tr>
+
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
@@ -285,9 +283,13 @@ echo '
 			<?php echo $languageTAB[$x]['iso_code']; ?> 
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
         <?php } ?>
-        <br />
     </td>
   </tr>
+  
+  <tr>
+    <td colspan="2"><hr></td>
+  </tr>
+  
   <tr>
     <td>Status : </td>
     <td>    
@@ -565,9 +567,6 @@ echo '
 	</td>
   </tr>
   
-  <tr>
-    <td colspan="2"><hr></td>
-  </tr>
 </table>
 
 
