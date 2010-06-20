@@ -784,6 +784,7 @@ img.icon { margin-right: 0.5em; vertical-align: middle; }
 	width: 448px;
 	float: left;
 	margin-top: 10px !important;
+	margin-bottom: 10px !important;
 }
 .warning_inline {
 	color:#da0f00;
