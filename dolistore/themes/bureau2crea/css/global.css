@@ -119,17 +119,23 @@ ul.idTabs li a {
 	color:#374853;
 }
 ul.idTabs li a.selected{
-	background-image: url('../img/tab_bg_selected.jpg');
+	background-image: url('../img/tab_bg_selected_large.jpg');
+/*	background-image: url(../img/bg_centerBlock-title.jpg); */
+	background-position: top left;
+	background-repeat: no-repeat;
+	text-align: center;
 	color:white;
 }
 
 /* IdTabs Short*/
 ul.idTabsShort li a {
 	background-image: url('../img/tab_bg_short.jpg');
+	text-align: center;
 	width:138px;
 }
 ul.idTabsShort li a.selected{
 	background-image: url('../img/tab_bg_selected_short.jpg');
+	text-align: center;
 	color:white;
 }
 
@@ -167,6 +173,7 @@ h2 {
 	height: 20px;
 	line-height: 20px;
 	padding-left: 10px;
+	padding-bottom: 10px;
 }
 h2 span {
 	font-size: 12px;
@@ -592,7 +599,7 @@ input.exclusive_mini_disabled, input.exclusive_small_disabled, input.exclusive_d
 a.button_mini, a.button_small, a.button, a.button_large,
 a.exclusive_mini, a.exclusive_small, a.exclusive, a.exclusive_large,
 span.button_mini, span.button_small, span.button, span.button_large,
-span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large {
+span.exclusive_mini, span.exclusive_small, span.exclusive_large {
 	background-repeat: no-repeat;
 	background-position: top left;
 	border: none;
@@ -606,6 +613,11 @@ span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large 
 	line-height: 18px;
 	height: 18px;
 }
+
+span.exclusive {
+display:none;
+}
+
 
 /* input button */
 input.button_mini, input.button_small, input.button, input.button_large,
@@ -677,7 +689,7 @@ input.button_small, input.button_small_disabled, input.exclusive_small, input.ex
 	float: left;
 }
 
-input.button, input.button_disabled, input.exclusive, input.exclusive_disabled, a.button, a.exclusive, span.button, span.exclusive, a.orange_btn {
+input.button, input.button_disabled, input.exclusive, input.exclusive_disabled, a.button, a.exclusive, span.button, a.orange_btn {
 	background-image: url(../img/bg_orangeBtn.jpg);
 	background-repeat: repeat-x;
 	height: 16px;
@@ -706,7 +718,7 @@ input.button_large, input.button_large_disabled, input.exclusive_large, input.ex
 }
 
 /* exclusive button */
-input.exclusive, input.exclusive_disabled, a.exclusive, span.exclusive {
+input.exclusive, input.exclusive_disabled, a.exclusive {
 	background-image: url(../img/bg_orangeBtn.jpg);
 	background-repeat: repeat-x;
 	height: 16px;
@@ -1187,7 +1199,7 @@ div.block {
 	position: relative;
 	float: left;
 	width: 220px;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 	background-image: url(../img/bg_leftCategorie.jpg);
 	background-position: top left;
 	background-repeat: no-repeat;
@@ -1198,7 +1210,7 @@ div.block {
 	float: left;
 	width: 220px;
 	min-height: 75px;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 	background-image: url(../img/bg_leftMenu.jpg);
 	background-position: top left;
 	background-repeat: no-repeat;
@@ -1208,7 +1220,7 @@ div.block {
 	position: relative;
 	float: right;
 	width: 190px;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 	background-image: url(../img/bg_rightCategorie.jpg);
 	background-position: top left;
 	background-repeat: no-repeat;
@@ -1520,7 +1532,7 @@ p.price_container {
 #center_column .products_block .featured_price { 
 	margin-top:2.5em;
 }
-#center_column .products_block a.button, #center_column .products_block a.exclusive, #center_column .products_block span.exclusive {
+#center_column .products_block a.button, #center_column .products_block a.exclusive, #center_column .products_block {
 	margin: 10px 0px 10px 10px;
 	float: right;
 }
@@ -3037,22 +3049,29 @@ ul.typedText {
 }
 
 /* category Products block */
+.idTabs a.selected {
+width:465px;
+}
+.idTabsShort a.selected {
+width:138px;
+}
+
 #productscategory{
 	margin:2em auto 0pt;
 	height:120px;
-	width:100%;
+	width:465px;
 }
 
 #productscategory_noscroll{
 	margin:2em auto 0pt;
 	height:120px;
-	width:100%;
+	width:430px;
 }
 
 #productscategory_list{
 	overflow:hidden;
 	float:left;
-	width:90%;
+	width:430px;
 }
 #productscategory_list ul{
 	padding-left:0px;
