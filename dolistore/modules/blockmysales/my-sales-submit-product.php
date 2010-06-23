@@ -26,7 +26,9 @@ foreach ($languages AS $language) {
 }
 
 
-
+/*
+ * Actions
+ */
 
 //upload du fichier
 if ($_GET["up"] == 1) {
@@ -132,13 +134,15 @@ if ($_GET["sub"] == 1) {
 		
 		//reference du produit
 		$reference = 'c'.$cookie->id_customer.'d'.$dateRef;
+		$qty=1000;
+		if ($prix_ttc == 0) $qty=0;
 		
 		//insertion du produit en base
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product` (
 		`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, 
 		`reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`
 		) VALUES (
-		0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, \'\', 0.00, 1000, '.$prix_ht.', '.$prix_ttc.', 0.00, 0, \''.$dateToday.'\', \''.$dateToday.'\', 
+		0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, \'\', 0.00, '.$qty.', '.$prix_ht.', '.$prix_ttc.', 0.00, 0, \''.$dateToday.'\', \''.$dateToday.'\', 
 		\''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0, '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\'
 		)';
 			
@@ -183,7 +187,15 @@ if ($_GET["sub"] == 1) {
 		)';
 		$result = Db::getInstance()->ExecuteS($query);
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));	
-		
+
+		if ($prix_ttc == 0) 
+		{
+			//mise dans la base des fichiers joints
+			
+			
+			//cree lien fichier vers fichiers joint
+			
+		}
 		
 		//inscritption du produit dans ttes les categories choisis
 		$categories = Category::getSimpleCategories($cookie->id_lang);
@@ -218,14 +230,21 @@ function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
 }
 
 
+
+
+/*
+ * View	
+ */
+
+echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2>", $iso_langue_en_cours);
 ?>
-
-	
-
-<?php echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2>", $iso_langue_en_cours); ?>
 <br />
 
 <?php
+print aff('Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
+'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 30% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+$iso_langue_en_cours);
+
 echo '
 
 <script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
@@ -268,20 +287,25 @@ echo '
 
 ?>
 
-<FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="std">
-<table width="100%" >  
-<tr>
-<td>
+<FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit">
 
-<table width="100%" border="0" cellspacing="10" cellpadding="0">  
+<table width="100%" border="0" style="padding-bottom: 5px;">  
 
+  <tr>
+    <td colspan="2"><hr></td>
+  </tr>
+  
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
     	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
         	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
-			<?php echo $languageTAB[$x]['iso_code']; ?> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
+            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+			<?php echo $languageTAB[$x]['iso_code']; 
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?> 
+			<br />
         <?php } ?>
     </td>
   </tr>
@@ -291,7 +315,7 @@ echo '
   </tr>
   
   <tr>
-    <td>Status : </td>
+    <td valign="top">Status : </td>
     <td>    
     <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] != "") echo 'checked="checked"'; ?>  disabled="true" type="radio" style="border:none">	
     <img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;"> <?php echo aff("Actif", "Enabled", $iso_langue_en_cours); ?>
@@ -341,7 +365,7 @@ echo '
  <!--
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente hors taxe : ", "Pre-tax sale price : ", $iso_langue_en_cours); ?> </td>
     <td>
-      <input size="11" maxlength="14" id="priceTE" name="priceTE" onkeyup="javascript:this.value = this.value.replace(/,/g, '.'); priceTI.value=this.value;" type="text"
+      <input size="6" maxlength="6" id="priceTE" name="priceTE" onkeyup="javascript:this.value = this.value.replace(/,/g, '.'); priceTI.value=this.value;" type="text"
 	   value="<?php if ($_POST["priceTE"] != 0 && $_POST["priceTE"] != "") echo $_POST["priceTE"]; ?>"
 	  > Euros 
     </td>
@@ -371,8 +395,8 @@ echo '
    <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input size="11" maxlength="14" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo $_POST["priceTI"]; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
-		<?php print aff(" Euros (0 si gratuit)"," Euros (0 if free)", $iso_langue_en_cours); ?>
+        <input size="6" maxlength="6" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo $_POST["priceTI"]; else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+		<?php print aff(" Euros (0 si gratuit)"," Euros (0 means free)", $iso_langue_en_cours); ?>
 	</td>
   </tr>   
 
@@ -439,8 +463,11 @@ echo '
   <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
-	<i>(<?php echo $languageTAB[$x]['iso_code']; ?> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">):</i>
+	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+		<?php echo $languageTAB[$x]['iso_code'];
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?>):
 	</td>
   </tr>
   <tr>
@@ -460,8 +487,13 @@ echo '
     <td nowrap="nowrap">    	
         <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
         	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
-			<?php echo $languageTAB[$x]['iso_code']; ?> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
+            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+			<?php 
+			echo $languageTAB[$x]['iso_code']; 
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?>
+			<br>
         <?php } ?>
     </td>
   </tr>
@@ -474,7 +506,11 @@ echo '
     <tr>
         <td colspan="2">
         	<?php echo aff("Description large ", "Large description ", $iso_langue_en_cours); ?> 
-            <i>(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>)</i> :
+            (<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+			<?php echo $languageTAB[$x]['iso_code'];
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?>):
         </td>
     </tr>
     <tr>
@@ -486,14 +522,14 @@ echo '
 
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaultfr='
-<p>Module version: <strong>1.0</strong></p>
-<p>Editeur: <strong>'.$publisher.'</strong></p>
-<p>Licence: <strong>GPL</strong></p>
-<p>Pr&eacute;requis: </p>
+Module version: <strong>1.0</strong><br>
+Editeur: <strong>'.$publisher.'</strong><br>
+Licence: <strong>GPL</strong><br>
+Pr&eacute;requis: <br>
 <ul>
 <li> Dolibarr version: <strong>2.8+</strong> </li>
 </ul>
-<p>Installation:</p>
+Installation:<br>
 <ul>
 <li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
 <li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
@@ -508,10 +544,10 @@ echo '
 <li> Le module ou thème est alors disponible et activable. </li>
 </ul>';
 			$defaulten='
-<p>Module version: <strong>1.0</strong></p>
-<p>Publisher: <strong>'.$publisher.'</strong></p>
-<p>License: <strong>GPL</strong></p>
-<p>Prerequisites: </p>
+Module version: <strong>1.0</strong><br>
+Publisher: <strong>'.$publisher.'</strong><br>
+License: <strong>GPL</strong><br>
+Prerequisites:<br>
 <ul>
 <li> Dolibarr version: <strong>2.8+</strong> </li>
 </ul>
@@ -542,14 +578,9 @@ echo '
     </tr>    
    <?php } ?>  
   <tr>
-    <td colspan="2"><hr></td>
+    <td colspan="2"><br></td>
   </tr>
-</table>
 
-
-
-
-<table width="100%" border="0" cellspacing="10" cellpadding="0">  
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
 		<button style="font-weight: 700;" type="button" onclick="javascript:
@@ -570,9 +601,6 @@ echo '
 </table>
 
 
-</td>
-</tr>
-</table>
 
 
 </FORM>

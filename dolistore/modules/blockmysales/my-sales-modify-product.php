@@ -63,6 +63,9 @@ function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
 if (testProductAppartenance($customer_id, $product_id)) {
 
 
+/*
+ * Actions
+ */
 
 
 //Mise a jour du produit
@@ -123,12 +126,14 @@ if ($_GET["upd"] == 1) {
 		
 		//reference du produit
 		$reference = 'c'.$cookie->id_customer.'d'.$dateRef;
+		$qty=1000;
+		if ($prix_ttc == 0) $qty=0;
 		
 		//Mise a jour du produit en base
 		$query = 'UPDATE `'._DB_PREFIX_.'product` SET 
 				`id_tax`				= '.$taxe_id.',  
 				`id_category_default` 	= '.$id_categorie_default.', 
-				`quantity` 				= 1000,  
+				`quantity` 				= '.$qty.',  
 				`price` 				= '.$prix_ht.',  
 				`wholesale_price` 		= '.$prix_ttc.',  
 				`reduction_from` 		= \''.$dateToday.'\',  
@@ -172,9 +177,19 @@ if ($_GET["upd"] == 1) {
 		}
 		
 		
+		if ($prix_ttc == 0) 
+		{
+			//cree lien fichier vers fichiers joint
+			
+		}
+		else
+		{
+			//supprime lien fichier vers fichiers joint
 		
+
+		}
 		
-		//inscritption du produit dans ttes les categories choisis
+		//inscription du produit dans ttes les categories choisis
 		$query = 'DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.$product_id;
 		$query.= " AND `id_category` <> 1";	// If product was on home, we keep it on home.
 		$result = Db::getInstance()->ExecuteS($query);
@@ -248,14 +263,20 @@ foreach ($result AS $row) {
 	$file_name =  $row['display_filename'];
 }		  
 
-?>
 
+/*
+ *	View
+ */
 	
-
-<?php echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</h2>", $iso_langue_en_cours); ?>
+echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</h2>", $iso_langue_en_cours); 
+?>
 <br />
 
 <?php
+print aff('Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
+'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 30% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+$iso_langue_en_cours);
+
 echo '
 
 <script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
@@ -298,13 +319,14 @@ echo '
 
 ?>
 
-<FORM name="fmysalesmodifiysubprod" method="POST" ENCTYPE="multipart/form-data" class="std">
-<table width="100%" >  
-<tr>
-<td>
+<FORM name="fmysalesmodifiysubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit">
 
-<table width="100%" border="0" cellspacing="10" cellpadding="0">  
+<table width="100%" border="0" style="padding-bottom: 5px;">  
 
+  <tr>
+    <td colspan="2"><hr></td>
+  </tr>
+  
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Référence module/produit", "Ref module/product : ", $iso_langue_en_cours); ?> </td>
 	<td>&nbsp; <?php echo $reference; ?></td>
@@ -318,9 +340,9 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
     	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
-			<?php echo $languageTAB[$x]['iso_code']; ?> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="22" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
+			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?> 
+            <br />
         <?php } ?>
     </td>
   </tr>
@@ -330,7 +352,7 @@ echo '
   </tr>
   
   <tr>
-    <td>Status : </td>
+    <td valign="top">Status : </td>
     <td>    
     <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] == "") echo "checked='checked'"; ?> type="radio" style="border:none">	
     <img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;"> <?php echo aff("Actif", "Enabled", $iso_langue_en_cours); ?>
@@ -363,7 +385,7 @@ echo '
  <!--
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente hors taxe : ", "Pre-tax sale price : ", $iso_langue_en_cours); ?> </td>
     <td>
-      <input size="11" maxlength="14" id="priceTE" name="priceTE" onkeyup="javascript:this.value = this.value.replace(/,/g, '.'); priceTI.value=this.value;" type="text"
+      <input size="6" maxlength="6" id="priceTE" name="priceTE" onkeyup="javascript:this.value = this.value.replace(/,/g, '.'); priceTI.value=this.value;" type="text"
 	   value="<?php if ($_POST["priceTE"] != 0 && $_POST["priceTE"] != "") echo $_POST["priceTE"]; ?>"
 	  > Euros 
     </td>
@@ -393,7 +415,7 @@ echo '
    <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input size="11" maxlength="14" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo round($_POST["priceTI"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text"> Euros
+        <input size="6" maxlength="6" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo round($_POST["priceTI"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text"> Euros
     </td>
   </tr>   
 
@@ -461,8 +483,11 @@ echo '
   <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
-	<i>(<?php echo $languageTAB[$x]['iso_code']; ?> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">):</i>
+	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+		<?php echo $languageTAB[$x]['iso_code'];
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?>):
 	</td>
   </tr>
   <tr>
@@ -479,12 +504,12 @@ echo '
   </tr>
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s <i>(utilis&eacute; par les <br> moteurs de recherches)</i>: ", "Keywords <i>(used by search engines)</i> : ", $iso_langue_en_cours); ?></td>
+    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s <i>(utilis&eacute; par les<br>moteurs de recherches)</i>: ", "Keywords <i>(used by search<br>engines)</i> : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">    	
         <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
         	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
-			<?php echo $languageTAB[$x]['iso_code']; ?> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br /><br />
+			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?> 
+            <br />
         <?php } ?>
     </td>
   </tr>
@@ -497,7 +522,11 @@ echo '
     <tr>
         <td colspan="2">
         	<?php echo aff("Description large : ", "Large description : ", $iso_langue_en_cours); ?> 
-            <i>(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>)</i> :
+            (<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+			<?php echo $languageTAB[$x]['iso_code'];
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?>):
         </td>
     </tr>
     <tr>
@@ -563,7 +592,7 @@ echo '
     </tr>    
    <?php } ?>  
   <tr>
-    <td colspan="2"><hr></td>
+    <td colspan="2"><br></td>
   </tr>
 </table>
 
