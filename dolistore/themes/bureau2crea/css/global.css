@@ -107,7 +107,7 @@ ul.idTabs li {
 	margin-right:1px;
 }
 ul.idTabs li a {
-	background-color: #da6c0a;
+	background-color: #df7e00;
 	display:block;
 	width:173px;
 	height:18px;
@@ -116,7 +116,7 @@ ul.idTabs li a {
 	text-transform:uppercase;
 	font-weight:bold;
 	padding-top:3px;
-	color:white;
+	color:#374853;
 }
 ul.idTabs li a.selected{
 	background-color: #767875;
@@ -129,16 +129,15 @@ ul.idTabs li a.selected{
 
 /* IdTabs Short*/
 ul.idTabsShort li a {
-	background-color: #da6c0a;
+	background-color: #df7e00;
 	text-align: center;
 	border-right: 1px #FFFFFF;
 	width:138px;
+	color:white;
 }
 ul.idTabsShort li a.selected{
 	background-color: #767875;
 	text-align: center;
-	border-right: 1px #FFFFFF;
-	color:white;
 }
 
 div.sheets{
