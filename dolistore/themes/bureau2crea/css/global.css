@@ -1,13 +1,3 @@
-/*
-	PrestaShop CSS
-	18 used colors : 
-	10 grays: #374853 #595a5e #5d717e #76839b #888 #bdc2c9 #d0d1d5 #d0d3d8 #e5e6e7 #f1f2f4
-	4 fushias: #f6dce8 #DF7E00 #971d58 #5d0630
-	2 yellows: #f8e1a0 #f9e400
-	1 green: #488c40
-	1 red: #da0f00
-*/
-
 * {
 	padding:0;
 	margin:0;
@@ -117,7 +107,7 @@ ul.idTabs li {
 	margin-right:1px;
 }
 ul.idTabs li a {
-	background-image: url('../img/tab_bg.jpg');
+	background-color: #374853;
 	display:block;
 	width:173px;
 	height:18px;
@@ -129,8 +119,7 @@ ul.idTabs li a {
 	color:#374853;
 }
 ul.idTabs li a.selected{
-	background-image: url('../img/tab_bg_selected_large.jpg');
-/*	background-image: url(../img/bg_centerBlock-title.jpg); */
+	background-color: #767875;
 	background-position: top left;
 	background-repeat: no-repeat;
 	text-align: center;
@@ -139,12 +128,12 @@ ul.idTabs li a.selected{
 
 /* IdTabs Short*/
 ul.idTabsShort li a {
-	background-image: url('../img/tab_bg_short.jpg');
+	background-color: #374853;
 	text-align: center;
 	width:138px;
 }
 ul.idTabsShort li a.selected{
-	background-image: url('../img/tab_bg_selected_short.jpg');
+	background-color: #767875;
 	text-align: center;
 	color:white;
 }
