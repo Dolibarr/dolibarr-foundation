@@ -107,7 +107,7 @@ ul.idTabs li {
 	margin-right:1px;
 }
 ul.idTabs li a {
-	background-color: #df7e00;
+	background-color: #da6c0a;
 	display:block;
 	width:173px;
 	height:18px;
@@ -129,7 +129,7 @@ ul.idTabs li a.selected{
 
 /* IdTabs Short*/
 ul.idTabsShort li a {
-	background-color: #df7e00;
+	background-color: #da6c0a;
 	text-align: center;
 	border-right: 1px #FFFFFF;
 	width:138px;
