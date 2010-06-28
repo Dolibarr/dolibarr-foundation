@@ -99,11 +99,12 @@ if (testProductAppartenance($customer_id, $product_id)) {
 				$image_description = "";
 				$image_description = $_POST["legende_image_".$languageTAB[$x]['id_lang']];
 				
+				/*
 				if ($image_description[$x] == "") {
 					echo "<div style='color:#FF0000'>"; aff("Tous les champs sont obligatoires.", "All fields are required.", $iso_langue_en_cours); echo " </div>";
 					$flagError = 1;
 					break;
-				}
+				}*/
 			}
 			
 			

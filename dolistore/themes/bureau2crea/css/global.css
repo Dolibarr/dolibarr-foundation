@@ -1413,10 +1413,14 @@ div.myaccount .block_content {
 	float: left;
 	clear: none;
 	margin: 0px 0px 10px 5px;
+	padding: 2px 2px 2px 2px;
+	border: 1px solid #AAAAAA;
 }
 
 .products_block ul.product_images li.first {
 	margin: 0px 0px 10px 0px;
+	padding: 2px 2px 2px 2px;
+	border: 1px solid #AAAAAA;
 }
 	
 /* Special style for block products in center column */
@@ -2181,8 +2185,9 @@ ul#product_list li h3 a {
 
 ul#product_list li .new{
 	background-image: url(../img/new.png);
+	background-repeat: no-repeat;
 	position: absolute;
-	top: 0px;
+/*	padding-top: 20px; */
 	left: 0px;
 	z-index: 100;
 	width: 83px;
@@ -2759,13 +2764,16 @@ div#more_info_block ul#more_info_tabs li a.selected {
 	float: left;
 	position: relative;
 	margin:0pt auto;
-	width: 250px;
+	width: 460px;
 }
 
+#thumbs_list_frame{
+	width: 460px !important;
+}
 #thumbs_list{
 	overflow:hidden;
 	float:left;
-	width: 215px;
+	width: 460px;
 }
 #thumbs_list ul{
 	padding-left:0px;
@@ -2775,8 +2783,11 @@ div#more_info_block ul#more_info_tabs li a.selected {
 #thumbs_list li{
 	float:left;
 	cursor:pointer;
+	border: 1px solid #AAAAAA;
 	width: 70px;
 	height: 70px;
+	margin-right: 4px !important;
+	padding: 1px 1px 1px 1px;
 }
 #view_scroll_left, #view_scroll_right{
 	background: url('../img/thumbs_left.gif') no-repeat center;
