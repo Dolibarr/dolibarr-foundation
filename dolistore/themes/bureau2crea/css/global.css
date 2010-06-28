@@ -101,11 +101,11 @@ ul.idTabs {
 /*	border-bottom:solid 1px #76839b; */
 	height:21px;
 	margin-top:1em;
-	margin-bottom:1em;
 }
 ul.idTabs li {
 	float:left;
 	margin-right:1px;
+	margin-bottom:1em;
 }
 ul.idTabs li a {
 	background-color: #df7e00;
@@ -132,7 +132,7 @@ ul.idTabs li a.selected{
 ul.idTabsShort li a {
 	background-color: #df7e00;
 	text-align: center;
-	border-right: 1px #FFFFFF;
+	border-right: 1px #FFFFFF solid;
 	width:138px;
 	color:white;
 }
