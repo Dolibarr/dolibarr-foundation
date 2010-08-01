@@ -89,7 +89,7 @@ ul.tree li{
 	margin-left:1em;
 }
 ul.tree a{ padding-left:0.2em; }
-ul.tree a.selected{ font-weight:bold; }
+ul.tree a.selected{ font-weight:normal; }
 ul.tree li.last{
 	border:none;
 }
@@ -108,7 +108,7 @@ ul.idTabs li {
 	margin-bottom:1em;
 }
 ul.idTabs li a {
-	background-color: #df7e00;
+	background-color: #767875;
 	display:block;
 	width:173px;
 	height:18px;
@@ -120,7 +120,7 @@ ul.idTabs li a {
 	color:#374853;
 }
 ul.idTabs li a.selected{
-	background-color: #767875;
+	background-color: #df7e00;
 	color: #FFFFFF;
 	background-position: top left;
 	background-repeat: no-repeat;
@@ -130,14 +130,14 @@ ul.idTabs li a.selected{
 
 /* IdTabs Short*/
 ul.idTabsShort li a {
-	background-color: #df7e00;
+	background-color: #767875;
 	text-align: center;
 	border-right: 1px #FFFFFF solid;
 	width:138px;
 	color:white;
 }
 ul.idTabsShort li a.selected{
-	background-color: #767875;
+	background-color: #df7e00;
 	text-align: center;
 }
 
@@ -165,6 +165,7 @@ a img {
 	border: none;
 	text-decoration: none;
 }
+
 h2 {
 	background-image: url(../img/bg_centerBlock-title.jpg);
 	background-repeat: no-repeat;
@@ -706,12 +707,12 @@ input.button, input.button_disabled, input.exclusive, input.exclusive_disabled, 
 }
 
 input.button_large, input.button_large_disabled, input.exclusive_large, input.exclusive_large_disabled, a.button_large, a.exclusive_large, span.button_large, span.exclusive_large {
-	background-image: url(../img/bg_orangeBtn.jpg);
+	background-image: url(../img/bg_greyBtn.jpg);
 	background-repeat: repeat-x;
 	height: 16px;
 	display: block;
 	width: auto;
-	border: 1px solid #842F00;
+	border: 1px solid #444444;
 	padding: 0px 5px 0px 5px;
 	line-height: 16px;
 	color: #FFF !important;
@@ -720,7 +721,7 @@ input.button_large, input.button_large_disabled, input.exclusive_large, input.ex
 }
 
 /* exclusive button */
-input.exclusive, input.exclusive_disabled, a.exclusive {
+input.exclusive, input.exclusive_disabled, a.exclusive, input.button_large#SubmitCreate {
 	background-image: url(../img/bg_orangeBtn.jpg);
 	background-repeat: repeat-x;
 	height: 16px;
@@ -776,11 +777,11 @@ img.icon { margin-right: 0.5em; vertical-align: middle; }
 
 /* warning */
 .warning {
-	color: #DB0000;
+	color: #800000;
 	font-size: 1.2em;
-	background-color: #E2ACAC;
-	border: 1px solid #DB0000;
-	font-weight: bold;
+	background-color: #E2CCCC;
+	border: 1px solid #800000;
+	font-weight: normal;
 	margin: 0px !important;
 	padding: 5px 0px 5px 10px !important;
 	width: 448px;
@@ -839,7 +840,17 @@ img.icon { margin-right: 0.5em; vertical-align: middle; }
 }
 
 /* pagination.tpl */
-div.pagination { positon: relative; float: left; margin: 10px; }
+div#pagination { 
+    width: 90%;
+	positon: relative; float: left; margin: 10px;
+	v-align: middle; 
+}
+div#pagination p { 
+    margin: 0;
+    padding: 0px;
+    v-align: middle; 
+}
+}
 ul.pagination {
 	list-style: none;
 	float: left;
@@ -1272,7 +1283,7 @@ div.exclusive .block_content { }
 
 /* block myaccount */
 #left_column div.myaccount, #right_column div.myaccount {
-	background-image: url(../img/bg_myaccount.jpg);
+	background-image: url(../img/bg_rightbox_top.jpg);
 	background-position: top left;
 	background-repeat: no-repeat;
 	background-color: #DDD;
@@ -1291,7 +1302,7 @@ div.myaccount ul.bullet {
 	width: 100%;
 }
 div.myaccount ul.bullet li {
-	width: 200px;
+	width: 180px;
 	height: 15px;
 	padding: 0px !important;
 	margin-left: 10px;
@@ -1326,7 +1337,7 @@ div.myaccount p.logout a {
 div.myaccount p.logout a:hover { text-decoration: none; }
 div.myaccount .block_content {
 	margin: 0px;
-	background-image: url(../img/arrondi_myaccount.jpg);
+	background-image: url(../img/bg_rightbox_bottom.jpg);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 	position: relative;
@@ -1336,6 +1347,12 @@ div.myaccount .block_content {
 	margin-left: 0px;
 	width:15em;
 }
+
+
+div.block h4 {
+color:white;
+}
+
 
 /* block in the center column */
 #center_column p { margin: 0.5em 0; padding-left:0.7em;}
@@ -1414,13 +1431,13 @@ div.myaccount .block_content {
 	clear: none;
 	margin: 0px 0px 10px 5px;
 	padding: 2px 2px 2px 2px;
-	border: 1px solid #AAAAAA;
+	border: 1px solid #CCCCCC;
 }
 
 .products_block ul.product_images li.first {
 	margin: 0px 0px 10px 0px;
 	padding: 2px 2px 2px 2px;
-	border: 1px solid #AAAAAA;
+	border: 1px solid #CCCCCC;
 }
 	
 /* Special style for block products in center column */
@@ -1652,7 +1669,7 @@ div.paiement_logo_block img { margin: 0 0.5em; }
 div#categories_block_left ul.tree { }
 div#categories_block_left ul.tree li {
 	border:none;
-	font-weight:bold;
+	font-weight:normal;
 	font-size:12px;
 	margin: 0px;
 	padding: 0px;
@@ -2199,14 +2216,14 @@ ul#product_list li p.product_desc{
 	text-align: justify;
 	position: relative;
 	float: left;
-	width: 185px;
+	width: 240px;
 	padding: 0px;
 	margin: 0px;
 }
 
 ul#product_list li div.center_block{
 	float:left;
-	width:320px;
+	width:330px;
 	position: relative;
 }
 ul#product_list li div.right_block{
@@ -2521,7 +2538,7 @@ div.categTree {
 	cursor:pointer; 
 	height:240px;
 	width:240px;
-	border: 1px solid #AAAAAA;
+	border: 1px solid #CCCCCC;
 }
 #primary_block ul#usefull_link_block {
 	position: relative;
@@ -2783,7 +2800,7 @@ div#more_info_block ul#more_info_tabs li a.selected {
 #thumbs_list li{
 	float:left;
 	cursor:pointer;
-	border: 1px solid #AAAAAA;
+	border: 1px solid #CCCCCC;
 	width: 70px;
 	height: 70px;
 	margin-right: 4px !important;
@@ -3101,13 +3118,19 @@ width:138px;
 	list-style-type:none;
 }
 #productscategory_list li{
-	float:left;
+float:left;
 	margin:0 3px;
 	cursor:pointer;
 	text-align:center;
 	width:100px;
 	overflow:hidden;
 }
+div#productscategory_list img {
+    border-color:#CCCCCC;
+    border-style:solid;
+    border-width:1px;   
+}
+
 #productscategory_scroll_left, #productscategory_scroll_right{
 	background: url('../img/thumbs_left.gif') no-repeat center;
 	text-indent:-3000px;
@@ -3380,4 +3403,13 @@ div.star a:hover{
 color: #DDDDDD;
 margin-top: 5px;
 margin-bottom: 5px;
+}
+
+.clearfix img {
+    border-color:#CCCCCC;
+    border-style:solid;
+    border-width:1px;   
+}
+.clearfix p {
+    font-size: 10px;	
 }
