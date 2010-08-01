@@ -22,6 +22,8 @@ foreach ($languages AS $language) {
 	if ($language['id_lang'] == $id_langue_en_cours) 
 		$iso_langue_en_cours = $language['iso_code'];
 	
+	//echo $languageTAB[$x]['id_lang']." | ".$languageTAB[$x]['name']." | ".$languageTAB[$x]['iso_code']." <br>";
+	
 	$x++;
 }
 
@@ -65,7 +67,7 @@ if ($_GET["up"] == 1) {
 if ($_GET["sub"] == 1) {
 
 	$flagError = 0;
-	$status = $_POST['active'];
+	$status = $_POST['active']; if ($status == "") $status = 0;
 	$product_file_name = $_POST["product_file_name"];
 	$product_file_path = $_POST["product_file_path"];
 	
@@ -74,9 +76,9 @@ if ($_GET["sub"] == 1) {
 	$prix_ttc = $_POST["priceTI"];
 	$prix_ht = $prix_ttc;
 	
-	if ($status == "" || $product_file_name == "" || $product_file_path == "" || $prix_ht == "" || $prix_ttc == "" ) 
-		$flagError = 1;
-	
+	if ($product_file_name == "" || $product_file_path == "" || $prix_ht == "" || $prix_ttc == "" ) {		
+		$flagError = 2;
+	}
 		
 	//prise des libelles
 	for ($x = 0; $languageTAB[$x]; $x++ ) {	
@@ -86,9 +88,23 @@ if ($_GET["sub"] == 1) {
 		$resume = $_POST["resume_".$languageTAB[$x]['id_lang']];
 		$keywords = $_POST["keywords_".$languageTAB[$x]['id_lang']];
 		$description = $_POST["description_".$languageTAB[$x]['id_lang']];
-		
-		if ($product_name == "" || $resume == "" || $description == "") {
+				
+		if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {			
 			$flagError = 1;
+		} else {
+		
+			if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
+				$product_name = $product_nameTAB[0];
+			}
+			if ($languageTAB[$x]['iso_code'] != "en" && $resume == "") {
+				$resume = $resumeTAB[0];
+			}
+			if ($languageTAB[$x]['iso_code'] != "en" && $description == "") {
+				$description = $descriptionTAB[0];
+			}
+			if ($languageTAB[$x]['iso_code'] != "en" && $keywords == "") {
+				$keywords = $keywordsTAB[0];
+			}
 		}
 		
 		$product_nameTAB[$x] = $product_name;
@@ -99,7 +115,11 @@ if ($_GET["sub"] == 1) {
 	
 	
 	if ($flagError == 1) {
-		echo "<div style='color:#FF0000'>";echo aff("Tous les champs sont obligatoires.", "All fields are required.", $iso_langue_en_cours); echo " </div>";
+		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
+	}
+	
+	if ($flagError == 2) {
+		echo "<div style='color:#FF0000'>";echo aff("Vous devez uploader un produit", "You have to upload a product", $iso_langue_en_cours); echo " </div>";
 	}
 	
 	//si pas derreur de saisis, traitement en base
@@ -134,6 +154,7 @@ if ($_GET["sub"] == 1) {
 		
 		//reference du produit
 		$reference = 'c'.$cookie->id_customer.'d'.$dateRef;
+		
 		$qty=1000;
 		if ($prix_ttc == 0) $qty=0;
 		
@@ -241,8 +262,9 @@ echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2
 <br />
 
 <?php
-print aff('Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
+print aff(
 'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 30% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
 $iso_langue_en_cours);
 
 echo '
@@ -283,7 +305,20 @@ echo '
 			}
 			tinyMCEInit(\'textarea.rte\');			
 			</script>
+
+
+			<script language="javascript"> 
+				function maxlength(text,length) {
+					if(text.innerText.length>length) 
+						text.innerText=text.innerText.substr(0,length); 
+				} 
+			</script> 
+
 ';
+
+
+
+
 
 ?>
 
@@ -468,11 +503,17 @@ echo '
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
 			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>):
+    <!-- <input type="text" id="resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>" value="400" size="2" width="3" style="border:0; font-size:10px; color:#333333;"> char max. -->
 	</td>
   </tr>
   <tr>
     <td colspan="2" nowrap="nowrap">    	
-        	<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3" ><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea> 
+        	<!--<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>"  
+            onkeydown="javascript:maxlength(this,400); resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); "             
+            onchange="javascript:maxlength(this,400); resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); "
+            cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>  -->
+            
+            <textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea> 
 			<br />
     </td>
   </tr>

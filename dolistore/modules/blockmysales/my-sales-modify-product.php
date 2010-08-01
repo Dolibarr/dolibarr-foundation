@@ -90,8 +90,22 @@ if ($_GET["upd"] == 1) {
 		$keywords = $_POST["keywords_".$languageTAB[$x]['id_lang']];
 		$description = $_POST["description_".$languageTAB[$x]['id_lang']];
 		
-		if ($product_name == "" || $resume == "" || $description == "") {
+		if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {
 			$flagError = 1;
+		} else {
+		
+			if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
+				$product_name = $product_nameTAB[0];
+			}
+			if ($languageTAB[$x]['iso_code'] != "en" && $resume == "") {
+				$resume = $resumeTAB[0];
+			}
+			if ($languageTAB[$x]['iso_code'] != "en" && $description == "") {
+				$description = $descriptionTAB[0];
+			}
+			if ($languageTAB[$x]['iso_code'] != "en" && $keywords == "") {
+				$keywords = $keywordsTAB[0];
+			}
 		}
 		
 		$product_nameTAB[$x] = $product_name;
@@ -102,7 +116,7 @@ if ($_GET["upd"] == 1) {
 	
 	
 	if ($flagError == 1) {
-		echo "<div style='color:#FF0000'>";echo aff("Tous les champs sont obligatoires.", "All fields are required.", $iso_langue_en_cours); echo " </div>";
+		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
 	}
 	
 	//si pas derreur de saisis, traitement en base
@@ -126,6 +140,7 @@ if ($_GET["upd"] == 1) {
 		
 		//reference du produit
 		$reference = 'c'.$cookie->id_customer.'d'.$dateRef;
+		
 		$qty=1000;
 		if ($prix_ttc == 0) $qty=0;
 		
@@ -273,8 +288,9 @@ echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</
 <br />
 
 <?php
-print aff('Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
+print aff(
 'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 30% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
 $iso_langue_en_cours);
 
 echo '
