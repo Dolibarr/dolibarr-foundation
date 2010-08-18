@@ -66,8 +66,7 @@ if (testProductAppartenance($customer_id, $product_id)) {
 /*
  * Actions
  */
-
-
+ 
 //Mise a jour du produit
 if ($_GET["upd"] == 1) {
 
@@ -192,17 +191,70 @@ if ($_GET["upd"] == 1) {
 		}
 		
 		
-		if ($prix_ttc == 0) 
-		{
-			//cree lien fichier vers fichiers joint
-			
-		}
-		else
-		{
-			//supprime lien fichier vers fichiers joint
+		//gestion des fichiers selon prix
+		$oldPrice = round($_GET["op"],2);
+		$newPrice =  round($_POST["priceTI"],2);	
 		
+		if ($oldPrice != $newPrice) {
+		
+			//recup des infos fichier
+			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download` 
+					  WHERE `id_product` = '.$product_id.' ';
+			$result = Db::getInstance()->ExecuteS($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+			foreach ($result AS $row) {
+				$product_file_name =  $row['display_filename'];
+				$product_file_path = $row['physically_filename'];
+			}	
+			
+			
+			if ($oldPrice == 0 && $newPrice > 0) {
 
+				//delete des attachments
+				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment` 
+						WHERE `id_product` = '.$product_id.' ';
+				$result = Db::getInstance()->ExecuteS($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+				foreach ($result AS $row) 
+					$id_attachment =  $row['id_attachment'];
+				
+				if ($id_attachment != "" && $id_attachment > 0) {
+					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';					
+					$result = Db::getInstance()->ExecuteS($query);
+					
+					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment_lang` WHERE `id_attachment` = '.$id_attachment.';';
+					$result = Db::getInstance()->ExecuteS($query);
+					
+					$query = 'DELETE FROM `'._DB_PREFIX_.'product_attachment` WHERE `id_attachment` = '.$id_attachment.';';
+					$result = Db::getInstance()->ExecuteS($query);
+				}
+				
+			} 
+			else if ($newPrice == 0 && $oldPrice > 0) {
+				
+				//creation dun attachement
+				$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `mime`) VALUES ("'.$product_file_path.'", "text/plain");';
+				$result = Db::getInstance()->ExecuteS($query);
+				
+				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'attachment` 
+				WHERE `file` = "'.$product_file_path.'"';
+				$result = Db::getInstance()->ExecuteS($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+				foreach ($result AS $row)
+					$id_attachment = $row['id_attachment'];
+				
+				for ($x = 0; $languageTAB[$x]; $x++ ) {				
+					$id_lang = $languageTAB[$x]['id_lang'];
+					$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
+					$result = Db::getInstance()->ExecuteS($query);
+				}
+				
+				$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$product_id.', '.$id_attachment.')';
+				$result = Db::getInstance()->ExecuteS($query);
+				
+			}
 		}
+		
 		
 		//inscription du produit dans ttes les categories choisis
 		$query = 'DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.$product_id;
@@ -221,7 +273,7 @@ if ($_GET["upd"] == 1) {
 			}
 		}
 		
-		echo "<script>window.location='./my-sales-manage-product.php?id_p=$id_product';</script>";		
+		//echo "<script>window.location='./my-sales-manage-product.php?id_p=$id_product';</script>";		
 	}
 }
 
@@ -397,37 +449,6 @@ echo '
   </tr>
 
 
-  <tr>
- <!--
-    <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente hors taxe : ", "Pre-tax sale price : ", $iso_langue_en_cours); ?> </td>
-    <td>
-      <input size="6" maxlength="6" id="priceTE" name="priceTE" onkeyup="javascript:this.value = this.value.replace(/,/g, '.'); priceTI.value=this.value;" type="text"
-	   value="<?php if ($_POST["priceTE"] != 0 && $_POST["priceTE"] != "") echo $_POST["priceTE"]; ?>"
-	  > Euros 
-    </td>
-  </tr>
-  
-  <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Taxe : ", "Tax : ", $iso_langue_en_cours); ?></td>
-    <td>
-    
-    <?php
-    
-		$taxes = Tax::getTaxes($cookie->id_lang);
-			
-		echo '<select onchange="javascript:priceTI.value=(parseFloat(priceTE.value)+parseFloat(priceTE.value*this.value));" name="id_tax" id="id_tax">';
-			echo '<option value="0"';  if ($_POST["id_tax"] == 0 || $_POST["id_tax"] == "") echo "selected='selected'"; echo '>'; echo aff("Sans taxe", "No tax", $iso_langue_en_cours); echo '</option>';
-				
-			foreach ($taxes AS $taxe) {			
-				$taxVal = ($taxe['rate']/100);
-				echo '<option value="'.$taxVal.'"';  if ($_POST["id_tax"] == $taxVal) echo "selected='selected'"; echo '>'.$taxe['name'].'</option>';
-			}
-		echo '</select>';
-	?>
-    </td>
-  </tr>
-  --> 	
-  
    <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
@@ -554,13 +575,15 @@ echo '
 
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaultfr='
-<p>Module version: <strong>1.0</strong></p>
-<p>Editeur: <strong>'.$publisher.'</strong></p>
-<p>Pr&eacute;requis: </p>
+Module version: <strong>1.0</strong><br>
+Editeur: <strong>'.$publisher.'</strong><br>
+Langage interface: <strong>Anglais</strong><br>
+Licence: <strong>GPL</strong><br>
+Pr&eacute;requis: <br>
 <ul>
-<li> Dolibarr version: <strong>2.8+</strong> </li>
+<li> Dolibarr version: <strong>2.9+</strong> </li>
 </ul>
-<p>Installation:</p>
+Installation:
 <ul>
 <li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
 <li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
@@ -575,13 +598,15 @@ echo '
 <li> Le module ou thème est alors disponible et activable. </li>
 </ul>';
 			$defaulten='
-<p>Module version: <strong>1.0</strong></p>
-<p>Publisher: <strong>'.$publisher.'</strong></p>
-<p>Prerequisites: </p>
+Module version: <strong>1.0</strong><br>
+Publisher: <strong>'.$publisher.'</strong><br>
+License: <strong>GPL</strong><br>
+User interface language: <strong>English</strong><br>
+Prerequisites:<br>
 <ul>
 <li> Dolibarr version: <strong>2.8+</strong> </li>
 </ul>
-<p>Install:</p>
+Install:
 <ul>
 <li> Download the archive file of module (.tgz file) from web site <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
 <li> Put the file into the root directory of Dolibarr. </li>
@@ -619,7 +644,7 @@ echo '
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
 		<button style="font-weight: 700;" type="button" onclick="javascript:
-																 document.fmysalesmodifiysubprod.action='?upd=1&id_p=<?php echo $_GET['id_p']; ?>';
+																 document.fmysalesmodifiysubprod.action='?upd=1&op=<?php echo $_POST["priceTI"]; ?>&id_p=<?php echo $_GET['id_p']; ?>';
                                                                  document.fmysalesmodifiysubprod.submit();"
 																 >
 			<?php echo aff("Modifier ce produit", "Update this product", $iso_langue_en_cours); ?>

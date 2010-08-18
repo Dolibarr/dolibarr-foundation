@@ -114,12 +114,27 @@ if ($_GET["sub"] == 1) {
 	}
 	
 	
+	//recuperation de la categorie par defaut
+	$categories = Category::getSimpleCategories($cookie->id_lang);
+	foreach ($categories AS $categorie) {
+		if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
+			$id_categorie_default = $categorie['id_category'];
+			break;
+		}
+	}
+	if ($id_categorie_default == "") $flagError = 3;
+
+	
 	if ($flagError == 1) {
 		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
 	}
 	
 	if ($flagError == 2) {
 		echo "<div style='color:#FF0000'>";echo aff("Vous devez uploader un produit", "You have to upload a product", $iso_langue_en_cours); echo " </div>";
+	}
+	
+	if ($flagError == 3) {
+		echo "<div style='color:#FF0000'>";echo aff("Vous devez choisir une categorie", "You have to choose a category", $iso_langue_en_cours); echo " </div>";
 	}
 	
 	//si pas derreur de saisis, traitement en base
@@ -138,15 +153,6 @@ if ($_GET["sub"] == 1) {
 		if ($taxe_id == "") $taxe_id = 0;*/
 		$taxe_id = 0;
 		
-		//recuperation de la categorie par defaut
-		$categories = Category::getSimpleCategories($cookie->id_lang);
-	    foreach ($categories AS $categorie) {
-			if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
-				$id_categorie_default = $categorie['id_category'];
-				break;
-			}
-		}
-		
 		//prise des date
 		$dateToday = date ("Y-m-d");
 		$dateNow = date ("Y-m-d H:i:s");
@@ -160,11 +166,8 @@ if ($_GET["sub"] == 1) {
 		
 		//insertion du produit en base
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product` (
-		`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, 
-		`reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`
-		) VALUES (
-		0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, \'\', 0.00, '.$qty.', '.$prix_ht.', '.$prix_ttc.', 0.00, 0, \''.$dateToday.'\', \''.$dateToday.'\', 
-		\''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0, '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\'
+		`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`) VALUES (
+		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ttc.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',    \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
 		)';
 			
 		$result = Db::getInstance()->ExecuteS($query);
@@ -204,19 +207,40 @@ if ($_GET["sub"] == 1) {
 		$product_file_path = str_replace("../../download/", "", $product_file_path);
 		
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
-		'.$id_product.', "'.$product_file_name.'", "'.$product_file_path.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, '.$status.'
+		'.$id_product.', "'.$product_file_name.'", "'.$product_file_path.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, 1
 		)';
 		$result = Db::getInstance()->ExecuteS($query);
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));	
 
+		
+		//mise en piece jointe du fichier
 		if ($prix_ttc == 0) 
 		{
 			//mise dans la base des fichiers joints
+			$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `mime`) VALUES ("'.$product_file_path.'", "text/plain");';
+			$result = Db::getInstance()->ExecuteS($query);
 			
+			//recuperation de l'id du fichier joint	
+			$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'attachment` 
+			WHERE `file` = "'.$product_file_path.'"';
+			$result = Db::getInstance()->ExecuteS($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+			foreach ($result AS $row)
+				$id_attachment = $row['id_attachment'];
+			
+			//set des nom du fichier en toute les langues
+			for ($x = 0; $languageTAB[$x]; $x++ ) {				
+				$id_lang = $languageTAB[$x]['id_lang'];
+				$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
+				$result = Db::getInstance()->ExecuteS($query);
+			}
 			
 			//cree lien fichier vers fichiers joint
-			
+			$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$id_product.', '.$id_attachment.')';
+			$result = Db::getInstance()->ExecuteS($query);
 		}
+		
+		
 		
 		//inscritption du produit dans ttes les categories choisis
 		$categories = Category::getSimpleCategories($cookie->id_lang);
@@ -338,7 +362,7 @@ echo '
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code']; 
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?> 
 			<br />
         <?php } ?>
@@ -501,19 +525,26 @@ echo '
 	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 		<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>):
-    <!-- <input type="text" id="resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>" value="400" size="2" width="3" style="border:0; font-size:10px; color:#333333;"> char max. -->
+    <input type="text" id="resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>" value="400" size="2" width="3" style="border:0; font-size:10px; color:#333333;"> char max.
 	</td>
   </tr>
   <tr>
     <td colspan="2" nowrap="nowrap">    	
-        	<!--<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>"  
+        	<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>"  
+            onkeyup="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
+            onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"             
+            onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
+            cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
+            
+            
+            <!--<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>"  
             onkeydown="javascript:maxlength(this,400); resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); "             
             onchange="javascript:maxlength(this,400); resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); "
-            cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>  -->
+            cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea> -->
             
-            <textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea> 
+            <!--<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>  -->
 			<br />
     </td>
   </tr>
@@ -532,7 +563,7 @@ echo '
 			<?php 
 			echo $languageTAB[$x]['iso_code']; 
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>
 			<br>
         <?php } ?>
@@ -545,12 +576,12 @@ echo '
   
   <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
     <tr>
-        <td colspan="2">
+        <td colspan="2"><br>
         	<?php echo aff("Description large ", "Large description ", $iso_langue_en_cours); ?> 
             (<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>):
         </td>
     </tr>
@@ -558,17 +589,18 @@ echo '
         <td colspan="2">        	
             <textarea class="rte" cols="100" rows="10" 
 			  id="description_<?php echo $languageTAB[$x]['id_lang']; ?>"  
-			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">			
+			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">		
 			<?php 
 
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaultfr='
 Module version: <strong>1.0</strong><br>
 Editeur: <strong>'.$publisher.'</strong><br>
+Langage interface: <strong>Anglais</strong><br>
 Licence: <strong>GPL</strong><br>
 Pr&eacute;requis: <br>
 <ul>
-<li> Dolibarr version: <strong>2.8+</strong> </li>
+<li> Dolibarr version: <strong>2.9+</strong> </li>
 </ul>
 Installation:<br>
 <ul>
@@ -588,9 +620,10 @@ Installation:<br>
 Module version: <strong>1.0</strong><br>
 Publisher: <strong>'.$publisher.'</strong><br>
 License: <strong>GPL</strong><br>
+User interface language: <strong>English</strong><br>
 Prerequisites:<br>
 <ul>
-<li> Dolibarr version: <strong>2.8+</strong> </li>
+<li> Dolibarr version: <strong>2.9+</strong> </li>
 </ul>
 <p>Install:</p>
 <ul>
@@ -608,8 +641,8 @@ Prerequisites:<br>
 </ul>';
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
 			{
-				if ($languageTAB[$x]['iso_code'] == 'en') print $defaulten;
 				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
+				else print $defaulten;				
 			}
 			else echo $_POST["description_".$languageTAB[$x]['id_lang']]; 
 			
