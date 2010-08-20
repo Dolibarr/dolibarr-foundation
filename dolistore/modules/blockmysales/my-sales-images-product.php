@@ -85,9 +85,9 @@ if (testProductAppartenance($customer_id, $product_id)) {
 		
 			//check  de l'exctention
 			preg_match('/\.([a-zA-Z0-9]+)$/',$_FILES['image_product']['name'],$reg);
-			$extention_image = $reg[1];
-			//if (! in_array($extention_image, array("jpg","png","gif","jpeg"))) {
-			if (! in_array($extention_image, array("jpg","jpeg"))) {
+			$extention_image = strtolower($reg[1]);
+			if (! in_array($extention_image, array("jpg","png","gif","jpeg"))) {
+			//if (! in_array($extention_image, array("jpg","jpeg"))) {
 				echo "<div style='color:#FF0000'>";aff("Votre image n'est pas en .jpg, le format .".$extention_image." n'est pas autorise.", 
 													   "Your picture must have .jpg format, the format .".$extention_image." is not authorized.", $iso_langue_en_cours); echo " </div>";
 				$flagError = 1;
@@ -169,16 +169,21 @@ if (testProductAppartenance($customer_id, $product_id)) {
 					}
 					
 					//duplication de l'image en bons formats et noms
-					$fichier_img_original 	= '../../img/p/'.$product_id.'-'.$id_image.'.jpg';
+					$fichier_img_original 	= '../../img/p/'.$product_id.'-'.$id_image.'.'.$extention_image;
 		
 					rename($chemin_destination, $fichier_img_original);
 					unlink($chemin_destination);
 		
-					vignette($fichier_img_original, 129, 129, 	'-home', 	50, '../../img/p/');
-					vignette($fichier_img_original, 300, 300, 	'-large',	50, '../../img/p/');
-					vignette($fichier_img_original, 80,  80, 	'-medium', 	50, '../../img/p/');
-					vignette($fichier_img_original, 45,  45, 	'-small', 	50, '../../img/p/');
-					vignette($fichier_img_original, 600, 600, 	'-thickbox',50, '../../img/p/');
+					if ($extention_image != 'jpg')
+					{
+						// We convert from xxx to jpg
+						vignette($fichier_img_original, -1,  -1, 	'', 	50, '../../img/p/', 2);
+					}
+					vignette($fichier_img_original, 45,  45, 	'-small', 	50, '../../img/p/', 2);
+					vignette($fichier_img_original, 70,  70, 	'-medium', 	50, '../../img/p/', 2);
+					vignette($fichier_img_original, 250, 250, 	'-large',	50, '../../img/p/', 2);
+					vignette($fichier_img_original, 80,   80, 	'-home', 	50, '../../img/p/', 2);
+					vignette($fichier_img_original, 600, 600, 	'-thickbox',50, '../../img/p/', 2);
 					
 					
 					echo "<script>alert('";
@@ -337,24 +342,25 @@ foreach ($result AS $row) {
 
 
 <table width="100%" border="0" cellspacing="10" cellpadding="0">  
-  <tr>
-    <td nowrap="nowrap" valign="top" colspan="2"><?php aff("Images de ce produit : ", "Product's pictures : ", $iso_langue_en_cours); ?></td>   
-  </tr>
-  
    <?php 
    $query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image` 
 			 WHERE `id_product` = '.$product_id.' 
 			';
 	$result = Db::getInstance()->ExecuteS($query);
-	if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+	if ($result === false) die(Tools::displayError('Invalid SQL query!: '.$query));
 
 	if (sizeof($result) > 0)
 	{
-		foreach ($result AS $row) {		   
-		   
+		?>
+		  <tr>
+			<td nowrap="nowrap" valign="top" colspan="2"><?php aff("Images de ce produit : ", "Product's pictures : ", $iso_langue_en_cours); ?></td>   
+		  </tr>
+		<?php
+		foreach ($result AS $row) 
+		{		   
 		   $id_image = $row['id_image'];
 		   
-		   ?>
+		?>
 		  <tr>
 			<td nowrap="nowrap" valign="top">
 				<img src="../../img/p/<?php echo "$product_id-$id_image";?>-large.jpg" />
@@ -370,11 +376,16 @@ foreach ($result AS $row) {
 	//{
 			//aff("Aucune pour le moment (Cliquer sur Soumettre image) : ", "None for the moment (Click on submit now) : ", $iso_langue_en_cours);
 	//}
-    ?>
-    
-  <tr>
-    <td colspan="2"><br><hr></td>
-  </tr>
+	
+	if (sizeof($result) > 0)
+	{
+		?>
+		<tr>
+			<td colspan="2"><br><hr></td>
+		</tr>
+		<?php
+	}
+	?>
 </table>
 
 
@@ -385,7 +396,7 @@ foreach ($result AS $row) {
   <tr>
     <td nowrap="nowrap" valign="top" align="center" colspan="2">		         
         
-        <button <?php print sizeof($row)?'':'disabled="true"'; ?> type="button" onclick="JavaScript: alert('<?php aff("Votre module/produit a été mis à jour", "Module/product updated", $iso_langue_en_cours); ?>'); window.location='./my-sales-manage-product.php';">			
+        <button <?php print sizeof($result)?'':'disabled="true"'; ?> type="button" onclick="JavaScript: alert('<?php aff("Votre module/produit a été mis à jour", "Module/product updated", $iso_langue_en_cours); ?>'); window.location='./my-sales-manage-product.php';">			
 	        <?php aff("Terminer", "Finish", $iso_langue_en_cours); ?>
 		</button>
                 

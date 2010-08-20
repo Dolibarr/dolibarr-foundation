@@ -8,10 +8,11 @@
 * \param maxHeight Hauteur maximum que dois faire l'image (-1=unchanged, 120 par defaut)
 * \param extName Extension pour differencier le nom de la vignette
 * \param quality Quality of compression (0=worst, 100=best)
+* \param targetformat New format of target (1,2,3,4, no change if empty)
 * \return string Full path of thumb
 * \remarks With file=myfile.jpg -> myfile_small.jpg
 */
-function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $quality=50, $outdir='thumbs')
+function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $quality=50, $outdir='thumbs', $targetformat=0)
 {
 	// Clean parameters
 	$file=trim($file);
@@ -27,25 +28,27 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 		// Si le fichier passe en parametre n'existe pas
 		return "ErrorFileNotFound";
 	}
-	elseif(!is_numeric($maxWidth) || empty($maxWidth) || $maxWidth < -1){
+	elseif(!is_numeric($maxWidth) || empty($maxWidth) || $maxWidth < -1)
+	{
 		// Si la largeur max est incorrecte (n'est pas numerique, est vide, ou est inferieure a 0)
 		return 'Wrong value for parameter maxWidth';
 	}
-	elseif(!is_numeric($maxHeight) || empty($maxHeight) || $maxHeight < -1){
+	elseif(!is_numeric($maxHeight) || empty($maxHeight) || $maxHeight < -1)
+	{
 		// Si la hauteur max est incorrecte (n'est pas numerique, est vide, ou est inferieure a 0)
 		return 'Wrong value for parameter maxHeight';
 	}
- 
+
 	$fichier = realpath($file); // Chemin canonique absolu de l'image
 	$dir = dirname($file); // Chemin du dossier contenant l'image
-	 
+
 	$infoImg = getimagesize($fichier); // Recuperation des infos de l'image
 	$imgWidth = $infoImg[0]; // Largeur de l'image
 	$imgHeight = $infoImg[1]; // Hauteur de l'image
-	 
-	if ($maxWidth == -1) $maxWidth=$infoImg[0]; // If size is -1, we keep unchanged
-	if ($maxHeight == -1) $maxHeight=$infoImg[1]; // If size is -1 we keep unchanged
-		 
+
+	if ($maxWidth  == -1) $maxWidth=$infoImg[0]; 	// If size is -1, we keep unchanged
+	if ($maxHeight == -1) $maxHeight=$infoImg[1]; 	// If size is -1 we keep unchanged
+
 	$imgfonction='';
 	switch($infoImg[2])
 	{
@@ -80,23 +83,18 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 		case 1: // Gif
 			$img = imagecreatefromgif($fichier);
 			$extImg = '.gif'; // Extension de l'image
-			$newquality='NU';
 			break;
 		case 2: // Jpg
 			$img = imagecreatefromjpeg($fichier);
 			$extImg = '.jpg'; // Extension de l'image
-			$newquality=$quality;
 			break;
 		case 3: // Png
 			$img = imagecreatefrompng($fichier);
 			$extImg = '.png';
-			$newquality=$quality-100;
-			$newquality=round(abs($quality-100)*9/100);
 			break;
 		case 4: // Bmp
 			$img = imagecreatefromwbmp($fichier);
 			$extImg = '.bmp';
-			$newquality='NU';
 			break;
 	}
 	 
@@ -120,9 +118,11 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 	$thumbHeight=round($thumbHeight);
 	$thumbWidth=round($thumbWidth);
 	 
-	 
+	// Define target format
+	if (empty($targetformat)) $targetformat=$infoImg[2];
+	
 	// Create empty image
-	if ($infoImg[2] == 1)
+	if ($targetformat == 1)
 	{
 		// Compatibilite image GIF
 		$imgThumb = imagecreate($thumbWidth, $thumbHeight);
@@ -145,25 +145,34 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 	}
 	 
 	// Initialisation des variables selon l'extension de l'image
-	switch($infoImg[2])
+	switch($targetformat)
 	{
 		case 1: // Gif
 			$trans_colour = imagecolorallocate($imgThumb, 255, 255,
 			255); // On procede autrement pour le format GIF
 			imagecolortransparent($imgThumb,$trans_colour);
+			$extImgTarget = '.gif';
+			$newquality='NU';
 			break;
 		case 2: // Jpg
 			$trans_colour = imagecolorallocatealpha($imgThumb, 255, 255,
 			255, 0);
+			$extImgTarget = '.jpg';
+			$newquality=$quality;
 			break;
 		case 3: // Png
 			imagealphablending($imgThumb,false); // Pour compatibilite sur certain systeme
 			$trans_colour = imagecolorallocatealpha($imgThumb, 255, 255,
 			255, 127); // Keep transparent channel
+			$extImgTarget = '.png';
+			$newquality=$quality-100;
+			$newquality=round(abs($quality-100)*9/100);
 			break;
 		case 4: // Bmp
 			$trans_colour = imagecolorallocatealpha($imgThumb, 255, 255,
 			255, 0);
+			$extImgTarget = '.bmp';
+			$newquality='NU';
 			break;
 	}
 	if (function_exists("imagefill")) imagefill($imgThumb, 0, 0, $trans_colour);
@@ -173,27 +182,27 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 	 
 	$fileName = preg_replace('/(\.gif|\.jpeg|\.jpg|\.png|\.bmp)$/i','',$file); // On enleve extension quelquesoit la casse
 	$fileName = basename($fileName);
-	$imgThumbName = $dirthumb.'/'.$fileName.$extName.$extImg; // Chemin complet du fichier de la vignette
+	$imgThumbName = $dirthumb.'/'.$fileName.$extName.$extImgTarget; // Chemin complet du fichier de la vignette
 	 
 	// Check if permission are ok
 	//$fp = fopen($imgThumbName, "w");
 	//fclose($fp);
 	 
 	// Create image on disk
-	switch($infoImg[2])
+	switch($targetformat)
 	{
-	case 1: // Gif
-	imagegif($imgThumb, $imgThumbName);
-	break;
-	case 2: // Jpg
-	imagejpeg($imgThumb, $imgThumbName, $newquality);
-	break;
-	case 3: // Png
-	imagepng($imgThumb, $imgThumbName, $newquality);
-	break;
-	case 4: // Bmp
-	image2wmp($imgThumb, $imgThumbName);
-	break;
+		case 1: // Gif
+		imagegif($imgThumb, $imgThumbName);
+		break;
+		case 2: // Jpg
+		imagejpeg($imgThumb, $imgThumbName, $newquality);
+		break;
+		case 3: // Png
+		imagepng($imgThumb, $imgThumbName, $newquality);
+		break;
+		case 4: // Bmp
+		image2wmp($imgThumb, $imgThumbName);
+		break;
 	}
 	 
 	// Set permissions on file

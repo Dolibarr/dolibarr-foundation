@@ -7,8 +7,6 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
 
-$foundationfeerate=0.7;
-
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
 
@@ -44,11 +42,14 @@ function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
 <br />
 
 <?php
+// foundationfreerate
+$foundationfeerate=0.7;
+// totalnbofsell
 $totalnbsell=0;
+// totalamount
 $totalamount=0;
-
-// TODO Look into a database for last payment date of user
-//
+// datestart
+// TODO Read first sell to detect datestart
 if (empty($datestart)) 
 {
 	//print $cookie->date_add;
@@ -57,18 +58,25 @@ if (empty($datestart))
 	//$datestart=mktime(0, 0, 0, 6, 1, 2010);	// If not found
 	//print 'ee'.$datestart;
 }
+// datelastpayment
+// TODO Read into database value for datelastpayment
+// datetoclaim
+$datetoclaim=0;
+if (empty($datelastpayment)) $datetoclaim=$datestart+(3600*24*30*6);
+else $datetoclaim=$datestart+(3600*24*30*6);
+
 
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 
 aff(
-"Les statistiques sont celles des téléchargements/ventes depuis le dernier paiement reçu pour vos ventes (<b>".date('Y-m-d',$datestart)."</b>) pour l'utilisateur courant (<b>".$publisher."</b>)",
-"Statistics are for download/sells since the last payment received for your sells (<b>".date('Y-m-d',$datestart)."</b>) for curent user (<b>".$publisher."</b>)",
+"Les statistiques sont celles des téléchargements/ventes depuis le dernier paiement reçu ".($datelastpayment?"(<b>".date('d/m/Y',$datelastpayment)."</b>)":"")." pour les ventes des composants soumis par l'utilisateur courant (<b>".$publisher."</b>)",
+"Statistics are for download/sells since the last payment received ".($datelastpayment?"(<b>".date('Y-m-d',$datelastpayment)."</b>)":"")." for your sells of components submited by for curent user (<b>".$publisher."</b>)",
 $iso_langue_en_cours);
 
 ?>
 <br><br>
 
-<?php aff("- Pour changer les informations sur votre produit cliquez sur son nom,<br>- Pour changer son image cliquez sur son image", "- To change your product information click on its name,<br>- To change its picture click on its picture", $iso_langue_en_cours); ?>
+<?php aff("- Pour changer les informations sur votre produit cliquez sur son nom,<br>- Pour changer son image cliquez sur son image<br>- Pour supprimer un produit, envoyez un mail à contact@dolibarr.org", "- To change your product information click on its name,<br>- To change its picture click on its picture<br>- To remove a product, send a mail to contact@dolibarr.org", $iso_langue_en_cours); ?>
 
 <FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="std">
 <table width="100%" >  
@@ -197,18 +205,43 @@ $iso_langue_en_cours);
 
 if ($totalamount > 0)
 {
-	aff("Date du dernier paiement: ","Last payment date: ", $iso_langue_en_cours);
-	print '<b>'.date('Y-m-d',$datestart).'</b><br>';
+	// mytotalamount
+	$mytotalamount=round($foundationfeerate*$totalamount,2);
+
+	print '<h2>';
+	aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
+	print '</h2>';
+	
+	// Total amount earned
 	aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
-	print "<b>".$foundationfeerate." x ".$totalamount." = ".round($foundationfeerate*$totalamount,2)."&#8364;</b>";
+	print "<b>".$foundationfeerate." x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
 	print '<br>';
-	aff("Il n'est pas possible de recevoir de paiements pour le moment.", "It is not possible to receive payments for the moment.", $iso_langue_en_cours);
+	// Last payment date
+	aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
+	if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
+	else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
 	print '<br>';
+	// Remain to receive
+	aff("Montant restant à percevoir: ","Remained amount to receive: ", $iso_langue_en_cours);
+	$remaintoreceive=$mytotalamount;
+	print "<b>".round($remaintoreceive,2)."&#8364;</b>";
+	print '<br>';
+	// Date to claim
+	if ($remaintoreceive)
+	{
+		aff("Date pour réclamer le solde: <b>".date('d/m/Y',$datetoclaim).'</b>',"Date to claim remain to pay: <b>".date('Y-m-d',$datetoclaim).'</b>', $iso_langue_en_cours);
+		print '<br>';
+	}
+	else
+	{
+		aff("Il n'est pas possible de réclamer de reversements pour le moment.", "It is not possible to claim payments for the moment.", $iso_langue_en_cours);
+		print '<br>';
+	}
 	print '<br>';
 }
 else
 {
-
+	aff("Aucun gain généré pour le moment.", "Nothing earned for the moment.", $iso_langue_en_cours);
 }
 
 include(dirname(__FILE__).'/../../footer.php');
