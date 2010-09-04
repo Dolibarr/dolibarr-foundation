@@ -598,6 +598,7 @@ Module version: <strong>1.0</strong><br>
 Editeur: <strong>'.$publisher.'</strong><br>
 Langage interface: <strong>Anglais</strong><br>
 Licence: <strong>GPL</strong><br>
+Assistance: <strong>Aucune / <strike>Forum sur www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
 Pr&eacute;requis: <br>
 <ul>
 <li> Dolibarr version: <strong>2.9+</strong> </li>
@@ -621,6 +622,8 @@ Module version: <strong>1.0</strong><br>
 Publisher: <strong>'.$publisher.'</strong><br>
 License: <strong>GPL</strong><br>
 User interface language: <strong>English</strong><br>
+Help/Support: <strong>None / <strike>Forum at www.dolibarr.org</strike> / <strike>Mail to contact@publisher.com</strike></strong><br>
+</ul>
 Prerequisites:<br>
 <ul>
 <li> Dolibarr version: <strong>2.9+</strong> </li>
