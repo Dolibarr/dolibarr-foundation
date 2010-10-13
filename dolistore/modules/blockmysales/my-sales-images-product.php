@@ -314,7 +314,8 @@ foreach ($result AS $row) {
     </p>
     </td>
   </tr>
-  
+
+<!--
   <tr>
     <td nowrap="nowrap" valign="top"><?php aff("Legende : ", "Legend : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">
@@ -325,11 +326,12 @@ foreach ($result AS $row) {
         <?php } ?>   
     </td>
   </tr>
+-->
 
   <tr>
     <td colspan="2" align="center"><br>
     	<a href="javascript:document.fmysalesimgprod.action='?up=1&id_p=<?php echo $_GET['id_p']; ?>'; document.fmysalesimgprod.submit();">
-          <?php aff("Soumettre cette image >> ", "Submit this picture >> ", $iso_langue_en_cours); ?>
+          <?php aff("Soumettre cette nouvelle image >> ", "Submit this new picture >> ", $iso_langue_en_cours); ?>
         </a>
     </td>
   </tr>

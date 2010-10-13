@@ -306,13 +306,13 @@ echo '
 						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
 
 						// Theme options
-						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,formatselect,fontsizeselect",
-						theme_advanced_buttons2 : "search,replace,|,bullist,numlist,|,outdent,indent,|,link,unlink,anchor,|,forecolor,backcolor",
-						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,|,sub,sup,|,image,|,pagebreak",
+						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,formatselect",
+						theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,|,link,unlink,anchor,|,forecolor,backcolor",
+						theme_advanced_buttons3 : "",
 						
 						theme_advanced_toolbar_location : "top",
 						theme_advanced_toolbar_align : "left",
-						width : "100",
+						width : "100%",
 						theme_advanced_statusbar_location : "bottom",
 						theme_advanced_resizing : true,
 						content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
@@ -468,7 +468,7 @@ echo '
 
   <tr>
     <td width="14%" valign="top">
-    <?php echo aff("Cocher toutes les categories dans lesquelles le produit apparaitra : ", "Mark all checkbox(es) of categories in which product is to appear : ", $iso_langue_en_cours); ?>
+    <?php echo aff("Cocher toutes les categories dans lesquelles le produit apparaitra : ", "Check all categories in which product will appear : ", $iso_langue_en_cours); ?>
  	</td>
     <td width="86%">
 		<?php
@@ -518,6 +518,26 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
+  <tr>
+    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
+    <td nowrap="nowrap">    	
+        <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
+            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
+			<?php 
+			echo $languageTAB[$x]['iso_code']; 
+			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			?>
+			<br>
+        <?php } ?>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td colspan="2"><hr></td>
+  </tr>
 
   <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
   <tr>
@@ -527,7 +547,7 @@ echo '
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
 			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>):
-    <input type="text" id="resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>" value="400" size="2" width="3" style="border:0; font-size:10px; color:#333333;"> char max.
+    <input type="text" id="resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>" value="400" size="2" width="3" style="border:0; font-size:10px; color:#333333;"> <?php echo aff("caractères restant", "characters left", $iso_langue_en_cours); ?>.
 	</td>
   </tr>
   <tr>
@@ -549,26 +569,6 @@ echo '
     </td>
   </tr>
   <?php } ?>
-
-  <tr>
-    <td colspan="2"><hr></td>
-  </tr>
-
-  <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s <i>(utilis&eacute; par les <br> moteurs de recherches)</i>: ", "Keywords <i>(used by search engines)</i> : ", $iso_langue_en_cours); ?></td>
-    <td nowrap="nowrap">    	
-        <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
-			<?php 
-			echo $languageTAB[$x]['iso_code']; 
-			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
-			?>
-			<br>
-        <?php } ?>
-    </td>
-  </tr>
 
   <tr>
     <td colspan="2"><hr></td>
@@ -608,13 +608,11 @@ Installation:<br>
 <li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
 <li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
 <li> Decompressez le fichier par la commande </li>
-</ul>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
 <pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.tgz').'</pre>
 </div>
 </div>
-<ul>
 <li> Le module ou thème est alors disponible et activable. </li>
 </ul>';
 			$defaulten='
@@ -633,13 +631,11 @@ Prerequisites:<br>
 <li> Download the archive file of module (.tgz file) from web site <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
 <li> Put the file into the root directory of Dolibarr. </li>
 <li> Uncompress the file with command </li>
-</ul>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
 <pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'modulefile.tgz').'</pre>
 </div>
 </div>
-<ul>
 <li> Module or skin is then available and can be activated. </li>
 </ul>';
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
