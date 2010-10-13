@@ -282,7 +282,7 @@ var fieldRequired = '{l s='Please fill all required fields' js=1}';
 
 			<p class="warning-inline" id="last_quantities"{if ($product->quantity > $last_qties || $product->quantity == 0) || $allow_oosp} style="display:none;"{/if} >{l s='Warning: Last items in stock!'}</p>
 
-			<p{if !$allow_oosp && $product->quantity == 0} style="display:none;"{/if} id="add_to_cart" class="buttons_bottom_block"><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
+			<p{if !$allow_oosp && $product->quantity == 0} style="display:none;"{/if} id="add_to_cart" class="buttons_bottom_block">{if ($product->price > 0)}<input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" />{/if}</p>
 			{if $HOOK_PRODUCT_ACTIONS}
 				{$HOOK_PRODUCT_ACTIONS}
 			{/if}
@@ -323,8 +323,6 @@ var fieldRequired = '{l s='Please fill all required fields' js=1}';
 	</table>
 </div>
 {/if}
-
-{$HOOK_PRODUCT_FOOTER}
 
 <!-- description and features -->
 {if $product->description || $features || $accessories || $HOOK_PRODUCT_TAB || $attachments}
@@ -387,6 +385,7 @@ var fieldRequired = '{l s='Please fill all required fields' js=1}';
 	</div>
 </div>
 {/if}
+{$HOOK_PRODUCT_FOOTER}
 
 <!-- Customizable products -->
 {if $product->customizable}
