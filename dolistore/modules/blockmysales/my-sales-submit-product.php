@@ -37,21 +37,23 @@ if ($_GET["up"] == 1) {
 	if ($_FILES['virtual_product_file']['error']) {
 			  switch ($_FILES['virtual_product_file']['error']){
 					   case 1: // UPLOAD_ERR_INI_SIZE
-					   echo "Le fichier depasse la limite autorisee par le serveur !";
+					   echo "File size is higher than server limit !";
 					   break;
 					   case 2: // UPLOAD_ERR_FORM_SIZE
-					   echo "Le fichier depasse la limite autorisee dans le formulaire HTML !";
+					   echo "File size if higher than limit in HTML form !";
 					   break;
 					   case 3: // UPLOAD_ERR_PARTIAL
-					   echo "L'envoi du fichier a ete interrompu pendant le transfert !";
+					   echo "File transfert was aborted !";
 					   break;
 					   case 4: // UPLOAD_ERR_NO_FILE
-					   echo "Le fichier que vous avez envoye a une taille nulle !";
+					   echo "File name was not defined or file size is null !";
 					   break;
 			  }
 	}
 	else {
-		$chemin_destination = '../../download/897d277ed8393a0bf9c817ed57b1'.time()."c".intval($cookie->id_customer);
+		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
+	        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
+		$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
 		
 		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) {
 			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
