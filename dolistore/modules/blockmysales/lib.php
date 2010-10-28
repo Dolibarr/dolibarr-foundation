@@ -1,5 +1,32 @@
 <?php
 
+/**
+ *
+ */
+function prestalog($message, $level=LOG_INFO)
+{
+    $filelog="prestalog.log";
+    $file=@fopen($filelog,"a+");
+    if ($file)
+    {
+        $ip='???';  // $ip contains information to identify computer that run the code
+        if (! empty($_SERVER["REMOTE_ADDR"])) $ip=$_SERVER["REMOTE_ADDR"];          // In most cases.
+        else if (! empty($_SERVER['SERVER_ADDR'])) $ip=$_SERVER['SERVER_ADDR'];     // This is when PHP session is ran inside a web server but not inside a client request (example: init code of apache)
+        else if (! empty($_SERVER['COMPUTERNAME'])) $ip=$_SERVER['COMPUTERNAME'].(empty($_SERVER['USERNAME'])?'':'@'.$_SERVER['USERNAME']); // This is when PHP session is ran outside a web server, like from Windows command line (Not always defined, but usefull if OS defined it).
+        else if (! empty($_SERVER['LOGNAME'])) $ip='???@'.$_SERVER['LOGNAME'];  // This is when PHP session is ran outside a web server, like from Linux command line (Not always defined, but usefull if OS defined it).
+
+        $liblevelarray=array(LOG_ERR=>'ERROR',LOG_WARNING=>'WARN',LOG_INFO=>'INFO',LOG_DEBUG=>'DEBUG');
+        $liblevel=$liblevelarray[$level];
+        if (! $liblevel) $liblevel='UNDEF';
+
+        $message=strftime("%Y-%m-%d %H:%M:%S", mktime())." ".sprintf("%-5s",$liblevel)." ".sprintf("%-15s",$ip)." ".$message;
+
+        fwrite($file,$message."\n");
+        fclose($file);
+        // This is for log file, we do not change permissions
+    }
+}
+
 
 /**
 * \brief Create 2 thumbnails from an image file: one small and one mini (Supported extensions are gif, jpg, png and bmp)
@@ -16,7 +43,7 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 {
 	// Clean parameters
 	$file=trim($file);
-	 
+
 	// Check parameters
 	if (! $file)
 	{
@@ -73,10 +100,10 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 			return 'Creation de vignette impossible. Ce PHP ne supporte pas les fonctions du module GD '.$imgfonction;
 		}
 	}
-	 
+
 	// On cree le repertoire contenant les vignettes
 	$dirthumb = $dir.($outdir?'/'.$outdir:''); // Chemin du dossier contenant les vignettes
-	 
+
 	// Initialisation des variables selon l'extension de l'image
 	switch($infoImg[2])
 	{
@@ -97,14 +124,14 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 			$extImg = '.bmp';
 			break;
 	}
-	 
+
 	// Initialisation des dimensions de la vignette si elles sont superieures a l'original
 	if($maxWidth > $imgWidth){ $maxWidth = $imgWidth; }
 	if($maxHeight > $imgHeight){ $maxHeight = $imgHeight; }
-	 
+
 	$whFact = $maxWidth/$maxHeight; // Facteur largeur/hauteur des dimensions max de la vignette
 	$imgWhFact = $imgWidth/$imgHeight; // Facteur largeur/hauteur de l'original
-	 
+
 	// Fixe les dimensions de la vignette
 	if($whFact < $imgWhFact){
 		// Si largeur determinante
@@ -117,10 +144,10 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 	}
 	$thumbHeight=round($thumbHeight);
 	$thumbWidth=round($thumbWidth);
-	 
+
 	// Define target format
 	if (empty($targetformat)) $targetformat=$infoImg[2];
-	
+
 	// Create empty image
 	if ($targetformat == 1)
 	{
@@ -131,19 +158,19 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 	{
 		$imgThumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
 	}
-	 
+
 	// Activate antialiasing for better quality
 	if (function_exists('imageantialias'))
 	{
 		imageantialias($imgThumb, true);
 	}
-	 
+
 	// This is to keep transparent alpha channel if exists (PHP >= 4.2)
 	if (function_exists('imagesavealpha'))
 	{
 		imagesavealpha($imgThumb, true);
 	}
-	 
+
 	// Initialisation des variables selon l'extension de l'image
 	switch($targetformat)
 	{
@@ -176,18 +203,18 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 			break;
 	}
 	if (function_exists("imagefill")) imagefill($imgThumb, 0, 0, $trans_colour);
-	 
+
 	imagecopyresampled($imgThumb, $img, 0, 0, 0, 0, $thumbWidth,
 	$thumbHeight, $imgWidth, $imgHeight); // Insere l'image de base redimensionnee
-	 
+
 	$fileName = preg_replace('/(\.gif|\.jpeg|\.jpg|\.png|\.bmp)$/i','',$file); // On enleve extension quelquesoit la casse
 	$fileName = basename($fileName);
 	$imgThumbName = $dirthumb.'/'.$fileName.$extName.$extImgTarget; // Chemin complet du fichier de la vignette
-	 
+
 	// Check if permission are ok
 	//$fp = fopen($imgThumbName, "w");
 	//fclose($fp);
-	 
+
 	// Create image on disk
 	switch($targetformat)
 	{
@@ -204,16 +231,16 @@ function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $
 		image2wmp($imgThumb, $imgThumbName);
 		break;
 	}
-	 
+
 	// Set permissions on file
 	// @chmod($imgThumbName, octdec($conf->global->MAIN_UMASK));
-	 
+
 	// Free memory
 	imagedestroy($imgThumb);
-	 
+
 	return $imgThumbName;
 }
- 
+
 
 
 
