@@ -35,21 +35,29 @@ foreach ($languages AS $language) {
 
 //upload du fichier
 if ($_GET["up"] == 1) {
+	$originalfilename=$_FILES['virtual_product_file']['name'];
 	if ($_FILES['virtual_product_file']['error']) {
 			  switch ($_FILES['virtual_product_file']['error']){
 					   case 1: // UPLOAD_ERR_INI_SIZE
-					   echo "File size is higher than server limit !";
+					   echo "<div style='color:#FF0000'>File size is higher than server limit ! </div>";
 					   break;
 					   case 2: // UPLOAD_ERR_FORM_SIZE
-					   echo "File size if higher than limit in HTML form !";
+					   echo "<div style='color:#FF0000'>File size if higher than limit in HTML form ! </div>";
 					   break;
 					   case 3: // UPLOAD_ERR_PARTIAL
-					   echo "File transfert was aborted !";
+					   echo "<div style='color:#FF0000'>File transfert was aborted ! </div>";
 					   break;
 					   case 4: // UPLOAD_ERR_NO_FILE
-					   echo "File name was not defined or file size is null !";
+					   echo "<div style='color:#FF0000'>File name was not defined or file size is null ! </div>";
 					   break;
 			  }
+	}
+	else if (preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
+	{
+		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
+		{
+			echo "<div style='color:#FF0000'>".aff("Le package ne semble pas avoir été fabriqué avec un outil Dolibarr officiel 'htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrmodule.pl' pour les themes","Package seems to have not been built using Dolibarr official tool 'htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrmodule.pl' for themes",$iso_langue_en_cours)."</div>";
+		}
 	}
 	else {
 		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
@@ -181,30 +189,27 @@ if ($_GET["sub"] == 1) {
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
 
-		//recuperation de l'id du produit
+		// Get product id
 		$query = 'SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 		WHERE `reference` = \''.$reference.'\'
 		AND `date_add` = \''.$dateNow.'\' ';
 		$result = Db::getInstance()->ExecuteS($query);
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 		foreach ($result AS $row)
-			$id_product = $row['id_product'];
+		{
+		    $id_product = $row['id_product'];
+		}
 
-
-		//mise en base des libelle anglais et fr et autre s'il y a
-		for ($x = 0; $product_nameTAB[$x]; $x++) {
+		// Add language description of product
+		for ($x = 0; $product_nameTAB[$x]; $x++)
+		{
 			$languageTAB[$x]['id_lang'];
 			$languageTAB[$x]['name'];
 
-			$link_rewrite = str_replace(" ", "-", $product_nameTAB[$x]);
-			$link_rewrite = str_replace("'", "-", $link_rewrite);
-			$link_rewrite = str_replace('"', "-", $link_rewrite);
-			$link_rewrite = str_replace("\\", "", $link_rewrite);
-			$link_rewrite = str_replace("/", "", $link_rewrite);
-
+			$link_rewrite = preg_replace('/[^a-zA-Z0-9-]/','-', $product_nameTAB[$x]);
 
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product_lang` (`id_product`, `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later`)
-			 VALUES ('.$id_product.", ".$languageTAB[$x]['id_lang'].", '".addslashes($descriptionTAB[$x])."', '".addslashes($resumeTAB[$x])."', '".$link_rewrite."', '".addslashes($product_nameTAB[$x])."', '".addslashes($keywordsTAB[$x])."', '".addslashes($product_nameTAB[$x])."', '".addslashes($product_nameTAB[$x])."', '".aff("Disponible", "Available", $iso_langue_en_cours)."', '".aff("En fabrication", "In build", $iso_langue_en_cours)."')";
+			 VALUES ('.$id_product.", ".$languageTAB[$x]['id_lang'].", '".addslashes($descriptionTAB[$x])."', '".addslashes($resumeTAB[$x])."', '".addslashes($link_rewrite)."', '".addslashes($product_nameTAB[$x])."', '".addslashes($keywordsTAB[$x])."', '".addslashes($product_nameTAB[$x])."', '".addslashes($product_nameTAB[$x])."', '".aff("Disponible", "Available", $iso_langue_en_cours)."', '".aff("En fabrication", "In build", $iso_langue_en_cours)."')";
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 		}

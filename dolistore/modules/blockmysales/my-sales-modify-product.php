@@ -23,10 +23,10 @@ foreach ($languages AS $language) {
 	$languageTAB[$x]['name'] = $language['name'];
 	$languageTAB[$x]['iso_code'] = $language['iso_code'];
 	$languageTAB[$x]['img'] = '../../img/l/'.$language['id_lang'].'.jpg';
-	
-	if ($language['id_lang'] == $id_langue_en_cours) 
+
+	if ($language['id_lang'] == $id_langue_en_cours)
 		$iso_langue_en_cours = $language['iso_code'];
-	
+
 	$x++;
 }
 
@@ -34,8 +34,8 @@ foreach ($languages AS $language) {
 
 
 function testProductAppartenance($customer_id, $product_id) {
-	$query = 'SELECT `id_product` FROM `'._DB_PREFIX_.'product` 
-				WHERE `reference` like "c'.$customer_id.'d2%" 
+	$query = 'SELECT `id_product` FROM `'._DB_PREFIX_.'product`
+				WHERE `reference` like "c'.$customer_id.'d2%"
 				AND `id_product` = '.$product_id;
 	$result = Db::getInstance()->ExecuteS($query);
 	if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -46,53 +46,53 @@ function testProductAppartenance($customer_id, $product_id) {
 		return true;
 	else
 		return false;
-	
+
 }
 
 
 
 function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
-	if ($iso_langue_en_cours == "fr") return $lb_fr; 
+	if ($iso_langue_en_cours == "fr") return $lb_fr;
 	else return $lb_other;
 }
 
 
 
 
-//test de l'appartenance 
+//test de l'appartenance
 if (testProductAppartenance($customer_id, $product_id)) {
 
 
 /*
  * Actions
  */
- 
+
 //Mise a jour du produit
 if ($_GET["upd"] == 1) {
 
 	$flagError = 0;
 	$status = $_POST['active'];
-	
+
 	//prise des prix
 	$prix_ttc = $_POST["priceTI"];
 	$prix_ht = $prix_ttc;
-	
-	if ($status == "" || $prix_ht == "") 
+
+	if ($status == "" || $prix_ht == "")
 		$flagError = 1;
-	
+
 	//prise des libelles
-	for ($x = 0; $languageTAB[$x]; $x++ ) {	
-		
+	for ($x = 0; $languageTAB[$x]; $x++ ) {
+
 		$product_name = $resume = $description = "";
 		$product_name = $_POST["product_name_l".$languageTAB[$x]['id_lang']];
 		$resume = $_POST["resume_".$languageTAB[$x]['id_lang']];
 		$keywords = $_POST["keywords_".$languageTAB[$x]['id_lang']];
 		$description = $_POST["description_".$languageTAB[$x]['id_lang']];
-		
+
 		if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {
 			$flagError = 1;
 		} else {
-		
+
 			if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
 				$product_name = $product_nameTAB[0];
 			}
@@ -106,23 +106,23 @@ if ($_GET["upd"] == 1) {
 				$keywords = $keywordsTAB[0];
 			}
 		}
-		
+
 		$product_nameTAB[$x] = $product_name;
 		$resumeTAB[$x] = $resume;
 		$keywordsTAB[$x] = $keywords;
 		$descriptionTAB[$x] = $description;
 	}
-	
-	
+
+
 	if ($flagError == 1) {
 		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
 	}
-	
+
 	//si pas derreur de saisis, traitement en base
 	if ($flagError == 0) {
-		
+
 		$taxe_id = 0;
-		
+
 		//recuperation de la categorie par defaut
 		$categories = Category::getSimpleCategories($cookie->id_lang);
 	    foreach ($categories AS $categorie) {
@@ -131,149 +131,145 @@ if ($_GET["upd"] == 1) {
 				break;
 			}
 		}
-		
+
 		//prise des date
 		$dateToday = date ("Y-m-d");
 		$dateNow = date ("Y-m-d H:i:s");
 		$dateRef = date ("YmdHis");
-		
+
 		//reference du produit
 		$reference = 'c'.$cookie->id_customer.'d'.$dateRef;
-		
+
 		$qty=1000;
 		if ($prix_ttc == 0) $qty=0;
-		
+
 		//Mise a jour du produit en base
-		$query = 'UPDATE `'._DB_PREFIX_.'product` SET 
-				`id_tax`				= '.$taxe_id.',  
-				`id_category_default` 	= '.$id_categorie_default.', 
-				`quantity` 				= '.$qty.',  
-				`price` 				= '.$prix_ht.',  
-				`wholesale_price` 		= '.$prix_ttc.',  
-				`reduction_from` 		= \''.$dateToday.'\',  
-				`reduction_to` 			= \''.$dateToday.'\',  
-				`reference` 			= \''.$reference.'\',  
-				`active` 				= '.$status.',  
-				`indexed` 				= 1,  
+		$query = 'UPDATE `'._DB_PREFIX_.'product` SET
+				`id_tax`				= '.$taxe_id.',
+				`id_category_default` 	= '.$id_categorie_default.',
+				`quantity` 				= '.$qty.',
+				`price` 				= '.$prix_ht.',
+				`wholesale_price` 		= '.$prix_ttc.',
+				`reduction_from` 		= \''.$dateToday.'\',
+				`reduction_to` 			= \''.$dateToday.'\',
+				`reference` 			= \''.$reference.'\',
+				`active` 				= '.$status.',
+				`indexed` 				= 1,
 				`date_upd` 				= \''.$dateNow.'\'
 				WHERE `id_product` = '.$product_id.' ';
 		$result = Db::getInstance()->ExecuteS($query);
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-		
+
 
 		//mise en base des libelle anglais et fr et autre s'il y a
-		for ($x = 0; $product_nameTAB[$x]; $x++) {			
+		for ($x = 0; $product_nameTAB[$x]; $x++)
+		{
 			$languageTAB[$x]['id_lang'];
 			$languageTAB[$x]['name'];
-			
-			$link_rewrite = str_replace(" ", "-", $product_nameTAB[$x]);
-			$link_rewrite = str_replace("'", "-", $link_rewrite);
-			$link_rewrite = str_replace('"', "-", $link_rewrite);
-			$link_rewrite = str_replace("\\", "", $link_rewrite);
-			$link_rewrite = str_replace("/", "", $link_rewrite);
-			
 
-			$query = "UPDATE `"._DB_PREFIX_."product_lang` SET 			
-			`description`		= '".addslashes($descriptionTAB[$x])."', 
-			`description_short`	= '".addslashes($resumeTAB[$x])."',  
-			`link_rewrite`		= '".$link_rewrite."',  
-			`meta_description`	= '".addslashes($product_nameTAB[$x])."',  
-			`meta_keywords`		= '".addslashes($keywordsTAB[$x])."',  
-			`meta_title`		= '".addslashes($product_nameTAB[$x])."',  
-			`name`				= '".addslashes($product_nameTAB[$x])."',  
-			`available_now`		= '".aff("Disponible", "Available", $iso_langue_en_cours)."',  
+            $link_rewrite = preg_replace('/[^a-zA-Z0-9-]/','-', $product_nameTAB[$x]);
+
+			$query = "UPDATE `"._DB_PREFIX_."product_lang` SET
+			`description`		= '".addslashes($descriptionTAB[$x])."',
+			`description_short`	= '".addslashes($resumeTAB[$x])."',
+			`link_rewrite`		= '".addslashes($link_rewrite)."',
+			`meta_description`	= '".addslashes($product_nameTAB[$x])."',
+			`meta_keywords`		= '".addslashes($keywordsTAB[$x])."',
+			`meta_title`		= '".addslashes($product_nameTAB[$x])."',
+			`name`				= '".addslashes($product_nameTAB[$x])."',
+			`available_now`		= '".aff("Disponible", "Available", $iso_langue_en_cours)."',
 			`available_later`	= '".aff("En fabrication", "In build", $iso_langue_en_cours)."'
 			WHERE `id_lang`	= ".$languageTAB[$x]['id_lang']."
 			AND `id_product` = ".$product_id;
-			
+
 			$result = Db::getInstance()->ExecuteS($query);
-			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));	
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 		}
-		
-		
+
+
 		//gestion des fichiers selon prix
 		$oldPrice = round($_GET["op"],2);
-		$newPrice =  round($_POST["priceTI"],2);	
-		
+		$newPrice =  round($_POST["priceTI"],2);
+
 		if ($oldPrice != $newPrice) {
-		
+
 			//recup des infos fichier
-			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download` 
+			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download`
 					  WHERE `id_product` = '.$product_id.' ';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 			foreach ($result AS $row) {
 				$product_file_name =  $row['display_filename'];
 				$product_file_path = $row['physically_filename'];
-			}	
-			
-			
+			}
+
+
 			if ($oldPrice == 0 && $newPrice > 0) {
 
 				//delete des attachments
-				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment` 
+				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment`
 						WHERE `id_product` = '.$product_id.' ';
 				$result = Db::getInstance()->ExecuteS($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-				foreach ($result AS $row) 
+				foreach ($result AS $row)
 					$id_attachment =  $row['id_attachment'];
-				
+
 				if ($id_attachment != "" && $id_attachment > 0) {
-					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';					
+					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';
 					$result = Db::getInstance()->ExecuteS($query);
-					
+
 					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment_lang` WHERE `id_attachment` = '.$id_attachment.';';
 					$result = Db::getInstance()->ExecuteS($query);
-					
+
 					$query = 'DELETE FROM `'._DB_PREFIX_.'product_attachment` WHERE `id_attachment` = '.$id_attachment.';';
 					$result = Db::getInstance()->ExecuteS($query);
 				}
-				
-			} 
+
+			}
 			else if ($newPrice == 0 && $oldPrice > 0) {
-				
+
 				//creation dun attachement
 				$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `mime`) VALUES ("'.$product_file_path.'", "text/plain");';
 				$result = Db::getInstance()->ExecuteS($query);
-				
-				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'attachment` 
+
+				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'attachment`
 				WHERE `file` = "'.$product_file_path.'"';
 				$result = Db::getInstance()->ExecuteS($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 				foreach ($result AS $row)
 					$id_attachment = $row['id_attachment'];
-				
-				for ($x = 0; $languageTAB[$x]; $x++ ) {				
+
+				for ($x = 0; $languageTAB[$x]; $x++ ) {
 					$id_lang = $languageTAB[$x]['id_lang'];
 					$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
 					$result = Db::getInstance()->ExecuteS($query);
 				}
-				
+
 				$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$product_id.', '.$id_attachment.')';
 				$result = Db::getInstance()->ExecuteS($query);
-				
+
 			}
 		}
-		
-		
+
+
 		//inscription du produit dans ttes les categories choisis
 		$query = 'DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.$product_id;
 		$query.= " AND `id_category` <> 1";	// If product was on home, we keep it on home.
 		$result = Db::getInstance()->ExecuteS($query);
-		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));	
-		
+		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
+
 		$categories = Category::getSimpleCategories($cookie->id_lang);
 	    foreach ($categories AS $categorie) {
-			
+
 			if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
 				$query = 'INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`) VALUES
 						('.$categorie['id_category'].', '.$product_id.', 1);';
 				$result = Db::getInstance()->ExecuteS($query);
-				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));	
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 			}
 		}
-		
-		//echo "<script>window.location='./my-sales-manage-product.php?id_p=$id_product';</script>";		
+
+		//echo "<script>window.location='./my-sales-manage-product.php?id_p=$id_product';</script>";
 	}
 }
 
@@ -282,10 +278,10 @@ if ($_GET["upd"] == 1) {
 
 
 //recupération des informations
-$query = 'SELECT 
-`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, 
+$query = 'SELECT
+`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`,
 `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`
-FROM `'._DB_PREFIX_.'product` 
+FROM `'._DB_PREFIX_.'product`
 WHERE `id_product` = '.$product_id.' ';
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -293,27 +289,27 @@ foreach ($result AS $row) {
 	$wholesale_price = $row['wholesale_price'];
 	$active = $row['active'];
 	$reference = $row['reference'];
-	
+
 	$_POST['active'] = $active;
 	$_POST["priceTI"] = $wholesale_price;
 }
 
 
-$query = 'SELECT `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later` FROM `'._DB_PREFIX_.'product_lang` 
+$query = 'SELECT `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later` FROM `'._DB_PREFIX_.'product_lang`
 		  WHERE `id_product` = '.$product_id.' ';
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 foreach ($result AS $row) {
-	
+
 	$_POST["product_name_l".$row['id_lang']]= $row['name'];
 	$_POST["resume_".$row['id_lang']] 		= $row['description_short'];
 	$_POST["keywords_".$row['id_lang']] 	= $row['meta_keywords'];
 	$_POST["description_".$row['id_lang']] 	= $row['description'];
-	
-}
-	
 
-$query = 'SELECT `id_category`, `position` FROM `'._DB_PREFIX_.'category_product` 
+}
+
+
+$query = 'SELECT `id_category`, `position` FROM `'._DB_PREFIX_.'category_product`
 		  WHERE `id_product` = '.$product_id.' ';
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -322,20 +318,20 @@ foreach ($result AS $row) {
 	$_POST['categories_checkbox_'.$id_category] = 1;
 }
 
-$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download` 
+$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download`
 		  WHERE `id_product` = '.$product_id.' ';
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 foreach ($result AS $row) {
 	$file_name =  $row['display_filename'];
-}		  
+}
 
 
 /*
  *	View
  */
-	
-echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</h2>", $iso_langue_en_cours); 
+
+echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</h2>", $iso_langue_en_cours);
 ?>
 <br />
 
@@ -363,7 +359,7 @@ echo '
 						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,formatselect",
 						theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,|,link,unlink,anchor,|,forecolor,backcolor",
 						theme_advanced_buttons3 : "",
-						
+
 						theme_advanced_toolbar_location : "top",
 						theme_advanced_toolbar_align : "left",
 						width : "100%",
@@ -381,7 +377,7 @@ echo '
 					});
 				});
 			}
-			tinyMCEInit(\'textarea.rte\');			
+			tinyMCEInit(\'textarea.rte\');
 			</script>
 ';
 
@@ -389,17 +385,17 @@ echo '
 
 <FORM name="fmysalesmodifiysubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit">
 
-<table width="100%" border="0" style="padding-bottom: 5px;">  
+<table width="100%" border="0" style="padding-bottom: 5px;">
 
   <tr>
     <td colspan="2"><hr></td>
   </tr>
-  
+
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Référence module/produit", "Ref module/product : ", $iso_langue_en_cours); ?> </td>
 	<td>&nbsp; <?php echo $reference; ?></td>
   </tr>
-  
+
   <tr>
     <td colspan="2"><hr></td>
   </tr>
@@ -408,24 +404,24 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
     	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="22" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" /> 
-			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?> 
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="22" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
+			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>
             <br />
         <?php } ?>
     </td>
   </tr>
-  
+
   <tr>
     <td colspan="2"><hr></td>
   </tr>
-  
+
   <tr>
     <td valign="top">Status : </td>
-    <td>    
-    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] == "") echo "checked='checked'"; ?> type="radio" style="border:none">	
+    <td>
+    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] == "") echo "checked='checked'"; ?> type="radio" style="border:none">
     <img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;"> <?php echo aff("Actif", "Enabled", $iso_langue_en_cours); ?>
-    <br />    
-	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] != "") echo "checked='checked'"; ?> type="radio" style="border:none">							
+    <br />
+	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] != "") echo "checked='checked'"; ?> type="radio" style="border:none">
     <img src="../../img/os/6.gif" alt="Disabled" title="Disabled" style="padding: 0px 5px;"> <?php echo aff("Inactif", "Disabled", $iso_langue_en_cours); ?>
     </td>
   </tr>
@@ -454,7 +450,7 @@ echo '
     <td>
         <input size="6" maxlength="6" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo round($_POST["priceTI"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text"> Euros
     </td>
-  </tr>   
+  </tr>
 
 
   <tr>
@@ -469,44 +465,44 @@ echo '
  	</td>
     <td width="86%">
 		<?php
-        
+
 		echo '<table width="100%" border="0" cellspacing="5" cellpadding="0">';
-				
+
         $categories = Category::getSimpleCategories($cookie->id_lang);
-        
+
         $x = 0;
         foreach ($categories AS $categorie) {
-      		
-			$query = 'SELECT `active` FROM `'._DB_PREFIX_.'category` 
-			WHERE `id_category` = \''.$categorie['id_category'].'\' 
+
+			$query = 'SELECT `active` FROM `'._DB_PREFIX_.'category`
+			WHERE `id_category` = \''.$categorie['id_category'].'\'
 			';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 			foreach ($result AS $row)
 				$active = $row['active'];
-			
-			if ($categorie['id_category'] > 1 && $active == 1) {	
-			 
+
+			if ($categorie['id_category'] > 1 && $active == 1) {
+
 				if ($x%2)
 				 $bgcolor="#FFF4EA";
 				else
 				 $bgcolor="#FFDBB7";
-             
+
 				echo '<tr bgcolor="'.$bgcolor.'">
 						<td nowrap="nowrap" valign="top" align="left">
 							<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
-				
+
 				if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
-				
+
 				echo ' />
 							'.$categorie['name'].'
 						</td>
 					</tr>';
 				$x++;
 			}
-        }        
+        }
 		echo '</table>';
-        ?>    
+        ?>
        </td>
   </tr>
 
@@ -516,7 +512,7 @@ echo '
   </tr>
 
 
-  
+
   <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
@@ -528,8 +524,8 @@ echo '
 	</td>
   </tr>
   <tr>
-    <td colspan="2" nowrap="nowrap">    	
-        	<textarea class="rte" id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3" ><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea> 
+    <td colspan="2" nowrap="nowrap">
+        	<textarea class="rte" id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3" ><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
 			<br />
     </td>
   </tr>
@@ -542,10 +538,10 @@ echo '
 
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
-    <td nowrap="nowrap">    	
+    <td nowrap="nowrap">
         <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" /> 
-			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?> 
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
+			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>
             <br />
         <?php } ?>
     </td>
@@ -554,11 +550,11 @@ echo '
   <tr>
     <td colspan="2"><hr></td>
   </tr>
-  
+
   <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
     <tr>
         <td colspan="2">
-        	<?php echo aff("Description large : ", "Large description : ", $iso_langue_en_cours); ?> 
+        	<?php echo aff("Description large : ", "Large description : ", $iso_langue_en_cours); ?>
             (<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
@@ -567,11 +563,11 @@ echo '
         </td>
     </tr>
     <tr>
-        <td colspan="2">        	
-            <textarea class="rte" cols="100" rows="10" 
-			  id="description_<?php echo $languageTAB[$x]['id_lang']; ?>"  
-			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">			
-			<?php 
+        <td colspan="2">
+            <textarea class="rte" cols="100" rows="10"
+			  id="description_<?php echo $languageTAB[$x]['id_lang']; ?>"
+			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">
+			<?php
 
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaultfr='
@@ -621,13 +617,13 @@ Install:
 				if ($languageTAB[$x]['iso_code'] == 'en') print $defaulten;
 				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
 			}
-			else echo $_POST["description_".$languageTAB[$x]['id_lang']]; 
-			
+			else echo $_POST["description_".$languageTAB[$x]['id_lang']];
+
 			?>
             </textarea>
         </td>
-    </tr>    
-   <?php } ?>  
+    </tr>
+   <?php } ?>
   <tr>
     <td colspan="2"><br></td>
   </tr>
@@ -636,7 +632,7 @@ Install:
 
 
 
-<table width="100%" border="0" cellspacing="10" cellpadding="0">  
+<table width="100%" border="0" cellspacing="10" cellpadding="0">
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
 		<button style="font-weight: 700;" type="button" onclick="javascript:
@@ -647,7 +643,7 @@ Install:
 		</button>
 	</td>
   </tr>
-  
+
 </table>
 
 
