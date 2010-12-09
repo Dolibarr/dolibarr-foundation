@@ -6,6 +6,7 @@ $useSSL = true;
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
+include(dirname(__FILE__).'/lib.php');
 
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
@@ -18,10 +19,10 @@ foreach ($languages AS $language) {
 	$languageTAB[$x]['name'] = $language['name'];
 	$languageTAB[$x]['iso_code'] = $language['iso_code'];
 	$languageTAB[$x]['img'] = '../../img/l/'.$language['id_lang'].'.jpg';
-	
-	if ($language['id_lang'] == $id_langue_en_cours) 
+
+	if ($language['id_lang'] == $id_langue_en_cours)
 		$iso_langue_en_cours = $language['iso_code'];
-	
+
 	$x++;
 }
 
@@ -29,7 +30,7 @@ foreach ($languages AS $language) {
 
 
 function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
-	if ($iso_langue_en_cours == "fr") echo $lb_fr; 
+	if ($iso_langue_en_cours == "fr") echo $lb_fr;
 	else echo $lb_other;
 }
 
@@ -50,7 +51,7 @@ $totalnbsell=0;
 $totalamount=0;
 // datestart
 // TODO Read first sell to detect datestart
-if (empty($datestart)) 
+if (empty($datestart))
 {
 	//print $cookie->date_add;
 	//$datestart=strtotime('YY-mm-DD HH:MM:II',$cookie->date_add);
@@ -79,7 +80,7 @@ $iso_langue_en_cours);
 <?php aff("- Pour changer les informations sur votre produit cliquez sur son nom,<br>- Pour changer son image cliquez sur son image<br>- Pour supprimer un produit, envoyez un mail à contact@dolibarr.org", "- To change your product information click on its name,<br>- To change its picture click on its picture<br>- To remove a product, send a mail to contact@dolibarr.org", $iso_langue_en_cours); ?>
 
 <FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="std">
-<table width="100%" >  
+<table width="100%" >
 <tr>
 <td>
 
@@ -94,98 +95,103 @@ $iso_langue_en_cours);
     <td nowrap="nowrap"><b><?php aff("Montant<br>gagné", "Amount<br>earned", $iso_langue_en_cours); ?></b></td>
     <!--<td nowrap="nowrap"><b><?php aff("Supp", "Delete", $iso_langue_en_cours); ?></b></td> -->
   </tr>
-  
-  <?php
-  
-  	$query = 'SELECT `id_product`, `reference` FROM `'._DB_PREFIX_.'product` 
-				WHERE `reference` like "c'.$customer_id.'d2%"';
-	$result = Db::getInstance()->ExecuteS($query);
-	
-	if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-	$id_product = "";
-	
-	$colorTabNbr = 1;
-	foreach ($result AS $row) 
-	{
-		$id_product = $row['id_product'];
-		$ref_product = $row['reference'];
-		
-		//recuperation des informations ds la langue de l'utilisateur
-		$query = 'SELECT `name`, `description_short`  FROM `'._DB_PREFIX_.'product_lang` 
-				WHERE `id_product` = '.$id_product.'
-				AND `id_lang` = '.$id_langue_en_cours;
-		$subresult = Db::getInstance()->ExecuteS($query);
-		$name = "";
-		$description_short = "";
-		foreach ($subresult AS $subrow) {
-			$name = $subrow['name'];
-			$description_short = $subrow['description_short'];
+
+<?php
+$min_date = 0;
+
+$query = 'SELECT `id_product`, `reference` FROM `'._DB_PREFIX_.'product`
+			WHERE `reference` like "c'.$customer_id.'d2%"';
+$result = Db::getInstance()->ExecuteS($query);
+
+if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+$id_product = "";
+
+$colorTabNbr = 1;
+foreach ($result AS $row)
+{
+	$id_product = $row['id_product'];
+	$ref_product = $row['reference'];
+
+	//recuperation des informations ds la langue de l'utilisateur
+	$query = 'SELECT `name`, `description_short`  FROM `'._DB_PREFIX_.'product_lang`
+			WHERE `id_product` = '.$id_product.'
+			AND `id_lang` = '.$id_langue_en_cours;
+	$subresult = Db::getInstance()->ExecuteS($query);
+	$name = "";
+	$description_short = "";
+	foreach ($subresult AS $subrow) {
+		$name = $subrow['name'];
+		$description_short = $subrow['description_short'];
+	}
+
+	//recuperation de limage du produit
+	$query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image`
+			WHERE `id_product` = '.$id_product.'
+			AND cover = 1';
+	$subresult = Db::getInstance()->ExecuteS($query);
+	$id_image = "";
+	foreach ($subresult AS $subrow) {
+		$id_image = $subrow['id_image'];
+	}
+
+	if ($id_image != "")
+		$imgProduct = '../../img/p/'.$id_product.'-'.$id_image.'-small.jpg';
+	else
+		$imgProduct = '../../img/p/en-default-small.jpg';
+
+	if ($colorTabNbr%2)
+		$colorTab="#ffffff";
+	else
+		$colorTab="#eeeeee";
+
+	$query = "SELECT count( id_order_detail ) as nbra, sum( product_price ) as amount, min( date_add ) as min_date
+				FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
+				WHERE product_id = ".$id_product."
+				AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
+				AND "._DB_PREFIX_."orders.valid = 1";
+	$subresult = Db::getInstance()->ExecuteS($query);
+	$nbr_achats = 0;
+	$nbr_amount = 0;
+	foreach ($subresult AS $subrow) {
+		$nbr_achats = $subrow['nbra'];
+		$nbr_amount = $subrow['amount'];
+		if ($subrow['min_date'])
+		{
+			if ($min_date) $min_date = min($min_date,$subrow['min_date']);
+			else $min_date=$subrow['min_date'];
 		}
-		
-		//recuperation de limage du produit
-		$query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image` 
-				WHERE `id_product` = '.$id_product.' 
-				AND cover = 1';
-		$subresult = Db::getInstance()->ExecuteS($query);
-		$id_image = "";
-		foreach ($subresult AS $subrow) {
-			$id_image = $subrow['id_image'];
+	}
+
+	$totalnbsell+=$nbr_achats;
+	$totalamount+=$nbr_amount;
+
+	?>
+
+	<tr bgcolor="<?php echo $colorTab; ?>">
+        <td><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
+        <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a>
+		<?php echo "<br>(".$ref_product.")"; ?>
+		</td>
+        <td>
+		<?php echo $description_short; ?>
+		</td>
+        <td align="right"><?php echo $nbr_achats; ?></td>
+        <td align="right"><?php
+		if ($nbr_amount > 0)
+		{
+			echo ($foundationfeerate*100).'% ';
+			aff(' de ',' of ',$iso_langue_en_cours);
+			echo '<br>';
 		}
-		
-		if ($id_image != "") 
-			$imgProduct = '../../img/p/'.$id_product.'-'.$id_image.'-small.jpg';
-		else
-			$imgProduct = '../../img/p/en-default-small.jpg';
-			
-		if ($colorTabNbr%2)
-			$colorTab="#ffffff";
-		else
-			$colorTab="#eeeeee";
-			
-		$query = 'SELECT count( `id_order_detail` ) as \'nbra\', sum( `product_price` ) as \'amount\'
-					FROM `'._DB_PREFIX_.'order_detail`,  `'._DB_PREFIX_.'orders`
-					WHERE `product_id` = '.$id_product.'
-					AND `'._DB_PREFIX_.'orders`.`id_order` = `'._DB_PREFIX_.'order_detail`.`id_order`
-					AND `'._DB_PREFIX_.'orders`.`valid` = 1
-				';
-		$subresult = Db::getInstance()->ExecuteS($query);
-		$nbr_achats = 0;
-		$nbr_amount = 0;
-		foreach ($subresult AS $subrow) {
-			$nbr_achats = $subrow['nbra'];
-			$nbr_amount = $subrow['amount'];
-		}
-		
-		$totalnbsell+=$nbr_achats;
-		$totalamount+=$nbr_amount;
-		
-		?>
-		
-		<tr bgcolor="<?php echo $colorTab; ?>">
-            <td><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
-            <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a>
-			<?php echo "<br>(".$ref_product.")"; ?>
-			</td>
-            <td>
-			<?php echo $description_short; ?>
-			</td>
-            <td align="right"><?php echo $nbr_achats; ?></td>
-            <td align="right"><?php
-			if ($nbr_amount > 0)
-			{
-				echo ($foundationfeerate*100).'% ';
-				aff(' de ',' of ',$iso_langue_en_cours);
-				echo '<br>';
-			}
-			echo round($nbr_amount,2); ?>&#8364;
-			</td>
-            <!--<td>&nbsp;</td> -->  
-		</tr>
-		
-		<?php
-		$colorTabNbr++;
-  }
-  ?>
+		echo round($nbr_amount,2); ?>&#8364;
+		</td>
+        <!--<td>&nbsp;</td> -->
+	</tr>
+
+	<?php
+	$colorTabNbr++;
+}
+?>
 </table>
 
 
@@ -205,13 +211,57 @@ $iso_langue_en_cours);
 
 if ($totalamount > 0)
 {
-	// mytotalamount
+	// define variables
 	$mytotalamount=round($foundationfeerate*$totalamount,2);
+    $alreadyreceived=0;
+    $datelastpayment=0;
+	$datetoclaim=0;
+	if ($min_date) $datetoclaim=(strtotime($min_date) + 6*30*24*60*60);
+	else $datetoclaim=(mktime() + 6*30*24*60*60);
+
+    // Search third party and payments already done
+	define(NUSOAP_PATH,'nusoap');
+
+    require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
+    $dolibarr_main_url_root='http://asso.dolibarr.org/dolibarr/';
+    $dolibarrkey='dolibarr-an';
+
+    $WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_thirdparty.php';
+    $WS_METHOD  = 'getThirdParty';
+
+    // Set the WebService URL
+    prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
+    $soapclient = new soapclient_nusoap($WS_DOL_URL);
+    if ($soapclient)
+    {
+        $soapclient->soap_defencoding='UTF-8';
+    }
+
+    // Call the WebService method and store its result in $result.
+    $authentication=array(
+        'dolibarrkey'=>$dolibarrkey,
+        'sourceapplication'=>'DEMO',
+        'login'=>'admin',
+        'password'=>'changeme',
+        'entity'=>'');
+    $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher);
+    prestalog("Call method ".$WS_METHOD);
+    $result = $soapclient->call($WS_METHOD,$parameters);
+    if (! $result)
+    {
+        print $soapclient->error_str;
+        exit;
+    }
+    $socid=$result['thirdparty']['id'];
+    if ($socid)
+    {
+		var_dump($result);
+    }
 
 	print '<h2>';
 	aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
 	print '</h2>';
-	
+
 	// Total amount earned
 	aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
 	print "<b>".$foundationfeerate." x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
@@ -221,9 +271,10 @@ if ($totalamount > 0)
 	if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
 	else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
 	print '<br>';
+	print '<br>';
 	// Remain to receive
 	aff("Montant restant à percevoir: ","Remained amount to receive: ", $iso_langue_en_cours);
-	$remaintoreceive=$mytotalamount;
+	$remaintoreceive=$mytotalamount-$alreadyreceived;
 	print "<b>".round($remaintoreceive,2)."&#8364;</b>";
 	print '<br>';
 	// Date to claim
@@ -231,13 +282,24 @@ if ($totalamount > 0)
 	{
 		aff("Date pour réclamer le solde: <b>".date('d/m/Y',$datetoclaim).'</b>',"Date to claim remain to pay: <b>".date('Y-m-d',$datetoclaim).'</b>', $iso_langue_en_cours);
 		print '<br>';
+		if ($datetoclaim < mktime())
+		{
+			aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à 'Association Dolibarr' du montant restant à percevoir par mail à <b>tresorier@dolibarr.org</b>.","You can claim remain amount to pay by sending an invoice to 'Association Dolibarr' with remain to pay by email to <b>tresorier@dolibarr.org</b>.", $iso_langue_en_cours);
+			print '<br>';
+		}
+		else
+		{
+			aff("Il n'est pas possible de réclamer de reversements pour le moment. Le dernier paiement est trop récent.","It is not possible to claim payments for the moment. Last payment is too recent.", $iso_langue_en_cours);
+			print '<br>';
+		}
 	}
 	else
 	{
-		aff("Il n'est pas possible de réclamer de reversements pour le moment.", "It is not possible to claim payments for the moment.", $iso_langue_en_cours);
+		aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde étant nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
 		print '<br>';
 	}
 	print '<br>';
+
 }
 else
 {
