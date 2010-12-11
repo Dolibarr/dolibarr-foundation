@@ -216,8 +216,8 @@ if ($totalamount > 0)
     $alreadyreceived=0;
     $datelastpayment=0;
 	$datetoclaim=0;
-	if ($min_date) $datetoclaim=(strtotime($min_date) + 6*30*24*60*60);
-	else $datetoclaim=(mktime() + 6*30*24*60*60);
+	if ($min_date) $datetoclaim=(strtotime($min_date) + 3*30*24*60*60);
+	else $datetoclaim=(mktime() + 3*30*24*60*60);
 
     // Search third party and payments already done
 	define(NUSOAP_PATH,'nusoap');
@@ -284,12 +284,12 @@ if ($totalamount > 0)
 		print '<br>';
 		if ($datetoclaim < mktime())
 		{
-			aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à 'Association Dolibarr' du montant restant à percevoir par mail à <b>tresorier@dolibarr.org</b>.","You can claim remain amount to pay by sending an invoice to 'Association Dolibarr' with remain to pay by email to <b>tresorier@dolibarr.org</b>.", $iso_langue_en_cours);
+			aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement.","You can claim remain amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account IBAN or BIC number for bank transaction.", $iso_langue_en_cours);
 			print '<br>';
 		}
 		else
 		{
-			aff("Il n'est pas possible de réclamer de reversements pour le moment. Le dernier paiement est trop récent.","It is not possible to claim payments for the moment. Last payment is too recent.", $iso_langue_en_cours);
+			aff("Il n'est pas possible de réclamer de reversements pour le moment. Le dernier paiement est trop récent (3 mois minimum).","It is not possible to claim payments for the moment. Last payment is too recent (3 month minimum).", $iso_langue_en_cours);
 			print '<br>';
 		}
 	}
