@@ -16,7 +16,7 @@
    id="svg3437"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="dolibarr_businesscard.svg"
+   sodipodi:docname="dolibarr_businesscard_55x85.svg"
    inkscape:export-filename="/media/DATA/Mes Developpements/dolibarrasso/businesscard/dolibarr_businesscard.png"
    inkscape:export-xdpi="2400"
    inkscape:export-ydpi="2400">
@@ -265,7 +265,7 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient6346"
-       id="linearGradient4043"
+       id="linearGradient3821"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(0.07067154,0,0,0.07067154,288.43512,615.17375)"
        x1="804.93121"
@@ -281,14 +281,14 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="133.99415"
-     inkscape:cy="140.36673"
+     inkscape:cx="132.48817"
+     inkscape:cy="117.07539"
      inkscape:document-units="cm"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="cm"
-     inkscape:window-width="1280"
-     inkscape:window-height="974"
+     inkscape:window-width="1276"
+     inkscape:window-height="752"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -310,7 +310,7 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-857.47867)">
+     transform="translate(0,-857.47847)">
     <rect
        y="821.29376"
        x="-1014.0809"
@@ -371,13 +371,13 @@
        id="text5484"
        y="673.46118"
        x="344.76227"
-       style="font-size:7.50841427px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:0.98449611;fill-rule:nonzero;stroke:url(#linearGradient4043);stroke-width:0.07067154;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       style="font-size:7.50841427px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:0.98449611;fill-rule:nonzero;stroke:url(#linearGradient3821);stroke-width:0.07067154;stroke-opacity:1;font-family:Bitstream Vera Sans"
        xml:space="preserve"><tspan
          y="673.46118"
          x="344.76227"
          id="tspan5486"
          sodipodi:role="line"
-         style="fill:#000000;fill-opacity:0.98449611;fill-rule:nonzero;stroke:url(#linearGradient4043);stroke-width:0.07067154;stroke-opacity:1;font-family:Arial;-inkscape-font-specification:Arial">ERP/CRM</tspan></text>
+         style="fill:#000000;fill-opacity:0.98449611;fill-rule:nonzero;stroke:url(#linearGradient3821);stroke-width:0.07067154;stroke-opacity:1;font-family:Arial;-inkscape-font-specification:Arial">ERP/CRM</tspan></text>
     <rect
        y="-302.97446"
        x="-1051.9996"
@@ -468,7 +468,7 @@
          id="tspan7275">FRANCE</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:7.13660383px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
        x="17.574657"
        y="811.54541"
        id="text7277"
@@ -478,6 +478,6 @@
          id="tspan7279"
          x="17.574657"
          y="811.54541"
-         style="font-style:italic;-inkscape-font-specification:Arial Italic">Dolibarr ERP-CRM Project leader</tspan></text>
+         style="font-size:8px;font-style:italic;-inkscape-font-specification:Arial Italic">Dolibarr ERP-CRM Project leader</tspan></text>
   </g>
 </svg>
