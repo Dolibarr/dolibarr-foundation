@@ -8,8 +8,36 @@ include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
+// Get env variables
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
+$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
+
+// Check if current user is also an employee with admin user
+$query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee
+		WHERE lastname = '".addslashes($cookie->customer_lastname)."' and firstname = '".addslashes($cookie->customer_firstname)."'";
+$subresult = Db::getInstance()->ExecuteS($query);
+if (! empty($subresult[0]['id_employee']))	// If yes we allow to view other customers id
+{
+	if (! empty($_GET["id_customer"]))
+	{
+		$query = "SELECT id_customer, firstname, lastname, optin, active, deleted FROM "._DB_PREFIX_."customer
+			WHERE id_customer = ".$_GET["id_customer"];
+		$subresult = Db::getInstance()->ExecuteS($query);
+
+		if (! empty($subresult[0]['active']))
+		{
+			$customer_id=$subresult[0]['id_customer'];
+			$publisher=trim($subresult[0]['firstname'].' '.$subresult[0]['lastname']);
+		}
+		else
+		{
+			print 'Customer with id '.$_GET["id_customer"].' can\'t be found.';
+			exit;
+		}
+	}
+}
+
 
 $languages = Language::getLanguages();
 
@@ -67,11 +95,9 @@ if (empty($datelastpayment)) $datetoclaim=$datestart+(3600*24*30*6);
 else $datetoclaim=$datestart+(3600*24*30*6);
 
 
-$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
-
 aff(
 "Les statistiques sont celles des téléchargements/ventes depuis le dernier paiement reçu ".($datelastpayment?"(<b>".date('d/m/Y',$datelastpayment)."</b>)":"")." pour les ventes des composants soumis par l'utilisateur courant (<b>".$publisher."</b>)",
-"Statistics are for download/sells since the last payment received ".($datelastpayment?"(<b>".date('Y-m-d',$datelastpayment)."</b>)":"")." for your sells of components submited by for curent user (<b>".$publisher."</b>)",
+"Statistics are for download/sells since the last payment received ".($datelastpayment?"(<b>".date('Y-m-d',$datelastpayment)."</b>)":"")." for your sells of components submited by for current user (<b>".$publisher."</b>)",
 $iso_langue_en_cours);
 
 ?>
@@ -144,6 +170,7 @@ foreach ($result AS $row)
 	else
 		$colorTab="#eeeeee";
 
+	// Calculate totalamount
 	$query = "SELECT count( id_order_detail ) as nbra, sum( product_price ) as amount, min( date_add ) as min_date
 				FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
 				WHERE product_id = ".$id_product."
@@ -164,6 +191,29 @@ foreach ($result AS $row)
 
 	$totalnbsell+=$nbr_achats;
 	$totalamount+=$nbr_amount;
+
+	// Calculate totalamount supplier can claim
+	$query = "SELECT count( id_order_detail ) as nbra, sum( product_price ) as amount, min( date_add ) as min_date
+				FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
+				WHERE product_id = ".$id_product."
+				AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
+				AND "._DB_PREFIX_."orders.valid = 1
+				AND date_add < '".date("Y-m-d 00:00:00",mktime()-(2*31*24*60*60))."'";
+
+	$subresult = Db::getInstance()->ExecuteS($query);
+	$nbr_achats = 0;
+	$nbr_amount = 0;
+	foreach ($subresult AS $subrow) {
+		$nbr_achats = $subrow['nbra'];
+		$nbr_amount = $subrow['amount'];
+		if ($subrow['min_date'])
+		{
+			if ($min_date) $min_date = min($min_date,$subrow['min_date']);
+			else $min_date=$subrow['min_date'];
+		}
+	}
+
+	$totalamountclaimable+=$nbr_amount;
 
 	?>
 
@@ -213,6 +263,7 @@ if ($totalamount > 0)
 {
 	// define variables
 	$mytotalamount=round($foundationfeerate*$totalamount,2);
+    $mytotalamountclaimable=round($foundationfeerate*$totalamountclaimable,2);
     $alreadyreceived=0;
     $datelastpayment=0;
 	$datetoclaim=0;
@@ -266,22 +317,27 @@ if ($totalamount > 0)
 	aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
 	print "<b>".$foundationfeerate." x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
 	print '<br>';
+	// Total amount you can claim
+	aff("Montant total qui peut etre réclamé (toute vente ne peut etre réclamée qu'après un délai de 2 mois): ", "Total amount you can claim (sells can be claimed only 2 month after): ", $iso_langue_en_cours);
+	print "<b>".$foundationfeerate." x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
+	print '<br>';
 	// Last payment date
 	aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
 	if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
 	else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
 	print '<br>';
 	print '<br>';
+
 	// Remain to receive
 	aff("Montant restant à percevoir: ","Remained amount to receive: ", $iso_langue_en_cours);
-	$remaintoreceive=$mytotalamount-$alreadyreceived;
+	$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
 	print "<b>".round($remaintoreceive,2)."&#8364;</b>";
 	print '<br>';
 	// Date to claim
 	if ($remaintoreceive)
 	{
 		aff("Date pour réclamer le solde: <b>".date('d/m/Y',$datetoclaim).'</b>',"Date to claim remain to pay: <b>".date('Y-m-d',$datetoclaim).'</b>', $iso_langue_en_cours);
-		print '<br>';
+		print '<br><br>';
 		if ($datetoclaim < mktime())
 		{
 			aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement.","You can claim remain amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account IBAN or BIC number for bank transaction.", $iso_langue_en_cours);
