@@ -78,7 +78,6 @@ $totalnbsell=0;
 // totalamount
 $totalamount=0;
 // datestart
-// TODO Read first sell to detect datestart
 if (empty($datestart))
 {
 	//print $cookie->date_add;
@@ -89,10 +88,6 @@ if (empty($datestart))
 }
 // datelastpayment
 // TODO Read into database value for datelastpayment
-// datetoclaim
-$datetoclaim=0;
-if (empty($datelastpayment)) $datetoclaim=$datestart+(3600*24*30*6);
-else $datetoclaim=$datestart+(3600*24*30*6);
 
 
 aff(
@@ -266,9 +261,6 @@ if ($totalamount > 0)
     $mytotalamountclaimable=round($foundationfeerate*$totalamountclaimable,2);
     $alreadyreceived=0;
     $datelastpayment=0;
-	$datetoclaim=0;
-	if ($min_date) $datetoclaim=(strtotime($min_date) + 3*30*24*60*60);
-	else $datetoclaim=(mktime() + 3*30*24*60*60);
 
     // Search third party and payments already done
 	define(NUSOAP_PATH,'nusoap');
@@ -331,27 +323,27 @@ if ($totalamount > 0)
 	// Remain to receive
 	aff("Montant restant à percevoir: ","Remained amount to receive: ", $iso_langue_en_cours);
 	$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
-	print "<b>".round($remaintoreceive,2)."&#8364;</b>";
-	print '<br>';
-	// Date to claim
+	print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;</font></b>";
+	print '<br><br>';
+	
+	// Message to claim
 	if ($remaintoreceive)
 	{
-		aff("Date pour réclamer le solde: <b>".date('d/m/Y',$datetoclaim).'</b>',"Date to claim remain to pay: <b>".date('Y-m-d',$datetoclaim).'</b>', $iso_langue_en_cours);
-		print '<br><br>';
-		if ($datetoclaim < mktime())
+		$minamount=50;
+		if ($remaintoreceive > $minamount)
 		{
-			aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement.","You can claim remain amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account IBAN or BIC number for bank transaction.", $iso_langue_en_cours);
+			aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires (RIB) pour le virement.","You can claim remain amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account IBAN or BIC number for bank transaction.", $iso_langue_en_cours);
 			print '<br>';
 		}
 		else
 		{
-			aff("Il n'est pas possible de réclamer de reversements pour le moment. Le dernier paiement est trop récent (3 mois minimum).","It is not possible to claim payments for the moment. Last payment is too recent (3 month minimum).", $iso_langue_en_cours);
+			aff("Il n'est pas possible de réclamer de reversements pour le moment (montant validé inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (validated amount < ".$minamount.").", $iso_langue_en_cours);
 			print '<br>';
 		}
 	}
 	else
 	{
-		aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde étant nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
+		aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
 		print '<br>';
 	}
 	print '<br>';
