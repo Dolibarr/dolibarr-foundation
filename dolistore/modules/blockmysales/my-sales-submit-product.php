@@ -388,10 +388,16 @@ echo '
   <tr>
     <td valign="top">Status : </td>
     <td>
-    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] != "") echo 'checked="checked"'; ?>  disabled="true" type="radio" style="border:none">
+    <!--
+    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] != "") echo 'checked'; ?>  disabled type="radio" style="border:none">
+    -->
+    <input name="active" id="active_on" value="1" type="radio" style="border:none" disabled />
     <img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;"> <?php echo aff("Actif", "Enabled", $iso_langue_en_cours); ?>
     <br />
-	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] == "") echo 'checked="checked"'; ?> type="radio" style="border:none">
+    <!--
+	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] == "") echo 'checked'; ?> type="radio" style="border:none" />
+    -->
+    <input name="active" id="active_off" value="0" type="radio" style="border:none" checked />
     <img src="../../img/os/6.gif" alt="Disabled" title="Disabled" style="padding: 0px 5px;"> <?php echo aff("Inactif (la soumission sera activé une fois validée par les modérateurs, ceci prend 2 à 10 jours)", "Disabled (submission will be enabled once validated by moderators, this takes 2 to 10 days)", $iso_langue_en_cours); ?>
     </td>
   </tr>
