@@ -93,8 +93,6 @@ if (empty($datestart))
     //$datestart=mktime(0, 0, 0, 6, 1, 2010);   // If not found
     //print 'ee'.$datestart;
 }
-// datelastpayment
-// TODO Read into database value for datelastpayment
 
 
 aff(
@@ -137,7 +135,7 @@ $id_product = "";
 $colorTabNbr = 1;
 if (sizeof($result))
 {
-    foreach ($result AS $row)
+    foreach ($result AS $row)   // For each product
     {
         $id_product = $row['id_product'];
         $ref_product = $row['reference'];
@@ -205,19 +203,19 @@ if (sizeof($result))
                     AND date_add < '".date("Y-m-d 00:00:00",mktime()-(2*31*24*60*60))."'";
 
         $subresult = Db::getInstance()->ExecuteS($query);
-        $nbr_achats = 0;
-        $nbr_amount = 0;
+        $nbr_achats2 = 0;
+        $nbr_amount2 = 0;
         foreach ($subresult AS $subrow) {
-            $nbr_achats = $subrow['nbra'];
-            $nbr_amount = $subrow['amount'];
+            $nbr_achats2 = $subrow['nbra'];
+            $nbr_amount2 = $subrow['amount'];
             if ($subrow['min_date'])
             {
-                if ($min_date) $min_date = min($min_date,$subrow['min_date']);
-                else $min_date=$subrow['min_date'];
+                if ($min_date2) $min_date2 = min($min_date2,$subrow['min_date']);
+                else $min_date2=$subrow['min_date'];
             }
         }
 
-        $totalamountclaimable+=$nbr_amount;
+        $totalamountclaimable+=$nbr_amount2;
 
         ?>
 
@@ -377,8 +375,9 @@ if ($totalamount > 0)
     print "<b>".$foundationfeerate." x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
     print '<br>';
     // Total amount you can claim
-    aff("Montant total qui peut etre réclamé (toute vente ne peut etre réclamée qu'après un délai de 2 mois): ", "Total amount you can claim (sells can be claimed only 2 month after): ", $iso_langue_en_cours);
+    aff("Montant total qui peut etre réclamé: ", "Total amount you can claim: ", $iso_langue_en_cours);
     print "<b>".$foundationfeerate." x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
+    aff(" &nbsp; (toute vente ne peut etre réclamée qu'après un délai de 2 mois)", "&nbsp; (sells can be claimed only 2 month after)", $iso_langue_en_cours);
     print '<br>';
     // Last payment date
     aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
@@ -388,7 +387,7 @@ if ($totalamount > 0)
     print '<br>';
 
     // Remain to receive
-    aff("Montant restant à percevoir: ","Remained amount to receive: ", $iso_langue_en_cours);
+    aff("Montant restant à réclamer: ","Remained amount to claim: ", $iso_langue_en_cours);
     $remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
     print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;</font></b>";
     print '<br><br>';
@@ -399,7 +398,7 @@ if ($totalamount > 0)
         $minamount=50;
         if ($remaintoreceive > $minamount)
         {
-            aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires (RIB) pour le virement.","You can claim remain amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account IBAN or BIC number for bank transaction.", $iso_langue_en_cours);
+            aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).","You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account number for bank transaction (BIC ou SWIFT).", $iso_langue_en_cours);
             print '<br>';
         }
         else
