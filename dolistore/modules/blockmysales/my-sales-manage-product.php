@@ -286,6 +286,13 @@ if ($totalamount > 0)
     $socid=0;
     $foundthirdparty=false;
 
+    $authentication=array(
+        'dolibarrkey'=>$dolibarrkey,
+        'sourceapplication'=>'DOLISTORE',
+        'login'=>'webserviceuser',
+        'password'=>'webserviceuser-we',
+        'entity'=>'');
+
     // Call the WebService method to find third party id from name or company name.
     $WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_thirdparty.php';
     $WS_METHOD  = 'getThirdParty';
@@ -297,12 +304,6 @@ if ($totalamount > 0)
     }
     if (! $foundthirdparty)
     {
-        $authentication=array(
-            'dolibarrkey'=>$dolibarrkey,
-            'sourceapplication'=>'DOLISTORE',
-            'login'=>'dolibarr',
-            'password'=>'d0libarr-an',
-            'entity'=>'');
         $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher);
         prestalog("Call method ".$WS_METHOD." for ref=".$publisher);
         $result = $soapclient->call($WS_METHOD,$parameters);
@@ -320,12 +321,6 @@ if ($totalamount > 0)
     }
     if (! $foundthirdparty)
     {
-        $authentication=array(
-            'dolibarrkey'=>$dolibarrkey,
-            'sourceapplication'=>'DOLISTORE',
-            'login'=>'dolibarr',
-            'password'=>'d0libarr-an',
-            'entity'=>'');
         $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$company);
         prestalog("Call method ".$WS_METHOD." for ref=".$company);
         $result = $soapclient->call($WS_METHOD,$parameters);
