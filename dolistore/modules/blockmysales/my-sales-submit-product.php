@@ -53,7 +53,8 @@ if ($_GET["up"] == 1) {
 		  }
 		$upload=-1;
 	}
-	else if (preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
+	
+	if ($upload >= 0 && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
 	{
 		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
 			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
@@ -62,7 +63,9 @@ if ($_GET["up"] == 1) {
 			$upload=-1;
 		}
 	}
-	else {
+
+	if ($upload >= 0)
+	{
 		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
 	        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
 		$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
@@ -696,7 +699,7 @@ Installation:<br>
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
 			{
 				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
-				if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
+				else if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
 				else print $defaulten;
 			}
 			else echo $_POST["description_".$languageTAB[$x]['id_lang']];

@@ -305,7 +305,7 @@ foreach ($result AS $row) {
 
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php aff("Ajoutez une image a ce produit : ", "Add a new image to this product : ", $iso_langue_en_cours); ?></td>
+    <td nowrap="nowrap" valign="top"><?php aff("Ajoutez une nouvelle image<br>à ce produit : ", "Add a new image<br>to this product : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">
     <input id="image_product" name="image_product" maxlength="10000000" type="file"><br>
     <p>
@@ -402,10 +402,6 @@ foreach ($result AS $row) {
 		</button>
 
      </td>
-  </tr>
-
-  <tr>
-    <td colspan="2"><hr></td>
   </tr>
 </table>
 
