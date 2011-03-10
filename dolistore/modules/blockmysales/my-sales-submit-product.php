@@ -27,7 +27,7 @@ foreach ($languages AS $language) {
 
 	$x++;
 }
-
+$upload=0;
 
 /*
  * Actions
@@ -37,26 +37,29 @@ foreach ($languages AS $language) {
 if ($_GET["up"] == 1) {
 	$originalfilename=$_FILES['virtual_product_file']['name'];
 	if ($_FILES['virtual_product_file']['error']) {
-			  switch ($_FILES['virtual_product_file']['error']){
-					   case 1: // UPLOAD_ERR_INI_SIZE
-					   echo "<div style='color:#FF0000'>File size is higher than server limit ! </div>";
-					   break;
-					   case 2: // UPLOAD_ERR_FORM_SIZE
-					   echo "<div style='color:#FF0000'>File size if higher than limit in HTML form ! </div>";
-					   break;
-					   case 3: // UPLOAD_ERR_PARTIAL
-					   echo "<div style='color:#FF0000'>File transfert was aborted ! </div>";
-					   break;
-					   case 4: // UPLOAD_ERR_NO_FILE
-					   echo "<div style='color:#FF0000'>File name was not defined or file size is null ! </div>";
-					   break;
-			  }
+		  switch ($_FILES['virtual_product_file']['error']){
+				   case 1: // UPLOAD_ERR_INI_SIZE
+				   echo "<div style='color:#FF0000'>File size is higher than server limit ! </div>";
+				   break;
+				   case 2: // UPLOAD_ERR_FORM_SIZE
+				   echo "<div style='color:#FF0000'>File size if higher than limit in HTML form ! </div>";
+				   break;
+				   case 3: // UPLOAD_ERR_PARTIAL
+				   echo "<div style='color:#FF0000'>File transfert was aborted ! </div>";
+				   break;
+				   case 4: // UPLOAD_ERR_NO_FILE
+				   echo "<div style='color:#FF0000'>File name was not defined or file size is null ! </div>";
+				   break;
+		  }
+		$upload=-1;
 	}
 	else if (preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
 	{
-		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
+		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
+			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
 		{
-			echo "<div style='color:#FF0000'>".aff("Le package ne semble pas avoir été fabriqué avec un outil Dolibarr officiel 'htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrmodule.pl' pour les themes","Package seems to have not been built using Dolibarr official tool 'htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrmodule.pl' for themes",$iso_langue_en_cours)."</div>";
+			echo "<div style='color:#FF0000'>".aff("Le package ne semble pas avoir été fabriqué avec un outil Dolibarr officiel 'htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes","Package seems to have not been built using Dolibarr official tool 'htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes",$iso_langue_en_cours)."</div>";
+			$upload=-1;
 		}
 	}
 	else {
@@ -66,10 +69,15 @@ if ($_GET["up"] == 1) {
 
         prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
 
-		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) {
+		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) 
+		{
 			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
+			$upload=-1;
 		}
-
+		else
+		{
+			$upload=1;
+		}
 	}
 }
 
@@ -91,9 +99,11 @@ if ($_GET["sub"] == 1) {
 	$prix_ttc = $_POST["priceTI"];
 	$prix_ht = $prix_ttc;
 
-	if ($product_file_name == "" || $product_file_path == "" || $prix_ht == "" || $prix_ttc == "" ) {
+	if ($upload < 0 || (empty($_POST["product_file_name"]) && empty($_FILES['virtual_product_file']['name'])))
+	{
 		$flagError = 2;
 	}
+//	if ($product_file_name == "" || $product_file_path == "" || $prix_ht == "" || $prix_ttc == "" ) {
 
 	//prise des libelles
 	for ($x = 0; $languageTAB[$x]; $x++ ) {
@@ -141,15 +151,15 @@ if ($_GET["sub"] == 1) {
 
 
 	if ($flagError == 1) {
-		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
+		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div><br>";
 	}
 
 	if ($flagError == 2) {
-		echo "<div style='color:#FF0000'>";echo aff("Vous devez uploader un produit", "You have to upload a product", $iso_langue_en_cours); echo " </div>";
+		echo "<div style='color:#FF0000'>";echo aff("Vous devez uploader un produit", "You have to upload a product", $iso_langue_en_cours); echo " </div><br>";
 	}
 
 	if ($flagError == 3) {
-		echo "<div style='color:#FF0000'>";echo aff("Vous devez choisir une categorie", "You have to choose a category", $iso_langue_en_cours); echo " </div>";
+		echo "<div style='color:#FF0000'>";echo aff("Vous devez choisir une categorie", "You have to choose a category", $iso_langue_en_cours); echo " </div><br>";
 	}
 
 	//si pas derreur de saisis, traitement en base
@@ -370,7 +380,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
     	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
+        	<input class="inputlarge" name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
@@ -409,15 +419,19 @@ echo '
 
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Package à diffuser<br>(fichier .tgz pour un module)", "Package to distribute<br>(.tgz file for a module)", $iso_langue_en_cours); ?></td>
+    <td nowrap="nowrap" valign="top"><?php echo aff("Package à diffuser<br>(fichier .zip pour<br>un module ou theme)", "Package to distribute<br>(.zip file for<br> a module or theme)", $iso_langue_en_cours); ?></td>
     <td>
         <?php
-		if ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "") {
+		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
+		{
 			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
 			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
 			echo aff("Fichier ".$file_name." prêt.","File ".$file_name." ready.",$iso_langue_en_cours);
 
-		} else { ?>
+		}
+		else 
+		{
+		?>
 			<?php echo aff("Taille maximal du fichier: ".ini_get('upload_max_filesize'),"Maximum file size is: ".ini_get('upload_max_filesize'), $iso_langue_en_cours); ?>
             <br />
 	        <input id="virtual_product_file" name="virtual_product_file" value="" class="" onchange="javascript:
@@ -473,7 +487,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
         <input size="6" maxlength="6" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo $_POST["priceTI"]; else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
-		<?php print aff(" Euros (0 si gratuit)"," Euros (0 means free)", $iso_langue_en_cours); ?>
+		<?php print aff(" Euros &nbsp; (0 si gratuit)"," Euros &nbsp; (0 means free)", $iso_langue_en_cours); ?>
 	</td>
   </tr>
 
@@ -540,7 +554,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">
         <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
+        	<input class="inputlarge" name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php
 			echo $languageTAB[$x]['iso_code'];
@@ -611,28 +625,6 @@ echo '
 			<?php
 
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
-			$defaultfr='
-Module version: <strong>1.0</strong><br>
-Editeur: <strong>'.$publisher.'</strong><br>
-Langage interface: <strong>Anglais</strong><br>
-Licence: <strong>GPL</strong><br>
-Assistance: <strong>Aucune / <strike>Forum sur www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
-Pr&eacute;requis: <br>
-<ul>
-<li> Dolibarr version: <strong>2.9+</strong> </li>
-</ul>
-Installation:<br>
-<ul>
-<li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
-<li> Decompressez le fichier par la commande </li>
-<div style="text-align: left;" dir="ltr">
-<div style="font-family: monospace;">
-<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.tgz').'</pre>
-</div>
-</div>
-<li> Le module ou thème est alors disponible et activable. </li>
-</ul>';
 			$defaulten='
 Module version: <strong>1.0</strong><br>
 Publisher: <strong>'.$publisher.'</strong><br>
@@ -651,14 +643,60 @@ Prerequisites:<br>
 <li> Uncompress the file with command </li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'modulefile.tgz').'</pre>
+<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'modulefile.zip').'</pre>
 </div>
 </div>
 <li> Module or skin is then available and can be activated. </li>
 </ul>';
+			$defaultfr='
+Module version: <strong>1.0</strong><br>
+Editeur: <strong>'.$publisher.'</strong><br>
+Langage interface: <strong>Anglais</strong><br>
+Licence: <strong>GPL</strong><br>
+Assistance: <strong>Aucune / <strike>Forum sur www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
+Pr&eacute;requis: <br>
+<ul>
+<li> Dolibarr version: <strong>2.9+</strong> </li>
+</ul>
+Installation:<br>
+<ul>
+<li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
+<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
+<li> Decompressez le fichier par la commande </li>
+<div style="text-align: left;" dir="ltr">
+<div style="font-family: monospace;">
+<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
+</div>
+</div>
+<li> Le module ou thème est alors disponible et activable. </li>
+</ul>';
+			$defaultes='
+Module version: <strong>1.0</strong><br>
+Editeur: <strong>'.$publisher.'</strong><br>
+Langage interface: <strong>Anglais</strong><br>
+Licence: <strong>GPL</strong><br>
+Assistance: <strong>Aucune / <strike>Forum sur www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
+Pr&eacute;requis: <br>
+<ul>
+<li> Dolibarr version: <strong>2.9+</strong> </li>
+</ul>
+Installation:<br>
+<ul>
+<li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
+<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
+<li> Decompressez le fichier par la commande </li>
+<div style="text-align: left;" dir="ltr">
+<div style="font-family: monospace;">
+<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
+</div>
+</div>
+<li> Le module ou thème est alors disponible et activable. </li>
+</ul>';
+
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
 			{
 				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
+				if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
 				else print $defaulten;
 			}
 			else echo $_POST["description_".$languageTAB[$x]['id_lang']];

@@ -36,11 +36,21 @@ class BlockMySales extends Module
 		global $smarty;
 		
 		if (!$params['cookie']->isLogged())
-			return false;
+		{
 			$smarty->assign(array(
-				'HOOK_BLOCK_MY_SALES' => Module::hookExec('mySalesBlock')
-		));
-		return $this->display(__FILE__, $this->name.'.tpl');
+				'HOOK_BLOCK_MY_SALES' => Module::hookExec('mySalesBlock'),
+				'logged'=>false
+			));
+			return $this->display(__FILE__, $this->name.'.tpl');
+		}
+		else
+		{
+			$smarty->assign(array(
+				'HOOK_BLOCK_MY_SALES' => Module::hookExec('mySalesBlock'),
+				'logged'=>true
+			));
+			return $this->display(__FILE__, $this->name.'.tpl');
+		}
 	}
 
 	private function addMySalesBlockHook()
