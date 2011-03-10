@@ -3387,7 +3387,7 @@ div.star a:hover{
 //	display: none;
 }
 
-#my-sales-submit-product input {
+.inputlarge {
 	width: 120px !important;
 }
 
