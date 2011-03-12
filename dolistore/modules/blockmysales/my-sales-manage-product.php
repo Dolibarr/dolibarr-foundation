@@ -93,7 +93,8 @@ if (empty($datestart))
 	//$datestart=mktime(0, 0, 0, 6, 1, 2010);	// If not found
 	//print 'ee'.$datestart;
 }
-
+//
+$dolistoreinvoices=array();
 
 aff(
 "Les statistiques sont celles des téléchargements/ventes depuis le dernier paiement reçu ".($datelastpayment?"(<b>".date('d/m/Y',$datelastpayment)."</b>)":"")." pour les ventes des composants soumis par l'utilisateur courant (<b>".$publisher.($company?" - ".$company:"")."</b>)",
@@ -358,7 +359,29 @@ if ($totalamount > 0)
 		    print 'Error '.$soapclient->error_str;
 		    die;
 		}
-		//var_dump($result);
+		if ($result['result']['result_code'] == 'OK')
+		{
+			foreach($result['invoices'] as $invoice)
+			{
+				$isfordolistore=0;
+				if (preg_match('/dolistore/i',$invoice['note'])) $isfordolistore=1;
+				if (! $isfordolistore)
+				{
+					foreach($invoice['lines'] as $line)
+					{
+						if (preg_match('/dolistore/i',$line['desc']))
+						{
+							$isfordolistore++;
+						}
+					}
+				}
+				if ($isfordolistore)
+				{
+					$dolistoreinvoices[]=array('date'=>$invoice['date_invoice'],'amount'=>$invoice['total']);
+					$alreadyreceived+=$invoice['total'];
+				}
+			}
+		}
 	}
 
 
@@ -368,18 +391,34 @@ if ($totalamount > 0)
 
 	// Total amount earned
 	aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
-	print "<b>".$foundationfeerate." x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
+	print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
 	print '<br>';
 	// Total amount you can claim
-	aff("Montant total qui peut etre réclamé: ", "Total amount you can claim: ", $iso_langue_en_cours);
-	print "<b>".$foundationfeerate." x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
-	aff(" &nbsp; (toute vente ne peut etre réclamée qu'après un délai de 2 mois)", "&nbsp; (sells can be claimed only 2 month after)", $iso_langue_en_cours);
+	aff("Montant total validé: ", "Total validated amount: ", $iso_langue_en_cours);
+	print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
+	aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de 2 mois de rétractation)", "&nbsp; (any sell is validated after a 2 month delay)", $iso_langue_en_cours);
 	print '<br>';
-	// Last payment date
-	aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
-	if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
-	else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
-	print '<br>';
+	// List of payments
+	if (sizeof($dolistoreinvoices))
+	{
+		aff("Reversements déjà reçus: ","Last payments recevied: ", $iso_langue_en_cours);
+		print '<br>'."\n";
+		foreach($dolistoreinvoices as $item)
+		{
+			aff("Date: ","Date: ", $iso_langue_en_cours);
+			print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
+			aff("Montant: ","Amount: ", $iso_langue_en_cours);
+			print ' <b>'.$item['amount'].'&#8364;</b><br>'."\n";
+			//var_dump($dolistoreinvoices);
+		}
+	}
+	else
+	{
+		aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
+		if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
+		else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
+		print '<br>';
+	}
 	print '<br>';
 
 	// Remain to receive
@@ -400,7 +439,7 @@ if ($totalamount > 0)
 		}
 		else
 		{
-			aff("Il n'est pas possible de réclamer de reversements pour le moment (montant validé inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (validated amount < ".$minamount.").", $iso_langue_en_cours);
+			aff("Il n'est pas possible de réclamer de reversements pour le moment (montant inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (amount lower than ".$minamount." euros).", $iso_langue_en_cours);
 			print '<br>';
 		}
 	}

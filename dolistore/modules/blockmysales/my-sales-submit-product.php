@@ -654,8 +654,8 @@ Prerequisites:<br>
 			$defaultfr='
 Module version: <strong>1.0</strong><br>
 Editeur: <strong>'.$publisher.'</strong><br>
-Langage interface: <strong>Anglais</strong><br>
 Licence: <strong>GPL</strong><br>
+Langage interface: <strong>Anglais</strong><br>
 Assistance: <strong>Aucune / <strike>Forum sur www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
 Pr&eacute;requis: <br>
 <ul>
@@ -674,26 +674,26 @@ Installation:<br>
 <li> Le module ou thème est alors disponible et activable. </li>
 </ul>';
 			$defaultes='
-Module version: <strong>1.0</strong><br>
-Editeur: <strong>'.$publisher.'</strong><br>
-Langage interface: <strong>Anglais</strong><br>
-Licence: <strong>GPL</strong><br>
-Assistance: <strong>Aucune / <strike>Forum sur www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
-Pr&eacute;requis: <br>
-<ul>
-<li> Dolibarr version: <strong>2.9+</strong> </li>
+Versión del Módulo: <strong>1.0</strong><br>
+Licencia: GPL
+Creador: <strong>'.$publisher.'</strong><br>
+Idioma interfaz usuario: <strong>Inglés</strong><br>
+Ayuda/Soporte: strong>No / <strike>foro en www.dolibarr.org</strike> / <strike>mail a contacto@creador.com</strike></strong><br>
+Prerrequisitos: <br>
+<ul>   
+<li> Versión Dolibarr: <strong>2.9+</strong></li>
 </ul>
-Installation:<br>
+Para instalar este módulo:<br>
 <ul>
-<li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
-<li> Decompressez le fichier par la commande </li>
+<li> Descargar el archivo del módulo (archivo .tgz) desde la web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
+<li> Ponga el archivo en el directorio raíz de Dolibarr.</li>
+<li> Descomprima el archivo usando el comando</li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
 <pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
-<li> Le module ou thème est alors disponible et activable. </li>
+<li> El módulo o tema está listo para ser activado.</li>
 </ul>';
 
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
