@@ -301,13 +301,13 @@ if ($totalamount > 0)
     if ($soapclient)
     {
         $soapclient->soap_defencoding='UTF-8';
+        $soapclient->decodeUTF8(false);
     }
 
     if (! $foundthirdparty)
     {
-        $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>utf8_decode($publisher));
+        $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher);
         prestalog("Call method ".$WS_METHOD." for ref=".$publisher);
-        $soapclient->decodeUTF8(true);
         $result = $soapclient->call($WS_METHOD,$parameters);
         if (! $result)
         {
@@ -326,7 +326,7 @@ if ($totalamount > 0)
 
     if (! $foundthirdparty)
     {
-        $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>utf8_decode($company));
+        $parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$company);
         prestalog("Call method ".$WS_METHOD." for ref=".$company);
         $result = $soapclient->call($WS_METHOD,$parameters);
         if (! $result)
@@ -354,6 +354,7 @@ if ($totalamount > 0)
         if ($soapclient)
         {
             $soapclient->soap_defencoding='UTF-8';
+            $soapclient->decodeUTF8(false);
         }
         $parameters = array('authentication'=>$authentication,'id'=>$socid,'ref'=>'');
         prestalog("Call method ".$WS_METHOD." for socid=".$socid);
