@@ -48,17 +48,9 @@ function testProductAppartenance($customer_id, $product_id) {
 }
 
 
-
-function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
-	if ($iso_langue_en_cours == "fr") echo $lb_fr;
-	else echo $lb_other;
-}
-
-
 //test de l'appartenance
-if (testProductAppartenance($customer_id, $product_id)) {
-
-
+if (testProductAppartenance($customer_id, $product_id)) 
+{
 
 	//upload du fichier
 	if ($_GET["up"] == 1) {

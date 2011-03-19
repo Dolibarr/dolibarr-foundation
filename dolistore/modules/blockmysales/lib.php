@@ -1,5 +1,15 @@
 <?php
 
+
+/**
+ *
+ */
+function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
+	if ($iso_langue_en_cours == "fr") echo $lb_fr;
+	else echo $lb_other;
+}
+
+
 /**
  *
  */

@@ -29,16 +29,6 @@ foreach ($languages AS $language) {
 }
 
 
-/*
- * Actions
- */
-
-function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
-	if ($iso_langue_en_cours == "fr") return $lb_fr;
-	else return $lb_other;
-}
-
-
 
 
 /*
