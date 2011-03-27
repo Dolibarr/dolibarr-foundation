@@ -107,10 +107,10 @@ else
 
 
 
-<?php aff("<h2>Liste des ventes de produit</h2>", "<h2>List of sells for product</h2>", $iso_langue_en_cours); ?>
+<?php echo aff("<h2>Liste des ventes de produit</h2>", "<h2>List of sells for product</h2>", $iso_langue_en_cours); ?>
 
 <?php
-aff(
+echo aff(
 'Ventes pour le produit <b>'.$name.'</b>',
 'Sells for product <b>'.$name.'</b>',
 $iso_langue_en_cours);
@@ -127,10 +127,10 @@ $iso_langue_en_cours);
 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr bgcolor="#CCCCCC">
-    <td nowrap="nowrap"><b><?php aff("Nom", "Name", $iso_langue_en_cours); ?></b></td>
-	<td nowrap="nowrap"><b><?php aff("Date", "Date", $iso_langue_en_cours); ?></b></td>
-    <td nowrap="nowrap"><b><?php aff("Montant", "Amount", $iso_langue_en_cours); ?></b></td>
-    <!--<td nowrap="nowrap"><b><?php aff("Supp", "Delete", $iso_langue_en_cours); ?></b></td> -->
+    <td nowrap="nowrap"><b><?php echo aff("Nom", "Name", $iso_langue_en_cours); ?></b></td>
+	<td nowrap="nowrap"><b><?php echo aff("Date", "Date", $iso_langue_en_cours); ?></b></td>
+    <td nowrap="nowrap"><b><?php echo aff("Montant", "Amount", $iso_langue_en_cours); ?></b></td>
+    <!--<td nowrap="nowrap"><b><?php echo aff("Supp", "Delete", $iso_langue_en_cours); ?></b></td> -->
   </tr>
 
 <?php

@@ -6,12 +6,12 @@ $useSSL = true;
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
+include(dirname(__FILE__).'/lib.php');
 
 
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
-$product_id = $_GET['id_p'];
-
+$product_id = $_GET['id_p']?$_GET['id_p']:$_POST['id_p'];
 
 
 
@@ -51,13 +51,6 @@ function testProductAppartenance($customer_id, $product_id) {
 
 
 
-function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
-	if ($iso_langue_en_cours == "fr") return $lb_fr;
-	else return $lb_other;
-}
-
-
-
 
 //test de l'appartenance
 if (testProductAppartenance($customer_id, $product_id)) {
@@ -67,11 +60,68 @@ if (testProductAppartenance($customer_id, $product_id)) {
  * Actions
  */
 
+
+//upload du fichier
+if ($_GET["up"] == 1) {
+	$originalfilename=$_FILES['virtual_product_file']['name'];
+	if ($_FILES['virtual_product_file']['error']) {
+		  switch ($_FILES['virtual_product_file']['error']){
+				   case 1: // UPLOAD_ERR_INI_SIZE
+				   echo "<div style='color:#FF0000'>File size is higher than server limit ! </div>";
+				   break;
+				   case 2: // UPLOAD_ERR_FORM_SIZE
+				   echo "<div style='color:#FF0000'>File size if higher than limit in HTML form ! </div>";
+				   break;
+				   case 3: // UPLOAD_ERR_PARTIAL
+				   echo "<div style='color:#FF0000'>File transfert was aborted ! </div>";
+				   break;
+				   case 4: // UPLOAD_ERR_NO_FILE
+				   echo "<div style='color:#FF0000'>File name was not defined or file size is null ! </div>";
+				   break;
+		  }
+		$upload=-1;
+	}
+	
+	if ($upload >= 0 && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
+	{
+		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
+			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
+		{
+			echo "<div style='color:#FF0000'>".aff("Le package ne semble pas avoir été fabriqué avec un outil Dolibarr officiel 'htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes","Package seems to have not been built using Dolibarr official tool 'htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes",$iso_langue_en_cours)."</div>";
+			$upload=-1;
+		}
+	}
+
+	if ($upload >= 0)
+	{
+		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
+	        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
+		$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
+
+        prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
+
+		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) 
+		{
+			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
+			$upload=-1;
+		}
+		else
+		{
+			$upload=1;
+		}
+	}
+}
+
+
 //Mise a jour du produit
 if ($_GET["upd"] == 1) {
 
 	$flagError = 0;
 	$status = $_POST['active'];
+	$product_file_name = $_POST["product_file_name"];
+	$product_file_path = $_POST["product_file_path"];
+
+	prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 	//prise des prix
 	$prix_ttc = $_POST["priceTI"];
@@ -113,24 +163,21 @@ if ($_GET["upd"] == 1) {
 		$descriptionTAB[$x] = $description;
 	}
 
-
-	if ($flagError == 1) {
-		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
+	//recuperation de la categorie par defaut
+	$categories = Category::getSimpleCategories($cookie->id_lang);
+	foreach ($categories AS $categorie) {
+		if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
+			$id_categorie_default = $categorie['id_category'];
+			break;
+		}
 	}
+	if ($id_categorie_default == "") $flagError = 3;
+
 
 	//si pas derreur de saisis, traitement en base
 	if ($flagError == 0) {
 
 		$taxe_id = 0;
-
-		//recuperation de la categorie par defaut
-		$categories = Category::getSimpleCategories($cookie->id_lang);
-	    foreach ($categories AS $categorie) {
-			if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
-				$id_categorie_default = $categorie['id_category'];
-				break;
-			}
-		}
 
 		//prise des date
 		$dateToday = date ("Y-m-d");
@@ -186,48 +233,72 @@ if ($_GET["upd"] == 1) {
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 		}
 
+		$newfile = ($product_file_path?1:0);
+
+		//mise en base du lien avec le produit telechargeable
+		if ($newfile)
+		{
+			$product_file_newname = basename($product_file_path);
+
+			$query = 'DELETE FROM `'._DB_PREFIX_.'product_download` WHERE `id_product` = '.$product_id.';';
+			$result1 = Db::getInstance()->ExecuteS($query);
+
+			$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `physically_filename`, `date_deposit`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
+			'.$product_id.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, 1
+			)';
+			prestalog("A new file is asked: We add it into product_download query=".$query);
+			$result = Db::getInstance()->ExecuteS($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
+		} 
+		else
+		{ 
+			//recup des infos fichier
+			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download`
+						  WHERE `id_product` = '.$product_id.' ';
+			prestalog("No new file, we search old value query=".$query);
+			$result = Db::getInstance()->ExecuteS($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+			foreach ($result AS $row) 
+			{
+				$product_file_name = $row['display_filename'];
+				$product_file_path = $row['physically_filename'];
+			}
+		}
 
 		//gestion des fichiers selon prix
 		$oldPrice = round($_GET["op"],2);
 		$newPrice =  round($_POST["priceTI"],2);
 
-		if ($oldPrice != $newPrice) {
-
-			//recup des infos fichier
-			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download`
-					  WHERE `id_product` = '.$product_id.' ';
-			$result = Db::getInstance()->ExecuteS($query);
-			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-			foreach ($result AS $row) {
-				$product_file_name =  $row['display_filename'];
-				$product_file_path = $row['physically_filename'];
-			}
-
-
-			if ($oldPrice == 0 && $newPrice > 0) {
-
+		// Si un fichier a ete modifier ou le prix modifie
+		if ($newfile || $oldPrice != $newPrice) 
+		{
+			if ($newfile || $newPrice > 0) 
+			{
 				//delete des attachments
 				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment`
 						WHERE `id_product` = '.$product_id.' ';
 				$result = Db::getInstance()->ExecuteS($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 				foreach ($result AS $row)
+				{
 					$id_attachment =  $row['id_attachment'];
+					prestalog("Delete attachment num ".$id_attachment);
 
-				if ($id_attachment != "" && $id_attachment > 0) {
-					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';
-					$result = Db::getInstance()->ExecuteS($query);
+					if ($id_attachment > 0) 
+					{
+						$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';
+						$result1 = Db::getInstance()->ExecuteS($query);
 
-					$query = 'DELETE FROM `'._DB_PREFIX_.'attachment_lang` WHERE `id_attachment` = '.$id_attachment.';';
-					$result = Db::getInstance()->ExecuteS($query);
+						$query = 'DELETE FROM `'._DB_PREFIX_.'attachment_lang` WHERE `id_attachment` = '.$id_attachment.';';
+						$result2 = Db::getInstance()->ExecuteS($query);
 
-					$query = 'DELETE FROM `'._DB_PREFIX_.'product_attachment` WHERE `id_attachment` = '.$id_attachment.';';
-					$result = Db::getInstance()->ExecuteS($query);
+						$query = 'DELETE FROM `'._DB_PREFIX_.'product_attachment` WHERE `id_attachment` = '.$id_attachment.';';
+						$result3 = Db::getInstance()->ExecuteS($query);
+					}
 				}
-
 			}
-			else if ($newPrice == 0 && $oldPrice > 0) {
-
+			if ($newfile || ($newPrice == 0 && $oldPrice > 0)) 
+			{
 				//creation dun attachement
 				$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `mime`) VALUES ("'.$product_file_path.'", "text/plain");';
 				$result = Db::getInstance()->ExecuteS($query);
@@ -237,20 +308,21 @@ if ($_GET["upd"] == 1) {
 				$result = Db::getInstance()->ExecuteS($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 				foreach ($result AS $row)
+				{
 					$id_attachment = $row['id_attachment'];
+					prestalog("Add attachment for num ".$id_attachment);
 
-				for ($x = 0; $languageTAB[$x]; $x++ ) {
-					$id_lang = $languageTAB[$x]['id_lang'];
-					$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
+					for ($x = 0; $languageTAB[$x]; $x++ ) {
+						$id_lang = $languageTAB[$x]['id_lang'];
+						$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
+						$result = Db::getInstance()->ExecuteS($query);
+					}
+
+					$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$product_id.', '.$id_attachment.')';
 					$result = Db::getInstance()->ExecuteS($query);
 				}
-
-				$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$product_id.', '.$id_attachment.')';
-				$result = Db::getInstance()->ExecuteS($query);
-
 			}
 		}
-
 
 		//inscription du produit dans ttes les categories choisis
 		$query = 'DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.$product_id;
@@ -271,6 +343,15 @@ if ($_GET["upd"] == 1) {
 
 		//echo "<script>window.location='./my-sales-manage-product.php?id_p=$id_product';</script>";
 	}
+
+	if ($flagError == 1) {
+		echo "<div style='color:#FF0000'>";echo aff("Tous les champs Anglais sont obligatoires.", "All English fields are required.", $iso_langue_en_cours); echo " </div>";
+	}
+
+	if ($flagError == 3) {
+		echo "<div style='color:#FF0000'>";echo aff("Vous devez choisir une categorie", "You have to choose a category", $iso_langue_en_cours); echo " </div><br>";
+	}
+
 }
 
 
@@ -356,8 +437,8 @@ echo '
 						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
 
 						// Theme options
-						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,formatselect",
-						theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,|,link,unlink,anchor,|,forecolor,backcolor",
+						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,|,bullist,numlist,|,link,unlink,|,forecolor",
+						theme_advanced_buttons2 : "",
 						theme_advanced_buttons3 : "",
 
 						theme_advanced_toolbar_location : "top",
@@ -433,9 +514,32 @@ echo '
 
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Package diffusé (non modifiable)", "Distributed package (no upgradable)", $iso_langue_en_cours); ?></td>
+    <td nowrap="nowrap" valign="top"><?php echo aff("Package diffusé<br>(fichier .zip pour<br>un module ou theme)", "Distributed package<br>(.zip file for<br> a module or theme)", $iso_langue_en_cours); ?></td>
     <td>
-    &nbsp; <?php echo $file_name; ?>
+	<?php echo $file_name; ?><br /><br />
+
+        <?php
+		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
+		{
+			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
+			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
+			echo aff("Fichier ".$file_name." prêt.","File ".$file_name." ready.",$iso_langue_en_cours);
+
+		}
+		else 
+		{
+		?>
+			<?php echo aff("Nouveau: Taille maximal du fichier: ".ini_get('upload_max_filesize'),"New file: Maximum file size is: ".ini_get('upload_max_filesize'), $iso_langue_en_cours); ?>
+            <br />
+	        <input id="virtual_product_file" name="virtual_product_file" value="" class="" onchange="javascript:
+    																					document.fmysalesmodifiysubprod.action='?up=1&id_p=<?php echo $product_id; ?>';
+                                                                                        document.fmysalesmodifiysubprod.submit();" maxlength="10000000" type="file">
+        	<?php
+		}
+		?>
+		<br>
+		<input type="hidden" name="product_file_name" id="product_file_name" value="<?php if ($_POST["product_file_name"] != "") echo $_POST["product_file_name"]; if ($_FILES['virtual_product_file']['name'] != "") echo $_FILES['virtual_product_file']['name']; ?>" >
+		<input type="hidden" name="product_file_path" id="product_file_path" value="<?php if ($_POST["product_file_path"] != "") echo $_POST["product_file_path"]; if ($chemin_destination != "") echo $chemin_destination; ?>" >
     </td>
   </tr>
 
@@ -460,8 +564,8 @@ echo '
 
 
   <tr>
-    <td width="14%" valign="top" nowrap="nowrap">
-    <?php echo aff("Cocher toutes les categories<br />dans lesquelles le produit apparaitra : ", "Mark all checkbox(es) of categories<br />in which product is to appear : ", $iso_langue_en_cours); ?>
+    <td width="14%" valign="top">
+    <?php echo aff("Cocher toutes les categories dans lesquelles le produit apparaitra : ", "Mark all checkbox(es) of categories in which product is to appear : ", $iso_langue_en_cours); ?>
  	</td>
     <td width="86%">
 		<?php
@@ -519,7 +623,7 @@ echo '
 	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 		<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>):
 	</td>
   </tr>
@@ -558,7 +662,7 @@ echo '
             (<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
-			if ($languageTAB[$x]['iso_code'] == 'fr') echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
+			else echo ', '.aff("optionnel","optionnal",$iso_langue_en_cours);
 			?>):
         </td>
     </tr>
@@ -569,53 +673,79 @@ echo '
 			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">
 			<?php
 
+			$minversion='3.0';
+			$maxversion='3.0';
+
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
-			$defaultfr='
+			$defaulten='
 Module version: <strong>1.0</strong><br>
-Editeur: <strong>'.$publisher.'</strong><br>
-Langage interface: <strong>Anglais</strong><br>
-Licence: <strong>GPL</strong><br>
-Pr&eacute;requis: <br>
-<ul>
-<li> Dolibarr version: <strong>2.9+</strong> </li>
+Publisher/Licence: <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
+User interface language: <strong>English</strong><br>
+Help/Support: <strong>None / <strike>Forum www.dolibarr.org</strike> / <strike>Mail to contact@publisher.com</strike></strong><br>
 </ul>
-Installation:
+Prerequisites:<br>
 <ul>
-<li> T&eacute;l&eacute;charger le fichier archive du module (.tgz) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
-<li> Decompressez le fichier par la commande </li>
+<li> Dolibarr version: <strong>'.$minversion.'+</strong> </li>
+</ul>
+<p>Install:</p>
+<ul>
+<li> Download the archive file of module (.zip file) from web site <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
+<li> Put the file into the root directory of Dolibarr. </li>
+<li> Uncompress the zip file, for example with command </li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.tgz').'</pre>
+<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'modulefile.zip').'</pre>
+</div>
+</div>
+<li> Module or skin is then available and can be activated. </li>
+</ul>';
+			$defaultfr='
+Module version: <strong>1.0</strong><br>
+Editeur/Licence: <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
+Langage interface: <strong>Anglais</strong><br>
+Assistance: <strong>Aucune / <strike>Forum www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
+Pr&eacute;requis: <br>
+<ul>
+<li> Dolibarr version: <strong>'.$minversion.'+</strong> </li>
+</ul>
+Installation:<br>
+<ul>
+<li> T&eacute;l&eacute;charger le fichier archive du module (.zip) depuis le site  web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
+<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
+<li> Decompressez le fichier zip, par exemple par la commande </li>
+<div style="text-align: left;" dir="ltr">
+<div style="font-family: monospace;">
+<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
 <li> Le module ou thème est alors disponible et activable. </li>
 </ul>';
-			$defaulten='
-Module version: <strong>1.0</strong><br>
-Publisher: <strong>'.$publisher.'</strong><br>
-License: <strong>GPL</strong><br>
-User interface language: <strong>English</strong><br>
-Prerequisites:<br>
-<ul>
-<li> Dolibarr version: <strong>2.9+</strong> </li>
+			$defaultes='
+Versión del Módulo: <strong>1.0</strong><br>
+Creador/Licencia:  <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
+Idioma interfaz usuario: <strong>Inglés</strong><br>
+Ayuda/Soporte: <strong>No / <strike>foro www.dolibarr.org</strike> / <strike>mail a contacto@creador.com</strike></strong><br>
+Prerrequisitos: <br>
+<ul>   
+<li> Versión Dolibarr: <strong>'.$minversion.'+</strong></li>
 </ul>
-Install:
+Para instalar este módulo:<br>
 <ul>
-<li> Download the archive file of module (.tgz file) from web site <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-<li> Put the file into the root directory of Dolibarr. </li>
-<li> Uncompress the file with command </li>
+<li> Descargar el archivo del módulo (archivo .zip) desde la web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
+<li> Ponga el archivo en el directorio raíz de Dolibarr.</li>
+<li> Descomprima el zip archivo, por ejamplo usando el comando</li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'modulefile.tgz').'</pre>
+<pre><span>tar</span> <span>-xvf</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
-<li> Module or skin is then available and can be activated. </li>
+<li> El módulo o tema está listo para ser activado.</li>
 </ul>';
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
 			{
 				if ($languageTAB[$x]['iso_code'] == 'en') print $defaulten;
 				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
+				if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
 			}
 			else echo $_POST["description_".$languageTAB[$x]['id_lang']];
 
@@ -636,11 +766,16 @@ Install:
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
 		<button style="font-weight: 700;" type="button" onclick="javascript:
-																 document.fmysalesmodifiysubprod.action='?upd=1&op=<?php echo $_POST["priceTI"]; ?>&id_p=<?php echo $_GET['id_p']; ?>';
+																 document.fmysalesmodifiysubprod.action='?upd=1&op=<?php echo $_POST["priceTI"]; ?>&id_p=<?php echo $product_id; ?>';
                                                                  document.fmysalesmodifiysubprod.submit();"
 																 >
 			<?php echo aff("Modifier ce produit", "Update this product", $iso_langue_en_cours); ?>
 		</button>
+		 &nbsp; &nbsp; &nbsp; &nbsp;
+		<button type="button" onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>');
+        											document.fmysalesmodifiysubprod.action='/modules/blockmysales/my-sales-manage-product.php';
+                                                    document.fmysalesmodifiysubprod.submit();">
+			<?php echo aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
 	</td>
   </tr>
 
