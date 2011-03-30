@@ -298,7 +298,7 @@ if ($_GET["upd"] == 1) {
                     }
                 }
             }
-            if ($newfile || ($newPrice == 0 && $oldPrice > 0))
+            if (($newfile && $newPrice == 0) || ($newPrice == 0 && $oldPrice > 0))
             {
                 $product_file_newname = basename($product_file_path);
 
