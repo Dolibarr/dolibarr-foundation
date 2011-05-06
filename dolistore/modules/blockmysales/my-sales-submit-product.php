@@ -320,7 +320,7 @@ echo '
 						script_url : \''.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/tiny_mce.js\',
 						// General options
 						theme : "advanced",
-						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
+						plugins : "safari,style,layer,table,advlink,inlinepopups,media,contextmenu,paste,directionality,fullscreen",
 
 						// Theme options
 						theme_advanced_buttons1 : "fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,|,bullist,numlist,|,link,unlink,|,forecolor",
@@ -330,7 +330,6 @@ echo '
 						theme_advanced_toolbar_location : "top",
 						theme_advanced_toolbar_align : "left",
 						width : "100%",
-						theme_advanced_statusbar_location : "bottom",
 						theme_advanced_resizing : true,
 						content_css : "'.__PS_BASE_URI__.'themes/'._THEME_NAME_.'/css/global.css",
 						// Drop lists for link/image/media/template dialogs
@@ -584,14 +583,6 @@ echo '
             onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
-
-
-            <!--<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>"
-            onkeydown="javascript:maxlength(this,400); resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); "
-            onchange="javascript:maxlength(this,400); resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); "
-            cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea> -->
-
-            <!--<textarea id="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" name="resume_<?php echo $languageTAB[$x]['id_lang']; ?>" cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>  -->
 			<br />
     </td>
   </tr>
@@ -710,17 +701,14 @@ Para instalar este módulo:<br>
 
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
-		<button style="font-weight: 700;" type="button" onclick="javascript:
-																 document.fmysalessubprod.action='?sub=1';
-                                                                 document.fmysalessubprod.submit();"
-																 >
-			<?php echo aff("Valider ce produit", "Submit this product", $iso_langue_en_cours); ?>
+		<button style="font-weight: 700;" type="button" 
+		onclick="javascript: document.fmysalessubprod.action='?sub=1'; document.fmysalessubprod.submit();">
+		<?php echo aff("Valider ce produit", "Submit this product", $iso_langue_en_cours); ?>
 		</button>
 		 &nbsp; &nbsp; &nbsp; &nbsp;
-		<button type="button" onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>');
-        											document.fmysalessubprod.action='?cel=1';
-                                                    document.fmysalessubprod.submit();">
-			<?php echo aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
+		<button type="button" 
+		onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>'); document.fmysalessubprod.action='?cel=1'; document.fmysalessubprod.submit();">
+		<?php echo aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
 		</button>
 	</td>
   </tr>
