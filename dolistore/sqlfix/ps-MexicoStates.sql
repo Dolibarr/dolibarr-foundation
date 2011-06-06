@@ -1,0 +1,37 @@
+# Not in 1.3.2
+
+UPDATE `ps_country` SET contains_states='1' WHERE iso_code='MX';
+
+INSERT INTO `ps_state` (id_country, id_zone, name, iso_code, tax_behavior, active) VALUES
+('145', '2', 'Aguascalientes', 'AGU', '0', '1'),
+('145', '2', 'Baja California', 'BCN', '0', '1'),
+('145', '2', 'Baja California Sur', 'BCS', '0', '1'),
+('145', '2', 'Campeche', 'CAM', '0', '1'),
+('145', '2', 'Chiapas', 'CHP', '0', '1'),
+('145', '2', 'Chihuahua', 'CHH', '0', '1'),
+('145', '2', 'Coahuila', 'COA', '0', '1'),
+('145', '2', 'Colima', 'COL', '0', '1'),
+('145', '2', 'Distrito Federal', 'DIF', '0', '1'),
+('145', '2', 'Durango', 'DUR', '0', '1'),
+('145', '2', 'Guanajuato', 'GUA', '0', '1'),
+('145', '2', 'Guerrero', 'GRO', '0', '1'),
+('145', '2', 'Hidalgo', 'HID', '0', '1'),
+('145', '2', 'Jalisco', 'JAL', '0', '1'),
+('145', '2', 'México', 'MEX', '0', '1'),
+('145', '2', 'Michoacán', 'MIC', '0', '1'),
+('145', '2', 'Morelos', 'MOR', '0', '1'),
+('145', '2', 'Nayarit', 'NAY', '0', '1'),
+('145', '2', 'Nuevo León', 'NLE', '0', '1'),
+('145', '2', 'Oaxaca', 'OAX', '0', '1'),
+('145', '2', 'Puebla', 'PUE', '0', '1'),
+('145', '2', 'Querétaro', 'QUE', '0', '1'),
+('145', '2', 'Quintana Roo', 'ROO', '0', '1'),
+('145', '2', 'San Luis Potosí', 'SLP', '0', '1'),
+('145', '2', 'Sinaloa', 'SIN', '0', '1'),
+('145', '2', 'Sonora', 'SON', '0', '1'),
+('145', '2', 'Tabasco', 'TAB', '0', '1'),
+('145', '2', 'Tamaulipas', 'TAM', '0', '1'),
+('145', '2', 'Tlaxcala', 'TLA', '0', '1'),
+('145', '2', 'Veracruz', 'VER', '0', '1'),
+('145', '2', 'Yucatán', 'YUC', '0', '1'),
+('145', '2', 'Zacatecas', 'ZAC', '0', '1');

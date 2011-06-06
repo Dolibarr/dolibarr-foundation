@@ -1,0 +1,35 @@
+# Already in SVN after v1.3.6.0 but missing in v1.4.17
+
+UPDATE `ps_country` SET `contains_states`='1' WHERE `id_country`='5';
+
+INSERT INTO `ps_state` (`id_country`, `id_zone`, `name`, `iso_code`, `tax_behavior`, `active`) VALUES
+(5, 3, 'Beijing', '11', 0, 1),
+(5, 3, 'Chongqing', '50', 0, 1),
+(5, 3, 'Shanghaï', '31', 0, 1),
+(5, 3, 'Tianjin', '12', 0, 1),
+(5, 3, 'Anhui', '34', 0, 1),
+(5, 3, 'Fujian', '35', 0, 1),
+(5, 3, 'Gansu', '62', 0, 1),
+(5, 3, 'Guangdong', '44', 0, 1),
+(5, 3, 'Guizhou', '52', 0, 1),
+(5, 3, 'Hainan', '46', 0, 1),
+(5, 3, 'Hebei', '13', 0, 1),
+(5, 3, 'Heilongjiang', '23', 0, 1),
+(5, 3, 'Henan', '41', 0, 1),
+(5, 3, 'Hubei', '42', 0, 1),
+(5, 3, 'Hunan', '43', 0, 1),
+(5, 3, 'Jiangsu', '32', 0, 1),
+(5, 3, 'Jiangxi', '36', 0, 1),
+(5, 3, 'Jilin', '22', 0, 1),
+(5, 3, 'Liaoning', '21', 0, 1),
+(5, 3, 'Qinghai', '63', 0, 1),
+(5, 3, 'Shaanxi', '61', 0, 1),
+(5, 3, 'Shandong', '37', 0, 1),
+(5, 3, 'Shanxi', '14', 0, 1),
+(5, 3, 'Sichuan', '51', 0, 1),
+(5, 3, 'Taïwan', '71', 0, 1),
+(5, 3, 'Yunnan', '53', 0, 1),
+(5, 3, 'Guangxi', '45', 0, 1),
+(5, 3, 'Neimenggu', '15', 0, 1),
+(5, 3, 'Ningxia', '64', 0, 1),
+(5, 3, 'Xinjiang', '65', 0, 1);
