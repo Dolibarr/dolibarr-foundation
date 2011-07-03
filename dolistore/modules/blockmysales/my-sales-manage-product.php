@@ -72,6 +72,7 @@ foreach ($languages AS $language) {
 $foundationfeerate=0.7;
 // totalnbofsell
 $totalnbsell=0;
+$totalnbsellpaid=0;
 // totalamount
 $totalamount=0;
 // datestart
@@ -196,6 +197,7 @@ if (sizeof($result))
 		}
 
 		$totalnbsell+=$nbr_achats;
+		if ($nbr_amount > 0) $totalnbsellpaid+=$nbr_achats;
 		$totalamount+=$nbr_amount;
 
 		// Calculate totalamount supplier can claim
@@ -414,6 +416,10 @@ if ($totalamount > 0)
 	echo aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
 	print '</h2>';
 
+	// Total number of sells
+	echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_langue_en_cours);
+	print "<b>".$totalnbsellpaid."</b>";
+	print '<br>';
 	// Total amount earned
 	echo aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
 	print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
