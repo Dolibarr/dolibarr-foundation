@@ -8,11 +8,13 @@ include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
+
 // Get env variables
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
+
 
 // Check if current user is also an employee with admin user
 $query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee
@@ -69,7 +71,7 @@ foreach ($languages AS $language) {
 
 <?php
 // foundationfreerate
-$foundationfeerate=0.8;
+$foundationfeerate=round($commission/100);
 // totalnbofsell
 $totalnbsell=0;
 $totalnbsellpaid=0;
@@ -228,13 +230,13 @@ if (sizeof($result))
 		<tr bgcolor="<?php echo $colorTab; ?>">
 		    <td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
 		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a>
-			<?php 
+			<?php
 			print '<br>';
-			echo $description_short; 
-			echo aff("Réf", "Ref", $iso_langue_en_cours).': '.$ref_product.""; 
+			echo $description_short;
+			echo aff("Réf", "Ref", $iso_langue_en_cours).': '.$ref_product."";
 			if ($active) echo '<img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;">';
 			else echo '<img src="../../img/os/6.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;">';
-			print '<br>';			
+			print '<br>';
 			print aff("Fichier", "File", $iso_langue_en_cours).': '.$filename.' ('.$datedeposit.')';
 			?>
 			</td>
@@ -468,7 +470,7 @@ if ($totalamount > 0)
 	$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
 	print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;</font></b><br>";
 	print '<br>';
-	
+
 	// Message to claim
 	if ($remaintoreceive)
 	{

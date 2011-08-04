@@ -9,10 +9,11 @@ include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 
+// Get env variables
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
 $product_id = $_GET['id_p']?$_GET['id_p']:$_POST['id_p'];
-
+if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
 
 
 $languages = Language::getLanguages();
@@ -81,7 +82,7 @@ if ($_GET["up"] == 1) {
 		  }
 		$upload=-1;
 	}
-	
+
 	if ($upload >= 0 && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
 	{
 		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
@@ -100,7 +101,7 @@ if ($_GET["up"] == 1) {
 
         prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
 
-		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) 
+		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true)
 		{
 			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
 			$upload=-1;
@@ -249,16 +250,16 @@ if ($_GET["upd"] == 1) {
 			prestalog("A new file is asked: We add it into product_download query=".$query);
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
-		} 
+		}
 		else
-		{ 
+		{
 			//recup des infos fichier
 			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download`
 						  WHERE `id_product` = '.$product_id.' ';
 			prestalog("No new file, we search old value query=".$query);
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-			foreach ($result AS $row) 
+			foreach ($result AS $row)
 			{
 				$product_file_name = $row['display_filename'];
 				$product_file_path = $row['physically_filename'];
@@ -270,9 +271,9 @@ if ($_GET["upd"] == 1) {
 		$newPrice =  round($_POST["priceTI"],2);
 
 		// Si un fichier a ete modifier ou le prix modifie
-		if ($newfile || $oldPrice != $newPrice) 
+		if ($newfile || $oldPrice != $newPrice)
 		{
-			if ($newfile || $newPrice > 0) 
+			if ($newfile || $newPrice > 0)
 			{
 				//delete des attachments
 				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment`
@@ -285,7 +286,7 @@ if ($_GET["upd"] == 1) {
 					$id_attachment =  $row['id_attachment'];
 					prestalog("Delete attachment num ".$id_attachment);
 
-					if ($id_attachment > 0) 
+					if ($id_attachment > 0)
 					{
 						$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';
 						$result1 = Db::getInstance()->ExecuteS($query);
@@ -298,7 +299,7 @@ if ($_GET["upd"] == 1) {
 					}
 				}
 			}
-			if (($newfile && $newPrice == 0) || ($newPrice == 0 && $oldPrice > 0)) 
+			if (($newfile && $newPrice == 0) || ($newPrice == 0 && $oldPrice > 0))
 			{
 				$product_file_newname = basename($product_file_path);
 
@@ -424,8 +425,8 @@ echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</
 
 <?php
 print aff(
-'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 30% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
-'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
+'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant '.(100-$commission).'% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute '.$commission.'% of payments, the remaining '.(100-$commission).'% are kept to help the development of Dolibarr ERP/CRM project)...',
 $iso_langue_en_cours);
 
 echo '
@@ -532,14 +533,14 @@ echo '
 	<?php echo $file_name; ?><br /><br />
 
         <?php
-		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
+		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != ""))
 		{
 			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
 			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
 			echo aff("Fichier ".$file_name." prêt.","File ".$file_name." ready.",$iso_langue_en_cours);
 
 		}
-		else 
+		else
 		{
 		?>
 			<?php echo aff("Nouveau: Taille maximal du fichier: ".ini_get('upload_max_filesize'),"New file: Maximum file size is: ".ini_get('upload_max_filesize'), $iso_langue_en_cours); ?>
@@ -744,7 +745,7 @@ Creador/Licencia:  <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
 Idioma interfaz usuario: <strong>Inglés</strong><br>
 Ayuda/Soporte: <strong>No / <strike>foro www.dolibarr.org</strike> / <strike>mail a contacto@creador.com</strike></strong><br>
 Prerrequisitos: <br>
-<ul>   
+<ul>
 <li> Versión Dolibarr: <strong>'.$minversion.'+</strong></li>
 </ul>
 Para instalar este módulo:<br>
