@@ -69,7 +69,7 @@ foreach ($languages AS $language) {
 
 <?php
 // foundationfreerate
-$foundationfeerate=0.7;
+$foundationfeerate=0.8;
 // totalnbofsell
 $totalnbsell=0;
 $totalnbsellpaid=0;

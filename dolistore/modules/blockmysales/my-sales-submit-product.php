@@ -304,8 +304,8 @@ echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2
 
 <?php
 print aff(
-'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 30% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
-'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 70% of payments, the remaining 30% are kept to help the development of Dolibarr ERP/CRM project)...',
+'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant 20% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute 80% of payments, the remaining 20% are kept to help the development of Dolibarr ERP/CRM project)...',
 $iso_langue_en_cours);
 
 echo '
