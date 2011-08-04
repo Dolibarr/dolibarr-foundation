@@ -3,6 +3,7 @@
 /* SSL Management */
 $useSSL = true;
 
+require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
@@ -71,7 +72,7 @@ foreach ($languages AS $language) {
 
 <?php
 // foundationfreerate
-$foundationfeerate=round($commission/100);
+$foundationfeerate=$commission/100;
 // totalnbofsell
 $totalnbsell=0;
 $totalnbsellpaid=0;
@@ -294,7 +295,6 @@ if ($totalamount > 0)
 
     require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
     $dolibarr_main_url_root='http://asso.dolibarr.org/dolibarr/';
-	require_once('config.inc.php');
 	$authentication=array(
 	    'dolibarrkey'=>$wsdolibarrkey,
 	    'sourceapplication'=>'DOLISTORE',
