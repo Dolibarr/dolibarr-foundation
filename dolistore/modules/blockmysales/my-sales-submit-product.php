@@ -34,7 +34,10 @@ $upload=0;
  */
 
 //upload du fichier
-if ($_GET["up"] == 1) {
+if ($_GET["up"] == 1) 
+{
+	prestalog("Upload or reupload file ".$_FILES['virtual_product_file']['tmp_name']);
+
 	$originalfilename=$_FILES['virtual_product_file']['name'];
 	if ($_FILES['virtual_product_file']['error']) {
 		  switch ($_FILES['virtual_product_file']['error']){
@@ -56,10 +59,17 @@ if ($_GET["up"] == 1) {
 	
 	if ($upload >= 0 && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
 	{
+		$rulesfr="";
+		$rulesen='';
 		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
 			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
 		{
-			echo "<div style='color:#FF0000'>".aff("Le package ne semble pas avoir été fabriqué avec un outil Dolibarr officiel 'htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes","Package seems to have not been built using Dolibarr official tool 'htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes",$iso_langue_en_cours)."</div>";
+			$rulesfr.="Le nom du fichier package doit avoir un nom du type module_monpackage-x.y(.z).zip<br>";
+			$rulesfr.="Essayer de fabriquer votre package avec un outil Dolibarr officiel récent ('htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes).";
+			$rulesen.="Package file name must match module_mypackage-x.y(.z).zip<br>";
+			$rulesen.="Try to build your package with a recent Dolibarr official tool ('htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes)";
+			echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
+			echo "<br>";
 			$upload=-1;
 		}
 	}
@@ -82,13 +92,16 @@ if ($_GET["up"] == 1) {
 			$upload=1;
 		}
 	}
+
+	// If upload is a success chemin_destination is defined. It is '' otherwise.
 }
 
 
 
 
 //soumission du produit
-if ($_GET["sub"] == 1) {
+if ($_GET["sub"] == 1) 
+{
 
 	$flagError = 0;
 	$status = $_POST['active']; if ($status == "") $status = 0;
@@ -298,6 +311,10 @@ if ($_GET['cel'] == 1) {
  * View
  */
 
+$tmpname=($_POST["product_file_name"] != "" ? $_POST["product_file_name"] : ($_FILES['virtual_product_file']['name'] != "" ? $_FILES['virtual_product_file']['name'] : "" ));
+$tmppath=($_POST["product_file_path"] != "" ? $_POST["product_file_path"] : ($chemin_destination != "" ? $chemin_destination : ""));
+
+
 echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2>", $iso_langue_en_cours);
 ?>
 <br />
@@ -433,10 +450,11 @@ echo '
                                                                                         document.fmysalessubprod.submit();" maxlength="10000000" type="file">
         	<?php
 		}
+
 		?>
 		<br>
-		<input type="hidden" name="product_file_name" id="product_file_name" value="<?php if ($_POST["product_file_name"] != "") echo $_POST["product_file_name"]; if ($_FILES['virtual_product_file']['name'] != "") echo $_FILES['virtual_product_file']['name']; ?>" >
-		<input type="hidden" name="product_file_path" id="product_file_path" value="<?php if ($_POST["product_file_path"] != "") echo $_POST["product_file_path"]; if ($chemin_destination != "") echo $chemin_destination; ?>" >
+		<input type="hidden" name="product_file_name" id="product_file_name" value="<?php echo $tmpname; ?>" >
+		<input type="hidden" name="product_file_path" id="product_file_path" value="<?php echo $tmppath; ?>" >
     </td>
   </tr>
 
@@ -701,14 +719,15 @@ Para instalar este módulo:<br>
 
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
-		<button style="font-weight: 700;" type="button" 
+		<?php // print 'xxxy: '.$tmpname.' - '.$tmppath; ?>
+		<button style="font-weight: 700;" type="button" <?php if (empty($tmpname) || empty($tmppath)) print 'disabled="disabled" '; ?>
 		onclick="javascript: document.fmysalessubprod.action='?sub=1'; document.fmysalessubprod.submit();">
-		<?php echo aff("Valider ce produit", "Submit this product", $iso_langue_en_cours); ?>
+		<?php print aff("Valider ce produit", "Submit this product", $iso_langue_en_cours); ?>
 		</button>
 		 &nbsp; &nbsp; &nbsp; &nbsp;
 		<button type="button" 
 		onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>'); document.fmysalessubprod.action='?cel=1'; document.fmysalessubprod.submit();">
-		<?php echo aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
+		<?php print aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
 		</button>
 	</td>
   </tr>

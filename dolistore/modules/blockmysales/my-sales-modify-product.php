@@ -64,6 +64,8 @@ if (testProductAppartenance($customer_id, $product_id)) {
 
 //upload du fichier
 if ($_GET["up"] == 1) {
+	prestalog("Upload or reupload file ".$_FILES['virtual_product_file']['tmp_name']);
+
 	$originalfilename=$_FILES['virtual_product_file']['name'];
 	if ($_FILES['virtual_product_file']['error']) {
 		  switch ($_FILES['virtual_product_file']['error']){
@@ -82,13 +84,20 @@ if ($_GET["up"] == 1) {
 		  }
 		$upload=-1;
 	}
-
+	
 	if ($upload >= 0 && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
 	{
+		$rulesfr="";
+		$rulesen='';
 		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
 			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
 		{
-			echo "<div style='color:#FF0000'>".aff("Le package ne semble pas avoir été fabriqué avec un outil Dolibarr officiel 'htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes","Package seems to have not been built using Dolibarr official tool 'htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes",$iso_langue_en_cours)."</div>";
+			$rulesfr.="Le nom du fichier package doit avoir un nom du type module_monpackage-x.y(.z).zip<br>";
+			$rulesfr.="Essayer de fabriquer votre package avec un outil Dolibarr officiel récent ('htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes).";
+			$rulesen.="Package file name must match module_mypackage-x.y(.z).zip<br>";
+			$rulesen.="Try to build your package with a recent Dolibarr official tool ('htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes)";
+			echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
+			echo "<br>";
 			$upload=-1;
 		}
 	}
@@ -101,7 +110,7 @@ if ($_GET["up"] == 1) {
 
         prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
 
-		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true)
+		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) 
 		{
 			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
 			$upload=-1;
@@ -250,16 +259,16 @@ if ($_GET["upd"] == 1) {
 			prestalog("A new file is asked: We add it into product_download query=".$query);
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
-		}
+		} 
 		else
-		{
+		{ 
 			//recup des infos fichier
 			$query = 'SELECT `display_filename`, `physically_filename` FROM `'._DB_PREFIX_.'product_download`
 						  WHERE `id_product` = '.$product_id.' ';
 			prestalog("No new file, we search old value query=".$query);
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-			foreach ($result AS $row)
+			foreach ($result AS $row) 
 			{
 				$product_file_name = $row['display_filename'];
 				$product_file_path = $row['physically_filename'];
@@ -271,9 +280,9 @@ if ($_GET["upd"] == 1) {
 		$newPrice =  round($_POST["priceTI"],2);
 
 		// Si un fichier a ete modifier ou le prix modifie
-		if ($newfile || $oldPrice != $newPrice)
+		if ($newfile || $oldPrice != $newPrice) 
 		{
-			if ($newfile || $newPrice > 0)
+			if ($newfile || $newPrice > 0) 
 			{
 				//delete des attachments
 				$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment`
@@ -286,7 +295,7 @@ if ($_GET["upd"] == 1) {
 					$id_attachment =  $row['id_attachment'];
 					prestalog("Delete attachment num ".$id_attachment);
 
-					if ($id_attachment > 0)
+					if ($id_attachment > 0) 
 					{
 						$query = 'DELETE FROM `'._DB_PREFIX_.'attachment` WHERE `id_attachment` = '.$id_attachment.';';
 						$result1 = Db::getInstance()->ExecuteS($query);
@@ -299,7 +308,7 @@ if ($_GET["upd"] == 1) {
 					}
 				}
 			}
-			if (($newfile && $newPrice == 0) || ($newPrice == 0 && $oldPrice > 0))
+			if (($newfile && $newPrice == 0) || ($newPrice == 0 && $oldPrice > 0)) 
 			{
 				$product_file_newname = basename($product_file_path);
 
@@ -533,14 +542,14 @@ echo '
 	<?php echo $file_name; ?><br /><br />
 
         <?php
-		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != ""))
+		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
 		{
 			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
 			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
 			echo aff("Fichier ".$file_name." prêt.","File ".$file_name." ready.",$iso_langue_en_cours);
 
 		}
-		else
+		else 
 		{
 		?>
 			<?php echo aff("Nouveau: Taille maximal du fichier: ".ini_get('upload_max_filesize'),"New file: Maximum file size is: ".ini_get('upload_max_filesize'), $iso_langue_en_cours); ?>
@@ -745,7 +754,7 @@ Creador/Licencia:  <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
 Idioma interfaz usuario: <strong>Inglés</strong><br>
 Ayuda/Soporte: <strong>No / <strike>foro www.dolibarr.org</strike> / <strike>mail a contacto@creador.com</strike></strong><br>
 Prerrequisitos: <br>
-<ul>
+<ul>   
 <li> Versión Dolibarr: <strong>'.$minversion.'+</strong></li>
 </ul>
 Para instalar este módulo:<br>
