@@ -434,9 +434,11 @@ if ($totalamount > 0)
 	// List of payments
 	if (sizeof($dolistoreinvoices))
 	{
+		print '<br>'."\n";
 		echo aff("Reversements déjà reçus: ","Last payments received: ", $iso_langue_en_cours);
 		print '<br>'."\n";
-		foreach($dolistoreinvoices as $item)
+		$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
+		foreach($sortdolistoreinvoices as $item)
 		{
 			echo aff("Date: ","Date: ", $iso_langue_en_cours);
 			print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
@@ -501,4 +503,40 @@ else
 }
 
 include(dirname(__FILE__).'/../../footer.php');
+
+
+
+/**
+ * 	Advanced sort array by second index function, which produces ascending (default)
+ *  or descending output and uses optionally natural case insensitive sorting (which
+ *  can be optionally case sensitive as well).
+ *
+ *  @param      array		$array      		Array to sort
+ *  @param      string		$index				Key in array to use for sorting criteria
+ *  @param      int			$order				Sort order
+ *  @param      int			$natsort			1=use "natural" sort (natsort), 0=use "standard sort (asort)
+ *  @param      int			$case_sensitive		1=sort is case sensitive, 0=not case sensitive
+ *  @return     array							Sorted array
+ */
+function dol_sort_array(&$array, $index, $order='asc', $natsort=0, $case_sensitive=0)
+{
+    // Clean parameters
+    $order=strtolower($order);
+
+    $sizearray=count($array);
+    if (is_array($array) && $sizearray>0)
+    {
+        foreach(array_keys($array) as $key) $temp[$key]=$array[$key][$index];
+        if (!$natsort) ($order=='asc') ? asort($temp) : arsort($temp);
+        else
+        {
+            ($case_sensitive) ? natsort($temp) : natcasesort($temp);
+            if($order!='asc') $temp=array_reverse($temp,TRUE);
+        }
+        foreach(array_keys($temp) as $key) (is_numeric($key))? $sorted[]=$array[$key] : $sorted[$key]=$array[$key];
+        return $sorted;
+    }
+    return $array;
+}
+
 ?>
