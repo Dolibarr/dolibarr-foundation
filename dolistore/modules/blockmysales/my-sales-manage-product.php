@@ -432,10 +432,10 @@ if ($totalamount > 0)
 	echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de 2 mois de rétractation)", "&nbsp; (any sell is validated after a 2 month delay)", $iso_langue_en_cours);
 	print '<br>';
 	// List of payments
-	if (sizeof($dolistoreinvoices))
+	if (count($dolistoreinvoices))
 	{
 		print '<br>'."\n";
-		echo aff("Reversements déjà reçus: ","Last payments received: ", $iso_langue_en_cours);
+		echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore'): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received "), $iso_langue_en_cours);
 		print '<br>'."\n";
 		$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
 		foreach($sortdolistoreinvoices as $item)
