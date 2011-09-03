@@ -127,15 +127,16 @@ $iso_langue_en_cours);
 
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr bgcolor="#CCCCCC">
+    <td nowrap="nowrap"><b><?php echo aff("Num", "Nb", $iso_langue_en_cours); ?></b></td>
     <td nowrap="nowrap"><b><?php echo aff("Nom", "Name", $iso_langue_en_cours); ?></b></td>
-	<td nowrap="nowrap"><b><?php echo aff("Date", "Date", $iso_langue_en_cours); ?></b></td>
+	<td nowrap="nowrap" align="center"><b><?php echo aff("Date", "Date", $iso_langue_en_cours); ?></b></td>
     <td nowrap="nowrap"><b><?php echo aff("Montant", "Amount", $iso_langue_en_cours); ?></b></td>
     <!--<td nowrap="nowrap"><b><?php echo aff("Supp", "Delete", $iso_langue_en_cours); ?></b></td> -->
   </tr>
 
 <?php
 // Calculate totalamount
-$query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, id_order_detail, product_price, o.date_add
+$query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, od.id_order_detail, od.product_price, od.reduction_amount, o.date_add
 			FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 			WHERE product_id = ".$id_product."
 			AND c.id_customer = o.id_customer 
@@ -146,8 +147,10 @@ $subresult = Db::getInstance()->ExecuteS($query);
 $nbr_achats = 0;
 $nbr_amount = 0;
 
+$i=0;
 foreach ($subresult AS $subrow) 
 {
+	$i++;
 	$nbr_achats = $subrow['nbra'];
 	$nbr_amount = $subrow['amount'];
 	
@@ -155,9 +158,18 @@ foreach ($subresult AS $subrow)
 	?>
 
 	<tr bgcolor="<?php echo $colorTab; ?>">
-		<td><?php echo $subrow['lastname'].' '.$subrow['firstname'].' ('.$subrow['email'].')'; ?></td>
-		<td align="right"><?php echo $subrow['date_add']; ?></td>
-		<td align="right"><?php echo $subrow['product_price']+0; ?></td>
+		<td><?php echo $i; ?></td>
+		<td><?php 
+			echo '<b>'.$subrow['lastname'].' '.$subrow['firstname'].'</b> ('.$subrow['email'].')'; 
+			echo '<br>'.aff("Inscrit le: ", "Registered on: ", $iso_langue_en_cours).$subrow['cust_date_add'];
+		?>
+		</td>
+		<td align="center"><?php echo $subrow['date_add']; ?></td>
+		<td align="right"><?php 
+			if ($subrow['reduction_amount'] > 0) echo ($subrow['product_price']-$subrow['reduction_amount']+0).' ('.($subrow['product_price']+0).')';
+			else echo ($subrow['product_price']+0); 
+		?>
+		</td>
 	</tr>
 
 	<?php

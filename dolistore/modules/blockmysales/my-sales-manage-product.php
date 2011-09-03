@@ -181,7 +181,7 @@ if (sizeof($result))
 			$colorTab="#eeeeee";
 
 		// Calculate totalamount
-		$query = "SELECT count( id_order_detail ) as nbra, sum( product_price ) as amount, min( date_add ) as min_date
+		$query = "SELECT count( id_order_detail ) as nbra, sum( product_price - reduction_amount ) as amount, min( date_add ) as min_date
 					FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
 					WHERE product_id = ".$id_product."
 					AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
@@ -204,7 +204,7 @@ if (sizeof($result))
 		$totalamount+=$nbr_amount;
 
 		// Calculate totalamount supplier can claim
-		$query = "SELECT count( id_order_detail ) as nbra, sum( product_price ) as amount, min( date_add ) as min_date
+		$query = "SELECT count( id_order_detail ) as nbra, sum( product_price - reduction_amount ) as amount, min( date_add ) as min_date
 					FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
 					WHERE product_id = ".$id_product."
 					AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
