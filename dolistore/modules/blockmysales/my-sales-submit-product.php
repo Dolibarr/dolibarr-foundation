@@ -248,17 +248,21 @@ if ($_GET["sub"] == 1)
 
 				if (empty($id_tag))
 				{
-					prestalog("We create tag for id_lang ".$id_lang.", name ".$tag);
 					$query = "INSERT INTO "._DB_PREFIX_."tag(id_lang, name) VALUES ('".$id_lang."', '".addslashes($tag)."')";
 					$result = Db::getInstance()->ExecuteS($query);
 					//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
+
+					$id_tag = Db::getInstance()->Insert_ID();
+					prestalog("We created tag for id_lang ".$id_lang.", name ".$tag.", id is ".$id_tag);
 				}
 
-				if (! empty($id_tag))
+				if (! empty($id_tag) && $id_tag > 0)
 				{
 					// Add tag link
-					// TODO
+					$query = "INSERT INTO "._DB_PREFIX_."product_tag(id_product, id_tag) VALUES ('".$id_product."', '".$id_tag."')";
+					$result = Db::getInstance()->ExecuteS($query);
 
+					prestalog("We insert link product_tag ".$id_product.", id_tag ".$id_tag);
 				}
 			}
 		}
