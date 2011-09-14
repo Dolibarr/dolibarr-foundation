@@ -225,6 +225,43 @@ if ($_GET["sub"] == 1)
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 		}
 
+		// Add tag description of product
+		for ($x = 0; $product_nameTAB[$x]; $x++)
+		{
+			$id_lang=$languageTAB[$x]['id_lang'];
+			$tags=explode(' ',$keywordsTAB[$x]);
+			foreach($tags as $tag)
+			{
+				$id_tag=0;
+
+				// Search existing tag
+				$query = 'SELECT id_tag FROM '._DB_PREFIX_.'tag
+				WHERE id_lang = \''.$id_lang.'\'
+				AND name = \''.addslashes($tag).'\' ';
+				$result = Db::getInstance()->ExecuteS($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+				foreach ($result AS $row)
+				{
+					$id_tag = $row['id_tag'];
+					prestalog("tag id for id_lang ".$id_lang.", name ".$tag." is ".$id_tag);
+				}
+
+				if (empty($id_tag))
+				{
+					prestalog("We create tag for id_lang ".$id_lang.", name ".$tag);
+					$query = "INSERT INTO "._DB_PREFIX_."tag(id_lang, name) VALUES ('".$id_lang."', '".addslashes($tag)."')";
+					$result = Db::getInstance()->ExecuteS($query);
+					//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
+				}
+
+				if (! empty($id_tag))
+				{
+					// Add tag link
+					// TODO
+
+				}
+			}
+		}
 
 		//mise en base du lien avec le produit telechargeable
 		$product_file_newname = basename($product_file_path);
