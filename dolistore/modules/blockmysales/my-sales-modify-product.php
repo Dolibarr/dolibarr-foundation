@@ -245,6 +245,55 @@ if ($_GET["upd"] == 1) {
 
 		$newfile = ($product_file_path?1:0);
 
+		$id_product = $product_id;
+
+		// Delete tag description of product
+		$query = "DELETE FROM "._DB_PREFIX_."product_tag WHERE id_product = ".$id_product;
+		$result = Db::getInstance()->ExecuteS($query);
+		prestalog("We delete all links to tags for id_product ".$id_product);
+
+		// Add tag description of product
+		for ($x = 0; $product_nameTAB[$x]; $x++)
+		{
+			$id_lang=$languageTAB[$x]['id_lang'];
+			$tags=preg_split('/[\s,]+/',$keywordsTAB[$x]);
+			foreach($tags as $tag)
+			{
+				$id_tag=0;
+
+				// Search existing tag
+				$query = 'SELECT id_tag FROM '._DB_PREFIX_.'tag
+				WHERE id_lang = \''.$id_lang.'\'
+				AND name = \''.addslashes($tag).'\' ';
+				$result = Db::getInstance()->ExecuteS($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+				foreach ($result AS $row)
+				{
+					$id_tag = $row['id_tag'];
+					prestalog("tag id for id_lang ".$id_lang.", name ".$tag." is ".$id_tag);
+				}
+
+				if (empty($id_tag))
+				{
+					$query = "INSERT INTO "._DB_PREFIX_."tag(id_lang, name) VALUES ('".$id_lang."', '".addslashes($tag)."')";
+					$result = Db::getInstance()->ExecuteS($query);
+					//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
+
+					$id_tag = Db::getInstance()->Insert_ID();
+					prestalog("We created tag for id_lang ".$id_lang.", name ".$tag.", id is ".$id_tag);
+				}
+
+				if (! empty($id_tag) && $id_tag > 0)
+				{
+					// Add tag link
+					$query = "INSERT INTO "._DB_PREFIX_."product_tag(id_product, id_tag) VALUES ('".$id_product."', '".$id_tag."')";
+					$result = Db::getInstance()->ExecuteS($query);
+
+					prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
+				}
+			}
+		}
+
 		//mise en base du lien avec le produit telechargeable
 		if ($newfile)
 		{

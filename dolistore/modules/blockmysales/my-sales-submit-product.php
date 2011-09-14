@@ -229,7 +229,7 @@ if ($_GET["sub"] == 1)
 		for ($x = 0; $product_nameTAB[$x]; $x++)
 		{
 			$id_lang=$languageTAB[$x]['id_lang'];
-			$tags=explode(' ',$keywordsTAB[$x]);
+			$tags=preg_split('/[\s,]+/',$keywordsTAB[$x]);
 			foreach($tags as $tag)
 			{
 				$id_tag=0;
@@ -262,7 +262,7 @@ if ($_GET["sub"] == 1)
 					$query = "INSERT INTO "._DB_PREFIX_."product_tag(id_product, id_tag) VALUES ('".$id_product."', '".$id_tag."')";
 					$result = Db::getInstance()->ExecuteS($query);
 
-					prestalog("We insert link product_tag ".$id_product.", id_tag ".$id_tag);
+					prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
 				}
 			}
 		}
