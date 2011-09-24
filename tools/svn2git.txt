@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# eg: ./svn2git.sh originproject projectdir projectdest
+
+ORIGIN_PROJECT=$1
+DIR_PROJECT=$2
+DEST_PROJECT=$3
+TEMPDIR='/tmp'
+
+# http://john.albin.net/git/convert-subversion-to-git
+
+# Retrieve a list of all svn committers
+# Work in local copy of svn repository
+# svn log -q | awk -F '|' '/^r/ {sub("^ ", "", $2); sub(" $", "", $2); print $2" = "$2" "}' | sort -u > authors-transform.txt
+
+# Clone the subversion repository
+# git svn clone file:///svnroot/${ORIGIN_PROJECT} --no-metadata -A authors-transform.txt --stdlayout ${TEMPDIR}
+# git svn clone https://agefodd.svn.sourceforge.net/svnroot/agefodd --no-metadata -A authors-transform.txt --stdlayout ${TEMPDIR}
+git svn clone svn+ssh://hregis@old.doliforge.org/svnroot/${ORIGIN_PROJECT} --no-metadata -A authors-transform.txt --stdlayout ${TEMPDIR}
+
+# Convert svn:ignore properties to .gitignore
+cd ${TEMPDIR}
+git svn show-ignore > .gitignore
+git add .gitignore
+git commit -m 'Convert svn:ignore properties to .gitignore.'
+
+# Uncomment for create the bare git repository
+# git init --bare /gitroot/${DIR_PROJECT}/${DEST_PROJECT}.git
+
+# Push repository to a bare git repository
+cd /gitroot/${DIR_PROJECT}/${DEST_PROJECT}.git
+git symbolic-ref HEAD refs/heads/trunk
+cd ${TEMPDIR}
+git remote add bare /gitroot/${DIR_PROJECT}/${DEST_PROJECT}.git
+git config remote.bare.push 'refs/remotes/*:refs/heads/*'
+git push bare
+
+# Delete temp dir
+rm -Rf ${TEMPDIR}/.git
+
+# Rename trunk branch to master
+cd /gitroot/${DIR_PROJECT}/${DEST_PROJECT}.git
+git branch -m trunk master
