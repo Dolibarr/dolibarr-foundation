@@ -1467,14 +1467,24 @@ color:white;
 	margin:0;
 	padding:0;
 }
-#center_column .products_block ul .product_accessories_description .product_accessories_price{
-	margin-top:75px !important;
+#center_column .products_block ul .product_accessories_description .product_accessories_price {
+	margin-top:200px !important;
 	margin-top:0px;
 }
 #center_column .products_block ul .product_accessories_description {
 	margin:0;
-	padding:0;
-	height:280px;
+	padding:4px;
+	height:260px;
+}
+#center_column .products_block ul .product_accessories_description .product_image {
+	border: 0px !important;
+}
+#center_column .products_block ul .product_accessories_description .product_desc {
+	width: 150px;
+}
+#center_column .products_block ul .product_accessories_description .product_description {
+	width: 216px;
+	border: 0px !important;
 }
 /*#center_column .products_block li.last_item { float:none; clear:both; }*/
 /*#center_column .products_block li.last_item_of_line { border-right:none; }*/
