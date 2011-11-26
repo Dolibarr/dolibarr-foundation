@@ -71,7 +71,7 @@
 }
 
 /*TMP*/
-#scenes a.cluetip span{
+#scenes .cluetip span{
 	background:transparent url(../img/icon/cible.gif) no-repeat scroll center center;
 	color:black;
 	display:block;
@@ -83,20 +83,19 @@
 	width:23px;
 }
 /*TMP*/
-
-#scenes .thumbs_banner{
+.thumbs_banner{
 	margin:10px auto;
 	width:100%;
 }
 
-#scenes .thumbs_banner .space-keeper{
+.thumbs_banner .space-keeper{
 	width:25px;
 	float:left;
 	display:block;
 	height:100%;
 }
 
-#scenes .thumbs_banner .space-keeper a.prev{
+.thumbs_banner .space-keeper a.prev{
 	background:transparent url(../img/icon/serial_scroll_left.gif);
 	display:none;
 	width:25px;
@@ -105,27 +104,25 @@
 	text-decoration:none;
 	background-color:#EEE;
 }
-
-#scenes .thumbs_banner #scenes_list{
+#scenes_list{
 	overflow:hidden;
 	width:504px;
 	float:left;
 	border:1px solid #EEE;
 }
-
-#scenes .thumbs_banner #scenes_list ul{
+#scenes_list ul{
 	list-style-type:none;
 }
 
-#scenes .thumbs_banner #scenes_list ul li{
+#scenes_list li{
 	float:left;
 }
 
-#scenes .thumbs_banner #scenes_list ul li a{
+#scenes_list a{
 	display:block;
 }
 
-#scenes .thumbs_banner a.next {
+.thumbs_banner a.next {
 	background:transparent url(../img/icon/serial_scroll_right.gif);
 	width:25px;
 	float:left;

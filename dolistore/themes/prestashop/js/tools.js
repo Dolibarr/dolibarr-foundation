@@ -1,10 +1,90 @@
+/*
+* 2007-2011 PrestaShop 
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 6594 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+function ps_round(value, precision)
+{
+	if (typeof(roundMode) == 'undefined')
+		roundMode = 2;
+	if (typeof(precision) == 'undefined')
+		precision = 2;
+	
+	method = roundMode;
+	if (method == 0)
+		return ceilf(value, precision);
+	else if (method == 1)
+		return floorf(value, precision);
+	precisionFactor = precision == 0 ? 1 : Math.pow(10, precision);
+	return Math.round(value * precisionFactor) / precisionFactor;
+}
+
+function ceilf(value, precision)
+{
+	if (typeof(precision) == 'undefined')
+		precision = 0;
+	precisionFactor = precision == 0 ? 1 : Math.pow(10, precision);
+	tmp = value * precisionFactor;
+	tmp2 = tmp.toString();
+	if (tmp2[tmp2.length - 1] == 0)
+		return value;
+	return Math.ceil(value * precisionFactor) / precisionFactor;
+}
+
+function floorf(value, precision)
+{
+	if (typeof(precision) == 'undefined')
+		precision = 0;
+	precisionFactor = precision == 0 ? 1 : Math.pow(10, precision);
+	tmp = value * precisionFactor;
+	tmp2 = tmp.toString();
+	if (tmp2[tmp2.length - 1] == 0)
+		return value;
+	return Math.floor(value * precisionFactor) / precisionFactor;
+}
+
+function formatedNumberToFloat(price, currencyFormat, currencySign)
+{
+	price = price.replace(currencySign, '');
+	if (currencyFormat == 1)
+		return parseFloat(price.replace(',', '').replace(' ', ''));
+	else if (currencyFormat == 2)
+		return parseFloat(price.replace(' ', '').replace(',', '.'));
+	else if (currencyFormat == 3)
+		return parseFloat(price.replace('.', '').replace(' ', '').replace(',', '.'));
+	else if (currencyFormat == 4)
+		return parseFloat(price.replace(',', '').replace(' ', ''));
+	return price;
+}
 
 //return a formatted price
 function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
-	//if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
-
+	// if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
 	blank = '';
+	price = parseFloat(price.toFixed(6));
+	price = ps_round(price, priceDisplayPrecision);
 	if (currencyBlank > 0)
 		blank = ' ';
 	if (currencyFormat == 1)
@@ -127,4 +207,20 @@ function in_array(value, array)
 		if (array[i] == value)
 			return true;
 	return false;
+}
+
+function resizeAddressesBox(nameBox)
+{
+	maxHeight = 0;
+
+	if (typeof(nameBox) == 'undefined')
+		nameBox = '.address';
+	$(nameBox).each(function()
+	{
+		$(this).css('height', 'auto');
+		currentHeight = $(this).height();
+		if (maxHeight < currentHeight)
+			maxHeight = currentHeight;
+	});
+	$(nameBox).height(maxHeight);
 }

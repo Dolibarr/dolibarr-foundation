@@ -136,7 +136,9 @@ $iso_langue_en_cours);
 
 <?php
 // Calculate totalamount
-$query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, od.id_order_detail, od.product_price, od.reduction_amount, o.date_add
+$query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, 
+			od.id_order_detail, od.product_price, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
+			o.date_add
 			FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 			WHERE product_id = ".$id_product."
 			AND c.id_customer = o.id_customer 
@@ -166,8 +168,15 @@ foreach ($subresult AS $subrow)
 		</td>
 		<td align="center"><?php echo $subrow['date_add']; ?></td>
 		<td align="right"><?php 
-			if ($subrow['reduction_amount'] > 0) echo ($subrow['product_price']-$subrow['reduction_amount']+0).' ('.($subrow['product_price']+0).')';
-			else echo ($subrow['product_price']+0); 
+			if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0)
+			{
+				if ($subrow['reduction_amount'] > 0) echo ($subrow['product_price']-$subrow['reduction_amount']+0).' ('.($subrow['product_price']+0).')';
+				else echo ($subrow['product_price']+0); 
+			}
+			else
+			{
+				print aff('Remboursé','Refunded',$iso_langue_en_cours);
+			}
 		?>
 		</td>
 	</tr>

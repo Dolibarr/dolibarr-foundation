@@ -1,5 +1,31 @@
+/*
+* 2007-2011 PrestaShop 
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 7204 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 nb_move_available = null;
-current_move = 0;
+current_move = -1;
 next_scene_is_at_right = true;
 
 function loadScene(id_scene){
@@ -15,7 +41,7 @@ function onSceneMove(){
 	else current_move--;
 	if (current_move == nb_move_available - 1)	$('#scenes .next').fadeOut();
 	else $('#scenes .next:hidden').fadeIn().css('display','block');
-	if (current_move == 0) $('#scenes .prev').fadeOut().css('display','block');
+	if (current_move == 0) $('#scenes .prev').fadeOut();
 	else $('#scenes .prev').fadeIn().css('display','block');
 	return true;
 }
@@ -33,6 +59,7 @@ $(function () {
 		.cluetip({
 			local:true,
 			cursor: 'pointer',
+			attribute:'accesskey',
 			cluetipClass: 'product_scene',
 			dropShadow: false,
 			dropShadowSteps: 0,
