@@ -1688,9 +1688,10 @@ div#categories_block_left ul.tree li {
 div#categories_block_left ul.tree li ul li{
 	padding-left:15px;
 	background:none;
-	font-size:11px;
+	font-size:12px;
 	font-weight:normal;
-	margin-bottom: 0px;
+	margin-bottom: 1px;
+	padding-top: 1px;
 }
 div#categories_block_left ul.tree li ul li ul li{
 	padding-left:15px;
