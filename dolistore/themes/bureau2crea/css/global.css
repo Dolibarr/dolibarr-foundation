@@ -2153,7 +2153,7 @@ body#category #subcategories li {
 	text-align: left;
 }
 
-div.cat_desc { margin:0 1em; }
+div.cat_desc { margin:0 1em; font-weight: bold; }
 
 body#category  div#subcategories ul.inline_list  li a img {
 	display:none;
@@ -2161,7 +2161,7 @@ body#category  div#subcategories ul.inline_list  li a img {
 
 /* product-list.tpl */
 ul#product_list{
-	margin-top:2em;
+	margin-top:1em;
 	list-style-type:none;
 	position: relative;
 	float: left;

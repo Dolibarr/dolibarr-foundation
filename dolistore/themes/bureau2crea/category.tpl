@@ -23,8 +23,13 @@
         {/if}
         {if $products}
                 {include file=$tpl_dir./product-sort.tpl}
+		{if $nb_products > 10}
+	                {include file=$tpl_dir./pagination.tpl}
+		{/if}
                 {include file=$tpl_dir./product-list.tpl products=$products}
-                {include file=$tpl_dir./pagination.tpl}
+		{if $nb_products > 10}
+	                        {include file=$tpl_dir./pagination.tpl}
+		{/if}
             {elseif !isset($subcategories)}
                 <p class="warning">{l s='There is no product in this category.'}</p>
             {/if}
