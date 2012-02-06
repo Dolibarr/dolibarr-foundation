@@ -12,7 +12,7 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg2816"
    version="1.1"
-   inkscape:version="0.47 r22583"
+   inkscape:version="0.48.2 r9819"
    width="3011.811"
    height="7334.6455"
    sodipodi:docname="dolibarr_rollup_fr.svg"
@@ -30,17 +30,17 @@
      guidetolerance="10"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:window-width="1280"
-     inkscape:window-height="968"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
      id="namedview2818"
      showgrid="false"
      inkscape:document-units="cm"
      units="cm"
-     inkscape:zoom="0.15909144"
-     inkscape:cx="1278.2057"
-     inkscape:cy="3667.3228"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4"
+     inkscape:zoom="0.125"
+     inkscape:cx="139.00125"
+     inkscape:cy="4724.7695"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2816"
      inkscape:showpageshadow="false"
@@ -129,12 +129,11 @@
          id="stop7621" />
     </linearGradient>
     <linearGradient
-       id="linearGradient5713"
-       inkscape:collect="always">
+       id="linearGradient5713">
       <stop
          id="stop5715"
          offset="0"
-         style="stop-color:#77775b;stop-opacity:1" />
+         style="stop-color:#585844;stop-opacity:1;" />
       <stop
          id="stop5717"
          offset="1"
@@ -227,7 +226,7 @@
          inkscape:collect="always" />
     </filter>
     <linearGradient
-       gradientTransform="translate(-275.70425,2041.2206)"
+       gradientTransform="translate(-275.70425,2010.5203)"
        gradientUnits="userSpaceOnUse"
        y2="2423.0273"
        x2="2595.5627"
@@ -237,12 +236,11 @@
        xlink:href="#linearGradient5713"
        inkscape:collect="always" />
     <linearGradient
-       id="linearGradient5713-7"
-       inkscape:collect="always">
+       id="linearGradient5713-7">
       <stop
          id="stop5715-8"
          offset="0"
-         style="stop-color:#77775b;stop-opacity:1" />
+         style="stop-color:#585844;stop-opacity:1;" />
       <stop
          id="stop5717-2"
          offset="1"
@@ -257,14 +255,13 @@
        y1="2423.0273"
        x2="2595.5627"
        y2="2423.0273"
-       gradientTransform="translate(-277.06592,2494.9206)" />
+       gradientTransform="translate(-277.06592,2464.2203)" />
     <linearGradient
-       id="linearGradient5713-7-2"
-       inkscape:collect="always">
+       id="linearGradient5713-7-2">
       <stop
          id="stop5715-8-0"
          offset="0"
-         style="stop-color:#77775b;stop-opacity:1" />
+         style="stop-color:#585843;stop-opacity:1;" />
       <stop
          id="stop5717-2-8"
          offset="1"
@@ -275,7 +272,7 @@
        xlink:href="#linearGradient5713-7-2"
        id="linearGradient5804"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-283.37447,2269.7306)"
+       gradientTransform="translate(-283.37447,2239.0303)"
        x1="1398.6343"
        y1="2423.0273"
        x2="2595.5627"
@@ -394,7 +391,7 @@
        x2="3164.687"
        y2="6001.1572"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-75.151834,25.359938)" />
+       gradientTransform="translate(-75.151834,-85.02993)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient7625"
@@ -404,7 +401,7 @@
        x2="2731.322"
        y2="5871.3262"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-4.4206952,25.359938)" />
+       gradientTransform="translate(-4.4206952,-85.02993)" />
     <filter
        inkscape:collect="always"
        id="filter8715"
@@ -539,11 +536,11 @@
   <text
      transform="scale(0.90483506,1.1051738)"
      id="text5518"
-     y="6050.2783"
+     y="5939.8945"
      x="1253.804"
      style="font-size:91.84264374px;font-style:normal;font-weight:normal;fill:url(#linearGradient7623);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
-       y="6050.2783"
+       y="5939.8945"
        x="1253.804"
        id="tspan5520"
        sodipodi:role="line"
@@ -551,41 +548,41 @@
   <text
      transform="scale(0.90295582,1.1074739)"
      id="text5522"
-     y="4505.9985"
+     y="4475.3022"
      x="1115.847"
-     style="font-size:157.72161865px;font-style:normal;font-weight:normal;fill:url(#linearGradient5719);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     style="font-size:157.72161865000001058px;font-style:normal;font-weight:normal;fill:url(#linearGradient5719);fill-opacity:1.0;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
-       style="fill:url(#linearGradient5719);fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       y="4505.9985"
+       style="fill:url(#linearGradient5719);fill-opacity:1.0;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       y="4475.3022"
        x="1115.847"
        id="tspan5524"
        sodipodi:role="line">Simple à installer</tspan></text>
   <text
-     transform="scale(0.78869503,1.2679172)"
+     transform="scale(0.8790905,1.1375393)"
      id="text5576"
-     y="4842.291"
-     x="627.75757"
-     style="font-size:139.66966248px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     y="5275.3203"
+     x="583.68207"
+     style="font-size:125.30765533px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
-       y="4842.291"
-       x="627.75757"
+       y="5275.3203"
+       x="583.68207"
        id="tspan5578"
        sodipodi:role="line"
-       style="font-family:Arial;-inkscape-font-specification:Arial">www.dolibarr.org</tspan></text>
+       style="font-size:120px;font-family:Arial;-inkscape-font-specification:Arial">www.dolibarr.org</tspan></text>
   <text
-     transform="scale(0.82546793,1.2114341)"
+     transform="scale(0.89399452,1.1185751)"
      id="text5576-3"
-     y="5071.2451"
-     x="2310.6682"
-     style="font-size:147.60308838px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     y="5369.2783"
+     x="2153.7197"
+     style="font-size:124.12431335px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
-       y="5071.2451"
-       x="2310.6682"
+       y="5369.2783"
+       x="2153.7197"
        id="tspan5578-8"
        sodipodi:role="line"
-       style="font-family:Arial;-inkscape-font-specification:Arial">www.dolibarr.fr</tspan></text>
+       style="font-size:119.5373764px;font-family:Arial;-inkscape-font-specification:Arial">www.dolibarr.fr</tspan></text>
   <g
-     transform="translate(1398.553,-561.94449)"
+     transform="translate(1416.553,-693.94449)"
      id="g5707">
     <rect
        style="opacity:0.57777782;fill:#000000;fill-opacity:0.92436978;fill-rule:nonzero;stroke:none;filter:url(#filter5671)"
@@ -603,7 +600,7 @@
        xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAELBAMAAAAFMM1/AAAAB3RJTUUH2gIHFQktFpZ4lwAAAAlw SFlzAAALEgAACxIB0t1+/AAAAARnQU1BAACxjwv8YQUAAAAMUExURQAzW8DAwNgcP////zhiluQA AAD5SURBVHja7c9BDQAgDASwWRgSkAD+vSHilvBpHbQqd2NnxwYeIiIiIiIiIiIiIiIiIiIiIiIi IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi IiIiIiIiIiIiIiIiIiIiIiJ/Ih1beeQBkacHqmf6qQ4AAAAASUVORK5CYII= " />
   </g>
   <g
-     transform="translate(-4.6302473,-348.95449)"
+     transform="translate(23.369753,-474.95449)"
      id="g5703">
     <rect
        style="opacity:0.57777782;fill:#000000;fill-opacity:0.92436978;fill-rule:nonzero;stroke:none;filter:url(#filter5671-6)"
@@ -623,35 +620,35 @@
   <text
      transform="scale(0.90295582,1.1074739)"
      id="text5522-7"
-     y="4959.7173"
+     y="4929.021"
      x="1114.4843"
      style="font-size:157.72161865px;font-style:normal;font-weight:normal;fill:url(#linearGradient5747);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
        style="fill:url(#linearGradient5747);fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       y="4959.7173"
+       y="4929.021"
        x="1114.4843"
        id="tspan5524-8"
        sodipodi:role="line">Simple à développer</tspan></text>
   <text
      transform="scale(0.90295582,1.1074739)"
      id="text5522-7-9"
-     y="4734.5142"
+     y="4703.8179"
      x="1108.1769"
      style="font-size:157.72161865px;font-style:normal;font-weight:normal;fill:url(#linearGradient5804);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
        style="fill:url(#linearGradient5804);fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       y="4734.5142"
+       y="4703.8179"
        x="1108.1769"
        id="tspan5524-8-2"
        sodipodi:role="line">Simple à utiliser</tspan></text>
   <text
      transform="scale(0.90483506,1.1051738)"
      id="text5518-8"
-     y="5920.4502"
+     y="5810.0664"
      x="186.38495"
      style="font-size:91.84264374px;font-style:normal;font-weight:normal;fill:url(#linearGradient7631);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
-       y="5920.4502"
+       y="5810.0664"
        x="186.38495"
        id="tspan5520-2"
        sodipodi:role="line"
@@ -671,40 +668,46 @@
      id="rect4181-9-9"
      style="opacity:0.75;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1.04935145;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter4295)" />
   <g
-     transform="matrix(0.84946284,0,0,0.82857463,268.06934,906.42551)"
+     transform="matrix(0.84946284,0,0,0.82857463,268.06934,872.42551)"
      id="g6120">
     <path
        style="fill:#2e719d;fill-opacity:1;fill-rule:nonzero;stroke:none"
        d="m 601.9151,4922.5873 c -26.27484,-22.1088 -37.01688,-54.9607 -27.44992,-83.9489 21.30433,-64.5527 99.705,-74.5663 133.66749,-17.0724 41.29327,69.9039 -45.31064,152.2711 -106.21757,101.0213 z"
-       id="path5862-7" />
+       id="path5862-7"
+       inkscape:connector-curvature="0" />
     <path
        style="opacity:0.61296303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter6116)"
        d="m 646.45496,4938.1678 c 29.19618,-0.5589 57.94294,-19.5415 69.59375,-54.8438 9.56696,-28.9882 -1.19391,-61.8599 -27.46875,-83.9687 -2.93675,-2.4711 -5.92973,-4.6338 -8.96875,-6.5 9.23609,17.8735 11.42851,37.9683 5.3125,56.5 -16.56263,50.1852 -67.62831,67.3975 -105.5,45.5625 0.9018,1.8278 1.86621,3.6552 2.9375,5.4688 15.38925,26.0519 39.90263,38.2443 64.09375,37.7812 z"
-       id="path5862-7-6-7" />
+       id="path5862-7-6-7"
+       inkscape:connector-curvature="0" />
   </g>
   <g
-     transform="matrix(0.84946284,0,0,0.82857463,264.61192,1153.5555)"
+     transform="matrix(0.84946284,0,0,0.82857463,264.61192,1119.5555)"
      id="g6120-8">
     <path
        style="fill:#2e719d;fill-opacity:1;fill-rule:nonzero;stroke:none"
        d="m 601.9151,4922.5873 c -26.27484,-22.1088 -37.01688,-54.9607 -27.44992,-83.9489 21.30433,-64.5527 99.705,-74.5663 133.66749,-17.0724 41.29327,69.9039 -45.31064,152.2711 -106.21757,101.0213 z"
-       id="path5862-7-1" />
+       id="path5862-7-1"
+       inkscape:connector-curvature="0" />
     <path
        style="opacity:0.61296303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter6116-8)"
        d="m 646.45496,4938.1678 c 29.19618,-0.5589 57.94294,-19.5415 69.59375,-54.8438 9.56696,-28.9882 -1.19391,-61.8599 -27.46875,-83.9687 -2.93675,-2.4711 -5.92973,-4.6338 -8.96875,-6.5 9.23609,17.8735 11.42851,37.9683 5.3125,56.5 -16.56263,50.1852 -67.62831,67.3975 -105.5,45.5625 0.9018,1.8278 1.86621,3.6552 2.9375,5.4688 15.38925,26.0519 39.90263,38.2443 64.09375,37.7812 z"
-       id="path5862-7-6-7-6" />
+       id="path5862-7-6-7-6"
+       inkscape:connector-curvature="0" />
   </g>
   <g
-     transform="matrix(0.84946284,0,0,0.82857463,264.61192,1407.5555)"
+     transform="matrix(0.84946284,0,0,0.82857463,264.61192,1373.5555)"
      id="g6120-89">
     <path
        style="fill:#2e719d;fill-opacity:1;fill-rule:nonzero;stroke:none"
        d="m 601.9151,4922.5873 c -26.27484,-22.1088 -37.01688,-54.9607 -27.44992,-83.9489 21.30433,-64.5527 99.705,-74.5663 133.66749,-17.0724 41.29327,69.9039 -45.31064,152.2711 -106.21757,101.0213 z"
-       id="path5862-7-0" />
+       id="path5862-7-0"
+       inkscape:connector-curvature="0" />
     <path
        style="opacity:0.61296303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter6116-9)"
        d="m 646.45496,4938.1678 c 29.19618,-0.5589 57.94294,-19.5415 69.59375,-54.8438 9.56696,-28.9882 -1.19391,-61.8599 -27.46875,-83.9687 -2.93675,-2.4711 -5.92973,-4.6338 -8.96875,-6.5 9.23609,17.8735 11.42851,37.9683 5.3125,56.5 -16.56263,50.1852 -67.62831,67.3975 -105.5,45.5625 0.9018,1.8278 1.86621,3.6552 2.9375,5.4688 15.38925,26.0519 39.90263,38.2443 64.09375,37.7812 z"
-       id="path5862-7-6-7-0" />
+       id="path5862-7-6-7-0"
+       inkscape:connector-curvature="0" />
   </g>
   <text
      transform="scale(0.7077518,1.4129247)"
@@ -789,7 +792,7 @@
        x="351.91925"
        id="tspan2947-7-7"
        sodipodi:role="line"
-       style="font-size:80px;font-family:Arial;-inkscape-font-specification:Arial">- Application multi-utilisateurs, multi-langues.</tspan></text>
+       style="font-size:80px;font-family:Arial;-inkscape-font-specification:Arial">- Application multi-utilisateurs, multi-langues, multi-plateformes.</tspan></text>
   <text
      transform="scale(0.70146583,1.4255862)"
      id="text2945-1-1-1"
@@ -827,17 +830,17 @@
        sodipodi:role="line"
        style="font-size:80px;fill:#ffffd9;fill-opacity:1;font-family:Arial;-inkscape-font-specification:Arial">- Agenda, emailings....</tspan></text>
   <text
-     transform="scale(0.87807383,1.1388564)"
+     transform="scale(1.0340824,0.96704096)"
      id="text2945-1-1-1-2"
-     y="4098.5996"
-     x="1730.9403"
-     style="font-size:150px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     y="4807.3779"
+     x="1458.697"
+     style="font-size:148.38319397px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#3d3d3d;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      xml:space="preserve"><tspan
-       y="4098.5996"
-       x="1730.9403"
+       y="4807.3779"
+       x="1458.697"
        id="tspan2947-7-7-1-2"
        sodipodi:role="line"
-       style="font-size:150px;fill:#000000;fill-opacity:1;font-family:Arial;-inkscape-font-specification:Arial">et surtout une application...</tspan></text>
+       style="font-size:142.44786072px;font-weight:normal;line-height:101.99999809%;fill:#3d3d3d;fill-opacity:1;font-family:Arial;-inkscape-font-specification:Arial">et surtout une application...</tspan></text>
   <flowRoot
      style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
      id="flowRoot4054"
@@ -1149,4 +1152,4 @@
          height="892.56842"
          x="-383.42728"
          y="3556.9438" /></flowRegion><flowPara
-       id="flowPara3869"></flowPara></flowRoot></svg>
+       id="flowPara3869" /></flowRoot></svg>
