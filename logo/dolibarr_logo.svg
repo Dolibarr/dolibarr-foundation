@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.48.2 r9819"
    sodipodi:docname="dolibarr_logo.svg"
-   inkscape:export-filename="/media/DATA/Mes Developpements/dolibarrasso/logo/dolibarr_logo.png"
+   inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <title
@@ -36,11 +36,11 @@
     <linearGradient
        id="linearGradient3734">
       <stop
-         style="stop-color:#0b5b85;stop-opacity:1;"
+         style="stop-color:#094276;stop-opacity:1;"
          offset="0"
          id="stop3736" />
       <stop
-         style="stop-color:#4f9cdf;stop-opacity:1;"
+         style="stop-color:#468dc9;stop-opacity:1;"
          offset="1"
          id="stop3738" />
     </linearGradient>
@@ -65,9 +65,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.15"
-     inkscape:cx="606.49671"
-     inkscape:cy="-895.46519"
+     inkscape:zoom="0.84852814"
+     inkscape:cx="34.451021"
+     inkscape:cy="213.81085"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -133,7 +133,7 @@
          style="font-size:518.16009521px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:333.234375px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.45798322;stroke-dasharray:none;font-family:Bitstream Vera Sans"
+       style="font-size:333.23437500000000000px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.70729470000000005;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bitstream Vera Sans;opacity:1"
        x="66.790085"
        y="358.46228"
        id="text2828"
@@ -142,7 +142,7 @@
          id="tspan2830"
          x="66.790085"
          y="358.46228"
-         style="font-size:194.85823059px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.45798322;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+         style="font-size:194.85823059000000512px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.70729470000000005;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:42.95219803px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"

@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.48.2 r9819"
    sodipodi:docname="dolibarr_logo_white.svg"
-   inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo_white.png"
+   inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo_white_pt.png"
    inkscape:export-xdpi="41.850452"
    inkscape:export-ydpi="41.850452">
   <title
@@ -57,23 +57,6 @@
          stdDeviation="23.363567"
          inkscape:collect="always" />
     </filter>
-    <filter
-       color-interpolation-filters="sRGB"
-       inkscape:collect="always"
-       id="filter5352">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="10.90887"
-         id="feGaussianBlur5354" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter4232">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="11.896469"
-         id="feGaussianBlur4234" />
-    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -83,7 +66,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.84852814"
-     inkscape:cx="400.70121"
+     inkscape:cx="176.78406"
      inkscape:cy="279.96901"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
@@ -150,7 +133,7 @@
          style="font-size:518.16009521px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:338.0368042px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160052;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.45798322;stroke-dasharray:none;font-family:Bitstream Vera Sans"
+       style="font-size:338.03680420000000595px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160051999999998;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882354;stroke-dasharray:none;font-family:Bitstream Vera Sans"
        x="42.971191"
        y="357.85651"
        id="text2828"
@@ -159,7 +142,7 @@
          id="tspan2830"
          x="42.971191"
          y="357.85651"
-         style="font-size:197.66644287px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160052;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.45798322;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+         style="font-size:197.66644286999999736px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160051999999998;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882354;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:47.99960709px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.25853133;stroke-opacity:0.19607843;font-family:Arial;-inkscape-font-specification:Arial"
@@ -173,5 +156,21 @@
          id="tspan5486"
          x="672.18494"
          y="210.52312">ERP/CRM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:55.1278801px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.37819695;stroke-opacity:0.39607843;font-family:Sans"
+       x="177.89494"
+       y="592.19281"
+       id="text2999"
+       sodipodi:linespacing="125%"
+       transform="scale(1.3959571,0.7163544)"
+       inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo_white_pt.png"
+       inkscape:export-xdpi="41"
+       inkscape:export-ydpi="41"><tspan
+         sodipodi:role="line"
+         id="tspan3001"
+         x="177.89494"
+         y="592.19281"
+         style="stroke-width:1.37819695">Portugal</tspan></text>
   </g>
 </svg>
