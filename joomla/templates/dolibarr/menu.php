@@ -20,29 +20,41 @@
 				}
 			?>
 			</ul>
-			
+
 		</div>
-		
+
+<div class="plusone">
+<!-- Plus one -->
+<g:plusone size="small" href="http://www.dolibarr.org/"></g:plusone>
+<script type="text/javascript">
+(function() {
+var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+po.src = 'http://apis.google.com/js/plusone.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+})();
+</script>
+</div>
+
 		<div align="right">
 		<?php # Disable language links mosLoadModules('user4'); ?>
 		<table cellpadding="0" cellspacing="0" class="moduletabletable.moduletable">
 			<tr>
 			<td>
 			<div id="jflanguageselection"><div class="rawimages">
-			<span><a href="http://www.dolibarr.es/" target="_blank"><img src="/images/flags/flags_es.png" alt="Dolibarr spanish portal" title="Dolibarr spanish portal" target="_blank" /></a></span>
-			<span><a href="http://www.dolibarr.fr/" target="_blank"><img src="/images/flags/flags_fr.png" alt="Dolibarr french portal" title="Dolibarr french portal" target="_blank" /></a></span>
+			<span><a href="http://www.dolibarr.es/" target="_blank"><img src="/images/flags/flags_es.png" alt="Dolibarr spanish portal" title="Dolibarr spanish portal" /></a></span>
+			<span><a href="http://www.dolibarr.fr/" target="_blank"><img src="/images/flags/flags_fr.png" alt="Dolibarr french portal" title="Dolibarr french portal" /></a></span>
 			</div></div>
 			</td>
 			</tr>
 		</table>
 		</div>
-		
-		<div id="submenu">
+
+<!--		<div id="submenu">
 			<ul>
 			<?php
-			/*			
+			/*
 				$qry = "SELECT * FROM #__menu WHERE menutype='mainmenu' and parent='{$item_id}' AND access<='$gid' AND sublevel='0' AND published='1' ORDER BY ordering";
-				$database->setQuery($qry);	
+				$database->setQuery($qry);
 				$rows = $database->loadObjectList();
 				if (!empty($rows)) {
 					foreach($rows as $row) {
@@ -53,5 +65,6 @@
 			?>
 			</ul>
 		</div>
+-->
 	</div>
 </div>

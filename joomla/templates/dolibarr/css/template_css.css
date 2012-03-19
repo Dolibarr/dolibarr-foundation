@@ -908,9 +908,10 @@ fieldset.input
 }
 
 .rawimages {
-        text-align: center;
+	border-collapse  : collapse;
+        text-align: right;
         margin-top: 15px;
-	padding-left: 20px;
+	padding-left: 10px;
 	padding-right: 6px;
 }
 .rawimages img {
@@ -1010,8 +1011,8 @@ color: #FFFFFF;
 
 #logodol { background-color: #80AEC6; }
 .menu { float: left; }
-.plusone { margin-left: 10px; margin-top: -16px; position: relative; float: left; display: inline !important; }
-#jflanguageselection { width: 200px; float: left; }
+.plusone { margin-left: 10px; margin-top: 19px; position: relative; float: left; display: inline !important; }
+#jflanguageselection { width: 144px; float: right; }
 #dolbanner { padding-top: 30px; }
 
 
@@ -1083,7 +1084,8 @@ color: #FFFFFF;
 /* Logo */
 #rt-logo {
   padding-left: 10px;
-  padding-top: 20px;
+  padding-top: 36px;
+  width: 200px;
   display: block;
 }
 

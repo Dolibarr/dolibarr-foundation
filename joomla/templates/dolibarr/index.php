@@ -53,11 +53,6 @@
 </head>
 <body class="body">
 
-<div class="ribbon">
-    <a href="http://github.com/Dolibarr/dolibarr" target="_blank">Fork me on GitHub</a>
-</div>
-
-
 <style type="text/css">
 <!--
 #rt-main-surround, #rt-variation .bg3 .module-content, #rt-variation .title3 .module-title {background:#ffffff;}
@@ -113,18 +108,6 @@
 
 <?php include('menu.php'); ?>	
 
-<div class="plusone">
-<!-- Plus one -->
-<g:plusone size="small" href="http://www.dolibarr.org/"></g:plusone>
-<script type="text/javascript">
-(function() {
-var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-po.src = 'http://apis.google.com/js/plusone.js';
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-})();
-</script>
-</div>
-
 <div class="clear"></div>
 </div></div>
 </div>
@@ -154,25 +137,22 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po
 <?php 
 if (empty($_SERVER['SCRIPT_URL']) || in_array($_SERVER['SCRIPT_URL'],array('/')) && ! isset($_GET['searchword']))
 {
-	print '<div style="padding:8px 6px 40px 6px;">';
-	print '<img style="padding-left: 6px; padding-top: 10px; float: left; width: 150px;" src="/images/stories/dolibarr_box.png">';
-	print '<div style="padding-left: 174px; ">';
-	print '<strong>Dolibarr ERP & CRM</strong> is a modern web software to manage your company or foundation activity (contacts, invoices, orders, stocks, agenda, ...). ';
-	print '<br>It\'s an <strong>opensource and free software</strong> designed for small and medium companies, foundations and freelances.<br>';
-	print 'You can <strong>install, use and distribute</strong> it as a standalone application or as an online web application (on a mutualized or dedicated server) to use it from anywhere.<br>';
-	print 'Dolibarr is also available on ready to use Cloud services.<br>';
-	print '<br>';
-	print 'This is official Portal with <strong>news</strong>, <strong>forum</strong>, <strong>demo</strong> and <strong>download</strong> area of Dolibarr project.<br>';
-	print 'For more information on <strong>features</strong>, <strong>roadmap</strong>, <strong>documentation</strong> and <strong>faq</strong> on project, see <a target="_blank" href="http://wiki.dolibarr.org/index.php/Main_Page">the Dolibarr wiki documentation</a>.';
-	print '</div></div>';
+	print '<div>';
+	mosLoadModules('user1');
+	print '</div>';
 
 	print '<table><tr><td valign="top">';
-	mosLoadModules('user1');
-	print '</td><td valign="top">';
 	mosLoadModules('user2');
+	print '</td><td valign="top">';
+	mosLoadModules('user3');
 	print '</td></tr></table>';
 
 	print '<br>';
+
+	print '<div>';
+	mosLoadModules('user4');
+	print '</div>';
+
 
 	if (in_array($_SERVER['SCRIPT_URL'],array('/','/lastnews')) && ! preg_match('/searchword/',$_SERVER['QUERY_STRING'])) print '<br><div class="componentheading" style="margin-left:6px;">Last news</div><br>';
 }
@@ -246,6 +226,11 @@ if (empty($_SERVER['SCRIPT_URL']) || in_array($_SERVER['SCRIPT_URL'],array('/fou
 </div>
 
 </center>
+
+<div class="ribbon">                                                                                                    
+    <a href="http://github.com/Dolibarr/dolibarr" target="_blank">Fork me on GitHub</a>                                 
+</div> 
+
 </body>
 </html>
 
