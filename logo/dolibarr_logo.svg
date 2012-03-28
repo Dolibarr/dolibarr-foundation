@@ -45,17 +45,12 @@
          id="stop3738" />
     </linearGradient>
     <filter
-       color-interpolation-filters="sRGB"
-       height="1.2883849"
-       y="-0.14419246"
-       width="1.0564719"
-       x="-0.028235927"
-       id="filter8715"
-       inkscape:collect="always">
+       inkscape:collect="always"
+       id="filter3775">
       <feGaussianBlur
-         id="feGaussianBlur8717"
-         stdDeviation="23.363567"
-         inkscape:collect="always" />
+         inkscape:collect="always"
+         stdDeviation="11.473048"
+         id="feGaussianBlur3777" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -65,9 +60,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.84852814"
-     inkscape:cx="34.451021"
-     inkscape:cy="213.81085"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="376.21396"
+     inkscape:cy="152.65216"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -121,11 +116,11 @@
      style="display:inline">
     <text
        xml:space="preserve"
-       style="font-size:886.12506104px;font-style:normal;font-weight:normal;opacity:0.16296297;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter8715);font-family:Bitstream Vera Sans"
+       style="font-size:886.12506103999999141px;font-style:normal;font-weight:normal;opacity:0.17204303000000001;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Bitstream Vera Sans;filter:url(#filter3775)"
        x="537.1402"
        y="887.85065"
        id="text2828-6"
-       transform="matrix(0.35661275,0,0,0.39656343,-115.67134,40.192962)"><tspan
+       transform="matrix(0.35661275,0,0,0.39656343,-119.67134,34.192962)"><tspan
          sodipodi:role="line"
          id="tspan2830-9"
          x="537.1402"
