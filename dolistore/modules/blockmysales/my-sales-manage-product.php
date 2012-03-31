@@ -245,7 +245,7 @@ if (sizeof($result))
 			if ($active) echo '<img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;">';
 			else echo '<img src="../../img/os/6.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;">';
 			print '<br>';			
-			print aff("Fichier", "File", $iso_langue_en_cours).': '.$filename.' ('.$datedeposit.')';
+			print aff("Fichier", "File", $iso_langue_en_cours).': '.$filename.'<br>'.aff("Date","Date", $iso_langue_en_cours).' '.$datedeposit;
 			?>
 			</td>
 		    <td align="right" nowrap="nowrap">
@@ -396,13 +396,19 @@ if ($totalamount > 0)
 			foreach($result['invoices'] as $invoice)
 			{
 				$isfordolistore=0;
-				if (preg_match('/dolistore/i',$invoice['note'])) $isfordolistore=1;
+				if (preg_match('/dolistore/i',$invoice['note'])
+					&& ! preg_match('/agios/i',$invoice['ref_supplier'])
+					&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+				) $isfordolistore=1;
 				if (! $isfordolistore)
 				{
 					foreach($invoice['lines'] as $line)
 					{
 						if (preg_match('/dolistore/i',$line['desc'])
-							&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc']))
+							&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
+							&& ! preg_match('/agios/i',$invoice['ref_supplier'])
+							&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+						)
 						{
 							$isfordolistore++;
 						}
@@ -410,9 +416,15 @@ if ($totalamount > 0)
 				}
 				if ($isfordolistore)
 				{
-					$dolistoreinvoices[]=array('date'=>$invoice['date_invoice'],
-												'amount'=>$invoice['total'],
-												'fk_thirdparty'=>$invoice['fk_thirdparty']);
+					$dolistoreinvoices[]=array(
+						'id'=>$invoice['id'],
+						'ref'=>$invoice['ref'],
+						'ref_supplier'=>$invoice['ref_supplier'],
+						'status'=>$invoice['status'],
+						'date'=>$invoice['date_invoice'],
+						'amount'=>$invoice['total'],
+						'fk_thirdparty'=>$invoice['fk_thirdparty']
+					);
 					$alreadyreceived+=$invoice['total'];
 				}
 			}
@@ -452,14 +464,28 @@ if ($totalamount > 0)
 		{
 			echo aff("Date: ","Date: ", $iso_langue_en_cours);
 			print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
-			echo aff("Montant: ","Amount: ", $iso_langue_en_cours);
+			//echo aff("Montant: ","Amount: ", $iso_langue_en_cours);
 			print ' <b>'.$item['amount'].'&#8364;</b>';
-			if ($customer_id == 'all')
+			if ($item['ref_supplier'])
 			{
-				print ' - ';
-				echo aff("Fournisseur: ","Supplier: ", $iso_langue_en_cours);
-				print ' <b>'.$item['fk_thirdparty'].'</b>';
+				echo ' - '.aff("Ref fourn: ","Supplier ref: ", $iso_langue_en_cours);
+				print ' <b>'.$item['ref_supplier'].'</b>';
 			}
+			if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment inprocess", $iso_langue_en_cours);
+			if ($item['ref'] || $customer_id == 'all') 
+			{
+				print ' <img title="';
+				echo aff("Ref Dolibarr - Facture: ","Ref Dolibarr - Invoice: ", $iso_langue_en_cours);
+				print ' '.$item['ref'];
+				if ($customer_id == 'all')
+				{
+					print ' - ';
+					echo aff("Fournisseur: ","Supplier: ", $iso_langue_en_cours);
+					print ' '.$item['fk_thirdparty'];
+				}
+				print '" src="/img/admin/asterisk.gif">';
+			}
+
 			print '<br>'."\n";
 			//var_dump($dolistoreinvoices);
 		}
