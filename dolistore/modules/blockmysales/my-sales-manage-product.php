@@ -14,7 +14,8 @@ include(dirname(__FILE__).'/lib.php');
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
-if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
+if (! empty($_GET["id_customer"]))  $customer_id=$_GET["id_customer"];
+if (! empty($_POST["id_customer"])) $customer_id=$_POST["id_customer"];
 
 
 // Check if current user is also an employee with admin user
@@ -87,7 +88,28 @@ if (empty($datestart))
 	//$datestart=mktime(0, 0, 0, 6, 1, 2010);	// If not found
 	//print 'ee'.$datestart;
 }
-//
+
+// Define dateafter and datebefore
+$dateafter='';
+$datebefore='';
+if (! empty($_POST['dateafter']))
+{
+	if (preg_match('/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/',$_POST['dateafter'])) 
+	{
+		$dateafter=$_POST['dateafter'];
+	}
+	else $_POST['dateafter']='';
+}
+if (! empty($_POST['datebefore']))
+{
+	if (preg_match('/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/',$_POST['datebefore'])) 
+	{
+		$datebefore=$_POST['datebefore'];
+	}
+	else $_POST['datebefore']='';
+}
+
+// array to store all invoices already payed
 $dolistoreinvoices=array();
 
 if ($customer_id != 'all')
@@ -126,14 +148,15 @@ $iso_langue_en_cours);
 <?php
 $min_date = 0;
 
+// Get list of products
 $query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, pl.name, pl.description_short';
 $query.= ' FROM '._DB_PREFIX_.'product as p';
 $query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
 if ($customer_id != 'all') $query.= ' WHERE p.reference like "c'.$customer_id.'d2%"';
 $query.= ' ORDER BY pl.name';
 $result = Db::getInstance()->ExecuteS($query);
-
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
 $id_product = "";
 
 $colorTabNbr = 1;
@@ -180,16 +203,21 @@ if (sizeof($result))
 		else
 			$colorTab="#eeeeee";
 
-		// Calculate totalamount
+		// Calculate totalamount for this product
 		$query = "SELECT count( id_order_detail ) as nbra, 
 					sum( (product_price - reduction_amount) * (product_quantity - product_quantity_refunded) ) as amount,
 					sum(product_quantity - product_quantity_refunded) as qtysold,
-					min( date_add ) as min_date
-					FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
+					min( date_add ) as min_date";
+		$query.= "	FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
 					WHERE product_id = ".$id_product."
 					AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
 					AND "._DB_PREFIX_."orders.valid = 1";
+		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
+		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+
 		$subresult = Db::getInstance()->ExecuteS($query);
+		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
 		$nbr_achats = 0;
 		$nbr_amount = 0;
 		foreach ($subresult AS $subrow) {
@@ -207,7 +235,7 @@ if (sizeof($result))
 		if ($nbr_amount > 0) $totalnbsellpaid+=$nbr_achats;
 		$totalamount+=$nbr_amount;
 
-		// Calculate totalamount supplier can claim
+		// Calculate totalamountclaimable (amount supplier can claim)
 		$query = "SELECT count( id_order_detail ) as nbra, 
 					sum( (product_price - reduction_amount) * (product_quantity - product_quantity_refunded) ) as amount,
 					sum(product_quantity - product_quantity_refunded) as qtysold,
@@ -216,9 +244,13 @@ if (sizeof($result))
 					WHERE product_id = ".$id_product."
 					AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
 					AND "._DB_PREFIX_."orders.valid = 1
-					AND date_add < '".date("Y-m-d 00:00:00",mktime()-(2*31*24*60*60))."'";
-
+					AND date_add < DATE_ADD('".date("Y-m-d 00:00:00",mktime())."', INTERVAL -2 MONTH)";	// 2 month
+		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
+		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+		//print $sql;
 		$subresult = Db::getInstance()->ExecuteS($query);
+		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
 		$nbr_achats2 = 0;
 		$nbr_amount2 = 0;
 		foreach ($subresult AS $subrow) {
@@ -292,213 +324,231 @@ else
 <br>
 <?php
 
-if ($totalamount > 0)
+// define variables
+$mytotalamount=round($foundationfeerate*$totalamount,2);
+$mytotalamountclaimable=round($foundationfeerate*$totalamountclaimable,2);
+$alreadyreceived=0;
+$datelastpayment=0;
+
+// Search third party and payments already done
+define(NUSOAP_PATH,'nusoap');
+
+require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
+$dolibarr_main_url_root='http://asso.dolibarr.org/dolibarr/';
+$authentication=array(
+    'dolibarrkey'=>$wsdolibarrkey,
+    'sourceapplication'=>'DOLISTORE',
+    'login'=>$wslogin,
+    'password'=>$wspass,
+    'entity'=>'');
+
+$socid=0;
+$foundthirdparty=false;
+
+// Call the WebService method to find third party id from name or company name.
+$WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_thirdparty.php';
+prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
+$soapclient = new soapclient_nusoap($WS_DOL_URL);
+if ($soapclient)
 {
-	// define variables
-	$mytotalamount=round($foundationfeerate*$totalamount,2);
-    $mytotalamountclaimable=round($foundationfeerate*$totalamountclaimable,2);
-    $alreadyreceived=0;
-    $datelastpayment=0;
+    $soapclient->soap_defencoding='UTF-8';
+	$soapclient->decodeUTF8(false);
+}
 
-    // Search third party and payments already done
-	define(NUSOAP_PATH,'nusoap');
-
-    require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
-    $dolibarr_main_url_root='http://asso.dolibarr.org/dolibarr/';
-	$authentication=array(
-	    'dolibarrkey'=>$wsdolibarrkey,
-	    'sourceapplication'=>'DOLISTORE',
-	    'login'=>$wslogin,
-	    'password'=>$wspass,
-	    'entity'=>'');
-
-	$socid=0;
-	$foundthirdparty=false;
-
-    // Call the WebService method to find third party id from name or company name.
-    $WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_thirdparty.php';
-    prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
-    $soapclient = new soapclient_nusoap($WS_DOL_URL);
-    if ($soapclient)
-    {
-        $soapclient->soap_defencoding='UTF-8';
-		$soapclient->decodeUTF8(false);
-    }
-
-	if ($customer_id != 'all')
+if ($customer_id != 'all')
+{
+	if (! $foundthirdparty)
 	{
-		if (! $foundthirdparty)
-		{
-			$parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher);
-			$WS_METHOD  = 'getThirdParty';
-			prestalog("Call method ".$WS_METHOD." for ref=".$publisher);
-			$result = $soapclient->call($WS_METHOD,$parameters);
-			if (! $result)
-			{
-			    print 'Error '.$soapclient->error_str;
-			    die;
-			}
-
-			//var_dump($result);
-			$socid=$result['thirdparty']['id'];
-			if ($socid)
-			{
-				$foundthirdparty=true;
-				//var_dump($socid);
-			}
-		}
-
-		if (! $foundthirdparty)
-		{
-			$parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$company);
-			$WS_METHOD  = 'getThirdParty';
-			prestalog("Call method ".$WS_METHOD." for ref=".$company);
-			$result = $soapclient->call($WS_METHOD,$parameters);
-			if (! $result)
-			{
-			    print 'Error '.$soapclient->error_str;
-			    die;
-			}
-			//var_dump($result);
-			$socid=$result['thirdparty']['id'];
-			if ($socid)
-			{
-				$foundthirdparty=true;
-				//var_dump($socid);
-			}
-		}
-	}
-	else $socid='all';
-
-    // Call the WebService method to get amount received
-	if ($socid)
-	{
-		// Define $datelastpayment and $alreadyreceived
-		$WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_supplier_invoice.php';
-		$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
-		prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
-		$soapclient = new soapclient_nusoap($WS_DOL_URL);
-		if ($soapclient)
-		{
-		    $soapclient->soap_defencoding='UTF-8';
-			$soapclient->decodeUTF8(false);
-		}
-		$parameters = array('authentication'=>$authentication,'id'=>$socid,'ref'=>'');
-		prestalog("Call method ".$WS_METHOD." for socid=".$socid);
+		$parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher);
+		$WS_METHOD  = 'getThirdParty';
+		prestalog("Call method ".$WS_METHOD." for ref=".$publisher);
 		$result = $soapclient->call($WS_METHOD,$parameters);
 		if (! $result)
 		{
 		    print 'Error '.$soapclient->error_str;
 		    die;
 		}
-		if ($result['result']['result_code'] == 'OK')
+
+		//var_dump($result);
+		$socid=$result['thirdparty']['id'];
+		if ($socid)
 		{
-			foreach($result['invoices'] as $invoice)
-			{
-				$isfordolistore=0;
-				if (preg_match('/dolistore/i',$invoice['note'])
-					&& ! preg_match('/agios/i',$invoice['ref_supplier'])
-					&& ! preg_match('/frais/i',$invoice['ref_supplier'])
-				) $isfordolistore=1;
-				if (! $isfordolistore)
-				{
-					foreach($invoice['lines'] as $line)
-					{
-						if (preg_match('/dolistore/i',$line['desc'])
-							&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
-							&& ! preg_match('/agios/i',$invoice['ref_supplier'])
-							&& ! preg_match('/frais/i',$invoice['ref_supplier'])
-						)
-						{
-							$isfordolistore++;
-						}
-					}
-				}
-				if ($isfordolistore)
-				{
-					$dolistoreinvoices[]=array(
-						'id'=>$invoice['id'],
-						'ref'=>$invoice['ref'],
-						'ref_supplier'=>$invoice['ref_supplier'],
-						'status'=>$invoice['status'],
-						'date'=>$invoice['date_invoice'],
-						'amount'=>$invoice['total'],
-						'fk_thirdparty'=>$invoice['fk_thirdparty']
-					);
-					$alreadyreceived+=$invoice['total'];
-				}
-			}
-		}
-		else
-		{
-			print 'Error during call of web service '.$WS_METHOD.' result='.$result['result']['result_code'];
+			$foundthirdparty=true;
+			//var_dump($socid);
 		}
 	}
 
-
-	print '<h2>';
-	echo aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
-	print '</h2>';
-
-	// Total number of sells
-	echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_langue_en_cours);
-	print "<b>".$totalnbsellpaid."</b>";
-	print '<br>';
-	// Total amount earned
-	echo aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
-	print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
-	print '<br>';
-	// Total amount you can claim
-	echo aff("Montant total validé: ", "Total validated amount: ", $iso_langue_en_cours);
-	print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
-	echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de 2 mois de rétractation)", "&nbsp; (any sell is validated after a 2 month delay)", $iso_langue_en_cours);
-	print '<br>';
-	// List of payments
-	if (count($dolistoreinvoices))
+	if (! $foundthirdparty)
 	{
-		print '<br>'."\n";
-		echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore'): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received "), $iso_langue_en_cours);
-		print '<br>'."\n";
-		$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
-		foreach($sortdolistoreinvoices as $item)
+		$parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$company);
+		$WS_METHOD  = 'getThirdParty';
+		prestalog("Call method ".$WS_METHOD." for ref=".$company);
+		$result = $soapclient->call($WS_METHOD,$parameters);
+		if (! $result)
 		{
-			echo aff("Date: ","Date: ", $iso_langue_en_cours);
-			print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
-			//echo aff("Montant: ","Amount: ", $iso_langue_en_cours);
-			print ' <b>'.$item['amount'].'&#8364;</b>';
-			if ($item['ref_supplier'])
+		    print 'Error '.$soapclient->error_str;
+		    die;
+		}
+		//var_dump($result);
+		$socid=$result['thirdparty']['id'];
+		if ($socid)
+		{
+			$foundthirdparty=true;
+			//var_dump($socid);
+		}
+	}
+}
+else $socid='all';
+
+// Call the WebService method to get amount received
+if ($socid)
+{
+	// Define $datelastpayment and $alreadyreceived
+	$WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_supplier_invoice.php';
+	$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
+	prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
+	$soapclient = new soapclient_nusoap($WS_DOL_URL);
+	if ($soapclient)
+	{
+	    $soapclient->soap_defencoding='UTF-8';
+		$soapclient->decodeUTF8(false);
+	}
+	$parameters = array('authentication'=>$authentication,'id'=>$socid,'ref'=>'');
+	prestalog("Call method ".$WS_METHOD." for socid=".$socid);
+	$result = $soapclient->call($WS_METHOD,$parameters);
+	if (! $result)
+	{
+	    print 'Error '.$soapclient->error_str;
+	    die;
+	}
+	if ($result['result']['result_code'] == 'OK')
+	{
+		foreach($result['invoices'] as $invoice)
+		{
+			$dateinvoice=substr($invoice['date_invoice'],0,10);
+
+			$isfordolistore=0;
+			if (preg_match('/dolistore/i',$invoice['note'])
+				&& ! preg_match('/agios/i',$invoice['ref_supplier'])
+				&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+			) $isfordolistore=1;
+			if (! $isfordolistore)
 			{
-				echo ' - '.aff("Ref fourn: ","Supplier ref: ", $iso_langue_en_cours);
-				print ' <b>'.$item['ref_supplier'].'</b>';
-			}
-			if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment inprocess", $iso_langue_en_cours);
-			if ($item['ref'] || $customer_id == 'all') 
-			{
-				print ' <img title="';
-				echo aff("Ref Dolibarr - Facture: ","Ref Dolibarr - Invoice: ", $iso_langue_en_cours);
-				print ' '.$item['ref'];
-				if ($customer_id == 'all')
+				foreach($invoice['lines'] as $line)
 				{
-					print ' - ';
-					echo aff("Fournisseur: ","Supplier: ", $iso_langue_en_cours);
-					print ' '.$item['fk_thirdparty'];
+					if (preg_match('/dolistore/i',$line['desc'])
+						&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
+						&& ! preg_match('/agios/i',$invoice['ref_supplier'])
+						&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+					)
+					{
+						$isfordolistore++;
+					}
 				}
-				print '" src="/img/admin/asterisk.gif">';
 			}
 
-			print '<br>'."\n";
-			//var_dump($dolistoreinvoices);
+			/*print $dateinvoice.'-'.$dateafter.'-'.$datebefore.'<br>';
+			if ($datebefore && $datebefore < $dateinvoice) $isfordolistore=0;
+			if ($dateafter && $dateafter > $dateinvoice) $isfordolistore=0;*/
+
+			if ($isfordolistore)
+			{
+
+				$dolistoreinvoices[]=array(
+					'id'=>$invoice['id'],
+					'ref'=>$invoice['ref'],
+					'ref_supplier'=>$invoice['ref_supplier'],
+					'status'=>$invoice['status'],
+					'date'=>$invoice['date_invoice'],
+					'amount'=>$invoice['total'],
+					'fk_thirdparty'=>$invoice['fk_thirdparty']
+				);
+				$alreadyreceived+=$invoice['total'];
+			}
 		}
 	}
 	else
 	{
-		echo aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
-		if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
-		else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
-		print '<br>';
+		print 'Error during call of web service '.$WS_METHOD.' result='.$result['result']['result_code'];
 	}
-	print '<br>';
+}
 
+print '<h2>';
+echo aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
+print '</h2>';
+
+print '<form name="filter" action"'.$_SERVER["PHP_SELF"].'" method="POST">';
+print aff('Filtre date entre','Filter on date between', $iso_langue_en_cours);
+print '<input type="text" name="dateafter" value="'.$_POST["dateafter"].'" size="11">';
+print ' '.aff('et','and', $iso_langue_en_cours);
+print '<input type="text" name="datebefore" value="'.$_POST["datebefore"].'" size="11">';
+print ' (YYYY-MM-DD) &nbsp;';
+print '<input type="submit" name="submit" value="'.aff("Rafraichir","Refresh",$iso_langue_en_cours).'">';
+print '<input type="hidden" name="id_customer" value="'.$id_customer.'">';
+print '<br>';
+print '</form>';
+
+// Total number of sells
+echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_langue_en_cours);
+print "<b>".$totalnbsellpaid."</b>";
+print '<br>';
+// Total amount earned
+echo aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
+print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
+print '<br>';
+// Total amount you can claim
+echo aff("Montant total validé: ", "Total validated amount: ", $iso_langue_en_cours);
+print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
+echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de 2 mois de rétractation)", "&nbsp; (any sell is validated after a 2 month delay)", $iso_langue_en_cours);
+print '<br>';
+// List of payments
+if (count($dolistoreinvoices))
+{
+	print '<br>'."\n";
+	echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore'): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received "), $iso_langue_en_cours);
+	print '<br>'."\n";
+	$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
+	foreach($sortdolistoreinvoices as $item)
+	{
+		echo aff("Date: ","Date: ", $iso_langue_en_cours);
+		print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
+		//echo aff("Montant: ","Amount: ", $iso_langue_en_cours);
+		print ' <b>'.$item['amount'].'&#8364;</b>';
+		if ($item['ref_supplier'])
+		{
+			echo ' - '.aff("Ref fourn: ","Supplier ref: ", $iso_langue_en_cours);
+			print ' <b>'.$item['ref_supplier'].'</b>';
+		}
+		if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment inprocess", $iso_langue_en_cours);
+		if ($item['ref'] || $customer_id == 'all') 
+		{
+			print ' <img title="';
+			echo aff("Ref Dolibarr -> Facture: ","Ref Dolibarr -> Invoice: ", $iso_langue_en_cours);
+			print ' '.$item['ref'];
+			//if ($customer_id == 'all')
+			//{
+				print ' - ';
+				echo aff("Fournisseur: ","Supplier: ", $iso_langue_en_cours);
+				print ' '.$item['fk_thirdparty'];
+			//}
+			print '" src="/img/admin/asterisk.gif">';
+		}
+
+		print '<br>'."\n";
+		//var_dump($dolistoreinvoices);
+	}
+}
+else
+{
+	echo aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
+	if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
+	else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
+	print '<br>';
+}
+print '<br>';
+
+if (empty($dateafter) && empty($datebefore))
+{
 	// Remain to receive now
 	echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
 	$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
@@ -508,35 +558,38 @@ if ($totalamount > 0)
 	$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
 	print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;</font></b><br>";
 	print '<br>';
-	
+
 	// Message to claim
 	if ($remaintoreceive)
 	{
 		$minamount=50;
-		if ($remaintoreceive > $minamount)
+		if ($customer_id != 'all')
 		{
-			echo aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).",
-					"You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account number for bank transaction (BIC ou SWIFT).", $iso_langue_en_cours);
-			print '<br>';
-		}
-		else
-		{
-			echo aff("Il n'est pas possible de réclamer de reversements pour le moment (montant inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (amount lower than ".$minamount." euros).", $iso_langue_en_cours);
-			print '<br>';
+			if ($remaintoreceive > $minamount)
+			{
+				echo aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).",
+						"You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account number for bank transaction (BIC ou SWIFT).", $iso_langue_en_cours);
+				print '<br>';
+			}
+			else
+			{
+				echo aff("Il n'est pas possible de réclamer de reversements pour le moment (montant inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (amount lower than ".$minamount." euros).", $iso_langue_en_cours);
+				print '<br>';
+			}
 		}
 	}
 	else
 	{
-		echo aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
-		print '<br>';
+		if ($customer_id != 'all')
+		{
+			echo aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
+			print '<br>';
+		}
 	}
 	print '<br>';
+}
 
-}
-else
-{
-	echo aff("Aucun gain généré pour le moment.", "Nothing earned for the moment.", $iso_langue_en_cours);
-}
+
 
 include(dirname(__FILE__).'/../../footer.php');
 
