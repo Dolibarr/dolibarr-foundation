@@ -36,6 +36,8 @@ $upload=0;
 //upload du fichier
 if ($_GET["up"] == 1) 
 {
+	$error=0;
+
 	prestalog("Upload or reupload file ".$_FILES['virtual_product_file']['tmp_name']);
 
 	$originalfilename=$_FILES['virtual_product_file']['name'];
@@ -55,9 +57,10 @@ if ($_GET["up"] == 1)
 				   break;
 		  }
 		$upload=-1;
+		$error++;
 	}
 	
-	if ($upload >= 0 && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
+	if (! $error && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
 	{
 		$rulesfr="";
 		$rulesen='';
@@ -71,21 +74,44 @@ if ($_GET["up"] == 1)
 			echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
 			echo "<br>";
 			$upload=-1;
+			$error++;
 		}
 	}
 
-	if ($upload >= 0)
+	if (! $error)
 	{
 		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
-	        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
+        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
 		$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
+		
+		$zip = new ZipArchive();
+		$res = $zip->open($_FILES['virtual_product_file']['tmp_name']);
+		if ($res === TRUE) 
+		{
+			$resarray=validateZipFile($zip,$originalfilename,$_FILES['virtual_product_file']['tmp_name']);
+			$zip->close();
+			$error=$resarray['error'];
+			$upload=$resarray['upload'];
+		}
+		else 
+		{
+			echo "<div style='color:#FF0000'>File can't be analyzed. Is it a true zip file ?<br>";
+			echo "If you think this is an error, send your package by email at contact@dolibarr.org";
+			echo "</div>";
+			$upload=-1;
+			$error++;
+		}
+	}
 
-        prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
+	if (! $error)
+	{
+	    prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
 
 		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) 
 		{
 			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
 			$upload=-1;
+			$error++;
 		}
 		else
 		{
@@ -668,9 +694,6 @@ echo '
 			  id="description_<?php echo $languageTAB[$x]['id_lang']; ?>"
 			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">
 			<?php
-
-			$minversion='3.0';
-			$maxversion='3.0';
 
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaulten='

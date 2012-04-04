@@ -39,6 +39,85 @@ function prestalog($message, $level=LOG_INFO)
 
 
 /**
+ * Check that a zip file is Dolibarr rule compliant
+ */
+function validateZipFile(&$zip,$originalfilename,$zipfile)
+{
+    prestalog("Validate zip file ".$zipfile);
+	$subdir=basename($zipfile);
+	$dir='/home/httpd/vhosts/dolistore.com/tmp/'.$subdir;
+	mkdir($dir);
+	$zip->extractTo($dir.'/');
+    $zip->close();
+	
+	// Analyze files
+	$validation=1;
+	$ismodule=$istheme=0;
+	if (is_dir($dir.'/scripts')) $ismodule=1;
+	if (is_dir($dir.'/htdocs/themes')) $istheme=1;
+	if (preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)) $ismodule=1;
+	if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)) $istheme=1;
+	if ($ismodule || $istheme)
+	{
+		prestalog("file ismodule=".$ismodule." istheme=".$istheme);
+		// It's a module or theme file
+		if (! $error && ($ismodule || $istheme) && $dh = opendir($dir)) 
+		{
+			while (($file = readdir($dh)) !== false) 
+			{
+				if ($file == '.' || $file == '..') continue;
+				prestalog("subdirs found for package:".$file);
+				$alloweddirs=array('htdocs','docs','scripts','test','build');
+				if (! in_array($file,$alloweddirs))
+				{
+					echo "<div style='color:#FF0000'>Sorry, a module file can only contains, into zip root, following directories ".join(',',$alloweddirs)."<br>";
+					echo "If you think this is an error, send your package by email at contact@dolibarr.org";
+					echo "</div>";
+					$upload=-1;
+					$error++;
+					break;
+				}
+			}
+			closedir($dh);
+		}				
+		// It's a module or theme file
+		if (! $error && $ismodule && is_dir($dir.'/htdocs') && $dh = opendir($dir.'/htdocs')) 
+		{
+			prestalog("we scan ".$dir."/htdocs to be sure there is only one directory into htdocs");
+			$nbofsubdir=0;
+			prestalog("check there is only one dir into htdocs");
+			while (($file = readdir($dh)) !== false) 
+			{
+				if ($file == '.' || $file == '..') continue;
+				if ($file == 'includes') continue;		// For old dolibarr version compatibility
+				prestalog("we found ".$file);
+				$nbofsubdir++;
+			}
+			closedir($dh);
+			if ($nbofsubdir >= 2)
+			{
+				echo "<div style='color:#FF0000'>Sorry, a module file can contains only one dir with name of module into the htdocs directory.";
+				echo "</div>";
+				$upload=-1;
+				$error++;
+			}
+		}				
+	}
+
+	if (! $validation)
+	{
+		echo "<div style='color:#FF0000'>Your zip file does not look to match Dolibarr package rules.";
+		echo "If you think this is an error, send your package by email at contact@dolibarr.org";
+		echo "</div>";
+		$upload=-1;
+		$error++;
+	}
+
+	return array('error'=>$error,'upload'=>$upload);
+}
+
+
+/**
 * \brief Create 2 thumbnails from an image file: one small and one mini (Supported extensions are gif, jpg, png and bmp)
 * \param file Chemin du fichier image a redimensionner
 * \param maxWidth Largeur maximum que dois faire la miniature (-1=unchanged, 160 par defaut)
