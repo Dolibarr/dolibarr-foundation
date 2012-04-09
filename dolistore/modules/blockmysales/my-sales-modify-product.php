@@ -87,13 +87,33 @@ if ($_GET["up"] == 1)
 		  }
 		$upload=-1;
 	}
-	
-	if (! $error && preg_match('/(\.zip|\.tgz)$/i',$originalfilename))
+
+	if (! $error && ! preg_match('/(\.odt|\.pdf|\.svg|\.zip|\.txt)$/i',$originalfilename))
+	{
+		$rulesfr.="Le nom du fichier package doit avoir une extension .odt, .pdf, .svg, .zip ou .txt<br>";
+		$rulesen.="Package file name must end with extension .odt, .pdf, .svg, .zip or .txt<br>";
+		echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
+		echo "<br>";
+		$upload=-1;
+		$error++;
+	}
+
+	if (! $error && preg_match('/(\.txt)$/i',$originalfilename) && ! preg_match('/(README)\.txt$/i',$originalfilename))
+	{
+		$rulesfr.="Un fichier .txt doit avoir pour nom README.txt<br>";
+		$rulesen.="A .txt file must be named README.txt<br>";
+		echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
+		echo "<br>";
+		$upload=-1;
+		$error++;
+	}
+
+	if (! $error && preg_match('/(\.zip)$/i',$originalfilename))
 	{
 		$rulesfr="";
 		$rulesen='';
-		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
-			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename))
+		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
+			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename))
 		{
 			$rulesfr.="Le nom du fichier package doit avoir un nom du type module_monpackage-x.y(.z).zip<br>";
 			$rulesfr.="Essayer de fabriquer votre package avec un outil Dolibarr officiel récent ('htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes).";
@@ -106,7 +126,7 @@ if ($_GET["up"] == 1)
 		}
 	}
 
-	if (! $error)
+	if (! $error && preg_match('/(\.zip)$/i',$originalfilename))
 	{
 		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
         //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
@@ -507,6 +527,13 @@ echo aff("<h2>Modifier mes modules/produits</h2>", "<h2>Update a module/plugin</
 <br />
 
 <?php
+
+print '<input type="checkbox" name="agreewithtermofuse"> ';
+echo aff('J\'ai lu et suis d\'accord avec les conditions d\'utilisations disponible sur <a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" target="_blank">http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes</a>',
+		 'I\'ve read and I agree with terms and conditions of use available on page <a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>', $iso_langue_en_cours);
+print '<br>';
+print '<br>';
+
 print aff(
 'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant '.(100-$commission).'% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
 'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute '.$commission.'% of payments, the remaining '.(100-$commission).'% are kept to help the development of Dolibarr ERP/CRM project)...',
