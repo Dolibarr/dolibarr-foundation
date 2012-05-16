@@ -31,9 +31,10 @@ if (empty($subresult[0]['id_employee']))	// If not an admin user
 	}
 }
 
-$query = "SELECT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company";
+$query = "SELECT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company, a.city, a.id_country, co.iso_code";
 $query.= " FROM "._DB_PREFIX_."customer as c";
 $query.= " LEFT JOIN "._DB_PREFIX_."address as a ON a.id_customer = c.id_customer AND a.deleted = 0";
+$query.= " LEFT JOIN "._DB_PREFIX_."country as co ON a.id_country = co.id_country";
 if ($customer_id != 'all') $query.= " WHERE c.id_customer = ".$customer_id;
 $subresult = Db::getInstance()->ExecuteS($query);
 
@@ -41,6 +42,7 @@ if (! empty($subresult[0]['active']))
 {
 	$publisher=trim($subresult[0]['firstname'].' '.$subresult[0]['lastname']);
 	$company=trim($subresult[0]['company']);
+	$country=trim($subresult[0]['iso_code']);
 }
 else
 {
@@ -72,6 +74,9 @@ foreach ($languages AS $language) {
 <br />
 
 <?php
+$iscee=in_array($country,array('AT','BE','CH','IT','DE','DK','ES','FR','GB','LU','MC','NL','UK','PO','PT'));
+$commission=$iscee?$commissioncee:$commissionnotcee;
+
 // foundationfreerate
 $foundationfeerate=$commission/100;
 // totalnbofsell
@@ -114,8 +119,8 @@ $dolistoreinvoices=array();
 
 if ($customer_id != 'all')
 {
-echo aff("Les statistiques sont celles des téléchargements/ventes pour les composants soumis par l'utilisateur courant (<b>".$publisher.($company?" - ".$company:"")."</b>)",
-"Statistics are for download/sells of components submited by for current user (<b>".$publisher.($company?" - ".$company:"")."</b>)",
+echo aff("Les statistiques sont celles des téléchargements/ventes pour les composants soumis par l'utilisateur courant (<b>".$publisher.($company?" - ".$company:"").($country?" - ".$country:"")."</b>)",
+"Statistics are for download/sells of components submited by for current user (<b>".$publisher.($company?" - ".$company:"").($country?" - ".$country:"")."</b>)",
 $iso_langue_en_cours);
 }
 else
@@ -562,7 +567,12 @@ if (empty($dateafter) && empty($datebefore))
 	// Message to claim
 	if ($remaintoreceive)
 	{
-		$minamount=50;
+		$minamount=($iscee?$minamountcee:$minamountnotcee);
+		echo aff("Montant minimum pour réclamer le reversement pour votre pays (<strong>".$country."</strong>): <strong>".$minamount."</strong> euros.","Minimum amount to claim payments for your country (<strong>".$country."</strong>): <strong>".$minamount."</strong> euros.", $iso_langue_en_cours).'<br>';
+//		echo aff("Montant commission transfert bancaire pour votre pays (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':' environ 30 euros')."</strong>.","Fee for bank transfert for your country (<strong>".$country."</strong>): <strong>".($iscee?'Free':'around 30 euros')."</strong>.", $iso_langue_en_cours).'<br>';
+		echo aff("Montant commission frais change pour votre monnaie (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':'selon votre banque')."</strong>.","Charge for change for your currency (<strong>".$country."</strong>): <strong>".($iscee?'Free':'depends on your bank')."</strong>.", $iso_langue_en_cours).'<br>';
+		print '<br>';
+
 		if ($customer_id != 'all')
 		{
 			if ($remaintoreceive > $minamount)

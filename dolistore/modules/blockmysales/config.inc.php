@@ -2,8 +2,13 @@
 $wsdolibarrkey='wssecuritykey';
 $wslogin='wsloginuser';
 $wspass='wsloginpass';
-$commission=80;
+$commissioncee=80;
+$commissionnotcee=80;
 
 $minversion='3.1';
-$maxversion='3.1';
+$maxversion='3.2';
+
+$minamountcee=50;
+$minamountnotcee=200;
+
 ?>

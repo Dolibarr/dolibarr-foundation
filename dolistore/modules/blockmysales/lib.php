@@ -94,13 +94,14 @@ function validateZipFile(&$zip,$originalfilename,$zipfile)
 				$nbofsubdir++;
 			}
 			closedir($dh);
-			if ($nbofsubdir >= 2)
-			{
-				echo "<div style='color:#FF0000'>Sorry, a module file can contains only one dir with name of module into the htdocs directory.";
-				echo "</div>";
-				$upload=-1;
-				$error++;
-			}
+#			if ($nbofsubdir >= 2)
+#			{
+#				echo "<div style='color:#FF0000'>Sorry, starting with Dolibarr 3.2 version, a module file can contains only one dir with name of module into the htdocs directory.";
+#				echo 'See <a href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>.';
+#				echo "</div>";
+#				$upload=-1;
+#				$error++;
+#			}
 		}				
 	}
 
@@ -118,16 +119,17 @@ function validateZipFile(&$zip,$originalfilename,$zipfile)
 
 
 /**
-* \brief Create 2 thumbnails from an image file: one small and one mini (Supported extensions are gif, jpg, png and bmp)
-* \param file Chemin du fichier image a redimensionner
-* \param maxWidth Largeur maximum que dois faire la miniature (-1=unchanged, 160 par defaut)
-* \param maxHeight Hauteur maximum que dois faire l'image (-1=unchanged, 120 par defaut)
-* \param extName Extension pour differencier le nom de la vignette
-* \param quality Quality of compression (0=worst, 100=best)
-* \param targetformat New format of target (1,2,3,4, no change if empty)
-* \return string Full path of thumb
-* \remarks With file=myfile.jpg -> myfile_small.jpg
-*/
+ * Create 2 thumbnails from an image file: one small and one mini (Supported extensions are gif, jpg, png and bmp)
+ * With file=myfile.jpg -> myfile_small.jpg
+ *
+ * @param file Chemin du fichier image a redimensionner
+ * @param maxWidth Largeur maximum que dois faire la miniature (-1=unchanged, 160 par defaut)
+ * @param maxHeight Hauteur maximum que dois faire l'image (-1=unchanged, 120 par defaut)
+ * @param extName Extension pour differencier le nom de la vignette
+ * @param quality Quality of compression (0=worst, 100=best)
+ * @param targetformat New format of target (1,2,3,4, no change if empty)
+ * @return string Full path of thumb
+ */
 function vignette($file, $maxWidth = 160, $maxHeight = 120, $extName='_small', $quality=50, $outdir='thumbs', $targetformat=0)
 {
 	// Clean parameters

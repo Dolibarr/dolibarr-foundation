@@ -54,7 +54,8 @@ function testProductAppartenance($customer_id, $product_id) {
 
 
 //test de l'appartenance
-if (testProductAppartenance($customer_id, $product_id)) {
+if (testProductAppartenance($customer_id, $product_id)) 
+{
 
 
 /*
@@ -128,10 +129,6 @@ if ($_GET["up"] == 1)
 
 	if (! $error && preg_match('/(\.zip)$/i',$originalfilename))
 	{
-		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
-        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
-		$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
-		
 		$zip = new ZipArchive();
 		$res = $zip->open($_FILES['virtual_product_file']['tmp_name']);
 		if ($res === TRUE) 
@@ -153,12 +150,18 @@ if ($_GET["up"] == 1)
 
 	if (! $error)
 	{
+		$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
+        //$newfilename = ProductDownload::getNewFilename()."_".intval($cookie->id_customer);
+		$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
+		
         prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
 
 		if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true) 
 		{
 			echo "<div style='color:#FF0000'>file copy impossible for the moment, please try again later </div>";
 			$upload=-1;
+			$error++;
+			$chemin_destination='';
 		}
 		else
 		{
@@ -920,7 +923,7 @@ Para instalar este módulo:<br>
 } //fin de test appartenance
 else
 {
-	aff("<div style='color:#FF0000'>Vous n'etes pas le proprietaire de ce produit<br> </div>", "<div style='color:#FF0000'>This product is not yours<br> </div>", $iso_langue_en_cours);
+	print aff("<div style='color:#FF0000'>Vous n'etes pas le proprietaire de ce produit<br> </div>", "<div style='color:#FF0000'>This product is not yours<br> </div>", $iso_langue_en_cours);
 }
 
 ?>
