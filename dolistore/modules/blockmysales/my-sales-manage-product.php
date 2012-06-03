@@ -209,16 +209,16 @@ if (sizeof($result))
 			$colorTab="#eeeeee";
 
 		// Calculate totalamount for this product
-		$query = "SELECT count( id_order_detail ) as nbra, 
-					sum( (product_price - reduction_amount) * (product_quantity - product_quantity_refunded) ) as amount,
-					sum(product_quantity - product_quantity_refunded) as qtysold,
-					min( date_add ) as min_date";
-		$query.= "	FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
-					WHERE product_id = ".$id_product."
-					AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
-					AND "._DB_PREFIX_."orders.valid = 1";
+		$query = "SELECT count( od.id_order_detail ) as nbra, 
+					sum( (od.product_price - od.reduction_amount) * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
+					sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
+					min( o.date_add ) as min_date";
+		$query.= "	FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
+					WHERE od.product_id = ".$id_product."
+					AND o.id_order = od.id_order";
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+		prestalog($query);
 
 		$subresult = Db::getInstance()->ExecuteS($query);
 		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -229,7 +229,7 @@ if (sizeof($result))
 			$nbr_achats = $subrow['nbra'];
 			$nbr_amount = $subrow['amount'];
 			$nbr_qtysold = $subrow['qtysold'];
-			if ($subrow['min_date'])
+			if ($subrow['min_date'] && $subrow['qtysold'])
 			{
 				if ($min_date) $min_date = min($min_date,$subrow['min_date']);
 				else $min_date=$subrow['min_date'];
@@ -240,28 +240,26 @@ if (sizeof($result))
 		if ($nbr_amount > 0) $totalnbsellpaid+=$nbr_achats;
 		$totalamount+=$nbr_amount;
 
-		// Calculate totalamountclaimable (amount supplier can claim)
-		$query = "SELECT count( id_order_detail ) as nbra, 
-					sum( (product_price - reduction_amount) * (product_quantity - product_quantity_refunded) ) as amount,
-					sum(product_quantity - product_quantity_refunded) as qtysold,
-					min( date_add ) as min_date
-					FROM "._DB_PREFIX_."order_detail,  "._DB_PREFIX_."orders
-					WHERE product_id = ".$id_product."
-					AND "._DB_PREFIX_."orders.id_order = "._DB_PREFIX_."order_detail.id_order
-					AND "._DB_PREFIX_."orders.valid = 1
+		// Calculate totalamountclaimable (amount validated supplier can claim)
+		$query = "SELECT count( od.id_order_detail ) as nbra, 
+					sum( (od.product_price - od.reduction_amount) * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
+					sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
+					min( o.date_add ) as min_date
+					FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
+					WHERE od.product_id = ".$id_product."
+					AND o.id_order = od.id_order
 					AND date_add < DATE_ADD('".date("Y-m-d 00:00:00",mktime())."', INTERVAL -2 MONTH)";	// 2 month
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-		//print $sql;
+		prestalog($query);
+
 		$subresult = Db::getInstance()->ExecuteS($query);
 		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
-		$nbr_achats2 = 0;
 		$nbr_amount2 = 0;
 		foreach ($subresult AS $subrow) {
-			$nbr_achats2 = $subrow['nbra'];
 			$nbr_amount2 = $subrow['amount'];
-			if ($subrow['min_date'])
+			if ($subrow['min_date'] && $subrow['qtysold'])
 			{
 				if ($min_date2) $min_date2 = min($min_date2,$subrow['min_date']);
 				else $min_date2=$subrow['min_date'];
@@ -270,7 +268,7 @@ if (sizeof($result))
 
 		$totalamountclaimable+=$nbr_amount2;
 
-		// Show line
+		// Show line of product
 		?>
 		<tr bgcolor="<?php echo $colorTab; ?>">
 		    <td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
@@ -287,7 +285,7 @@ if (sizeof($result))
 			</td>
 		    <td align="right" nowrap="nowrap">
 				<a href="./my-sales-list.php?id_p=<?php echo $id_product; ?>"><?php echo $nbr_qtysold; ?></a>
-				<?php if ($nbr_achats && $nbr_qtysold != $nbr_achats) echo '<br>'.($nbr_achats-$nbr_qtysold).' '.aff('remboursé','refunded', $iso_langue_en_cours).'<br>'; ?>
+				<?php if ($nbr_achats && $nbr_qtysold != $nbr_achats) echo '<br>+'.($nbr_achats-$nbr_qtysold).' '.aff('remboursé','refunded', $iso_langue_en_cours).'<br>'; ?>
 			</td>
 		    <td align="right"><?php
 			if ($nbr_amount > 0)

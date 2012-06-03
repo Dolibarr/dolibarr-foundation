@@ -138,12 +138,13 @@ $iso_langue_en_cours);
 // Calculate totalamount
 $query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, 
 			od.id_order_detail, od.product_price, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
-			o.date_add
+			o.date_add, o.valid
 			FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 			WHERE product_id = ".$id_product."
 			AND c.id_customer = o.id_customer 
-		    AND o.id_order = od.id_order
-			AND o.valid = 1";
+		    AND o.id_order = od.id_order";
+prestalog($query);
+
 //print $query;
 $subresult = Db::getInstance()->ExecuteS($query);
 $nbr_achats = 0;
@@ -168,7 +169,7 @@ foreach ($subresult AS $subrow)
 		</td>
 		<td align="center"><?php echo $subrow['date_add']; ?></td>
 		<td align="right"><?php 
-			if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0)
+			if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 			{
 				if ($subrow['reduction_amount'] > 0) echo ($subrow['product_price']-$subrow['reduction_amount']+0).' ('.($subrow['product_price']+0).')';
 				else echo ($subrow['product_price']+0); 
