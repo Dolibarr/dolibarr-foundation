@@ -1,0 +1,2 @@
+
+https://cms.paypal.com/fr/cgi-bin/?cmd=_render-content&content_ID=security_fr/paypal_purchase_protection
