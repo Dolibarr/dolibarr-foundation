@@ -154,7 +154,7 @@ $iso_langue_en_cours);
 $min_date = 0;
 
 // Get list of products
-$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, pl.name, pl.description_short';
+$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, pl.name, pl.description_short';
 $query.= ' FROM '._DB_PREFIX_.'product as p';
 $query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
 if ($customer_id != 'all') $query.= ' WHERE p.reference like "c'.$customer_id.'d2%"';
@@ -176,6 +176,7 @@ if (sizeof($result))
 		$supplier_reference = $row['supplier_reference'];
 		$location = $row['location'];
 		$active = $row['active'];
+		$price = $row['price'];
 
 		//recuperation nom fichier
 		$query = 'SELECT display_filename, date_deposit FROM '._DB_PREFIX_.'product_download
@@ -272,7 +273,7 @@ if (sizeof($result))
 		?>
 		<tr bgcolor="<?php echo $colorTab; ?>">
 		    <td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
-		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a>
+		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a> (<?php echo round($price); ?>€)
 			<?php 
 			print '<br>';
 			echo $description_short; 
