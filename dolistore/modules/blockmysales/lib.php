@@ -43,40 +43,46 @@ function prestalog($message, $level=LOG_INFO)
  */
 function validateZipFile(&$zip,$originalfilename,$zipfile)
 {
-    prestalog("Validate zip file ".$zipfile);
+	prestalog("Validate zip file ".$zipfile);
 	$subdir=basename($zipfile);
 	$dir='/home/httpd/vhosts/dolistore.com/tmp/'.$subdir;
 	mkdir($dir);
 	$zip->extractTo($dir.'/');
-    $zip->close();
-	
+	$zip->close();
+
 	// Analyze files
+	$upload=0;
 	$validation=1;
 	$ismodule=$istheme=0;
-	if (is_dir($dir.'/scripts')) $ismodule=1;
-	if (is_dir($dir.'/htdocs/themes')) $istheme=1;
-	if (preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)) $ismodule=1;
-	if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)) $istheme=1;
+	if (is_dir($dir.'/scripts')) $ismodule='module';
+	if (is_dir($dir.'/htdocs/themes')) $istheme='theme';
+	if (preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename,$reg)) $ismodule=$reg[1];
+	if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename,$reg)) $istheme=$reg[1];
 	if ($ismodule || $istheme)
 	{
 		prestalog("file ismodule=".$ismodule." istheme=".$istheme);
 		// It's a module or theme file
 		if (! $error && ($ismodule || $istheme) && $dh = opendir($dir)) 
 		{
+			$nbofsubdirs=0;
 			while (($file = readdir($dh)) !== false) 
 			{
 				if ($file == '.' || $file == '..') continue;
 				prestalog("subdirs found for package:".$file);
-				$alloweddirs=array('htdocs','docs','scripts','test','build');
+				$nbofsubdirs++;
+				$alloweddirs=array('htdocs','docs','scripts','test','build',($ismodule?$ismodule:($istheme?$istheme:'')));
 				if (! in_array($file,$alloweddirs))
 				{
-					echo "<div style='color:#FF0000'>Sorry, a module file can only contains, into zip root, following directories ".join(',',$alloweddirs)."<br>";
-					echo "If you think this is an error, send your package by email at contact@dolibarr.org";
-					echo "</div>";
 					$upload=-1;
 					$error++;
 					break;
 				}
+			}
+			if ($error)
+			{
+				echo "<div style='color:#FF0000'>Sorry, a module file can only contains, into zip root:<br>\nOnly one directory matching module or theme name<br>\nor several directories matching following names: ".join(',',$alloweddirs)."<br>\n";
+				echo "If you think this is an error, send your package by email at contact@dolibarr.org";
+				echo "</div>";
 			}
 			closedir($dh);
 		}				
