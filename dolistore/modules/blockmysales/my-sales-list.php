@@ -176,7 +176,7 @@ foreach ($subresult AS $subrow)
 			}
 			else
 			{
-				print aff('Remboursé','Refunded',$iso_langue_en_cours);
+				print aff('Rejeté','Refunded',$iso_langue_en_cours);
 			}
 		?>
 		</td>

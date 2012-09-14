@@ -238,7 +238,7 @@ if (sizeof($result))
 		}
 
 		$totalnbsell+=$nbr_achats;
-		if ($nbr_amount > 0) $totalnbsellpaid+=$nbr_achats;
+		if ($nbr_amount > 0) $totalnbsellpaid+=$nbr_qtysold;
 		$totalamount+=$nbr_amount;
 
 		// Calculate totalamountclaimable (amount validated supplier can claim)
@@ -286,7 +286,7 @@ if (sizeof($result))
 			</td>
 		    <td align="right" nowrap="nowrap">
 				<a href="./my-sales-list.php?id_p=<?php echo $id_product; ?>"><?php echo $nbr_qtysold; ?></a>
-				<?php if ($nbr_achats && $nbr_qtysold != $nbr_achats) echo '<br>+'.($nbr_achats-$nbr_qtysold).' '.aff('remboursé','refunded', $iso_langue_en_cours).'<br>'; ?>
+				<?php if ($nbr_achats && $nbr_qtysold != $nbr_achats) echo '<br>+'.($nbr_achats-$nbr_qtysold).' '.aff('rejeté','refunded', $iso_langue_en_cours).'<br>'; ?>
 			</td>
 		    <td align="right"><?php
 			if ($nbr_amount > 0)
