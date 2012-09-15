@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="600px"
+   id="svg3450"
+   inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="dolibarr_logo.svg"
+   version="1.1"
+   width="800px">
+  <title
+     id="title3072">Logo Dolibarr ERP-CRM</title>
+  <defs
+     id="defs3452">
+    <linearGradient
+       gradientTransform="matrix(0.45741655,0,0,0.45741661,-164.27656,-275.19117)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient5510"
+       inkscape:collect="always"
+       x1="1223.7272"
+       x2="1221.0221"
+       xlink:href="#linearGradient3734"
+       y1="1026.5248"
+       y2="1317.5959" />
+    <linearGradient
+       id="linearGradient3734">
+      <stop
+         id="stop3736"
+         offset="0"
+         style="stop-color:#094276;stop-opacity:1;" />
+      <stop
+         id="stop3738"
+         offset="1"
+         style="stop-color:#468dc9;stop-opacity:1;" />
+    </linearGradient>
+    <filter
+       id="filter3775"
+       inkscape:collect="always">
+      <feGaussianBlur
+         id="feGaussianBlur3777"
+         inkscape:collect="always"
+         stdDeviation="11.473048" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     bordercolor="#666666"
+     borderlayer="false"
+     borderopacity="1.0"
+     id="base"
+     inkscape:current-layer="layer1"
+     inkscape:cx="101.85653"
+     inkscape:cy="152.65216"
+     inkscape:document-units="px"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:showpageshadow="false"
+     inkscape:window-height="1027"
+     inkscape:window-maximized="1"
+     inkscape:window-width="1920"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:zoom="0.70710678"
+     pagecolor="#ffffff"
+     showborder="true"
+     showgrid="false" />
+  <metadata
+     id="metadata3455">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Logo Dolibarr ERP-CRM</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nd/3.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Laurent Destailleur</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Laurent Destailleur</dc:title>
+          </cc:Agent>
+        </dc:rights>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nd/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1"
+     style="display:inline">
+    <text
+       id="text2828-6"
+       style="font-size:886.12506104px;font-style:normal;font-weight:normal;opacity:0.17204303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3775);font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       transform="matrix(0.29307877,0,0,0.39656343,-92.272087,34.192962)"
+       x="537.1402"
+       xml:space="preserve"
+       y="887.85065"><tspan
+         id="tspan2830-9"
+         sodipodi:role="line"
+         style="font-size:518.16009521px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         x="537.1402"
+         y="887.85065">Dolibarr</tspan></text>
+    <text
+       id="text2828"
+       style="font-size:301.5090332px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.54475296;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bitstream Vera Sans"
+       transform="scale(0.85713446,1.1666781)"
+       x="68.070366"
+       xml:space="preserve"
+       y="324.07108"><tspan
+         id="tspan2830"
+         sodipodi:role="line"
+         style="font-size:176.30688477px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.54475296;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         x="68.070366"
+         y="324.07108">Dolibarr</tspan></text>
+    <text
+       id="text5484"
+       sodipodi:linespacing="100%"
+       style="font-size:42.95219803px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="scale(0.88533213,1.1295196)"
+       x="647.82953"
+       xml:space="preserve"
+       y="222.68947"><tspan
+         id="tspan5486"
+         sodipodi:role="line"
+         style="font-size:42.95219803px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="647.82953"
+         y="222.68947">ERP/CRM</tspan></text>
+  </g>
+</svg>
