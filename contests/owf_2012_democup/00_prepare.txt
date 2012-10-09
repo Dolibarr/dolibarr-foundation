@@ -1,0 +1,11 @@
+
+* Install stopwatch package and add link onto desktop.
+* Replace desktop with Dolibarr wallpaper.
+* Add link to 01_dolibarr_democup_owf_2012.odp
+* Add dolideb package version 3.2.3
+* Install VM of windows+firefox+DoliWamp 3.3 with link to VirtualBox
+* Add video of dolicloud
+* Add dolideb 3.3
+* Add link to dolibarr login page http://localhost/dolibarr/
+* Add dolimed package
+* Launch 00_reinit_presentation.sh to remove completely dolibarr package
