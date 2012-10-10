@@ -1,0 +1,33 @@
+/* Light Theme */
+
+.roktabs-wrapper {padding: 0;}
+.roktabs-wrapper .light {position: relative;border: 1px solid #DCDCDC;}
+.roktabs-wrapper .light .roktabs-container-inner {position:relative;overflow: hidden;}
+.roktabs-wrapper .light .roktabs-container-wrapper {clear: both;position: relative;overflow: hidden;width: 30000px;}
+.roktabs-wrapper .light .roktabs-container-wrapper div {float: left;/*width: 450px;*//*width: 220px;*/}
+.roktabs-wrapper .light .roktabs-container-wrapper div.wrapper {padding: 14px;width: auto;}
+.roktabs-wrapper .light .roktabs-links {overflow: hidden;margin:0;}
+.roktabs-wrapper .light .active-arrows .roktabs-links {margin:0 21px;}
+.roktabs-wrapper .light .roktabs-links ul {text-align: left;font-weight: bold;list-style-type: none;padding: 0;overflow:hidden;}
+.roktabs-wrapper .light .roktabs-links ul.roktabs-top {margin: 0;background: url(tabbg-light.png) 0 0 repeat-x;height: 32px;}
+.roktabs-wrapper .light .roktabs-links ul.roktabs-bottom {margin: 0;background: url(tabbg-bottom-light.png) 0 0 repeat-x;height: 32px;}
+.roktabs-wrapper .light .roktabs-links ul li {float: left;padding: 0;margin: 0;text-decoration: none;border-right: 1px solid #DCDCDC;border-bottom: none;color: #666;position: relative;height: 31px;line-height: 31px;}
+.roktabs-wrapper .light .roktabs-links ul li span {padding: 0 10px;}
+.roktabs-wrapper .light .roktabs-links ul li.first {border-left: 0;}
+.roktabs-wrapper .light .roktabs-links ul li.active.last {border-right: 1px solid #DCDCDC;}
+.roktabs-wrapper .light .roktabs-links ul li.last {border-right: 0;}
+.roktabs-wrapper .light .roktabs-links ul li.hover {color: #000;}
+.roktabs-wrapper .light .roktabs-links ul.roktabs-top li.active {background: url(tabbg-active-light.png) 0 0 repeat-x;color: #000;height: 31px;border-bottom: 1px solid #fff;}
+.roktabs-wrapper .light .roktabs-links ul.roktabs-bottom li.active {background: url(tabbg-active-bottom-light.png) 0 0 repeat-x;color: #000;height: 31px;border-top: 1px solid #fff;margin-top: -1px;}
+.roktabs-wrapper .light .roktabs-links ul li.active.first {border-left: 0;}
+.roktabs-wrapper .light .roktabs-scroller {position: absolute;bottom: 0;right: 0;height: 32px;}
+.roktabs-wrapper .light .arrow-next, .roktabs-wrapper .light .arrow-prev {line-height: 29px;margin: 1px;text-align: center;float: left;cursor: pointer;border: 1px solid #DCDCDC;z-index: 2;width:17px;position:absolute;top:0;height:29px;}
+.roktabs-wrapper .light .arrow-next {right:0;background: url(next-light.png) 50% 0 no-repeat;}
+.roktabs-wrapper .light .arrow-prev {left:0;background: url(prev-light.png) 50% 0 no-repeat;}
+.roktabs-wrapper .light .arrow-next-hover {background-position: 50% -29px;}
+.roktabs-wrapper .light .arrow-prev-hover {background-position: 50% -29px;}
+.roktabs-wrapper .light .arrow-prev span, .roktabs-wrapper .light .arrow-next span {display: none;}
+.roktabs-wrapper .light .roktabs-container-tr, .roktabs-wrapper .light .roktabs-container-inner, .roktabs-wrapper .light .active-arrows {background: #fff;}
+.clear {clear: both;}
+.roktabs-wrapper .icon-left .tab-icon {vertical-align:middle;margin-right:5px;}
+.roktabs-wrapper .icon-right .tab-icon {vertical-align:middle;margin-left:5px;}

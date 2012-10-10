@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0058)http://wiki.dolibarr.org/index.php/Developer_documentation -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr" class="client-chrome client-chrome-2 client-webkit client-linux"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="verify-v1" content="HMNutRwqmhagMMJPRLLAFKlwRnifyx4SoJjYN+fyZV0=">
+		
+		<meta name="generator" content="MediaWiki 1.17.0">
+<link rel="alternate" type="application/x-wiki" title="Modifier" href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit">
+<link rel="edit" title="Modifier" href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit">
+<link rel="shortcut icon" href="http://wiki.dolibarr.org/skins/dolibarr/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="http://wiki.dolibarr.org/opensearch_desc.php" title="Dolibarr Wiki (en)">
+<link rel="EditURI" type="application/rsd+xml" href="http://wiki.dolibarr.org/api.php?action=rsd">
+<link rel="copyright" href="http://creativecommons.org/licenses/by-sa/3.0/">
+<link rel="alternate" type="application/atom+xml" title="Flux Atom de Dolibarr Wiki" href="http://wiki.dolibarr.org/index.php?title=Special:RecentChanges&feed=atom">		<title>Developer documentation - Dolibarr Wiki</title>
+		<link rel="stylesheet" href="http://wiki.dolibarr.org/load.php?debug=false&lang=fr&modules=mediawiki.legacy.commonPrint%2Cshared&only=styles&skin=dolibarr&*">
+<link rel="stylesheet" href="http://wiki.dolibarr.org/skins/dolibarr/main.css?301" media="screen">
+<!--[if IE 6]><link rel="stylesheet" href="/skins/dolibarr/IE60Fixes.css?301" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/dolibarr/IE70Fixes.css?301" media="screen" /><![endif]--><meta name="ResourceLoaderDynamicStyles" content="">
+		<!--[if lt IE 7]><script type="text/javascript" src="/skins/common/IEFixes.js?301"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+
+		<script type="text/javascript" async="" src="./Developer documentation - Dolibarr Wiki_files/ga.js"></script><script>if ( window.mediaWiki ) {
+	mediaWiki.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "Developer_documentation", "wgTitle": "Developer documentation", "wgAction": "view", "wgArticleId": 2276, "wgIsArticle": true, "wgUserName": "Eldy", "wgUserGroups": ["bureaucrat", "sysop", "*", "user", "autoconfirmed"], "wgCurRevisionId": 27744, "wgCategories": [], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": []});
+}
+</script><style type="text/css"></style>
+
+		<!-- Head Scripts -->
+		<script type="text/javascript" src="./Developer documentation - Dolibarr Wiki_files/index.php"><!-- site js --></script>
+
+<!-- Google nalytics -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9049390-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-Developer_documentation skin-dolibarr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 id="firstHeading" class="firstHeading">Developer documentation</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">De Dolibarr Wiki.</h3>
+			<div id="contentSub"></div>
+												<!-- start content -->
+			<table id="toc" class="toc"><tbody><tr><td><div id="toctitle"><h2>Sommaire</h2> <span class="toctoggle">[<a id="togglelink" class="internal" href="http://wiki.dolibarr.org/index.php/Developer_documentation
+">masquer</a>]</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Development_organization_and_tools"><span class="tocnumber">1</span> <span class="toctext">Development organization and tools</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Coding_rules_and_best_practices"><span class="tocnumber">2</span> <span class="toctext">Coding rules and best practices</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#List_of_existing_modules"><span class="tocnumber">3</span> <span class="toctext">List of existing modules</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#To_develop_a_new_module.2Faddon_for_GUI"><span class="tocnumber">4</span> <span class="toctext">To develop a new module/addon for GUI</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#To_develop_a_batch_or_command_line_script"><span class="tocnumber">5</span> <span class="toctext">To develop a batch or command line script</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#Technical_components_of_Dolibarr"><span class="tocnumber">6</span> <span class="toctext">Technical components of Dolibarr</span></a>
+<ul>
+<li class="toclevel-2 tocsection-7"><a href="#Tree_structure"><span class="tocnumber">6.1</span> <span class="toctext">Tree structure</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#Setup_storage"><span class="tocnumber">6.2</span> <span class="toctext">Setup storage</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#Business_objects"><span class="tocnumber">6.3</span> <span class="toctext">Business objects</span></a></li>
+<li class="toclevel-2 tocsection-10"><a href="#Menus_system"><span class="tocnumber">6.4</span> <span class="toctext">Menus system</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="#Tabs_system"><span class="tocnumber">6.5</span> <span class="toctext">Tabs system</span></a></li>
+<li class="toclevel-2 tocsection-12"><a href="#Skins_system"><span class="tocnumber">6.6</span> <span class="toctext">Skins system</span></a></li>
+<li class="toclevel-2 tocsection-13"><a href="#Box_system"><span class="tocnumber">6.7</span> <span class="toctext">Box system</span></a></li>
+<li class="toclevel-2 tocsection-14"><a href="#Authentication_system"><span class="tocnumber">6.8</span> <span class="toctext">Authentication system</span></a></li>
+<li class="toclevel-2 tocsection-15"><a href="#Permission_system"><span class="tocnumber">6.9</span> <span class="toctext">Permission system</span></a></li>
+<li class="toclevel-2 tocsection-16"><a href="#Translation_system"><span class="tocnumber">6.10</span> <span class="toctext">Translation system</span></a></li>
+<li class="toclevel-2 tocsection-17"><a href="#Error_management"><span class="tocnumber">6.11</span> <span class="toctext">Error management</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#Canvas_system"><span class="tocnumber">6.12</span> <span class="toctext">Canvas system</span></a></li>
+<li class="toclevel-2 tocsection-19"><a href="#Triggers_system"><span class="tocnumber">6.13</span> <span class="toctext">Triggers system</span></a></li>
+<li class="toclevel-2 tocsection-20"><a href="#Hooks_system"><span class="tocnumber">6.14</span> <span class="toctext">Hooks system</span></a></li>
+<li class="toclevel-2 tocsection-21"><a href="#Variable_substitution_system"><span class="tocnumber">6.15</span> <span class="toctext">Variable substitution system</span></a></li>
+<li class="toclevel-2 tocsection-22"><a href="#Web_services"><span class="tocnumber">6.16</span> <span class="toctext">Web services</span></a></li>
+<li class="toclevel-2 tocsection-23"><a href="#Files.2FDocuments_storage_management"><span class="tocnumber">6.17</span> <span class="toctext">Files/Documents storage management</span></a></li>
+<li class="toclevel-2 tocsection-24"><a href="#Numbering_modules"><span class="tocnumber">6.18</span> <span class="toctext">Numbering modules</span></a></li>
+<li class="toclevel-2 tocsection-25"><a href="#Numbering_modules_and_generating_documents"><span class="tocnumber">6.19</span> <span class="toctext">Numbering modules and generating documents</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-26"><a href="#Mass_exports.2Fimports"><span class="tocnumber">7</span> <span class="toctext">Mass exports/imports</span></a></li>
+<li class="toclevel-1 tocsection-27"><a href="#Interfaces_and_links_with_other_applications"><span class="tocnumber">8</span> <span class="toctext">Interfaces and links with other applications</span></a></li>
+<li class="toclevel-1 tocsection-28"><a href="#FAQ"><span class="tocnumber">9</span> <span class="toctext">FAQ</span></a></li>
+</ul>
+</td></tr></tbody></table>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=1" title="Modifier la section : Development organization and tools">modifier</a>]</span> <span class="mw-headline" id="Development_organization_and_tools"> Development organization and tools </span></h1>
+<p>This chapter contains global informations that must be read before to start any development on Dolibarr.
+</p>
+<ol><li> <a href="http://wiki.dolibarr.org/index.php/Dolibarr_Project" title="Dolibarr Project">Organization of project</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/To_known_before_to_start" title="To known before to start">To known before to start to develop</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/Environment_and_development_tools" title="Environment and development tools">Environment and development tools</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/Dependencies_and_external_libraries" title="Dependencies and external libraries">Dependencies and external libraries</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/FAQ_Get,update_project_sources" title="FAQ Get,update project sources" class="mw-redirect">Get or update sources of a development version</a>
+</li></ol>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=2" title="Modifier la section : Coding rules and best practices">modifier</a>]</span> <span class="mw-headline" id="Coding_rules_and_best_practices"> Coding rules and best practices </span></h1>
+<ol><li> <a href="http://wiki.dolibarr.org/index.php/Language_and_development_rules" title="Language and development rules">Language and development rules (PHP, SQL, HTML)</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/Category:Table_SQL" title="Category:Table SQL">List of tables</a>
+</li></ol>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=3" title="Modifier la section : List of existing modules">modifier</a>]</span> <span class="mw-headline" id="List_of_existing_modules"> List of existing modules </span></h1>
+<p>Technical documentations on standard business modules are available on developer documentation of each modules. Choose page you are interested in to go on it:
+</p>
+<ul><li> List of standard modules is defined on page <a href="http://wiki.dolibarr.org/index.php/Category:List_of_Modules_(developer)" title="Category:List of Modules (developer)">List of Modules</a>
+</li><li> List of other modules is defined on page <a href="http://wiki.dolibarr.org/index.php/Category:Complementary_modules" title="Category:Complementary modules">Complementary modules</a>
+</li></ul>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=4" title="Modifier la section : To develop a new module/addon for GUI">modifier</a>]</span> <span class="mw-headline" id="To_develop_a_new_module.2Faddon_for_GUI"> To develop a new module/addon for GUI </span></h1>
+<p>This section describe how to develop a new module on Dolibarr that change how Dolibarr works. Such modules can its own screens, its own data, its own CSS stylesheet, its own business code or all oh this.
+Script development is not included in this section (this is described in next chapter).
+</p><p>To develop your own module, go on tutorial: <a href="Module%20development%20-%20Dolibarr%20Wiki.html" title="Module development">Module development</a>
+</p>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=5" title="Modifier la section : To develop a batch or command line script">modifier</a>]</span> <span class="mw-headline" id="To_develop_a_batch_or_command_line_script"> To develop a batch or command line script </span></h1>
+<p>This chapter describe the way to develop its own command line script to realize Dolibarr treatments (read, update data...).
+Making modifications on user gui interface (GUI) is not included in this chapter. See previous chapter for this.
+</p><p>To develop a script, like a cron script or an command line import tool to import data from an external source, you can have a look at the page: <a href="http://wiki.dolibarr.org/index.php/Script_development" title="Script development">Script development</a>
+</p>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=6" title="Modifier la section : Technical components of Dolibarr">modifier</a>]</span> <span class="mw-headline" id="Technical_components_of_Dolibarr"> Technical components of Dolibarr </span></h1>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=7" title="Modifier la section : Tree structure">modifier</a>]</span> <span class="mw-headline" id="Tree_structure"> Tree structure </span></h2>
+<p>Path hierarchy of current version are defined into [<a href="http://www.dolibarr.org/html_doxygen/index.html" class="external free" target="_blank">http://www.dolibarr.org/html_doxygen/index.html</a> doxygen generated documentation (generated "javadoc" like documentation).
+</p><p>However, paths to use to add new files by a new module is defined into the documentation to develop a new module (see <a href="http://wiki.dolibarr.org/index.php/Module_development" title="Module development">Module development</a>).
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=8" title="Modifier la section : Setup storage">modifier</a>]</span> <span class="mw-headline" id="Setup_storage"> Setup storage </span></h2>
+<p>There is 3 area for Dolibarr setup parameters.
+</p>
+<ul><li> Dolibarr technical setup (authentication mode, database logins and storage area for files) are defined in only one setup file conf/conf.php. See <a href="http://wiki.dolibarr.org/index.php/Configuration_file" title="Configuration file">Configuration file</a> for more information.
+</li><li> Global features parameters are stored in <a href="http://wiki.dolibarr.org/index.php/Table_llx_const" title="Table llx const">Table llx_const</a>. See page <a href="http://wiki.dolibarr.org/index.php/Constants" title="Constants">Constants</a> for more information.
+</li><li> Feature parameters for particular users are stored in <a href="http://wiki.dolibarr.org/index.php/Table_llx_user_param" title="Table llx user param">Table llx_user_param</a>. See page <a href="http://wiki.dolibarr.org/index.php/Constants" title="Constants">Constants</a> for more information.
+</li></ul>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=9" title="Modifier la section : Business objects">modifier</a>]</span> <span class="mw-headline" id="Business_objects"> Business objects </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Business_Objects" title="Business Objects">Business Objects</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=10" title="Modifier la section : Menus system">modifier</a>]</span> <span class="mw-headline" id="Menus_system"> Menus system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Menus_system" title="Menus system">Menus system</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=11" title="Modifier la section : Tabs system">modifier</a>]</span> <span class="mw-headline" id="Tabs_system"> Tabs system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Tabs_system" title="Tabs system">Tabs system</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=12" title="Modifier la section : Skins system">modifier</a>]</span> <span class="mw-headline" id="Skins_system"> Skins system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Skins" title="Skins">Skins</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=13" title="Modifier la section : Box system">modifier</a>]</span> <span class="mw-headline" id="Box_system"> Box system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Box_system" title="Box system">Box system</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=14" title="Modifier la section : Authentication system">modifier</a>]</span> <span class="mw-headline" id="Authentication_system"> Authentication system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Authentication" title="Authentication">Authentication</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=15" title="Modifier la section : Permission system">modifier</a>]</span> <span class="mw-headline" id="Permission_system"> Permission system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Permissions_En" title="Permissions En">Permissions</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=16" title="Modifier la section : Translation system">modifier</a>]</span> <span class="mw-headline" id="Translation_system"> Translation system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Translation_system" title="Translation system">Translation system</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=17" title="Modifier la section : Error management">modifier</a>]</span> <span class="mw-headline" id="Error_management"> Error management </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Error_reporting" title="Error reporting">Error reporting</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=18" title="Modifier la section : Canvas system">modifier</a>]</span> <span class="mw-headline" id="Canvas_system"> Canvas system </span></h2>
+<p>Canvas is a developer feature to replace sreens to create, update or view a card (products, thirdparties, contacts, ...). For example, you can replace the input form to create a new third party, or to edit it, or replace the card used to view it.
+</p><p>See page <a href="http://wiki.dolibarr.org/index.php/Canvas_development" title="Canvas development">Canvas development</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=19" title="Modifier la section : Triggers system">modifier</a>]</span> <span class="mw-headline" id="Triggers_system"> Triggers system </span></h2>
+<p>Triggers is a develop feature to execute personalized code during a Dolibarr "Business event" (creation of invoice, delete of user, update of thirdparty, etc...), and only for a business event. To personalize code for other contexts, see instead chapter <b>Hooks system</b>.
+</p><p>For triggers usage, see <a href="http://wiki.dolibarr.org/index.php/Interfaces_Dolibarr_toward_foreign_systems" title="Interfaces Dolibarr toward foreign systems">this page</a>.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=20" title="Modifier la section : Hooks system">modifier</a>]</span> <span class="mw-headline" id="Hooks_system"> Hooks system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Hooks_system" title="Hooks system">Hooks system</a>.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=21" title="Modifier la section : Variable substitution system">modifier</a>]</span> <span class="mw-headline" id="Variable_substitution_system"> Variable substitution system </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php?title=Variable_substitution_system&action=edit&redlink=1" class="new" title="Variable substitution system (page inexistante)">Variable substitution system</a>.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=22" title="Modifier la section : Web services">modifier</a>]</span> <span class="mw-headline" id="Web_services"> Web services </span></h2>
+<p>Dolibarr can be setup to provide some services.
+See <a href="http://wiki.dolibarr.org/index.php/Module_Web_Services" title="Module Web Services">Module Web Services</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=23" title="Modifier la section : Files/Documents storage management">modifier</a>]</span> <span class="mw-headline" id="Files.2FDocuments_storage_management"> Files/Documents storage management </span></h2>
+<p>See page <a href="http://wiki.dolibarr.org/index.php/Generated_documents" title="Generated documents">Generated documents</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=24" title="Modifier la section : Numbering modules">modifier</a>]</span> <span class="mw-headline" id="Numbering_modules"> Numbering modules </span></h2>
+<p>For each entity created in the application, Dolibarr assigns a reference. In order to adapt the reference to any use, Dolibarr use modules to define the rule of generation of this reference. Several modules are supplied with application. Some are generic and are used to define the mask numbering (number on x characters, with or without prefix, including the date or not, etc.), which can meet most needs. However, there are still cases where the modules provided does not meet the need. In this case it is necessary to develop its own numbering module.
+</p><p>For more information, see on page <a href="http://wiki.dolibarr.org/index.php/Create_numeration_module" title="Create numeration module" class="mw-redirect">Create numeration module</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=25" title="Modifier la section : Numbering modules and generating documents">modifier</a>]</span> <span class="mw-headline" id="Numbering_modules_and_generating_documents"> Numbering modules and generating documents </span></h2>
+<p>More documentation about document generation from modeles is available on page <a href="http://wiki.dolibarr.org/index.php/Create_a_PDF_document_template" title="Create a PDF document template">Create a PDF document template</a> or <a href="http://wiki.dolibarr.org/index.php/Create_an_ODT_document_template" title="Create an ODT document template">Create an ODT document template</a>
+</p>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=26" title="Modifier la section : Mass exports/imports">modifier</a>]</span> <span class="mw-headline" id="Mass_exports.2Fimports"> Mass exports/imports </span></h1>
+<ol><li> <a href="http://wiki.dolibarr.org/index.php/Mass_imports" title="Mass imports">Mass imports</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/Module_Exports_En" title="Module Exports En">Mass exports</a>
+</li></ol>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=27" title="Modifier la section : Interfaces and links with other applications">modifier</a>]</span> <span class="mw-headline" id="Interfaces_and_links_with_other_applications"> Interfaces and links with other applications </span></h1>
+<ol><li> <a href="http://wiki.dolibarr.org/index.php/Interfaces_Dolibarr_toward_foreign_systems" title="Interfaces Dolibarr toward foreign systems">Interfaces Dolibarr toward foreign systems</a> or toward Dolibarr (Dolibarr Triggers)
+</li><li> <a href="http://wiki.dolibarr.org/index.php/Interfaces_from_foreign_systems_toward_Dolibarr" title="Interfaces from foreign systems toward Dolibarr">Interfaces from foreign systems toward Dolibarr</a>
+</li><li> <a href="http://wiki.dolibarr.org/index.php/Module_Web_Services" title="Module Web Services">Web Services</a>
+</li></ol>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit&section=28" title="Modifier la section : FAQ">modifier</a>]</span> <span class="mw-headline" id="FAQ"> FAQ </span></h1>
+<p>All FAQ are available through index page <a href="http://wiki.dolibarr.org/index.php/Category:FAQ_EN" title="Category:FAQ EN">FAQ EN</a>
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 110/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key dolibarrwiki:pcache:idhash:2276-0!*!0!!fr!* and timestamp 20121010113554 -->
+<div class="printfooter">
+Récupérée de « <a href="./Developer documentation - Dolibarr Wiki_files/Developer documentation - Dolibarr Wiki.html">http://wiki.dolibarr.org/index.php/Developer_documentation</a> »</div>
+			<div id="catlinks" class="catlinks catlinks-allhidden"></div>			<!-- end content -->
+						<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Affichages</h5>
+		<div class="pBody">
+			<ul>
+	
+				 <li id="ca-nstab-main" class="selected"><a href="./Developer documentation - Dolibarr Wiki_files/Developer documentation - Dolibarr Wiki.html" title="Voir la page de contenu [alt-c]" accesskey="c">Page</a></li>
+				 <li id="ca-talk" class="new"><a href="http://wiki.dolibarr.org/index.php?title=Talk:Developer_documentation&action=edit&redlink=1" title="Discussion au sujet de cette page de contenu [alt-t]" accesskey="t">Discussion</a></li>
+				 <li id="ca-edit"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=edit" title="Vous pouvez modifier cette page.
+Veuillez utiliser le bouton de prévisualisation avant d’enregistrer. [alt-e]" accesskey="e">Modifier</a></li>
+				 <li id="ca-history"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=history" title="Les versions passées de cette page (avec leurs contributeurs) [alt-h]" accesskey="h">Historique</a></li>
+				 <li id="ca-delete"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=delete" title="Supprimer cette page [alt-d]" accesskey="d">Supprimer</a></li>
+				 <li id="ca-move"><a href="http://wiki.dolibarr.org/index.php/Special:MovePage/Developer_documentation" title="Renommer cette page [alt-m]" accesskey="m">Renommer</a></li>
+				 <li id="ca-protect"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=protect" title="Protéger cette page [alt-=]" accesskey="=">Protéger</a></li>
+				 <li id="ca-watch"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&action=watch" title="Ajouter cette page à votre liste de suivi [alt-w]" accesskey="w">Suivre</a></li>
+				 <li id="ca-language"><a href="http://wiki.dolibarr.org/index.php?title=Special:MultiLanguageManager&cible=Developer_documentation">Langue</a></li>			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Outils personnels</h5>
+		<div class="pBody">
+			<ul>
+							<li id="pt-userpage"><a href="http://wiki.dolibarr.org/index.php/User:Eldy" title="Votre page utilisateur [alt-.]" accesskey="." class="new">Eldy</a></li>
+				<li id="pt-mytalk"><a href="http://wiki.dolibarr.org/index.php/User_talk:Eldy" title="Votre page de discussion [alt-n]" accesskey="n" class="new">Page de discussion</a></li>
+				<li id="pt-preferences"><a href="http://wiki.dolibarr.org/index.php/Special:Preferences" title="Vos préférences">Préférences</a></li>
+				<li id="pt-watchlist"><a href="http://wiki.dolibarr.org/index.php/Special:Watchlist" title="La liste des pages dont vous suivez les modifications [alt-l]" accesskey="l">Liste de suivi</a></li>
+				<li id="pt-mycontris"><a href="http://wiki.dolibarr.org/index.php/Special:Contributions/Eldy" title="La liste de vos contributions [alt-y]" accesskey="y">Contributions</a></li>
+				<li id="pt-logout"><a href="http://wiki.dolibarr.org/index.php?title=Special:UserLogout&returnto=Developer_documentation" title="Se déconnecter">Déconnexion</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/dolibarr/dolibarr_125x125.png);" href="http://wiki.dolibarr.org/index.php/Main_Page" title="Visiter la page d’accueil du site [alt-z]" accesskey="z"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class="generated-sidebar portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage-description"><a href="http://wiki.dolibarr.org/index.php/Main_Page" title="Aller à l’accueil [alt-z]" accesskey="z">Accueil</a></li>
+				<li id="n-recentchanges"><a href="http://wiki.dolibarr.org/index.php/Special:RecentChanges" title="Liste des modifications récentes sur le wiki [alt-r]" accesskey="r">Modifications récentes</a></li>
+				<li id="n-randompage"><a href="http://wiki.dolibarr.org/index.php/Special:Random" title="Afficher une page au hasard [alt-x]" accesskey="x">Page au hasard</a></li>
+			</ul>
+		</div>
+	</div>
+<div class="generated-sidebar portlet" id="p-navigation"><h5>Autres langues</h5><div class="pBody"><a class="language" href="http://wiki.dolibarr.org/index.php/Documentation_D%C3%A9veloppeur"><img src="./Developer documentation - Dolibarr Wiki_files/fr.png" class="languageimage" alt="Français"></a><a class="language" href="http://wiki.dolibarr.org/index.php/Documentaci%C3%B3n_Desarrolladores"><img src="./Developer documentation - Dolibarr Wiki_files/es.png" class="languageimage" alt="Espagnol"></a>
+</div>
+</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Rechercher</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="http://wiki.dolibarr.org/index.php" id="searchform">
+				<input type="hidden" name="title" value="Special:Search">
+				<input id="searchInput" title="Rechercher dans Dolibarr Wiki" accesskey="f" type="search" name="search">
+				<input type="submit" name="go" class="searchButton" id="searchGoButton" value="Lire" title="Aller vers une page portant exactement ce nom si elle existe.">
+				<div><a href="http://wiki.dolibarr.org/index.php/Special:Search" rel="search">Recherche avancée</a></div>
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Boîte à outils</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="http://wiki.dolibarr.org/index.php/Special:WhatLinksHere/Developer_documentation" title="Liste des pages liées à celle-ci [alt-j]" accesskey="j">Pages liées</a></li>
+				<li id="t-recentchangeslinked"><a href="http://wiki.dolibarr.org/index.php/Special:RecentChangesLinked/Developer_documentation" title="Liste des modifications récentes des pages liées à celle-ci [alt-k]" accesskey="k">Suivi des pages liées</a></li>
+<li id="t-upload"><a href="http://wiki.dolibarr.org/index.php/Special:Upload" title="Envoyer une image ou fichier média sur le serveur [alt-u]" accesskey="u">Téléverser un fichier</a></li>
+<li id="t-specialpages"><a href="http://wiki.dolibarr.org/index.php/Special:SpecialPages" title="Liste de toutes les pages spéciales [alt-q]" accesskey="q">Pages spéciales</a></li>
+				<li id="t-print"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&printable=yes" title="Version imprimable de cette page [alt-p]" accesskey="p">Version imprimable</a></li>				<li id="t-permalink"><a href="http://wiki.dolibarr.org/index.php?title=Developer_documentation&oldid=27744" title="Lien permanent vers cette version de la page">Adresse de cette version</a></li><li id="t-pdf">
+<a href="http://wiki.dolibarr.org/index.php?title=Special:Pdfprint&page=Developer_documentation">Imprimer en PDF</a></li>			</ul>
+		</div>
+	</div>
+<br><div class="generated-sidebar portlet" id="p-navigation-donation" style="text-align: center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="8978561">
+<input type="image" src="./Developer documentation - Dolibarr Wiki_files/Paypal.png" border="0" name="submit" alt="Help Dolibarr making a donation">
+</form>
+</div>
+
+<br><br>
+
+<div class="generated-sidebar portlet" id="p-navigation-adsense" style="text-align: center">
+<div class="pBody">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-1071905880519467";
+/* PUBSKYDOLIBARRWIKI2 */
+google_ad_slot = "7811259314";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>
+
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+		<div id="footer">
+			<ul id="f-list">
+					<li id="lastmod"> Dernière modification de cette page le 7 octobre 2012 à 10:51.<br></li>
+					<li id="viewcount">Cette page a été consultée 31&nbsp;733 fois.</li>
+					<li id="copyright">Content is available under <a href="http://creativecommons.org/licenses/by-sa/3.0/" class="external ">Creative Commons Attribution-ShareAlike 3.0 License</a>.</li>
+			</ul>
+		</div>
+</div>
+
+<script src="./Developer documentation - Dolibarr Wiki_files/load.php"></script><script src="./Developer documentation - Dolibarr Wiki_files/load(1).php"></script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "Developer_documentation", "wgTitle": "Developer documentation", "wgAction": "view", "wgArticleId": 2276, "wgIsArticle": true, "wgUserName": "Eldy", "wgUserGroups": ["bureaucrat", "sysop", "*", "user", "autoconfirmed"], "wgCurRevisionId": 27744, "wgCategories": [], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": []});
+}
+</script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.loader.load(["mediawiki.util", "mediawiki.legacy.wikibits", "mediawiki.legacy.ajax", "mediawiki.legacy.ajaxwatch"]);
+	mediaWiki.loader.go();
+}
+</script><script type="text/javascript" src="./Developer documentation - Dolibarr Wiki_files/load(2).php"></script>
+
+<script>if ( window.mediaWiki ) {
+	mediaWiki.user.options.set({"quickbar":0,"underline":2,"cols":"100","rows":"30","searchlimit":20,"contextlines":5,"contextchars":50,"skin":"dolibarr","math":1,"rcdays":"14","rclimit":"250","wllimit":250,"highlightbroken":1,"stubthreshold":0,"previewontop":1,"editsection":1,"editsectiononrightclick":0,"showtoc":1,"showtoolbar":1,"date":"default","imagesize":2,"thumbsize":2,"rememberpassword":0,"enotifwatchlistpages":0,"enotifusertalkpages":1,"enotifminoredits":0,"enotifrevealaddr":0,"shownumberswatching":1,"fancysig":0,"externaleditor":0,"externaldiff":0,"showjumplinks":0,"numberheadings":0,"uselivepreview":0,"watchlistdays":3,"editfont":"default","gender":"male","variant":"en","language":"fr","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false,
+	"searchNs100":true,"searchNs101":false,"searchNs110":false,"searchNs111":false,"nickname":"","timecorrection":"Offset|0","usenewrc":"1","watchlisttoken":"8a5551f6ed351fe6966e82d2885cb6d2901c2bee"});;mediaWiki.loader.state({"user.options":"ready"});
+}
+</script><!-- Served in 0.309 secs. -->
+<div class="extLives"></div></body></html>

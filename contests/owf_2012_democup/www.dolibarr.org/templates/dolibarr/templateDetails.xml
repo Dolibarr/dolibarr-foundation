@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<mosinstall type="template" version="1.0">
+  <name>dolibarr</name>
+  <creationDate>02/2007</creationDate>
+  <author>Eldy (Laurent Destailleur)</author>
+  <copyright>This template is released under GNU/GPL License.</copyright>
+  <authorEmail>contact@dolibarr.org</authorEmail>
+  <authorUrl>www.dolibarr.org</authorUrl>
+  <version>1.0</version>
+  <description>Dolibarr portal template for Joomla 1.5.22. This template is provided by the Dolibarr foundation and ca be used by any local portal dedicated to Dolibarr ERP-CRM project.</description>
+	<files>
+		<filename>index.php</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>menu.php</filename>
+		<filename>templates.php</filename>
+	</files>
+	<images>
+		<filename>images/banner_01.jpg</filename>
+		<filename>images/banner_02.jpg</filename>
+		<filename>images/bg.jpg</filename>
+		<filename>images/bg_inside.gif</filename>
+		<filename>images/body_bg.jpg</filename>
+		<filename>images/footer_bg.jpg</filename>
+		<filename>images/home.gif</filename>
+		<filename>images/indent1.png</filename>
+		<filename>images/lr_bg.gif</filename>
+		<filename>images/mail.gif</filename>
+		<filename>images/mainlevel.gif</filename>
+		<filename>images/mainlevel_h.gif</filename>
+		<filename>images/moduletable_th_bg.gif</filename>
+		<filename>images/subbullet.gif</filename>
+		<filename>images/table_bg.gif</filename>
+		<filename>images/topmenu_bg.gif</filename>
+		<filename>images/topmenu_bg_over.gif</filename>
+		<filename>images/topmenu_left.gif</filename>
+		<filename>images/topmenu_right.gif</filename>
+		<filename>images/toppath.gif</filename>
+
+	</images>
+	<css>
+		<filename>css/template_css.css</filename>
+	</css>
+</mosinstall>

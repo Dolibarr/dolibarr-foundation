@@ -1,0 +1,897 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0053)http://wiki.dolibarr.org/index.php/Module_development -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr" class="client-chrome client-chrome-2 client-webkit client-linux"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="verify-v1" content="HMNutRwqmhagMMJPRLLAFKlwRnifyx4SoJjYN+fyZV0=">
+		
+		<meta name="generator" content="MediaWiki 1.17.0">
+<link rel="alternate" type="application/x-wiki" title="Modifier" href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit">
+<link rel="edit" title="Modifier" href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit">
+<link rel="shortcut icon" href="http://wiki.dolibarr.org/skins/dolibarr/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="http://wiki.dolibarr.org/opensearch_desc.php" title="Dolibarr Wiki (en)">
+<link rel="EditURI" type="application/rsd+xml" href="http://wiki.dolibarr.org/api.php?action=rsd">
+<link rel="copyright" href="http://creativecommons.org/licenses/by-sa/3.0/">
+<link rel="alternate" type="application/atom+xml" title="Flux Atom de Dolibarr Wiki" href="http://wiki.dolibarr.org/index.php?title=Special:RecentChanges&feed=atom">		<title>Module development - Dolibarr Wiki</title>
+		<link rel="stylesheet" href="http://wiki.dolibarr.org/load.php?debug=false&lang=fr&modules=mediawiki.legacy.commonPrint%2Cshared&only=styles&skin=dolibarr&*">
+<link rel="stylesheet" href="http://wiki.dolibarr.org/skins/dolibarr/main.css?301" media="screen">
+<!--[if IE 6]><link rel="stylesheet" href="/skins/dolibarr/IE60Fixes.css?301" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/dolibarr/IE70Fixes.css?301" media="screen" /><![endif]--><meta name="ResourceLoaderDynamicStyles" content="">
+		<!--[if lt IE 7]><script type="text/javascript" src="/skins/common/IEFixes.js?301"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+
+		<script type="text/javascript" async="" src="./Module development - Dolibarr Wiki_files/ga.js"></script><script>if ( window.mediaWiki ) {
+	mediaWiki.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "Module_development", "wgTitle": "Module development", "wgAction": "view", "wgArticleId": 2278, "wgIsArticle": true, "wgUserName": "Eldy", "wgUserGroups": ["bureaucrat", "sysop", "*", "user", "autoconfirmed"], "wgCurRevisionId": 27449, "wgCategories": ["Core", "Page waiting to complete"], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": []});
+}
+</script>
+
+		<!-- Head Scripts -->
+<style type="text/css">/*<![CDATA[*/
+.source-php {line-height: normal;}
+.source-php li, .source-php pre {
+	line-height: normal; border: 0px none white;
+}
+/**
+ * GeSHi Dynamically Generated Stylesheet
+ * --------------------------------------
+ * Dynamically generated stylesheet for php
+ * CSS class: source-php, CSS id: 
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ * --------------------------------------
+ */
+.php.source-php .de1, .php.source-php .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.php.source-php  {font-family:monospace;}
+.php.source-php .imp {font-weight: bold; color: red;}
+.php.source-php li, .php.source-php .li1 {font-weight: normal; vertical-align:top;}
+.php.source-php .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.php.source-php .li2 {font-weight: bold; vertical-align:top;}
+.php.source-php .kw1 {color: #505000;}
+.php.source-php .kw2 {color: #000000; font-weight: bold;}
+.php.source-php .kw3 {color: #505000;}
+.php.source-php .kw4 {color: #009900; font-weight: bold;}
+.php.source-php .co1 {color: #666666; font-style: italic;}
+.php.source-php .co2 {color: #666666; font-style: italic;}
+.php.source-php .co3 {color: #0000cc; font-style: italic;}
+.php.source-php .co4 {color: #009933; font-style: italic;}
+.php.source-php .coMULTI {color: #666666; font-style: italic;}
+.php.source-php .es0 {color: #000099; font-weight: bold;}
+.php.source-php .es1 {color: #000099; font-weight: bold;}
+.php.source-php .es2 {color: #660099; font-weight: bold;}
+.php.source-php .es3 {color: #660099; font-weight: bold;}
+.php.source-php .es4 {color: #006699; font-weight: bold;}
+.php.source-php .es5 {color: #006699; font-weight: bold; font-style: italic;}
+.php.source-php .es6 {color: #009933; font-weight: bold;}
+.php.source-php .es_h {color: #000099; font-weight: bold;}
+.php.source-php .br0 {color: #009900;}
+.php.source-php .sy0 {color: #339933;}
+.php.source-php .sy1 {color: #000000; font-weight: bold;}
+.php.source-php .st0 {color: #0000ff;}
+.php.source-php .st_h {color: #0000ff;}
+.php.source-php .nu0 {color: #cc66cc;}
+.php.source-php .nu8 {color: #208080;}
+.php.source-php .nu12 {color: #208080;}
+.php.source-php .nu19 {color:#800080;}
+.php.source-php .me1 {color: #004000;}
+.php.source-php .me2 {color: #004000;}
+.php.source-php .re0 {color: #000088;}
+.php.source-php .ln-xtra, .php.source-php li.ln-xtra, .php.source-php div.ln-xtra {background-color: #ffc;}
+.php.source-php span.xtra { display:block; }
+
+/*]]>*/
+</style>
+<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Geshi.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+/*]]>*/
+</style><style type="text/css">/*<![CDATA[*/
+.source-sql {line-height: normal;}
+.source-sql li, .source-sql pre {
+	line-height: normal; border: 0px none white;
+}
+/**
+ * GeSHi Dynamically Generated Stylesheet
+ * --------------------------------------
+ * Dynamically generated stylesheet for sql
+ * CSS class: source-sql, CSS id: 
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ * --------------------------------------
+ */
+.sql.source-sql .de1, .sql.source-sql .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.sql.source-sql  {font-family:monospace;}
+.sql.source-sql .imp {font-weight: bold; color: red;}
+.sql.source-sql li, .sql.source-sql .li1 {font-weight: normal; vertical-align:top;}
+.sql.source-sql .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.sql.source-sql .li2 {font-weight: bold; vertical-align:top;}
+.sql.source-sql .kw1 {color: #505000;}
+.sql.source-sql .co1 {color: #666666; font-style: italic;}
+.sql.source-sql .co2 {color: #666666; font-style: italic;}
+.sql.source-sql .coMULTI {color: #666666; font-style: italic;}
+.sql.source-sql .es0 {color: #000099; font-weight: bold;}
+.sql.source-sql .br0 {color: #66cc66;}
+.sql.source-sql .sy0 {color: #66cc66;}
+.sql.source-sql .st0 {color: #0000ff;}
+.sql.source-sql .nu0 {color: #cc66cc;}
+.sql.source-sql .ln-xtra, .sql.source-sql li.ln-xtra, .sql.source-sql div.ln-xtra {background-color: #ffc;}
+.sql.source-sql span.xtra { display:block; }
+
+/*]]>*/
+</style>
+<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Geshi.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+/*]]>*/
+</style><style type="text/css">/*<![CDATA[*/
+.source-bash {line-height: normal;}
+.source-bash li, .source-bash pre {
+	line-height: normal; border: 0px none white;
+}
+/**
+ * GeSHi Dynamically Generated Stylesheet
+ * --------------------------------------
+ * Dynamically generated stylesheet for bash
+ * CSS class: source-bash, CSS id: 
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ * --------------------------------------
+ */
+.bash.source-bash .de1, .bash.source-bash .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.bash.source-bash  {font-family:monospace;}
+.bash.source-bash .imp {font-weight: bold; color: red;}
+.bash.source-bash li, .bash.source-bash .li1 {font-weight: normal; vertical-align:top;}
+.bash.source-bash .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.bash.source-bash .li2 {font-weight: bold; vertical-align:top;}
+.bash.source-bash .kw1 {color: #000000; font-weight: bold;}
+.bash.source-bash .kw2 {color: #500050; font-weight: bold;}
+.bash.source-bash .kw3 {color: #222222; font-weight: bold;}
+.bash.source-bash .co0 {color: #666666; font-style: italic;}
+.bash.source-bash .co1 {color: #666666;}
+.bash.source-bash .co2 {color: #666666; font-style: italic;}
+.bash.source-bash .co3 {color: #000000; font-weight: bold;}
+.bash.source-bash .es1 {color: #000099; font-weight: bold;}
+.bash.source-bash .es2 {color: #007800;}
+.bash.source-bash .es3 {color: #007800;}
+.bash.source-bash .es4 {color: #007800;}
+.bash.source-bash .es5 {color: #780078;}
+.bash.source-bash .es_h {color: #000099; font-weight: bold;}
+.bash.source-bash .br0 {color: #7a0874; font-weight: bold;}
+.bash.source-bash .sy0 {color: #000000; font-weight: bold;}
+.bash.source-bash .st0 {color: #0000ff;}
+.bash.source-bash .st_h {color: #0000ff;}
+.bash.source-bash .nu0 {color: #000000;}
+.bash.source-bash .re0 {color: #007800;}
+.bash.source-bash .re1 {color: #007800;}
+.bash.source-bash .re2 {color: #007800;}
+.bash.source-bash .re4 {color: #007800;}
+.bash.source-bash .re5 {color: #660033;}
+.bash.source-bash .ln-xtra, .bash.source-bash li.ln-xtra, .bash.source-bash div.ln-xtra {background-color: #ffc;}
+.bash.source-bash span.xtra { display:block; }
+
+/*]]>*/
+</style>
+<style type="text/css">/*<![CDATA[*/
+@import "/index.php?title=MediaWiki:Geshi.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+/*]]>*/
+</style>		<script type="text/javascript" src="./Module development - Dolibarr Wiki_files/index.php"><!-- site js --></script><style type="text/css"></style>
+
+<!-- Google nalytics -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9049390-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<script src="chrome-extension://omioeahgfecgfpfldejlnideemfidnkc/contentscript/publisher_toolbar_gpt_decoder.js" type="text/javascript"></script></head>
+<body class="mediawiki ltr ns-0 ns-subject page-Module_development skin-dolibarr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 id="firstHeading" class="firstHeading">Module development</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">De Dolibarr Wiki.</h3>
+			<div id="contentSub"></div>
+												<!-- start content -->
+			<div style="text-align:center; float:right; font-size:80%; background: #eef; border: 1px solid #ccf; margin-bottom: 0px; margin-left: 2px; margin-right: 2px; padding: 1px; height: 92px">
+<p><a href="http://wiki.dolibarr.org/index.php/Developer_documentation" title="Developer documentation">Return to developer<br>documentation index</a><br>
+</p>
+<a href="http://wiki.dolibarr.org/index.php/Developer_documentation" title="Developer documentation"><img alt="File Doc dev.png" src="./Module development - Dolibarr Wiki_files/File_Doc_dev.png" width="48" height="48"></a></div>
+<p>To create a new module/addon for Dolibarr, there is several steps. This tutorial will describe you each of them to build a module to extend Dolibarr features, like one or several of the following&nbsp;:
+</p>
+<ul><li> Add new tables in database
+</li><li> Add your own menu entries
+</li><li> Add new screens to edit new tables
+</li><li> Add or remove tabs on object view (invoice, product, order, event, ...)
+</li><li> Add predefined exports for the internal export tool
+</li><li> Add new information boxes in the home page
+</li><li> Add new substitutions variables
+</li><li> Define new permissions
+</li><li> Execute code automatically triggered by a particular Dolibarr action
+</li><li> Insert your code inside Dolibarr hooks positions
+</li><li> Add your numbering module
+</li><li> Add a new document template
+</li><li> Add a new skin
+</li></ul>
+<p>etc...
+All those operations are possible with version 3.2 or more of Dolibarr.
+</p><p>Following chapters presents how to do all of this manually with an easy way. For experienced developers, a method to do this using MDA generation is also on the work. See last chapter for this.
+</p>
+<table id="toc" class="toc"><tbody><tr><td><div id="toctitle"><h2>Sommaire</h2> <span class="toctoggle">[<a id="togglelink" class="internal" href="#">masquer</a>]</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Create_your_module"><span class="tocnumber">1</span> <span class="toctext">Create your module</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#Create_a_descriptor_of_Module_.28required.29"><span class="tocnumber">1.1</span> <span class="toctext">Create a descriptor of Module (required)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-3"><a href="#Create_your_module_descriptor"><span class="tocnumber">1.1.1</span> <span class="toctext">Create your module descriptor</span></a></li>
+<li class="toclevel-3 tocsection-4"><a href="#Test_your_descriptor"><span class="tocnumber">1.1.2</span> <span class="toctext">Test your descriptor</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-5"><a href="#Tree_of_path_for_new_module_files_.28required.29"><span class="tocnumber">1.2</span> <span class="toctext">Tree of path for new module files (required)</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#Create_your_SQL_tables_and_the_PHP_DAO_class_.28optional.29"><span class="tocnumber">1.3</span> <span class="toctext">Create your SQL tables and the PHP DAO class (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-7"><a href="#Create_your_.sql_file"><span class="tocnumber">1.3.1</span> <span class="toctext">Create your .sql file</span></a></li>
+<li class="toclevel-3 tocsection-8"><a href="#Test_your_.sql_files"><span class="tocnumber">1.3.2</span> <span class="toctext">Test your .sql files</span></a></li>
+<li class="toclevel-3 tocsection-9"><a href="#Generate_the_PHP_DAO_class"><span class="tocnumber">1.3.3</span> <span class="toctext">Generate the PHP DAO class</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-10"><a href="#The_tab_management_.28optional.29"><span class="tocnumber">1.4</span> <span class="toctext">The tab management (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-11"><a href="#Add_or_removed_your_own_tabs_on_object_sheets"><span class="tocnumber">1.4.1</span> <span class="toctext">Add or removed your own tabs on object sheets</span></a></li>
+<li class="toclevel-3 tocsection-12"><a href="#Show_tabs_navigation_into_your_own_pages"><span class="tocnumber">1.4.2</span> <span class="toctext">Show tabs navigation into your own pages</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-13"><a href="#Create_your_own_PHP_screens_.28optional.29"><span class="tocnumber">1.5</span> <span class="toctext">Create your own PHP screens (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-14"><a href="#Create_a_PHP_screen"><span class="tocnumber">1.5.1</span> <span class="toctext">Create a PHP screen</span></a></li>
+<li class="toclevel-3 tocsection-15"><a href="#Replace_templated_parts_of_screen_.28version_3.3.2B.29"><span class="tocnumber">1.5.2</span> <span class="toctext">Replace templated parts of screen (version 3.3+)</span></a></li>
+<li class="toclevel-3 tocsection-16"><a href="#Database_access"><span class="tocnumber">1.5.3</span> <span class="toctext">Database access</span></a></li>
+<li class="toclevel-3 tocsection-17"><a href="#Define_style_of_your_pages"><span class="tocnumber">1.5.4</span> <span class="toctext">Define style of your pages</span></a></li>
+<li class="toclevel-3 tocsection-18"><a href="#Use_the_Dolibarr_date_picker"><span class="tocnumber">1.5.5</span> <span class="toctext">Use the Dolibarr date picker</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-19"><a href="#Add_your_own_setup_page_.28optional.29"><span class="tocnumber">1.6</span> <span class="toctext">Add your own setup page (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-20"><a href="#Create_your_page_to_edit_parameters"><span class="tocnumber">1.6.1</span> <span class="toctext">Create your page to edit parameters</span></a></li>
+<li class="toclevel-3 tocsection-21"><a href="#Test_your_page"><span class="tocnumber">1.6.2</span> <span class="toctext">Test your page</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-22"><a href="#Define_your_entries_in_menu_.28optional.29"><span class="tocnumber">1.7</span> <span class="toctext">Define your entries in menu (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-23"><a href="#Define_your_menu_entries"><span class="tocnumber">1.7.1</span> <span class="toctext">Define your menu entries</span></a></li>
+<li class="toclevel-3 tocsection-24"><a href="#Test_your_menu_entries"><span class="tocnumber">1.7.2</span> <span class="toctext">Test your menu entries</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-25"><a href="#Add_your_own_permissions_.28optional.29"><span class="tocnumber">1.8</span> <span class="toctext">Add your own permissions (optional)</span></a></li>
+<li class="toclevel-2 tocsection-26"><a href="#Define_you_own_box_.28optional.29"><span class="tocnumber">1.9</span> <span class="toctext">Define you own box (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-27"><a href="#Define_your_box"><span class="tocnumber">1.9.1</span> <span class="toctext">Define your box</span></a></li>
+<li class="toclevel-3 tocsection-28"><a href="#Test_if_your_box_is_detected_by_Dolibarr"><span class="tocnumber">1.9.2</span> <span class="toctext">Test if your box is detected by Dolibarr</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-29"><a href="#Define_your_own_export_.28optional.29"><span class="tocnumber">1.10</span> <span class="toctext">Define your own export (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-30"><a href="#Define_export"><span class="tocnumber">1.10.1</span> <span class="toctext">Define export</span></a></li>
+<li class="toclevel-3 tocsection-31"><a href="#Test_your_export"><span class="tocnumber">1.10.2</span> <span class="toctext">Test your export</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-32"><a href="#Define_your_CSS_styles_.28optional.29"><span class="tocnumber">1.11</span> <span class="toctext">Define your CSS styles (optional)</span></a>
+<ul>
+<li class="toclevel-3 tocsection-33"><a href="#Create_and_declare_your_style_sheet"><span class="tocnumber">1.11.1</span> <span class="toctext">Create and declare your style sheet</span></a></li>
+<li class="toclevel-3 tocsection-34"><a href="#Test_your_style_sheet"><span class="tocnumber">1.11.2</span> <span class="toctext">Test your style sheet</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-35"><a href="#Add_your_Javascript_functions_.28optional.29"><span class="tocnumber">1.12</span> <span class="toctext">Add your Javascript functions (optional)</span></a></li>
+<li class="toclevel-2 tocsection-36"><a href="#Run_your_own_code_on_any_Dolibarr_event_.28optional.29"><span class="tocnumber">1.13</span> <span class="toctext">Run your own code on any Dolibarr event (optional)</span></a></li>
+<li class="toclevel-2 tocsection-37"><a href="#Insert_your_code_inside_Dolibarr_hooks_positions_.28optional.29"><span class="tocnumber">1.14</span> <span class="toctext">Insert your code inside Dolibarr hooks positions (optional)</span></a></li>
+<li class="toclevel-2 tocsection-38"><a href="#Add_your_own_numbering_rules"><span class="tocnumber">1.15</span> <span class="toctext">Add your own numbering rules</span></a></li>
+<li class="toclevel-2 tocsection-39"><a href="#Add_your_document_template_.28optional.29"><span class="tocnumber">1.16</span> <span class="toctext">Add your document template (optional)</span></a></li>
+<li class="toclevel-2 tocsection-40"><a href="#Add_your_skin_.28optional.29"><span class="tocnumber">1.17</span> <span class="toctext">Add your skin (optional)</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-41"><a href="#Some_coding_rules_and_predefined_functions"><span class="tocnumber">2</span> <span class="toctext">Some coding rules and predefined functions</span></a></li>
+<li class="toclevel-1 tocsection-42"><a href="#Using_MDA"><span class="tocnumber">3</span> <span class="toctext">Using MDA</span></a></li>
+<li class="toclevel-1 tocsection-43"><a href="#Create_a_package_to_distribute_and_install_your_module"><span class="tocnumber">4</span> <span class="toctext">Create a package to distribute and install your module</span></a></li>
+</ul>
+</td></tr></tbody></table>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=1" title="Modifier la section : Create your module">modifier</a>]</span> <span class="mw-headline" id="Create_your_module"> <a href="http://wiki.dolibarr.org/index.php/File:Art.png" class="image"><img alt="Art.png" src="./Module development - Dolibarr Wiki_files/Art.png" width="56" height="51"></a> Create your module </span></h1>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=2" title="Modifier la section : Create a descriptor of Module (required)">modifier</a>]</span> <span class="mw-headline" id="Create_a_descriptor_of_Module_.28required.29"> Create a descriptor of Module (required) </span></h2>
+<p><b>When</b>: Required as soon as an addon is developed, whatever is its goal (except for adding a skin or a document template).
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=3" title="Modifier la section : Create your module descriptor">modifier</a>]</span> <span class="mw-headline" id="Create_your_module_descriptor"> Create your module descriptor </span></h3>
+<p>The first step is to create a file descriptor for the module. 
+</p>
+<ul><li> Create directory <b>/htdocs/<i>mymodule</i>/core/modules</b>. Then go into the directory dev/skeletons and copy the file modMyModule.class.php in this directory <b>htdocs/<i>mymodyle</i>/core/modules</b>.
+</li></ul>
+<p>Then change the contents of this file to replace:
+</p>
+<ul><li> all "modMyModule" with a value which corresponds to the vocation of your module. This value must always start with 'mod' and contains only alpha characters.
+</li><li> $this-&gt;numero = 10000 by a number of free module (Go to <b>Home page -&gt; System Information -&gt; Dolibarr -&gt; Modules</b> to know id already used by existing modules).
+</li><li> Modify any other variables defined in the constructor (see comment in the code skeleton for their meaning). 
+</li></ul>
+<p>Your file descriptor for your module is ready.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=4" title="Modifier la section : Test your descriptor">modifier</a>]</span> <span class="mw-headline" id="Test_your_descriptor"> Test your descriptor </span></h3>
+<p>Launch Dolibarr and go to page <b>Setup-&gt;module</b>? You must see a new line with your new module and the possibility to activate it or not (browse all the tabs of each category of modules to find it). It's value of $this-&gt;special that determines in which tab will be your module.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=5" title="Modifier la section : Tree of path for new module files (required)">modifier</a>]</span> <span class="mw-headline" id="Tree_of_path_for_new_module_files_.28required.29"> Tree of path for new module files (required) </span></h2>
+<p>Create a directory 'mymodule' that will receive all files of your module. This directory must be inside the <b>htdocs</b> directory and will contains following subdirectories (only first line is mandatory):
+</p>
+<ul><li> htdocs/mymodule/core/modules/ contains module descriptor file modMyModule.class.php
+</li><li> htdocs/mymodule/core/triggers contains triggers provided by module
+</li><li> htdocs/mymodule/admin/ contains pages to setup module
+</li><li> htdocs/mymodule/class/ contains PHP class files provided by module
+</li><li> htdocs/mymodule/css contains CSS files provided by module
+</li><li> htdocs/mymodule/img contains images files provided by module
+</li><li> htdocs/mymodule/langs/xx_XX contains language files for language xx_XX (try to put at least en_US)
+</li><li> htdocs/mymodule/lib contains libraries provided and used by module
+</li><li> htdocs/mymodule/sql contains SQL file provided by module to add new tables or indexes
+</li><li> htdocs/mymodule/themes/mytheme if module provide its own theme/skin
+</li><li> build/ can contains any data file used for compiling or building package
+</li><li> docs/ contains any documentation. This directory can also contains licence files.
+</li><li> scripts/ contains any command line scripts files.
+</li><li> test/ contains any files for unit tests (data, scripts and class)
+</li><li> README.txt is a file that contains introduction about module. More precise documentation must be into docs directory.
+</li></ul>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=6" title="Modifier la section : Create your SQL tables and the PHP DAO class (optional)">modifier</a>]</span> <span class="mw-headline" id="Create_your_SQL_tables_and_the_PHP_DAO_class_.28optional.29"> Create your SQL tables and the PHP DAO class (optional) </span></h2>
+<p><b>When</b>: If your module needs to manage data of its own
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=7" title="Modifier la section : Create your .sql file">modifier</a>]</span> <span class="mw-headline" id="Create_your_.sql_file"> Create your .sql file </span></h3>
+<p>If your module is designed to manage data of its own, which are not available in the standard version of Dolibarr, it is necessary to define SQL tables to store the data.
+</p><p>Files for your own module must be placed in a directory.
+</p><p>Create a subdirectory called "sql" into directory of your module (eg htdocs/mymodule/sql) to put the sql scripts that you will create. Then in the "load_tables" function of your file descriptor module, modify the line
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$dir</span> <span class="sy0">=</span> DOL_DOCUMENT_ROOT<span class="sy0">.</span><span class="st_h">'/mymodule/sql/'</span><span class="sy0">;</span></pre></div></div>
+<p>by
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$dir</span> <span class="sy0">=</span> DOL_DOCUMENT_ROOT<span class="sy0">.</span><span class="st_h">'/valuechooseformymodule/sql/'</span><span class="sy0">;</span></pre></div></div>
+<p><i>Rules to follow:</i>
+</p>
+<ul><li> Add the files about creating tables commands on the principle of a file <b>llx_matable.sql</b> per table with a possibly file <b>llx_matable.key.sql</b> (see existing files in <b>install/mysql/tables</b> for examples).
+</li></ul>
+<ul><li> To manage data, you must create a file called <b>data.sql</b> inside directory <b>/mymodule/sql/</b> that contains SQL command to add/edit/delete datas.
+</li></ul>
+<p>Example of content of a file data.sql
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="sql source-sql" style="font-family:monospace;"><pre class="de1"> <span class="kw1">DELETE</span> <span class="kw1">FROM</span> llx_const <span class="kw1">WHERE</span> name<span class="sy0">=</span><span class="st0">'MYMODULE_IT_WORKS'</span> <span class="kw1">AND</span> entity<span class="sy0">=</span><span class="st0">'__ENTITY__'</span>;
+ <span class="kw1">INSERT</span> <span class="kw1">INTO</span> llx_const <span class="br0">(</span>name<span class="sy0">,</span> value<span class="sy0">,</span> type<span class="sy0">,</span> note<span class="sy0">,</span> visible<span class="sy0">,</span> entity<span class="br0">)</span> <span class="kw1">VALUES</span> <span class="br0">(</span><span class="st0">'MYMODULE_IT_WORKS'</span><span class="sy0">,</span><span class="st0">'1'</span><span class="sy0">,</span><span class="st0">'chaine'</span><span class="sy0">,</span><span class="st0">'A constant vor my module'</span><span class="sy0">,</span><span class="nu0">1</span><span class="sy0">,</span><span class="st0">'__ENTITY__'</span><span class="br0">)</span>;</pre></div></div>
+<p>Files must be operational for the database mysql. Rem: The files of other databases are not maintained. They will be read and converted on the fly by the driver of the other database.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=8" title="Modifier la section : Test your .sql files">modifier</a>]</span> <span class="mw-headline" id="Test_your_.sql_files"> Test your .sql files </span></h3>
+<p>Once the files ready, you can return to Dolibarr to disable the module, dropper tables in database and reactivate the module. The tables should be recreated by the activation of the module. If this is not the case, check your scripts by passing them by hand, or check the Dolibarr logs.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=9" title="Modifier la section : Generate the PHP DAO class">modifier</a>]</span> <span class="mw-headline" id="Generate_the_PHP_DAO_class"> Generate the PHP DAO class </span></h3>
+<p>Once you have created your tables into the database, move to the dev/skeletons directory and run the script
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="bash source-bash" style="font-family:monospace;"><pre class="de1">php build_class_from_table.php tablename</pre></div></div>
+<p>Note: If the command does not work, try to use php-cli php instead.
+</p><p>This will generate a file <b>out.tablename.class.php</b> that contains the class to manage table tablename. 
+In this class, you can find the CRUD methods (Create / Read / Update / Delete) already working to do an insert, a fetch (select), an update, a delete of a row in table.
+Remove just the "out" from the file name and put the file in a subdirectory of <b>htdocs</b> specific to your module (in htdocs/mymodule for example).
+</p><p>A file <b>out.tablename_script.php</b> has been generated and contains a sample code to use the class for each of the 4 CRUD methods.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=10" title="Modifier la section : The tab management (optional)">modifier</a>]</span> <span class="mw-headline" id="The_tab_management_.28optional.29"> The tab management (optional) </span></h2>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=11" title="Modifier la section : Add or removed your own tabs on object sheets">modifier</a>]</span> <span class="mw-headline" id="Add_or_removed_your_own_tabs_on_object_sheets"> Add or removed your own tabs on object sheets </span></h3>
+<p><b>When</b>: To add a tab on an object (invoices, orders, proposals, member ...)
+</p><p>To do this go into the file descriptor of module previously created and edit the $this-&gt;tabs array:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1">	<span class="co1">// Array to add new pages in new tabs or remove existing one</span>
+	<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">tabs</span> <span class="sy0">=</span> <span class="kw3">array</span><span class="br0">(</span><span class="st_h">'objecttype:+tabname1:Title1:@mymodule:/mymodule/mynewtab1.php?id=__ID__'</span><span class="sy0">,</span>  <span class="co1">// To add a new tab identified by code tabname1</span>
+                            <span class="st_h">'objecttype:+tabname2:Title2:@mymodule:/mymodule/mynewtab2.php?id=__ID__'</span><span class="sy0">,</span>  <span class="co1">// To add another new tab identified by code tabname2</span>
+                            <span class="st_h">'objecttype:-tabname'</span><span class="br0">)</span><span class="sy0">;</span>                                                     <span class="co1">// To remove an existing tab identified by code tabname</span></pre></div></div>
+<p>The table should contain a list of strings, each string representing a new tab. 
+The format of the string consisting of 5 parts separated by ":"
+</p>
+<ul><li> Part 1: The element type (objecttype) where should the tab appears is a value from the following:
+<ul><li> 'thirdparty' to add a tab in third party view
+</li><li> 'intervention' to add a tab in intervention view
+</li><li> 'order_supplier' to add a tab in supplier order view
+</li><li> 'invoice_supplier' to add a tab in supplier invoice view
+</li><li> 'invoice' to add a tab in customer invoice view
+</li><li> 'order' to add a tab in customer order view
+</li><li> 'product' to add a tab in product view
+</li><li> 'stock' to add a tab in stock view
+</li><li> 'propal' to add a tab in propal view
+</li><li> 'member' to add a tab in fundation member view
+</li><li> 'contract' to add a tab in contract view
+</li><li> 'user' to add a tab in user view
+</li><li> 'group' to add a tab in group view
+</li><li> 'contact' to add a tab in contact view
+</li><li> 'categories_x' to add a tab in category view (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
+</li></ul>
+</li><li> Part 2: A code to identify tab to add (start with +) or to remove (start with -)
+</li><li> Part 3: The title of the tab. This can be a hard read or better code translation in a file lang.
+</li><li> Part 4: The name of the file. Lang which contains correspondence between the code translation and language to display. If this name start with @, Dolibarr will search translation file into the lang file of module, so htdocs/mymodule/langs/code_CODE/mymodule.lang, otherwise Dolibarr will look for file htdocs/langs/code_CODE/mymodyle.lang 
+</li><li> Part 5: The url of the page to display when you click on the tab. The __ID__ string will be replaced automatically by the Id of the element concerned.
+</li></ul>
+<p>To feed the contents of the tab with data from the database, see the next chapter.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=12" title="Modifier la section : Show tabs navigation into your own pages">modifier</a>]</span> <span class="mw-headline" id="Show_tabs_navigation_into_your_own_pages"> Show tabs navigation into your own pages </span></h3>
+<p><b>When</b>: To show all standard tabs of an object (produit, tiers, etc.) on your page.
+</p><p>You must follow these steps&nbsp;:
+</p><p><b>1. Include files you need into your file</b>
+</p><p>For each pbject type, there is two files to include with line
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="kw1">require_once</span><span class="br0">(</span><span class="re0">$url_fichier</span><span class="br0">)</span> <span class="sy0">;</span></pre></div></div>
+<p>This is list of those files to include (DOL_DOCUMENT_ROOT is often dolibarr/htdocs/)&nbsp;:
+</p>
+<ul><li> Object thirdparty (thirdparty)&nbsp;:
+<ul><li> DOL_DOCUMENT_ROOT/societe.class.php
+</li><li> DOL_DOCUMENT_ROOT/lib/company.lib.php
+</li></ul>
+</li><li> Object product (product)&nbsp;:
+<ul><li> DOL_DOCUMENT_ROOT/product.class.php
+</li><li> DOL_DOCUMENT_ROOT/lib/product.lib.php
+</li></ul>
+</li><li> Object invoice (invoice)&nbsp;:
+<ul><li> DOL_DOCUMENT_ROOT/facture.class.php
+</li><li> DOL_DOCUMENT_ROOT/lib/invoice.lib.php
+</li></ul>
+</li></ul>
+<p><b>2. Create and load the object to show into your tab</b>
+</p><p>Create instance of object of the correct class and load object from database by using the fetch method of object en providing to this method the id you get from url (ie&nbsp;: /mytab.php?id=1).
+</p><p><i>Example&nbsp;:</i>
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$id</span><span class="sy0">=</span>GETPOST<span class="br0">(</span><span class="st_h">'id'</span><span class="sy0">,</span><span class="st_h">'int'</span><span class="br0">)</span><span class="sy0">;</span>
+<span class="re0">$ref</span><span class="sy0">=</span>GETPOST<span class="br0">(</span><span class="st_h">'ref'</span><span class="sy0">,</span><span class="st_h">'alpha'</span><span class="br0">)</span><span class="sy0">;</span>
+<span class="re0">$product</span> <span class="sy0">=</span> <span class="kw2">new</span> Product<span class="br0">(</span><span class="re0">$db</span><span class="br0">)</span> <span class="sy0">;</span>
+<span class="re0">$result</span> <span class="sy0">=</span> <span class="re0">$product</span><span class="sy0">-&gt;</span><span class="me1">fetch</span><span class="br0">(</span><span class="re0">$id</span><span class="sy0">,</span><span class="re0">$ref</span><span class="br0">)</span> <span class="sy0">;</span> <span class="co1">// Test $result to check the database read is ok</span></pre></div></div>
+<p><b>3. Get list of all tabs to show for your object type</b>
+</p><p>Use fonction XXX_prepare_head($obj), where XXX is name of object. This will return an array with all definition of tab entries to show. Parameter to put into this method is the instance of object you want tabs.
+</p><p>The resulting array has the following structure
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$head</span>        <span class="co1">// Array of tabs</span>
+<span class="re0">$head</span><span class="br0">[</span><span class="re0">$h</span><span class="br0">]</span>    <span class="co1">// Element to describe one tab.</span>
+<span class="re0">$head</span><span class="br0">[</span><span class="re0">$h</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">0</span><span class="br0">]</span> <span class="co1">// Url of page to show when you click on tab</span>
+<span class="re0">$head</span><span class="br0">[</span><span class="re0">$h</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span> <span class="co1">// Title of tab</span>
+<span class="re0">$head</span><span class="br0">[</span><span class="re0">$h</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">2</span><span class="br0">]</span> <span class="co1">// Code name to identify the tab</span></pre></div></div>
+<p><i>Example&nbsp;:</i>
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$head</span> <span class="sy0">=</span> product_prepare_head<span class="br0">(</span><span class="re0">$product</span><span class="sy0">,</span> <span class="re0">$user</span><span class="br0">)</span> <span class="sy0">;</span> <span class="co1">// parameter $user is present for some function anly</span></pre></div></div>
+<p><b>4. show tabs into your page</b>
+</p><p>Use function dol_fiche_head() to show all tabs defined into array $head returned by XX_prepare_head().
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1">dol_fiche_head<span class="br0">(</span><span class="re0">$links</span><span class="sy0">,</span> <span class="re0">$active</span><span class="sy0">=</span><span class="st_h">'0'</span><span class="sy0">,</span> <span class="re0">$title</span><span class="sy0">=</span><span class="st_h">''</span><span class="sy0">,</span> <span class="re0">$notab</span><span class="sy0">=</span>0<span class="sy0">,</span> <span class="re0">$picto</span><span class="sy0">=</span><span class="st_h">''</span><span class="br0">)</span>
+<span class="co1">//$links  // Tableau des onglets, appelé $head plus haut.</span>
+<span class="co1">//$active // Onglet actif (mettre le nom de l'onglet défini dans votre fichier de module, ou un nom contenu dans $head[$h][2]). Cet onglet sera mis en surbrillance</span>
+<span class="co1">//$title  // Title to show (shown into a special tab that you can't click)</span>
+<span class="co1">//$notab</span>
+<span class="co1">//$picto  // Name of image to show into title. Possible values are:</span>
+<span class="co1">//            product</span>
+<span class="co1">//            service</span>
+<span class="co1">//            company</span></pre></div></div>
+<p>This function will show required tabs and open an html element <i>&lt; div class="" &gt;</i> that correspond to the area under the tabs. To close area of a tab, just use <i>&lt; /div &gt;</i> into your PHP page.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=13" title="Modifier la section : Create your own PHP screens (optional)">modifier</a>]</span> <span class="mw-headline" id="Create_your_own_PHP_screens_.28optional.29"> Create your own PHP screens (optional) </span></h2>
+<p><b>When</b>: If the purpose of your module is to add features that require new screens.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=14" title="Modifier la section : Create a PHP screen">modifier</a>]</span> <span class="mw-headline" id="Create_a_PHP_screen"> Create a PHP screen </span></h3>
+<p>You must then create your PHP pages that will show/edit data from tables using the skeleton templates provided as an example in the directory <b>dev/skeletons</b> (For the development of a script from the command line, see <a href="http://wiki.dolibarr.org/index.php/Script_development" title="Script development">Script development</a>).
+</p><p>To create a new user screen, create a subdirectory of <b>htdocs</b> (if not already done) for your module (in <b>htdocs/mymodule</b> for example) to store the pages you will create.
+</p><p>Copy, into that directory, the file <b>skeletons_page.php</b> that will serve as a starting point for your page file.
+Edit the file to have a correct relative path to the main.inc.php file. 
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$res</span><span class="sy0">=</span><span class="nu0">0</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">(</span><span class="sy0">!</span> <span class="re0">$res</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">file_exists</span><span class="br0">(</span><span class="st0">"../main.inc.php"</span><span class="br0">)</span><span class="br0">)</span> <span class="re0">$res</span><span class="sy0">=@</span><span class="kw1">include</span><span class="br0">(</span><span class="st0">"../main.inc.php"</span><span class="br0">)</span><span class="sy0">;</span>			<span class="co1">// for root directory</span>
+<span class="kw1">if</span> <span class="br0">(</span><span class="sy0">!</span> <span class="re0">$res</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">file_exists</span><span class="br0">(</span><span class="st0">"../../main.inc.php"</span><span class="br0">)</span><span class="br0">)</span> <span class="re0">$res</span><span class="sy0">=@</span><span class="kw1">include</span><span class="br0">(</span><span class="st0">"../../main.inc.php"</span><span class="br0">)</span><span class="sy0">;</span>		<span class="co1">// for level1 directory ("custom" directory)</span>
+<span class="kw1">if</span> <span class="br0">(</span><span class="sy0">!</span> <span class="re0">$res</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">file_exists</span><span class="br0">(</span><span class="st0">"../../../main.inc.php"</span><span class="br0">)</span><span class="br0">)</span> <span class="re0">$res</span><span class="sy0">=@</span><span class="kw1">include</span><span class="br0">(</span><span class="st0">"../../../main.inc.php"</span><span class="br0">)</span><span class="sy0">;</span>	<span class="co1">// for level2 directory</span>
+<span class="kw1">if</span> <span class="br0">(</span><span class="sy0">!</span> <span class="re0">$res</span><span class="br0">)</span> <span class="kw3">die</span><span class="br0">(</span><span class="st0">"Include of main fails"</span><span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<p>This depends on the depth of the directory in which the file is (Add or remove "../"). 
+The modules developed for all version of Dolibarr after the 3.2 should be able to be moved in a different folder than "htdocs", like "htdocs/custom", without having to modify the source code of the module, that's why we make several includes.
+</p><p>It's in the main.inc.php file that is loaded technical environment variables and permissions. The following variables are objects positioned in this file:
+</p>
+<ul><li> $user    Objet that contains the characteristics of the user + his permissions.
+</li><li> $conf    Objet that contains Dolibarr configuration.
+</li><li> $db      Objet that contains an opened connection handler to the database.
+</li><li> $langs   Objet that contains the user's language.
+</li></ul>
+<p>Then enter your code to display the page.
+</p>
+<ul><li> To include a class dedicated to the module is done using a Dolibarr function (and not using directly include_once):
+</li></ul>
+<p><i>Example&nbsp;:</i>
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1">dol_include_once<span class="br0">(</span><span class="st_h">'/mymodule/class/myclass.class.php'</span><span class="sy0">,</span> <span class="st_h">'MyClass'</span><span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<ul><li> To include classes provied with Dolibarr, use the following syntax:
+</li></ul>
+<p><i>Example&nbsp;:</i>
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="kw1">if</span> <span class="br0">(</span><span class="sy0">!</span> <span class="kw3">class_exists</span><span class="br0">(</span><span class="st_h">'DoliClass'</span><span class="br0">)</span><span class="br0">)</span> <span class="kw1">require</span> DOL_DOCUMENT_ROOT<span class="sy0">.</span><span class="st_h">'/core/class/doli.class.php'</span><span class="sy0">;</span></pre></div></div>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=15" title="Modifier la section : Replace templated parts of screen (version 3.3+)">modifier</a>]</span> <span class="mw-headline" id="Replace_templated_parts_of_screen_.28version_3.3.2B.29"> Replace templated parts of screen (version 3.3+) </span></h3>
+<p>Some parts of Dolibarr screen are isolated into native PHP template files.
+You can develop a module to overwrite such templates with yours.
+</p>
+<table cellspacing="0" cellpadding="2" style="border: 1px solid #AAAAAA; background: #DCCC66;"><tbody><tr><td>
+<p><img alt="En verysmall.png" src="./Module development - Dolibarr Wiki_files/En_verysmall.png" width="16" height="11"> Page waiting to complete. To complete, create an account, go back and clic on "Modify".<br>
+<img alt="Fr verysmall.png" src="./Module development - Dolibarr Wiki_files/Fr_verysmall.png" width="16" height="11"> Page en attente d'être complété. Pour compléter, créez un compte, revenez et cliquez sur "Modifier".<br>
+<img alt="Es verysmall.png" src="./Module development - Dolibarr Wiki_files/Es_verysmall.png" width="16" height="11"> Página a completar. Para completarla, cree una cuenta, vuelva a la página y haga clic en "editar"<br>
+</p>
+</td></tr></tbody></table>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=16" title="Modifier la section : Database access">modifier</a>]</span> <span class="mw-headline" id="Database_access"> Database access </span></h3>
+<p>If you need to edit some data in database inside you own table, use the PHP class generated before.
+</p><p>If you to make access to tables with no dedicated PHP class available, this is always possible (for example if you want to get a list of records with a particular join or filter). In this case, this is a code samples to follow:
+</p><p>To make an insert, update or delete:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">begin</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>   <span class="co1">// Start transaction</span>
+<span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">query</span><span class="br0">(</span><span class="st0">"My SQL request insert, update or delete"</span><span class="br0">)</span><span class="sy0">;</span>
+<span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">commit</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>       <span class="co1">// Validate transaction</span>
+or <span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">rollback</span><span class="br0">(</span><span class="br0">)</span>  <span class="co1">// Cancel transaction</span></pre></div></div>
+<p>To read:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$resql</span><span class="sy0">=</span><span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">query</span><span class="br0">(</span><span class="st0">"My select request"</span><span class="br0">)</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">(</span><span class="re0">$resql</span><span class="br0">)</span>
+<span class="br0">{</span>
+	<span class="re0">$num</span> <span class="sy0">=</span> <span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">num_rows</span><span class="br0">(</span><span class="re0">$resql</span><span class="br0">)</span><span class="sy0">;</span>
+	<span class="re0">$i</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">(</span><span class="re0">$num</span><span class="br0">)</span>
+	<span class="br0">{</span>
+		<span class="kw1">while</span> <span class="br0">(</span><span class="re0">$i</span> <span class="sy0">&lt;</span> <span class="re0">$num</span><span class="br0">)</span>
+		<span class="br0">{</span>
+			<span class="re0">$obj</span> <span class="sy0">=</span> <span class="re0">$db</span><span class="sy0">-&gt;</span><span class="me1">fetch_object</span><span class="br0">(</span><span class="re0">$resql</span><span class="br0">)</span><span class="sy0">;</span>
+			<span class="kw1">if</span> <span class="br0">(</span><span class="re0">$obj</span><span class="br0">)</span>
+			<span class="br0">{</span>
+				<span class="co1">// You can use here results</span>
+				<span class="kw1">print</span> <span class="re0">$obj</span><span class="sy0">-&gt;</span><span class="me1">field1</span><span class="sy0">;</span>
+				<span class="kw1">print</span> <span class="re0">$obj</span><span class="sy0">-&gt;</span><span class="me1">field2</span><span class="sy0">;</span>
+			<span class="br0">}</span>
+			<span class="re0">$i</span><span class="sy0">++;</span>
+		<span class="br0">}</span>
+	<span class="br0">}</span>
+<span class="br0">}</span></pre></div></div>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=17" title="Modifier la section : Define style of your pages">modifier</a>]</span> <span class="mw-headline" id="Define_style_of_your_pages"> Define style of your pages </span></h3>
+<p>To have the look of your own pages to match the Dolibarr theme, it is necessary to use the Dolibarr CSS styles.
+</p><p>You can use for example:
+</p>
+<ul><li> class="<b>liste_titre</b>" on tags <i>tr</i> and <i>td</i> for the head row of a table.
+</li><li> class="<b>pair</b>" or class="<b>impair</b>" on tags <i>tr</i> and <i>td</i> of other rows of a table.
+</li><li> class="<b>flat</b>" on all input fields (<i>input, select, textarea</i>...).
+</li><li> class="<b>button</b>" on HTML fields with type <i>input type="submit"</i>.
+</li></ul>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=18" title="Modifier la section : Use the Dolibarr date picker">modifier</a>]</span> <span class="mw-headline" id="Use_the_Dolibarr_date_picker"> Use the Dolibarr date picker </span></h3>
+<p>If you want to use the Dolibarr date selector (with its calendar popup) into your pages, use the following line:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"> <span class="re0">$form</span><span class="sy0">=</span><span class="kw2">new</span> Form<span class="br0">(</span><span class="re0">$db</span><span class="br0">)</span><span class="sy0">;</span>
+ <span class="re0">$form</span><span class="sy0">-&gt;</span><span class="me1">select_date</span><span class="br0">(</span><span class="st_h">''</span><span class="sy0">,</span><span class="st_h">'mykey'</span><span class="sy0">,</span><span class="nu0">0</span><span class="sy0">,</span><span class="nu0">0</span><span class="sy0">,</span><span class="nu0">0</span><span class="sy0">,</span><span class="st0">"myform"</span><span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<p>The string mykey will identify the date selector in the form. You must use different values if you use several date selectors in same page.
+The string myform is the name of the FORM in which the selector is included (value found in the form name="myform" in HTML page).
+This means a date selector must be included necessarily into an html FORM.
+</p><p>To get value after the POST of your form, the command is:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$mydate</span> <span class="sy0">=</span> dol_mktime<span class="br0">(</span>12<span class="sy0">,</span> 0 <span class="sy0">,</span> 0<span class="sy0">,</span> <span class="re0">$_POST</span><span class="br0">[</span><span class="st_h">'mykeymonth'</span><span class="br0">]</span><span class="sy0">,</span> <span class="re0">$_POST</span><span class="br0">[</span><span class="st_h">'mykeyday'</span><span class="br0">]</span><span class="sy0">,</span> <span class="re0">$_POST</span><span class="br0">[</span><span class="st_h">'mykeyyear'</span><span class="br0">]</span><span class="br0">)</span><span class="sy0">;</span>
+<span class="kw1">print</span> <span class="kw3">strftime</span><span class="br0">(</span><span class="st_h">'%A&nbsp;%d&nbsp;%B&nbsp;%Y'</span><span class="sy0">,</span> <span class="re0">$mydate</span><span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=19" title="Modifier la section : Add your own setup page (optional)">modifier</a>]</span> <span class="mw-headline" id="Add_your_own_setup_page_.28optional.29"> Add your own setup page (optional) </span></h2>
+<p><b>When</b>: If your module need to ask user several parameters.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=20" title="Modifier la section : Create your page to edit parameters">modifier</a>]</span> <span class="mw-headline" id="Create_your_page_to_edit_parameters"> Create your page to edit parameters </span></h3>
+<p>If your module need several parameters to be setup, you must create a page to edit options (that will be saved into <a href="http://wiki.dolibarr.org/index.php/Table_llx_const" title="Table llx const">table <b>llx_const</b></a>).
+Create a page named <b>mymodule_setuppage.php</b> that show possibles options and update them into table from a form.
+It is a necessary to take an example from a page into directory <b>/admin</b> that will show you the way to read/save your parameter.
+Put this page into directory <b>/admin</b>.
+Then, into the descriptor file of your module, modify the variable config_page_url to set name of this PHP page (without the path that is not necesary if page is inside directory admin).
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">config_page_url</span> <span class="sy0">=</span> <span class="kw3">array</span><span class="br0">(</span><span class="st0">"mymodule_setuppage.php"</span><span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=21" title="Modifier la section : Test your page">modifier</a>]</span> <span class="mw-headline" id="Test_your_page"> Test your page </span></h3>
+<p>Go into page <b>Home-&gt;Setup-&gt;Modules</b>, you should see a picture at the end of the line of your module to reach your setup page. Click on it, you should be able to view/edit parameters from your page.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=22" title="Modifier la section : Define your entries in menu (optional)">modifier</a>]</span> <span class="mw-headline" id="Define_your_entries_in_menu_.28optional.29"> Define your entries in menu (optional) </span></h2>
+<p><b>When</b>: If you have created PHP pages, it is necessary that those pages can be reached from menu entries in Dolibarr menu.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=23" title="Modifier la section : Define your menu entries">modifier</a>]</span> <span class="mw-headline" id="Define_your_menu_entries"> Define your menu entries </span></h3>
+<p>For this, you must define into the module descriptor, the array this-&gt;menu that declare all menus added by your module.
+This array contains entries that will appear once your module is activated.
+The example module descriptor file <b>modMyModule.class.php</b> contains an example to declare a top menu and also its left menu entries.
+</p><p>This is the example of code to declare your own menu entries in a module descriptor file:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="co1">// Main menu entries</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">menu</span> <span class="sy0">=</span> <span class="kw3">array</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>			<span class="co1">// List of menus to add</span>
+<span class="re0">$r</span><span class="sy0">=</span><span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">// Add here entries to declare new menus</span>
+<span class="co1">// Example to declare the Top Menu entry:</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">menu</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="sy0">=</span><span class="kw3">array</span><span class="br0">(</span>	<span class="st_h">'fk_menu'</span><span class="sy0">=&gt;</span><span class="nu0">0</span><span class="sy0">,</span>			<span class="co1">// Put 0 if this is a top menu</span>
+			<span class="st_h">'type'</span><span class="sy0">=&gt;</span><span class="st_h">'top'</span><span class="sy0">,</span>			<span class="co1">// This is a Top menu entry</span>
+			<span class="st_h">'titre'</span><span class="sy0">=&gt;</span><span class="st_h">'MyModule top menu'</span><span class="sy0">,</span>
+			<span class="st_h">'mainmenu'</span><span class="sy0">=&gt;</span><span class="st_h">'mymodule'</span><span class="sy0">,</span>
+			<span class="st_h">'leftmenu'</span><span class="sy0">=&gt;</span><span class="st_h">'mymodule'</span><span class="sy0">,</span>
+			<span class="st_h">'url'</span><span class="sy0">=&gt;</span><span class="st_h">'/mymodule/pagetop.php'</span><span class="sy0">,</span>
+			<span class="st_h">'langs'</span><span class="sy0">=&gt;</span><span class="st_h">'mylangfile'</span><span class="sy0">,</span>	<span class="co1">// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.</span>
+			<span class="st_h">'position'</span><span class="sy0">=&gt;</span><span class="nu0">100</span><span class="sy0">,</span>
+			<span class="st_h">'enabled'</span><span class="sy0">=&gt;</span><span class="st_h">'1'</span><span class="sy0">,</span>			<span class="co1">// Define condition to show or hide menu entry. Use '$conf-&gt;mymodule-&gt;enabled' if entry must be visible if module is enabled.</span>
+			<span class="st_h">'perms'</span><span class="sy0">=&gt;</span><span class="st_h">'1'</span><span class="sy0">,</span>			<span class="co1">// Use 'perms'=&gt;'$user-&gt;rights-&gt;mymodule-&gt;level1-&gt;level2' if you want your menu with a permission rules</span>
+			<span class="st_h">'target'</span><span class="sy0">=&gt;</span><span class="st_h">''</span><span class="sy0">,</span>
+			<span class="st_h">'user'</span><span class="sy0">=&gt;</span>2<span class="br0">)</span><span class="sy0">;</span>				<span class="co1">// 0=Menu for internal users, 1=external users, 2=both</span>
+<span class="re0">$r</span><span class="sy0">++;</span>
+&nbsp;
+<span class="co1">// Example to declare a Left Menu entry:</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">menu</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="sy0">=</span><span class="kw3">array</span><span class="br0">(</span>	<span class="st_h">'fk_menu'</span><span class="sy0">=&gt;</span><span class="st_h">'fk_mainmenu=xxx'</span><span class="sy0">,</span>		    <span class="co1">// Use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode</span>
+			<span class="st_h">'type'</span><span class="sy0">=&gt;</span><span class="st_h">'left'</span><span class="sy0">,</span>			        <span class="co1">// This is a Left menu entry</span>
+			<span class="st_h">'titre'</span><span class="sy0">=&gt;</span><span class="st_h">'MyModule left menu 1'</span><span class="sy0">,</span>
+			<span class="st_h">'mainmenu'</span><span class="sy0">=&gt;</span><span class="st_h">'xxx'</span><span class="sy0">,</span>
+                        <span class="st_h">'leftmenu'</span><span class="sy0">=&gt;</span><span class="st_h">'mymodule'</span><span class="sy0">,</span>
+			<span class="st_h">'url'</span><span class="sy0">=&gt;</span><span class="st_h">'/mymodule/pagelevel1.php'</span><span class="sy0">,</span>
+			<span class="st_h">'langs'</span><span class="sy0">=&gt;</span><span class="st_h">'mylangfile'</span><span class="sy0">,</span>	<span class="co1">// Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.</span>
+			<span class="st_h">'position'</span><span class="sy0">=&gt;</span><span class="nu0">100</span><span class="sy0">,</span>
+			<span class="st_h">'enabled'</span><span class="sy0">=&gt;</span><span class="st_h">'1'</span><span class="sy0">,</span>			<span class="co1">// Define condition to show or hide menu entry. Use '$conf-&gt;mymodule-&gt;enabled' if entry must be visible if module is enabled.</span>
+			<span class="st_h">'perms'</span><span class="sy0">=&gt;</span><span class="st_h">'1'</span><span class="sy0">,</span>			<span class="co1">// Use 'perms'=&gt;'$user-&gt;rights-&gt;mymodule-&gt;level1-&gt;level2' if you want your menu with a permission rules</span>
+			<span class="st_h">'target'</span><span class="sy0">=&gt;</span><span class="st_h">''</span><span class="sy0">,</span>
+			<span class="st_h">'user'</span><span class="sy0">=&gt;</span>2<span class="br0">)</span><span class="sy0">;</span>				<span class="co1">// 0=Menu for internal users,1=external users, 2=both</span>
+<span class="re0">$r</span><span class="sy0">++;</span></pre></div></div>
+<p>To show menu or not depending on a permission, modify property <b>perms</b> in array. See chapter on permissions later to see how to add permissions.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=24" title="Modifier la section : Test your menu entries">modifier</a>]</span> <span class="mw-headline" id="Test_your_menu_entries"> Test your menu entries </span></h3>
+<p>Disable and reenable your module under Dolibarr module setup page, menus entries must appear (if property 'enabled' is declaration array is ok).
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=25" title="Modifier la section : Add your own permissions (optional)">modifier</a>]</span> <span class="mw-headline" id="Add_your_own_permissions_.28optional.29"> Add your own permissions (optional) </span></h2>
+<p><b>When</b>: If you want to add new permissions.
+</p><p>The way to define permissions that will manage your module is done inside the module descriptor created previously.
+Modify line 
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">rights_class</span> <span class="sy0">=</span> <span class="st_h">'mymodule'</span></pre></div></div>
+<p>with correct value for mymodule.
+</p><p>Then you must fill the array $this-&gt;rights with as many entries than different permissions you need to manage.
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">rights</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="br0">[</span>0<span class="br0">]</span> <span class="sy0">=</span> <span class="nu0">10001</span><span class="sy0">;</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">rights</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span> <span class="sy0">=</span> <span class="st_h">'Label by default of permission'</span><span class="sy0">;</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">rights</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="br0">[</span>3<span class="br0">]</span> <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">rights</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">4</span><span class="br0">]</span> <span class="sy0">=</span> <span class="st_h">'action'</span><span class="sy0">;</span>
+<span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">rights</span><span class="br0">[</span><span class="re0">$r</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">5</span><span class="br0">]</span> <span class="sy0">=</span> <span class="st_h">'subaction'</span><span class="sy0">;</span>
+<span class="re0">$r</span><span class="sy0">++;</span></pre></div></div>
+<p>Into $this-&gt;rights[$r][0], put a permission id not already used (See into menu <b>System info</b> on a working installation of Dolibarr to know list of id already used by standard modules.
+Into $this-&gt;rights[$r][3], put 1 if this permission must be granted automatically by default to any new created user.
+Into $this-&gt;rights[$r][1], put a label by default for permission (This label will be used if no translation can be found into the file <b>admin.lang</b>).
+Into $this-&gt;rights[$r][4] and $this-&gt;rights[$r][5], put an action and subaction string without spaces. You will be able to test if a user has the permission in your PHP source code with the sequence:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="kw1">if</span> <span class="br0">(</span><span class="re0">$user</span><span class="sy0">-&gt;</span><span class="me1">rights</span><span class="sy0">-&gt;</span><span class="me1">mymodule</span><span class="sy0">-&gt;</span><span class="me1">action</span><span class="sy0">-&gt;</span><span class="me1">subaction</span><span class="br0">)</span> <span class="sy0">...</span></pre></div></div>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=26" title="Modifier la section : Define you own box (optional)">modifier</a>]</span> <span class="mw-headline" id="Define_you_own_box_.28optional.29"> Define you own box (optional) </span></h2>
+<p><b>When</b>: If your module need to provide one or several new boxes to show on home page.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=27" title="Modifier la section : Define your box">modifier</a>]</span> <span class="mw-headline" id="Define_your_box"> Define your box </span></h3>
+<p>For this, modify the array $this-&gt;boxes into the module descriptor file.
+All you have to do is to add one line for each box file you will create into directory <b>htdocs/core/boxes</b>
+</p><p><i>Example:</i>
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1">this<span class="sy0">-&gt;</span><span class="me1">boxes</span><span class="br0">[</span><span class="nu0">0</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span><span class="sy0">=</span><span class="st_h">'mybox0.php'</span>
+this<span class="sy0">-&gt;</span><span class="me1">boxes</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span><span class="sy0">=</span><span class="st_h">'mybox1.php'</span>
+this<span class="sy0">-&gt;</span><span class="me1">boxes</span><span class="br0">[</span><span class="nu0">2</span><span class="br0">]</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span><span class="sy0">=</span><span class="st_h">'mybox2.php'</span>
+<span class="sy0">...</span>
+this<span class="sy0">-&gt;</span><span class="me1">boxes</span><span class="br0">[</span>n<span class="br0">]</span><span class="br0">[</span><span class="nu0">1</span><span class="br0">]</span><span class="sy0">=</span><span class="st_h">'myboxn.php'</span></pre></div></div>
+<p>Then create files mybox0.php, mybox1.php... by copying an example from an existing box file (into directory htdocs/core/boxes).
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=28" title="Modifier la section : Test if your box is detected by Dolibarr">modifier</a>]</span> <span class="mw-headline" id="Test_if_your_box_is_detected_by_Dolibarr"> Test if your box is detected by Dolibarr </span></h3>
+<p>Disable and enabled module.
+</p><p>Go into menu <b>Home - Setup - Boxes</b>.
+</p><p>Your boxes must appear in the list of boxes you can activated. Activate the box and go on home page to see if the box is showing correctly.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=29" title="Modifier la section : Define your own export (optional)">modifier</a>]</span> <span class="mw-headline" id="Define_your_own_export_.28optional.29"> Define your own export (optional) </span></h2>
+<p><b>When</b>: If your module provide new predefined database export profiles (for its own tables or for already existing tables of another module).
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=30" title="Modifier la section : Define export">modifier</a>]</span> <span class="mw-headline" id="Define_export"> Define export </span></h3>
+<p>For this uncomment and modify arrays $this-&gt;export_xxx in your module descriptor file.
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=31" title="Modifier la section : Test your export">modifier</a>]</span> <span class="mw-headline" id="Test_your_export"> Test your export </span></h3>
+<p>Go into menu Tools -&gt; Export. Your export will appear in the list of available predefined exports (if your module is enabled).
+Choose it, you must see list of all possible fields defined in the export arrays.
+Choose on field and try to build an export file. If ok, try again with all fields.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=32" title="Modifier la section : Define your CSS styles (optional)">modifier</a>]</span> <span class="mw-headline" id="Define_your_CSS_styles_.28optional.29"> Define your CSS styles (optional) </span></h2>
+<p><b>When</b>: If in your PHP pages, you use class styles that are not defined inside Dolibarr themes CSS (not recommanded).
+</p>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=33" title="Modifier la section : Create and declare your style sheet">modifier</a>]</span> <span class="mw-headline" id="Create_and_declare_your_style_sheet"> Create and declare your style sheet </span></h3>
+<p>Create a style sheet CSS named <b>mymodule.css</b> or <b>mymodule.css.php</b> and put it into directory <b>htdocs/mymodule</b>. You can have only one CSS file per module.
+Remember it's better to use existing styles already available by default into Dolibarr (The CSS file used by Dolibarr is file <b>themes/mytheme/<i>themename</i>.css.php</b>. Create your own CSS file only if you need absolutely to add not already existing styles.
+</p><p>Once your style sheet is ready, declare it into your module descriptor file by modifying the property <b>$this-&gt;modules_parts</b>.
+Value to put here must be a relative URL to your CSS file.
+For example
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="re0">$this</span><span class="sy0">-&gt;</span><span class="me1">module_parts</span> <span class="sy0">=</span> <span class="kw3">array</span><span class="br0">(</span><span class="st_h">'css'</span> <span class="sy0">=&gt;</span> <span class="kw3">array</span><span class="br0">(</span><span class="st_h">'/mymodule/css/mymodule.css.php'</span><span class="br0">)</span><span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<h3><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=34" title="Modifier la section : Test your style sheet">modifier</a>]</span> <span class="mw-headline" id="Test_your_style_sheet"> Test your style sheet </span></h3>
+<p>Disable and enable your module.
+</p><p>Go on home page (index.php). Show the HTML source of the page.
+</p><p>You should see into the HTML header, a line that declare your style sheet.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=35" title="Modifier la section : Add your Javascript functions (optional)">modifier</a>]</span> <span class="mw-headline" id="Add_your_Javascript_functions_.28optional.29"> Add your Javascript functions (optional) </span></h2>
+<p><b>When</b>: If in your PHP pages, you use javascript functions not available in Dolibarr (in file lib_head.js)
+</p><p>If you need to use your own javascript functions inside your PHP pages, it is necessary to have your functions, defined into your  javascript file <b>htdocs/mymodule/js/mymodule.js</b>, included into the HTML HEAD section.
+To ask Dolibarr that forge this header to include your own javascript file, you must just provide it to the llxHeader() function called by your page.
+</p><p>Example for page /htdocs/mymodule/mypage.php&nbsp;:
+</p>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="php source-php" style="font-family:monospace;"><pre class="de1"><span class="kw1">require</span><span class="br0">(</span><span class="st_h">'../main.inc.php'</span><span class="br0">)</span><span class="sy0">;</span>
+<span class="re0">$morejs</span><span class="sy0">=</span><span class="kw3">array</span><span class="br0">(</span><span class="st0">"/mymodule/js/mymodule.js"</span><span class="br0">)</span><span class="sy0">;</span>
+llxHeader<span class="br0">(</span><span class="st_h">''</span><span class="sy0">,</span><span class="st_h">'Titre'</span><span class="sy0">,</span><span class="st_h">''</span><span class="sy0">,</span><span class="st_h">''</span><span class="sy0">,</span><span class="st_h">''</span><span class="sy0">,</span><span class="st_h">''</span><span class="sy0">,</span><span class="re0">$morejs</span><span class="sy0">,</span><span class="st_h">''</span><span class="sy0">,</span>0<span class="sy0">,</span>0<span class="br0">)</span><span class="sy0">;</span></pre></div></div>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=36" title="Modifier la section : Run your own code on any Dolibarr event (optional)">modifier</a>]</span> <span class="mw-headline" id="Run_your_own_code_on_any_Dolibarr_event_.28optional.29"> Run your own code on any Dolibarr event (optional) </span></h2>
+<p><b>When</b>: If you want to execute your own code once a common Dolibarr event has occurred (example: I want to update a table in my module when an invoice is created into Dolibarr), you must create a <b>triggers</b>.
+</p><p>See also <a href="http://wiki.dolibarr.org/index.php/Interfaces_Dolibarr_toward_foreign_systems" title="Interfaces Dolibarr toward foreign systems">Interfaces_Dolibarr_toward_foreign_systems</a>
+and <a href="http://wiki.dolibarr.org/index.php/Interfaces_from_foreign_systems_toward_Dolibarr" title="Interfaces from foreign systems toward Dolibarr">Interfaces_from_foreign_systems_toward_Dolibarr</a>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=37" title="Modifier la section : Insert your code inside Dolibarr hooks positions (optional)">modifier</a>]</span> <span class="mw-headline" id="Insert_your_code_inside_Dolibarr_hooks_positions_.28optional.29"> Insert your code inside Dolibarr hooks positions (optional) </span></h2>
+<p><b>When</b>: When you want to add code or replace Dolibarr code into another situation than a business event (See previous chapter for adding code during a business event).
+</p><p>See page <a href="http://wiki.dolibarr.org/index.php/Hooks_system" title="Hooks system">Hooks_system</a>.
+</p><p><br>
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=38" title="Modifier la section : Add your own numbering rules">modifier</a>]</span> <span class="mw-headline" id="Add_your_own_numbering_rules"> Add your own numbering rules </span></h2>
+<p><b>When</b>: When you need a new rule for generated ref of elements that is not covered by existing rules.
+</p><p>See page <a href="http://wiki.dolibarr.org/index.php/Create_numbering_module" title="Create numbering module">Create numbering module</a>.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=39" title="Modifier la section : Add your document template (optional)">modifier</a>]</span> <span class="mw-headline" id="Add_your_document_template_.28optional.29"> Add your document template (optional) </span></h2>
+<p><b>When</b>: When you want to personalized your own generated PDF or ODT documents.
+</p><p>Note: To add this feature you don't need to create a module descriptor.
+</p><p>Documentation to add your own template is available on page <a href="http://wiki.dolibarr.org/index.php/Create_a_PDF_document_template" title="Create a PDF document template">Create_a_PDF_document_template</a> or <a href="http://wiki.dolibarr.org/index.php/Create_an_ODT_document_template" title="Create an ODT document template">Create_an_ODT_document_template</a>.
+</p>
+<h2><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=40" title="Modifier la section : Add your skin (optional)">modifier</a>]</span> <span class="mw-headline" id="Add_your_skin_.28optional.29"> Add your skin (optional) </span></h2>
+<p><b>When</b>: When you want to personalized your colors/fonts/images.
+</p><p>Note: To add this feature you don't need to create a module descriptor.
+</p><p>To add your own skin, read page <a href="http://wiki.dolibarr.org/index.php/Skins" title="Skins">Skins</a>.
+</p>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=41" title="Modifier la section : Some coding rules and predefined functions">modifier</a>]</span> <span class="mw-headline" id="Some_coding_rules_and_predefined_functions"> <a href="http://wiki.dolibarr.org/index.php/File:Art.png" class="image"><img alt="Art.png" src="./Module development - Dolibarr Wiki_files/Art.png" width="56" height="51"></a> Some coding rules and predefined functions </span></h1>
+<p>The coding rules to be followed are defined in the <a href="http://wiki.dolibarr.org/index.php/Developer_documentation" title="Developer documentation">Developer documentation</a>, under section "General Information - Language and standards development".
+</p><p>A lot of predefined features for developers are also available and described into page <a href="http://wiki.dolibarr.org/index.php/Developer_documentation" title="Developer documentation">Developer documentation</a> under section "Technical components of Dolibarr".
+</p>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=42" title="Modifier la section : Using MDA">modifier</a>]</span> <span class="mw-headline" id="Using_MDA"> <a href="http://wiki.dolibarr.org/index.php/File:Art.png" class="image"><img alt="Art.png" src="./Module development - Dolibarr Wiki_files/Art.png" width="56" height="51"></a> Using MDA </span></h1>
+<p>A method to generate a functional module from a UML model has been developed. More information on the page <a href="http://wiki.dolibarr.org/index.php/UML2Dolibarr_-_Build_a_module_using_MDA" title="UML2Dolibarr - Build a module using MDA">UML2Dolibarr - Build a module using MDA</a>.
+</p>
+<h1><span class="editsection">[<a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit&section=43" title="Modifier la section : Create a package to distribute and install your module">modifier</a>]</span> <span class="mw-headline" id="Create_a_package_to_distribute_and_install_your_module"> <a href="http://wiki.dolibarr.org/index.php/File:Art.png" class="image"><img alt="Art.png" src="./Module development - Dolibarr Wiki_files/Art.png" width="56" height="51"></a> Create a package to distribute and install your module </span></h1>
+<p>This process must be used to generate a package to submit it on the <a href="http://www.dolistore.com/" class="external free" target="_blank">http://www.dolistore.com</a> market place.
+But you can use it to have a package easy to distribute on your on network.
+</p>
+<ul><li> Go into the directory <b>/build</b> and copy the file <b>makepack-dolibarrmodules.conf</b> into <b>makepack-mymodule.conf</b>. Warning, this directory may not be provided in some packages of stable versions. If so, it can be retrieved from the snapshot available for download on the Dolibarr website in area "Development version" (taken in this case the whole build directory which is autonomous and independent directory).
+</li></ul>
+<p>Edit this file to add list of file names for all new files you created for your module (module descriptor, new sql tables files, php page, images, etc...)
+</p>
+<ul><li> Run the script via Perl (need the Perl version 5.0 or later):
+</li></ul>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="bash source-bash" style="font-family:monospace;"><pre class="de1"><span class="kw2">perl</span> makepack-dolibarrmodule.pl</pre></div></div>
+<p>The script asks you the name of your module, its major and minor version. A file <b>mymodule.zip </b> will then be manufactured containing your module ready to be deployed.
+</p>
+<ul><li> The person who receives your module must then place the file in the root directory of a Dolibarr installation and perform the command:
+</li></ul>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="bash source-bash" style="font-family:monospace;"><pre class="de1"><span class="kw2">tar</span> <span class="re5">-xvf</span> mymodule.zip</pre></div></div>
+<ul><li> If you want your module to be public, you can submit it (the zip file) on Dolibarr web site on download area: <a href="http://www.dolistore.com/" class="external text" target="_blank">DoliStore.com</a> (you must create an account first and be logged to use the link "Submit a product").
+<ul><li> If your module was build correctly, file will be validated later.
+</li><li> If quality is enough and license permits it, code might be added inside main Dolibarr sources (except if you disagree for that).
+</li></ul>
+</li></ul>
+
+<!-- 
+NewPP limit report
+Preprocessor node count: 437/1000000
+Post-expand include size: 2923/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key dolibarrwiki:pcache:idhash:2278-0!*!0!!fr!2 and timestamp 20121010114111 -->
+<div class="printfooter">
+Récupérée de « <a href="./Module development - Dolibarr Wiki_files/Module development - Dolibarr Wiki.html">http://wiki.dolibarr.org/index.php/Module_development</a> »</div>
+			<div id="catlinks" class="catlinks"><div id="mw-normal-catlinks"><a href="http://wiki.dolibarr.org/index.php/Special:Categories" title="Special:Categories">Catégories</a>&nbsp;: <span dir="ltr"><a href="http://wiki.dolibarr.org/index.php/Category:Core" title="Category:Core">Core</a></span> | <span dir="ltr"><a href="http://wiki.dolibarr.org/index.php/Category:Page_waiting_to_complete" title="Category:Page waiting to complete">Page waiting to complete</a></span></div></div>			<!-- end content -->
+						<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Affichages</h5>
+		<div class="pBody">
+			<ul>
+	
+				 <li id="ca-nstab-main" class="selected"><a href="./Module development - Dolibarr Wiki_files/Module development - Dolibarr Wiki.html" title="Voir la page de contenu [alt-c]" accesskey="c">Page</a></li>
+				 <li id="ca-talk" class="new"><a href="http://wiki.dolibarr.org/index.php?title=Talk:Module_development&action=edit&redlink=1" title="Discussion au sujet de cette page de contenu [alt-t]" accesskey="t">Discussion</a></li>
+				 <li id="ca-edit"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=edit" title="Vous pouvez modifier cette page.
+Veuillez utiliser le bouton de prévisualisation avant d’enregistrer. [alt-e]" accesskey="e">Modifier</a></li>
+				 <li id="ca-history"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=history" title="Les versions passées de cette page (avec leurs contributeurs) [alt-h]" accesskey="h">Historique</a></li>
+				 <li id="ca-delete"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=delete" title="Supprimer cette page [alt-d]" accesskey="d">Supprimer</a></li>
+				 <li id="ca-move"><a href="http://wiki.dolibarr.org/index.php/Special:MovePage/Module_development" title="Renommer cette page [alt-m]" accesskey="m">Renommer</a></li>
+				 <li id="ca-protect"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=protect" title="Protéger cette page [alt-=]" accesskey="=">Protéger</a></li>
+				 <li id="ca-watch"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&action=watch" title="Ajouter cette page à votre liste de suivi [alt-w]" accesskey="w">Suivre</a></li>
+				 <li id="ca-language"><a href="http://wiki.dolibarr.org/index.php?title=Special:MultiLanguageManager&cible=Module_development">Langue</a></li>			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Outils personnels</h5>
+		<div class="pBody">
+			<ul>
+							<li id="pt-userpage"><a href="http://wiki.dolibarr.org/index.php/User:Eldy" title="Votre page utilisateur [alt-.]" accesskey="." class="new">Eldy</a></li>
+				<li id="pt-mytalk"><a href="http://wiki.dolibarr.org/index.php/User_talk:Eldy" title="Votre page de discussion [alt-n]" accesskey="n" class="new">Page de discussion</a></li>
+				<li id="pt-preferences"><a href="http://wiki.dolibarr.org/index.php/Special:Preferences" title="Vos préférences">Préférences</a></li>
+				<li id="pt-watchlist"><a href="http://wiki.dolibarr.org/index.php/Special:Watchlist" title="La liste des pages dont vous suivez les modifications [alt-l]" accesskey="l">Liste de suivi</a></li>
+				<li id="pt-mycontris"><a href="http://wiki.dolibarr.org/index.php/Special:Contributions/Eldy" title="La liste de vos contributions [alt-y]" accesskey="y">Contributions</a></li>
+				<li id="pt-logout"><a href="http://wiki.dolibarr.org/index.php?title=Special:UserLogout&returnto=Module_development" title="Se déconnecter">Déconnexion</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/dolibarr/dolibarr_125x125.png);" href="http://wiki.dolibarr.org/index.php/Main_Page" title="Visiter la page d’accueil du site [alt-z]" accesskey="z"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class="generated-sidebar portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage-description"><a href="http://wiki.dolibarr.org/index.php/Main_Page" title="Aller à l’accueil [alt-z]" accesskey="z">Accueil</a></li>
+				<li id="n-recentchanges"><a href="http://wiki.dolibarr.org/index.php/Special:RecentChanges" title="Liste des modifications récentes sur le wiki [alt-r]" accesskey="r">Modifications récentes</a></li>
+				<li id="n-randompage"><a href="http://wiki.dolibarr.org/index.php/Special:Random" title="Afficher une page au hasard [alt-x]" accesskey="x">Page au hasard</a></li>
+			</ul>
+		</div>
+	</div>
+<div class="generated-sidebar portlet" id="p-navigation"><h5>Autres langues</h5><div class="pBody"><a class="language" href="http://wiki.dolibarr.org/index.php/D%C3%A9veloppement_module"><img src="./Module development - Dolibarr Wiki_files/fr.png" class="languageimage" alt="Français"></a><a class="language" href="http://wiki.dolibarr.org/index.php/Desarrollo_de_un_m%C3%B3dulo"><img src="./Module development - Dolibarr Wiki_files/es.png" class="languageimage" alt="Espagnol"></a>
+</div>
+</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Rechercher</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="http://wiki.dolibarr.org/index.php" id="searchform">
+				<input type="hidden" name="title" value="Special:Search">
+				<input id="searchInput" title="Rechercher dans Dolibarr Wiki" accesskey="f" type="search" name="search">
+				<input type="submit" name="go" class="searchButton" id="searchGoButton" value="Lire" title="Aller vers une page portant exactement ce nom si elle existe.">
+				<div><a href="http://wiki.dolibarr.org/index.php/Special:Search" rel="search">Recherche avancée</a></div>
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Boîte à outils</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="http://wiki.dolibarr.org/index.php/Special:WhatLinksHere/Module_development" title="Liste des pages liées à celle-ci [alt-j]" accesskey="j">Pages liées</a></li>
+				<li id="t-recentchangeslinked"><a href="http://wiki.dolibarr.org/index.php/Special:RecentChangesLinked/Module_development" title="Liste des modifications récentes des pages liées à celle-ci [alt-k]" accesskey="k">Suivi des pages liées</a></li>
+<li id="t-upload"><a href="http://wiki.dolibarr.org/index.php/Special:Upload" title="Envoyer une image ou fichier média sur le serveur [alt-u]" accesskey="u">Téléverser un fichier</a></li>
+<li id="t-specialpages"><a href="http://wiki.dolibarr.org/index.php/Special:SpecialPages" title="Liste de toutes les pages spéciales [alt-q]" accesskey="q">Pages spéciales</a></li>
+				<li id="t-print"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&printable=yes" title="Version imprimable de cette page [alt-p]" accesskey="p">Version imprimable</a></li>				<li id="t-permalink"><a href="http://wiki.dolibarr.org/index.php?title=Module_development&oldid=27449" title="Lien permanent vers cette version de la page">Adresse de cette version</a></li><li id="t-pdf">
+<a href="http://wiki.dolibarr.org/index.php?title=Special:Pdfprint&page=Module_development">Imprimer en PDF</a></li>			</ul>
+		</div>
+	</div>
+<br><div class="generated-sidebar portlet" id="p-navigation-donation" style="text-align: center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="8978561">
+<input type="image" src="./Module development - Dolibarr Wiki_files/Paypal.png" border="0" name="submit" alt="Help Dolibarr making a donation">
+</form>
+</div>
+
+<br><br>
+
+<div class="generated-sidebar portlet" id="p-navigation-adsense" style="text-align: center">
+<div class="pBody">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-1071905880519467";
+/* PUBSKYDOLIBARRWIKI2 */
+google_ad_slot = "7811259314";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><ins style="display:inline-table;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:160px"><ins id="aswift_0_anchor" style="display:block;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:160px"><iframe allowtransparency="true" frameborder="0" height="600" hspace="0" marginwidth="0" marginheight="0" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){i+=&#39;.call&#39;;setTimeout(h,0)}else if(h.match){i+=&#39;.nav&#39;;w.location.replace(h)}s.log&amp;&amp;s.log.push(i)}" scrolling="no" vspace="0" width="160" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;"></iframe></ins></ins>
+</div>
+</div>
+
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+		<div id="footer">
+			<ul id="f-list">
+					<li id="lastmod"> Dernière modification de cette page le 19 septembre 2012 à 09:55.<br></li>
+					<li id="viewcount">Cette page a été consultée 23&nbsp;721 fois.</li>
+					<li id="copyright">Content is available under <a href="http://creativecommons.org/licenses/by-sa/3.0/" class="external ">Creative Commons Attribution-ShareAlike 3.0 License</a>.</li>
+			</ul>
+		</div>
+</div>
+
+<script src="./Module development - Dolibarr Wiki_files/load.php"></script><script src="./Module development - Dolibarr Wiki_files/load(1).php"></script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "Module_development", "wgTitle": "Module development", "wgAction": "view", "wgArticleId": 2278, "wgIsArticle": true, "wgUserName": "Eldy", "wgUserGroups": ["bureaucrat", "sysop", "*", "user", "autoconfirmed"], "wgCurRevisionId": 27449, "wgCategories": ["Core", "Page waiting to complete"], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": []});
+}
+</script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.loader.load(["mediawiki.util", "mediawiki.legacy.wikibits", "mediawiki.legacy.ajax", "mediawiki.legacy.ajaxwatch"]);
+	mediaWiki.loader.go();
+}
+</script><script type="text/javascript" src="./Module development - Dolibarr Wiki_files/load(2).php"></script>
+
+<script>if ( window.mediaWiki ) {
+	mediaWiki.user.options.set({"quickbar":0,"underline":2,"cols":"100","rows":"30","searchlimit":20,"contextlines":5,"contextchars":50,"skin":"dolibarr","math":1,"rcdays":"14","rclimit":"250","wllimit":250,"highlightbroken":1,"stubthreshold":0,"previewontop":1,"editsection":1,"editsectiononrightclick":0,"showtoc":1,"showtoolbar":1,"date":"default","imagesize":2,"thumbsize":2,"rememberpassword":0,"enotifwatchlistpages":0,"enotifusertalkpages":1,"enotifminoredits":0,"enotifrevealaddr":0,"shownumberswatching":1,"fancysig":0,"externaleditor":0,"externaldiff":0,"showjumplinks":0,"numberheadings":0,"uselivepreview":0,"watchlistdays":3,"editfont":"default","gender":"male","variant":"en","language":"fr","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false,
+	"searchNs100":true,"searchNs101":false,"searchNs110":false,"searchNs111":false,"nickname":"","timecorrection":"Offset|0","usenewrc":"1","watchlisttoken":"8a5551f6ed351fe6966e82d2885cb6d2901c2bee"});;mediaWiki.loader.state({"user.options":"ready"});
+}
+</script><!-- Served in 2.741 secs. -->
+<div class="extLives"></div><div style="display: none; " id="gpt_hidden_data"></div></body></html>

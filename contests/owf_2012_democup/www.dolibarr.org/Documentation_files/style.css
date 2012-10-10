@@ -1,0 +1,19 @@
+@charset "utf-8";
+/* 
+* Sociail Media Icon Links Module
+* Description : This module displays icon links to your social media profiles.
+* @author Viper Web Solutions
+* Email : info@viperwebistes.com
+* URL : www.viperwebsites.com
+* @Copyright Copyright (C) 2010 Viper Web Solutions. 
+* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+***/
+ul#socialmedialinks {margin:0px; padding:0px;}
+ul#socialmedialinks li{float:left;margin:3px;list-style:none;}
+ul#socialmedialinks .60 {width:60px;}
+ul#socialmedialinks .48 {width:48px}
+ul#socialmedialinks .32 {width:32px;}
+ul#socialmedialinks .24 {width:24px;}
+ul#socialmedialinks .16 {width:16px;}
+ul#socialmedialinks li a img {border:none;}
+.clr {clear:both;}
