@@ -1,0 +1,693 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0046)http://www.dolistore.com/lang-fr/2-modules?p=3 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Modules et plugins</title>
+		<meta name="description" content="Rayon des modules et plugins ajoutant des fonctionnalités à Dolibarr ERP/CRM">
+		<meta name="keywords" content="dolibarr, dolistore, modules, plugins">
+		
+		<meta name="generator" content="PrestaShop">
+		<meta name="robots" content="index,follow">
+                <meta name="Updowner-verification" content="1328821adac0666e174e84809a4cc72e">
+		<link rel="icon" type="image/vnd.microsoft.icon" href="http://www.dolistore.com/img/dolistore.ico">
+		<link rel="shortcut icon" type="image/x-icon" href="http://www.dolistore.com/img/dolistore.ico">
+		<link href="./Modules et plugins_files/jquery.cluetip.css" rel="stylesheet" type="text/css" media="all">
+		<link href="./Modules et plugins_files/scenes.css" rel="stylesheet" type="text/css" media="all">
+		<link href="./Modules et plugins_files/global.css" rel="stylesheet" type="text/css" media="all">
+			<script type="text/javascript" async="" src="./Modules et plugins_files/ga.js"></script><script type="text/javascript" src="./Modules et plugins_files/tools.js"></script>
+		<script type="text/javascript">
+			var baseDir = 'http://www.dolistore.com/';
+			var static_token = 'f11858a7bde51caf1c826d6563bda30f';
+			var token = '23f2f708e19501621a0a9a336c7edccb';
+			var priceDisplayPrecision = 2;
+		</script>
+		<script type="text/javascript" src="./Modules et plugins_files/jquery-1.2.6.pack.js"></script>
+		<script type="text/javascript" src="./Modules et plugins_files/jquery.easing.1.3.js"></script>
+		<script type="text/javascript" src="./Modules et plugins_files/jquery.hotkeys-0.7.8-packed.js"></script>
+		<script type="text/javascript">
+			window.google_analytics_uacct = "UA-9631096-12";
+		</script>
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9049390-8']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+		<!-- Block search module HEADER -->
+<link rel="stylesheet" type="text/css" href="./Modules et plugins_files/jquery.autocomplete.css">
+<script type="text/javascript" src="./Modules et plugins_files/jquery.autocomplete.js"></script>
+<!-- Block search module HEADER --><link rel="canonical" href="http://www.dolistore.com/lang-fr/www.dolistore.com/lang-fr/2-modules?p=3">
+<link rel="alternate" type="application/rss+xml" title="Modules et plugins" href="http://www.dolistore.com/modules/feeder/rss.php?id_category=2&orderby=position&orderway=DESC">
+	<style type="text/css"></style></head>
+	
+	<body id="category">
+			<noscript>&lt;ul&gt;&lt;li&gt;Cette boutique n&amp;eacute;cessite JavaScript afin de fonctionner correctement. Merci de l&amp;#039;activer dans votre navigateur.&lt;/li&gt;&lt;/ul&gt;</noscript>
+		<div id="page">
+
+			<!-- Header -->
+			<div id="header_box">
+				<h1 id="logo"><a href="http://www.dolistore.com/" title="DoliStore"><img src="./Modules et plugins_files/logo.png" alt="DoliStore"></a></h1>
+				<div id="header">
+					<!-- Block search module TOP -->
+<div id="search_block_top">
+	<form method="get" action="http://www.dolistore.com/search.php" id="searchbox">
+	<p>
+		<label for="search_query"><!-- image on background --></label>
+		<input type="hidden" name="orderby" value="position">
+		<input type="hidden" name="orderway" value="desc">
+		<input type="text" id="search_query" name="search_query" value="" autocomplete="off" class="ac_input">
+		<input type="submit" name="submit_search" value="Rechercher" class="button">
+	</p>
+	</form>
+</div>
+	<script type="text/javascript">
+		$('document').ready( function() {
+			$("#search_query")
+				.autocomplete(
+					'http://www.dolistore.com/search.php', {
+						minChars: 3,
+						max: 10,
+						width: 500,
+						selectFirst: false,
+						scroll: false,
+						dataType: "json",
+						formatItem: function(data, i, max, value, term) {
+							return value;
+						},
+						parse: function(data) {
+							var mytab = new Array();
+							for (var i = 0; i < data.length; i++) {
+								mytab[mytab.length] = { 
+									data: data[i], 
+									value: data[i].cname + ' > ' + data[i].pname 
+								};
+							}
+							return mytab;
+						},
+						extraParams: {
+							ajaxSearch: 1,
+							id_lang: 2
+						}
+					}
+				)
+				.result(function(event, data, formatted) {
+					$('#search_query').val(data.pname);
+					document.location.href = data.product_link;
+				})
+		});
+	</script>
+<!-- /Block search module TOP --><!-- Block languages module -->
+<div id="languages_block_top">
+	<ul id="first-languages">
+					<li style="opacity: 0.3; ">
+				<a href="http://www.dolistore.com/lang-en/2-modules?p=3" title="English (English)">					<img src="./Modules et plugins_files/1.jpg" alt="en" width="16" height="11">
+				</a>			</li>
+					<li class="selected_language">
+									<img src="./Modules et plugins_files/2.jpg" alt="fr" width="16" height="11">
+							</li>
+					<li style="opacity: 0.3; ">
+				<a href="http://www.dolistore.com/lang-es/2-modules?p=3" title="Spanish">					<img src="./Modules et plugins_files/3.jpg" alt="es" width="16" height="11">
+				</a>			</li>
+			</ul>
+</div>
+<script type="text/javascript">
+	$('ul#first-languages li:not(.selected_language)').css('opacity', 0.3);
+	$('ul#first-languages li:not(.selected_language)').hover(function(){
+		$(this).css('opacity', 1);
+	}, function(){
+		$(this).css('opacity', 0.3);
+	});
+</script>
+<!-- /Block languages module -->
+<!-- Block user information module HEADER -->
+<div id="header_user">
+	<p id="header_user_info">
+		Bienvenue,
+					<a href="https://www.dolistore.com/my-account.php">identifiez-vous</a>
+			</p>
+	<ul id="header_nav">
+		<li id="shopping_cart">
+			<a href="https://www.dolistore.com/order.php" title="Votre panier d&#39;achat">Panier :</a>
+			<span class="ajax_cart_quantity hidden">0</span>
+			<span class="ajax_cart_product_txt hidden">produit</span>
+			<span class="ajax_cart_product_txt_s hidden">produits</span>
+						<span class="ajax_cart_no_product">(vide)</span>
+		</li>
+		<li id="your_account"><a href="https://www.dolistore.com/my-account.php" title="Votre compte">Votre compte</a></li>
+	</ul>
+</div>
+<!-- /Block user information module HEADER --><script type="text/javascript" src="./Modules et plugins_files/treeManagement.js"></script>
+
+<!-- Block categories module -->
+<div id="horizontal_block">
+	<h4>Catégories</h4>
+	<div class="block_content">
+		<ul class="tree dynamized" style="display: block; ">
+											<li>
+	<span class="grower OPEN"> </span><a href="http://www.dolistore.com/lang-fr/2-modules" class="selected" title="Rayon des modules et plugins ajoutant des fonctionnalités à Dolibarr ERP/CRM">Modules/Plugins</a>
+			<ul style="display: block; ">
+											<li>
+	<a href="http://www.dolistore.com/lang-fr/19-autres" title="">Autres</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/13-crm-gestion-relation-client" title="">CRM - Gestion relation client</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/14-ged-gestion-electronique-de-documents" title="">GED - Gestion de documents</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/18-interfaces-avec-d-autres-logiciels-systemes" title="Interfaces avec d&#39;autres logiciels ou systèmes">Interfaçage</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/21-interface-utilisateurs" title="Modules modifiant les comportement de l&#39;interface utilisateur.
+Pour de nouveaux themes, voir plutôt la catégorie &quot;Themes et modèles&quot;.">Interface utilisateurs</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/12-outils-systemes" title="Outils systèmes">Outils systèmes</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/16-gestion-produits-ou-services" title="Produits, services ou stocks">Produits, services ou stocks</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/17-projets-ou-collaboratif" title="Gestion projets ou fonctions collaboratives">Projets ou collaboratif</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/20-reporting-or-search" title="Fonctions de reporting ou recherche">Reporting ou recherche</a>
+	</li>														<li class="last">
+	<a href="http://www.dolistore.com/lang-fr/15-gestion-ressource-humaines" title="Modules en rapport avec la gestion des ressources humaines ou des personnes">RH - Ressource humaines</a>
+	</li>							</ul>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/7-outils" title="Espace réservé aux outils ou documents (ou liens vers eux) dédiés ou en rapport avec Dolibarr ERP/CRM.">Outils et documentation</a>
+	</li>														<li class="last">
+	<span class="grower CLOSE"> </span><a href="http://www.dolistore.com/lang-fr/4-themes" title="Rayon de nouveaux thèmes ou modèles de documents pour Dolibarr ERP/CRM.
+
+Vous pouvez améliorer le filtrage en sélectionnant une sous-catégorie dans le menu gauche.
+
+">Thèmes et modèles</a>
+			<ul>
+											<li>
+	<a href="http://www.dolistore.com/lang-fr/10-modeles-de-documents" title="Modèles utilisables pour la génération de documents">Modèles de documents</a>
+	</li>														<li class="last">
+	<a href="http://www.dolistore.com/lang-fr/9-themes" title="Thèmes pour modifier l&#39;apparence de votre interface utilisateur.">Thèmes</a>
+	</li>							</ul>
+	</li>							</ul>
+	</div>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+	// we hide the tree only if JavaScript is activated
+	$('div#horizontal_block ul.dhtml').hide();
+// ]]>
+</script>
+<!-- /Block categories module -->
+				</div>
+			</div>
+            
+			<!-- Left -->
+			<div id="left_column" class="column">
+				<script type="text/javascript" src="./Modules et plugins_files/treeManagement.js"></script>
+
+<!-- Block categories module -->
+<div id="categories_block_left" class="block">
+	<h4>Catégories</h4>
+	<div class="block_content">
+		<ul class="tree dynamized" style="display: block; ">
+											<li>
+	<span class="grower OPEN"> </span><a href="http://www.dolistore.com/lang-fr/2-modules" class="selected" title="Rayon des modules et plugins ajoutant des fonctionnalités à Dolibarr ERP/CRM">Modules/Plugins</a>
+			<ul style="display: block; ">
+											<li>
+	<a href="http://www.dolistore.com/lang-fr/19-autres" title="">Autres</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/13-crm-gestion-relation-client" title="">CRM - Gestion relation client</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/14-ged-gestion-electronique-de-documents" title="">GED - Gestion de documents</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/18-interfaces-avec-d-autres-logiciels-systemes" title="Interfaces avec d&#39;autres logiciels ou systèmes">Interfaçage</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/21-interface-utilisateurs" title="Modules modifiant les comportement de l&#39;interface utilisateur.
+Pour de nouveaux themes, voir plutôt la catégorie &quot;Themes et modèles&quot;.">Interface utilisateurs</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/12-outils-systemes" title="Outils systèmes">Outils systèmes</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/16-gestion-produits-ou-services" title="Produits, services ou stocks">Produits, services ou stocks</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/17-projets-ou-collaboratif" title="Gestion projets ou fonctions collaboratives">Projets ou collaboratif</a>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/20-reporting-or-search" title="Fonctions de reporting ou recherche">Reporting ou recherche</a>
+	</li>														<li class="last">
+	<a href="http://www.dolistore.com/lang-fr/15-gestion-ressource-humaines" title="Modules en rapport avec la gestion des ressources humaines ou des personnes">RH - Ressource humaines</a>
+	</li>							</ul>
+	</li>														<li>
+	<a href="http://www.dolistore.com/lang-fr/7-outils" title="Espace réservé aux outils ou documents (ou liens vers eux) dédiés ou en rapport avec Dolibarr ERP/CRM.">Outils et documentation</a>
+	</li>														<li class="last">
+	<span class="grower CLOSE"> </span><a href="http://www.dolistore.com/lang-fr/4-themes" title="Rayon de nouveaux thèmes ou modèles de documents pour Dolibarr ERP/CRM.
+
+Vous pouvez améliorer le filtrage en sélectionnant une sous-catégorie dans le menu gauche.
+
+">Thèmes et modèles</a>
+			<ul style="display: none; ">
+											<li>
+	<a href="http://www.dolistore.com/lang-fr/10-modeles-de-documents" title="Modèles utilisables pour la génération de documents">Modèles de documents</a>
+	</li>														<li class="last">
+	<a href="http://www.dolistore.com/lang-fr/9-themes" title="Thèmes pour modifier l&#39;apparence de votre interface utilisateur.">Thèmes</a>
+	</li>							</ul>
+	</li>							</ul>
+	</div>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+	// we hide the tree only if JavaScript is activated
+	$('div#categories_block_left ul.dhtml').hide();
+// ]]>
+</script>
+<!-- /Block categories module --><!-- MODULE Block new products -->
+<div id="new-products_block_right" class="block products_block">
+	<h4><a href="http://www.dolistore.com/new-products.php" title="Nouveaux produits">Nouveaux produits</a></h4>
+	<div class="block_content">
+			<ul class="product_images clearfix">
+									<li class="first"><a href="http://www.dolistore.com/lang-fr/outils-systemes/184-Export-V2.html" title=""><img src="./Modules et plugins_files/Export-V2.jpg" height="70" width="70" alt=""></a></li>
+												<li><a href="http://www.dolistore.com/lang-fr/autres/183-SMS-Decanet.html" title=""><img src="./Modules et plugins_files/SMS-Decanet.jpg" height="70" width="70" alt=""></a></li>
+																	</ul>
+		<dl class="products">
+					<dt class="first_item"><a href="http://www.dolistore.com/lang-fr/outils-systemes/184-Export-V2.html" title="Export V2">Export V2</a></dt>
+			<dd class="first_item"><a href="http://www.dolistore.com/lang-fr/outils-systemes/184-Export-V2.html">Version amélioré du module d'exportation natif...</a>&nbsp;<a href="http://www.dolistore.com/lang-fr/outils-systemes/184-Export-V2.html"><img alt="&gt;&gt;" src="./Modules et plugins_files/bullet.gif"></a></dd>					<dt class="item"><a href="http://www.dolistore.com/lang-fr/autres/183-SMS-Decanet.html" title="SMS Decanet">SMS Decanet</a></dt>
+			<dd class="item"><a href="http://www.dolistore.com/lang-fr/autres/183-SMS-Decanet.html">SMS Decanet vous permet d'envoyer des SMS à vos...</a>&nbsp;<a href="http://www.dolistore.com/lang-fr/autres/183-SMS-Decanet.html"><img alt="&gt;&gt;" src="./Modules et plugins_files/bullet.gif"></a></dd>					<dt class="item"><a href="http://www.dolistore.com/lang-fr/autres/182-ModInstall.html" title="ModInstall">ModInstall</a></dt>
+			<dd class="item"><a href="http://www.dolistore.com/lang-fr/autres/182-ModInstall.html">Le module « ModInstall » permet à un...</a>&nbsp;<a href="http://www.dolistore.com/lang-fr/autres/182-ModInstall.html"><img alt="&gt;&gt;" src="./Modules et plugins_files/bullet.gif"></a></dd>					<dt class="last_item"><a href="http://www.dolistore.com/lang-fr/autres/181-Commandes-En-Facture.html" title="Commandes En Facture">Commandes En Facture</a></dt>
+			<dd class="last_item"><a href="http://www.dolistore.com/lang-fr/autres/181-Commandes-En-Facture.html">Module permettant de transformer très...</a>&nbsp;<a href="http://www.dolistore.com/lang-fr/autres/181-Commandes-En-Facture.html"><img alt="&gt;&gt;" src="./Modules et plugins_files/bullet.gif"></a></dd>				</dl>
+		<p><a href="http://www.dolistore.com/new-products.php" title="Tous les nouveaux produits" class="button_large">Tous les nouveaux produits</a></p>
+		</div>
+</div>
+<!-- /MODULE Block new products --><!-- MODULE Block best sellers -->
+<div id="best-sellers_block_right" class="block products_block">
+	<h4><a href="http://www.dolistore.com/best-sales.php">Meilleures ventes</a></h4>
+	<div class="block_content">
+			<ul class="product_images">
+			<li><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/8-Google-3-2.html" title="Google 3.2"><img src="./Modules et plugins_files/Google-3-2.jpg" height="70" width="70" alt="Google 3.2"></a></li>
+			<li><a href="http://www.dolistore.com/lang-fr/autres/11-Belgique.html" title="Belgique"><img src="./Modules et plugins_files/Belgique.jpg" height="70" width="70" alt="Belgique"></a></li>		</ul>
+		<dl>
+					<dt class="first_item"><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/8-Google-3-2.html" title="Google 3.2">Google 3.2</a></dt>
+					<dt class="item"><a href="http://www.dolistore.com/lang-fr/autres/11-Belgique.html" title="Belgique">Belgique</a></dt>
+					<dt class="item"><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/2-Acc--l--rateur-MemCached-3-1.html" title="Accélérateur MemCached 3.1">Accélérateur MemCached 3.1</a></dt>
+					<dt class="item"><a href="http://www.dolistore.com/lang-fr/autres/17-NumberWords.html" title="NumberWords">NumberWords</a></dt>
+					<dt class="last_item"><a href="http://www.dolistore.com/lang-fr/modules/10-Pibarcode.html" title="Pibarcode">Pibarcode</a></dt>
+				</dl>
+		<p><a href="http://www.dolistore.com/best-sales.php" title="Toutes les meilleures ventes" class="button_large">Toutes les meilleures ventes</a></p>
+		</div>
+</div>
+<!-- /MODULE Block best sellers --><br>
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-5108338073960175";
+/* dolistore banniere droite gauche */
+google_ad_slot = "0195368950";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</center>
+			</div>
+
+			<!-- Center -->
+			<div id="center_column">
+	<!-- Breadcrumb -->
+<div class="breadcrumb">
+	<a href="http://www.dolistore.com/" title="retour à Accueil">Accueil</a><span class="navigation-pipe">&gt;</span><span class="navigation_end">Modules/Plugins</span></div>
+<!-- /Breadcrumb --> 
+
+	<div id="category_block">
+        <h2 class="category_title">
+            Modules/Plugins
+            <span>77&nbsp;produits</span>
+        </h2>
+    
+                    <!-- Category image -->
+                        
+                    <div class="cat_desc">Rayon des modules et plugins ajoutant des fonctionnalités à Dolibarr ERP/CRM</div>
+                                <!-- Sort products -->
+	<form id="productsSortForm" action="./Modules et plugins_files/Modules et plugins.html">
+	<p class="select">
+		<select id="selectPrductSort" onchange="document.location.href = $(this).val();">
+			<option value="http://www.dolistore.com/lang-fr/2-modules?p=3&amp;orderby=position&amp;orderway=desc" selected="selected">--</option>
+			<option value="http://www.dolistore.com/lang-fr/2-modules?p=3&amp;orderby=price&amp;orderway=asc">le moins cher</option>
+			<option value="http://www.dolistore.com/lang-fr/2-modules?p=3&amp;orderby=price&amp;orderway=desc">le plus cher</option>
+			<option value="http://www.dolistore.com/lang-fr/2-modules?p=3&amp;orderby=name&amp;orderway=asc">de A à Z</option>
+			<option value="http://www.dolistore.com/lang-fr/2-modules?p=3&amp;orderby=name&amp;orderway=desc">de Z à A</option>
+			<option value="http://www.dolistore.com/lang-fr/2-modules?p=3&amp;orderby=quantity&amp;orderway=desc">produits en stock</option>
+		</select>
+		<label for="selectPrductSort">Tri</label>
+	</p>
+</form>
+<!-- /Sort products -->
+			                							<!-- Pagination -->
+	<div id="pagination" class="pagination">
+			<ul class="pagination">
+								<li id="pagination_previous"><a href="http://www.dolistore.com/lang-fr/2-modules?p=2">«&nbsp;Précédent</a></li>
+													<li><a href="http://www.dolistore.com/lang-fr/2-modules">1</a></li>
+												<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=2">2</a></li>
+												<li class="current"><span>3</span></li>
+												<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=4">4</a></li>
+												<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=5">5</a></li>
+										<li class="truncate">...</li>
+			<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=8">8</a></li>
+										<li id="pagination_next"><a href="http://www.dolistore.com/lang-fr/2-modules?p=4">Suivant&nbsp;»</a></li>
+				</ul>
+			<form action="http://www.dolistore.com/lang-fr/2-modules" method="get" class="pagination">
+			<p>
+												<input type="submit" class="button_mini" value="OK">
+				<label for="nb_item">produits</label>
+				<select name="n" id="nb_item">
+									<option value="10" selected="selected">10</option>
+									<option value="20">20</option>
+									<option value="50">50</option>
+								</select>
+																						<input type="hidden" name="p" value="3">
+																																			<input type="hidden" name="id_category" value="2">
+																		</p>
+		</form>
+	</div>
+	<!-- /Pagination -->
+		                	<!-- Products list -->
+	<ul id="product_list" class="clear">
+			<li class="ajax_block_product first_item item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/autres/141-Final-Line.html" class="product_img_link" title="Final Line"><img src="./Modules et plugins_files/Final-Line.jpg" alt="Final Line"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/autres/141-Final-Line.html" title="Final Line">Final Line</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/autres/141-Final-Line.html"> Permet l'ajout automatique de lignes finales aux factures lors de l'ajout ou la modification d'une ligne. Il peut gérer plusieurs lignes à ajouter, en fonction de produits ou services définis ensemble ou indépendamment. Il est particulièrement  adapté pour l'automatisation du calcul et de l'ajout de lignes de factures tel que les taxes carbones, les...</a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">10,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/autres/141-Final-Line.html" title="Voir le produit">Voir le produit</a>
+                                    <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_141" href="http://www.dolistore.com/cart.php?add&id_product=141&token=f11858a7bde51caf1c826d6563bda30f">Ajouter au panier</a>
+                            </div>
+		</li>
+			<li class="ajax_block_product  alternate_item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/37-PHPSysinfo.html" class="product_img_link" title="PHPSysinfo"><img src="./Modules et plugins_files/PHPSysinfo.jpg" alt=""></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/37-PHPSysinfo.html" title="">PHPSysinfo</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/37-PHPSysinfo.html"> Ajoute une entrée dans le menu avec un lien vers une page d'information PHPSysinfo (http://phpsysinfo.sourceforge.net/) </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">0,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/37-PHPSysinfo.html" title="Voir le produit">Download</a>
+                                        <span class="exclusive">Ajouter au panier</span>
+                            </div>
+		</li>
+			<li class="ajax_block_product  item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/modules/50-SpeedFinder.html" class="product_img_link" title="SpeedFinder"><img src="./Modules et plugins_files/SpeedFinder.jpg" alt="Recherche d&#39;un contact par numero de telephone"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/modules/50-SpeedFinder.html" title="Recherche d&#39;un contact par numero de telephone">SpeedFinder</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/modules/50-SpeedFinder.html"> Menu de recherche rapide (en Ajax) d'un contact ou d'une société en saisissant seulement quelques caracteres d'un nom ou chiffres d'un numéro de téléphone. </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">0,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/modules/50-SpeedFinder.html" title="Voir le produit">Download</a>
+                                        <span class="exclusive">Ajouter au panier</span>
+                            </div>
+		</li>
+			<li class="ajax_block_product  alternate_item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html" class="product_img_link" title="Cabinet médical"><img src="./Modules et plugins_files/Cabinet-m--dical.jpg" alt=""></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html" title="">Cabinet médical</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html"> Gestion d'un cabinet médical ou de l'activité de médecins libéraux. Permet le suivi des patients, consultations,  prescriptions, comptes rendus de consultation, alertes patients, etc... </a></p>
+			</div>
+			<div class="right_block">
+									<span class="discount">Prix réduit !</span>
+								<div><span class="price" style="display: inline;">95,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html" title="Voir le produit">Voir le produit</a>
+                                    <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_154" href="http://www.dolistore.com/cart.php?add&id_product=154&token=f11858a7bde51caf1c826d6563bda30f">Ajouter au panier</a>
+                            </div>
+		</li>
+			<li class="ajax_block_product  item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/autres/7-BitTorrent.html" class="product_img_link" title="BitTorrent"><img src="./Modules et plugins_files/BitTorrent.jpg" alt="BitTorrent"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/autres/7-BitTorrent.html" title="BitTorrent">BitTorrent</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/autres/7-BitTorrent.html"> Permet à Dolibarr de servir de serveur de tracker BitTorrent. Ceci permet de pouvoir diffuser des fichiers sur le réseau BitTorrent en toute indépendance. </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">0,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/autres/7-BitTorrent.html" title="Voir le produit">Download</a>
+                                        <span class="exclusive">Ajouter au panier</span>
+                            </div>
+		</li>
+			<li class="ajax_block_product  alternate_item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/6-Thomson-phone-book.html" class="product_img_link" title="Thomson phone book"><img src="./Modules et plugins_files/Thomson-phone-book.jpg" alt="Thomson phone book"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/6-Thomson-phone-book.html" title="Thomson phone book">Thomson phone book</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/6-Thomson-phone-book.html"> Ajoute un service permettant à un téléphone Thomson d'afficher la liste des contacts Dolibarr. </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">0,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/6-Thomson-phone-book.html" title="Voir le produit">Download</a>
+                                        <span class="exclusive">Ajouter au panier</span>
+                            </div>
+		</li>
+			<li class="ajax_block_product  item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/2-Acc--l--rateur-MemCached-3-1.html" class="product_img_link" title="Accélérateur MemCached 3.1"><img src="./Modules et plugins_files/Acc--l--rateur-MemCached-3-1.jpg" alt="Module Memcached"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/2-Acc--l--rateur-MemCached-3-1.html" title="Module Memcached">Accélérateur MemCached 3.1</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/2-Acc--l--rateur-MemCached-3-1.html"> Ce module permet à Dolibarr d'améliorer ses performances en utilisant un serveur de cache  MemCached . Selon la plateforme et sa puissance, le temps d'affichage de chaque page peut être réduit de 20% à 40%. Ce cache joue sur l'application et non comme cache OPCode PHP, aussi son gain est cumulé à des caches OPCodes comme APC, eAccelerator ... </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">19,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/interfaces-avec-d-autres-logiciels-systemes/2-Acc--l--rateur-MemCached-3-1.html" title="Voir le produit">Voir le produit</a>
+                                    <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_2" href="http://www.dolistore.com/cart.php?add&id_product=2&token=f11858a7bde51caf1c826d6563bda30f">Ajouter au panier</a>
+                            </div>
+		</li>
+			<li class="ajax_block_product  alternate_item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/crm-gestion-relation-client/124-Dolipresta-Interface-Prestashop-Dolibarr-.html" class="product_img_link" title="Dolipresta Interface Prestashop Dolibarr "><img src="./Modules et plugins_files/Dolipresta-Interface-Prestashop-Dolibarr-.jpg" alt=""></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/crm-gestion-relation-client/124-Dolipresta-Interface-Prestashop-Dolibarr-.html" title="">Dolipresta Interface Prestashop...</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/crm-gestion-relation-client/124-Dolipresta-Interface-Prestashop-Dolibarr-.html"> Ce module permet d'intégrer les ventes et clients de vos sites Prestashop dans Dolibarr et d'utiliser les outils de Dolibarr pour gèrer ces commandes (expéditions) et clients. Vous pouvez aussi gérer vos produits en vente en ligne directement avec Dolibarr (mise en vente, stock, prix) sans passer par le back office de Prestashop. </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">485,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/crm-gestion-relation-client/124-Dolipresta-Interface-Prestashop-Dolibarr-.html" title="Voir le produit">Voir le produit</a>
+                                    <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_124" href="http://www.dolistore.com/cart.php?add&id_product=124&token=f11858a7bde51caf1c826d6563bda30f">Ajouter au panier</a>
+                            </div>
+		</li>
+			<li class="ajax_block_product  item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/modeles-de-documents/130-Ultimatepdf.html" class="product_img_link" title="Ultimatepdf"><img src="./Modules et plugins_files/Ultimatepdf.jpg" alt="Ultimatepdf"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/modeles-de-documents/130-Ultimatepdf.html" title="Ultimatepdf">Ultimatepdf</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/modeles-de-documents/130-Ultimatepdf.html"> Suite logique de la blue-serie, ultimatepdf est un module à part entière qui permet d'installer en un clic le modèle "ultimate" (commande, expedition, facture avec lcr, fichinter, project, propale, supplier_order). De plus l'administration du module vous offre la possibilité de gérer vous même les couleurs de fond...</a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">60,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/modeles-de-documents/130-Ultimatepdf.html" title="Voir le produit">Voir le produit</a>
+                                    <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_130" href="http://www.dolistore.com/cart.php?add&id_product=130&token=f11858a7bde51caf1c826d6563bda30f">Ajouter au panier</a>
+                            </div>
+		</li>
+			<li class="ajax_block_product last_item alternate_item">
+			<div class="center_block">
+            					<a href="http://www.dolistore.com/lang-fr/modules/114-Office-inventory-control.html" class="product_img_link" title="Office inventory control"><img src="./Modules et plugins_files/Office-inventory-control.jpg" alt="Office inventory control"></a>
+				<h3><a href="http://www.dolistore.com/lang-fr/modules/114-Office-inventory-control.html" title="Office inventory control">Office inventory control</a></h3>
+				<p class="product_desc"><a href="http://www.dolistore.com/lang-fr/modules/114-Office-inventory-control.html"> Module that facilitates the monitoring and recording materials company offices. </a></p>
+			</div>
+			<div class="right_block">
+								<div><span class="price" style="display: inline;">0,00 €</span></div>				                <span class="availability">Disponible</span>
+			</div>
+            <div class="button-set">
+                <a class="button view" href="http://www.dolistore.com/lang-fr/modules/114-Office-inventory-control.html" title="Voir le produit">Download</a>
+                                        <span class="exclusive">Ajouter au panier</span>
+                            </div>
+		</li>
+		</ul>
+	<!-- /Products list -->
+			                        							<!-- Pagination -->
+	<div id="pagination" class="pagination">
+			<ul class="pagination">
+								<li id="pagination_previous"><a href="http://www.dolistore.com/lang-fr/2-modules?p=2">«&nbsp;Précédent</a></li>
+													<li><a href="http://www.dolistore.com/lang-fr/2-modules">1</a></li>
+												<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=2">2</a></li>
+												<li class="current"><span>3</span></li>
+												<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=4">4</a></li>
+												<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=5">5</a></li>
+										<li class="truncate">...</li>
+			<li><a href="http://www.dolistore.com/lang-fr/2-modules?p=8">8</a></li>
+										<li id="pagination_next"><a href="http://www.dolistore.com/lang-fr/2-modules?p=4">Suivant&nbsp;»</a></li>
+				</ul>
+			<form action="http://www.dolistore.com/lang-fr/2-modules" method="get" class="pagination">
+			<p>
+												<input type="submit" class="button_mini" value="OK">
+				<label for="nb_item">produits</label>
+				<select name="n" id="nb_item">
+									<option value="10" selected="selected">10</option>
+									<option value="20">20</option>
+									<option value="50">50</option>
+								</select>
+																						<input type="hidden" name="p" value="3">
+																																			<input type="hidden" name="id_category" value="2">
+																		</p>
+		</form>
+	</div>
+	<!-- /Pagination -->
+		                 </div>
+				</div>
+
+<!-- Right -->
+			<div id="right_column" class="column">
+				
+<script type="text/javascript" src="./Modules et plugins_files/iutil.prestashop-modifications.js"></script>
+<script type="text/javascript" src="./Modules et plugins_files/ifxtransfer.js"></script>
+<script type="text/javascript">
+var CUSTOMIZE_TEXTFIELD = 1;
+var customizationIdMessage = 'Personnalisation ';
+var removingLinkText = 'supprimer cet article du panier';
+</script>
+<script type="text/javascript" src="./Modules et plugins_files/ajax-cart.js"></script>
+
+<!-- MODULE Block cart -->
+<div id="cart_block" class="block exclusive">
+	<h4>
+		<a href="https://www.dolistore.com/order.php">Panier</a>
+				<span id="block_cart_expand" class="hidden">&nbsp;</span>
+		<span id="block_cart_collapse">&nbsp;</span>
+			</h4>
+	<div class="block_content">
+	<!-- block summary -->
+	<div id="cart_block_summary" class="collapsed">
+				<span class="ajax_cart_product_txt_s hidden">articles</span>
+		<span class="ajax_cart_product_txt hidden">article</span>
+				<span class="ajax_cart_no_product">(vide)</span>	</div>
+	<!-- block list of products -->
+	<div id="cart_block_list" class="expanded">
+			<p id="cart_block_no_products">Aucun produit</p>
+		
+				
+		<p id="cart-prices">
+			<span>Expédition</span>
+			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">0,00 €</span>
+			<br>
+						<span>Total</span>
+			<span id="cart_block_total" class="price ajax_block_cart_total">0,00 €</span>
+		</p>
+						<p id="cart-buttons">
+			<a href="https://www.dolistore.com/order.php" class="button_small" title="Panier">Panier</a>
+			<a href="https://www.dolistore.com/order.php?step=1" id="button_order_cart" class="exclusive" title="Commander">Commander</a>
+		</p>
+	</div>
+	</div>
+</div>
+<!-- /MODULE Block cart --><!-- Block mysales module -->
+<div class="block myaccount">
+	<h4>Mes modules/produits</h4>
+	<div class="block_content">
+		<ul class="bullet">
+			<li><a href="https://www.dolistore.com/modules/blockmysales/my-sales-log-first.php" title="">Soumettre un module/produit</a></li>			
+			<!--<li><a href="https://www.dolistore.com/my-sales-stats.php" title="">Statistiques des ventes</a></li>-->
+			
+		</ul>		
+	</div>
+</div>
+<!-- /Block mysales module -->
+<!-- Block links module -->
+<div id="links_block_left" class="block">
+	<h4>
+			Liens sites Dolibarr
+		</h4>
+	<ul class="block_content bullet">
+			<li><a href="http://wiki.dolibarr.org/" onclick="window.open(this.href);return false;">Dolibarr wiki</a></li>
+			<li><a href="http://www.dolibarr.org/" onclick="window.open(this.href);return false;">Dolibarr site officiel</a></li>
+			<li><a href="http://www.dolibarr.fr/" onclick="window.open(this.href);return false;">Dolibarr site francophone</a></li>
+			<li><a href="http://asso.dolibarr.org/index.php/Dolibarr_foundation" onclick="window.open(this.href);return false;">Dolibarr Association</a></li>
+			<li><a href="http://www.dolibarr.es/" onclick="window.open(this.href);return false;">Dolibarr site espagnol</a></li>
+		</ul>
+</div>
+<!-- /Block links module --><!-- Block Viewed products -->
+<div id="viewed-products_block_left" class="block products_block">
+	<h4>Déjà vus</h4>
+	<div class="block_content">
+		<ul class="products clearfix">
+							<li class="clearfix first_item">
+					<a href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html" title="En savoir plus à propos de Cabinet médical"><img src="./Modules et plugins_files/Cabinet-m--dical(1).jpg" height="70" width="70" alt=""></a>
+					<h5><a href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html" title="En savoir plus à propos de Cabinet médical">Cabinet...</a></h5>
+					<p> Gestion d'un cabinet médical ou ...<a href="http://www.dolistore.com/lang-fr/autres/154-Cabinet-m--dical.html" title="En savoir plus à propos de Cabinet médical"><img src="./Modules et plugins_files/bullet.gif" alt="&gt;&gt;"></a></p>
+				</li>
+							<li class="clearfix last_item">
+					<a href="http://www.dolistore.com/lang-fr/autres/182-ModInstall.html" title="En savoir plus à propos de ModInstall"><img src="./Modules et plugins_files/ModInstall.jpg" height="70" width="70" alt=""></a>
+					<h5><a href="http://www.dolistore.com/lang-fr/autres/182-ModInstall.html" title="En savoir plus à propos de ModInstall">ModInstall</a></h5>
+					<p>Le module « ModInstall » permet à un ...<a href="http://www.dolistore.com/lang-fr/autres/182-ModInstall.html" title="En savoir plus à propos de ModInstall"><img src="./Modules et plugins_files/bullet.gif" alt="&gt;&gt;"></a></p>
+				</li>
+					</ul>
+	</div>
+</div><br>
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-5108338073960175";
+/* dolistore banniere droite gauche */
+google_ad_slot = "0195368950";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</center>
+			</div>
+
+<!-- Footer -->
+			<div id="footer">
+		<script type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol ) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script><script src="./Modules et plugins_files/ga.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		try {
+			var pageTracker = _gat._createTracker("UA-9631096-12");
+			pageTracker._trackPageview();
+		}
+		catch(err) {}
+		</script><!-- MODULE Block various links -->
+<ul class="block_various_links" id="block_various_links_footer">
+	<li class="first_item"><a href="http://www.dolistore.com/prices-drop.php" title="">Promotions</a></li>
+	<li class="item"><a href="http://www.dolistore.com/new-products.php" title="">Nouveaux produits</a></li>
+	<li class="item"><a href="http://www.dolistore.com/best-sales.php" title="">Meilleures ventes</a></li>
+	<li class="item"><a href="https://www.dolistore.com/contact-form.php" title="">Contactez-nous</a></li>
+			<li class="item"><a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" title="Conditions d&#39;utilisation">Conditions d'utilisation</a></li>
+			<li class="item"><a href="http://www.dolistore.com/lang-fr/content/4-a-propos" title="A propos">A propos</a></li>
+		<li class="last_item">Propulsé par <a href="http://www.prestashop.com/">PrestaShop</a>™</li>
+</ul>
+<!-- /MODULE Block various links -->
+		<script type="text/javascript">
+			var time_start;
+			$(window).load(
+				function() {
+					time_start = new Date();
+				}
+			);
+			$(window).unload(
+				function() {
+					var time_end = new Date();
+					var pagetime = new Object;
+					pagetime.type = "pagetime";
+					pagetime.id_connections = "198419";
+					pagetime.id_page = "5";
+					pagetime.time_start = "2012-10-11 23:37:02";
+					pagetime.token = "acd900ceb7b2351ee471baec04727f761f5fecc7";
+					pagetime.time = time_end-time_start;
+					$.post("http://www.dolistore.com/statistics.php", pagetime);
+				}
+			);
+		</script></div>
+		</div>
+		
+<div class="extLives"></div></body></html>
