@@ -6,6 +6,7 @@
 * 02 - Add page of dolibarr.org dolideb package version 3.2.3
 * 03 - Install VM of windows+firefox+DoliWamp 3.3 with link to VirtualBox
 * 04 - Add video .webm of dolicloud
-* 05 - Add dolideb 3.3
-* 06 - Add page of dolistore.com + dolimed package
+* 05 - Add link to launcher of http://localhost/dolibarr/ to show minimal setup
+* 06 - Add dolideb 3.3
+* 07 - Add page of dolistore.com + dolimed package
 * Launch 00_reinit_presentation.sh to remove completely dolibarr package
