@@ -1,0 +1,55 @@
+@CHARSET "UTF-8";
+.itp-share{
+    display:block !important;        
+}
+
+.itp-share-tw{
+    float:left;
+    margin:10px 5px 0;
+}
+
+.itp-share-tbr{
+    float:left;
+    margin:10px;
+}
+
+.itp-share-fbl{
+    float:left;
+    margin:10px;
+}
+.itp-share-digg{
+    float:left;
+    margin-right:15px;
+    margin-top:10px;
+}
+.itp-share-su{
+    float:left;
+    margin-right:14px;
+    margin-top:11px;
+}
+.itp-share-lin{
+    float:left;
+    margin-right:14px;
+    margin-top:10px;
+}
+
+.itp-share-gone{
+    float:left;
+    margin-left:5px;
+    margin-right:10px;
+    margin-top:10px;
+}
+
+.itp-share-retweetme{
+    float:left;
+    margin-top:10px;
+}
+
+.itp-share-reddit{
+    float:left;
+    margin-top:10px;
+}
+.itp-share-reddit a:hover{
+    text-decoration: none !important;
+    background: none !important;
+}
