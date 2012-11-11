@@ -1,7 +1,7 @@
 <?php
 /*
- *	/products-list.php?p=-1 => Show all products
- *  
+ *	/products-list.php?p=-1&n=10000 => Show all products
+ *
  */
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
