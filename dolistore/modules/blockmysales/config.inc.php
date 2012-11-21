@@ -11,4 +11,5 @@ $maxversion='3.2';
 $minamountcee=50;
 $minamountnotcee=200;
 
+$mindelaymonth=1;
 ?>

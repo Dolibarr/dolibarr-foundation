@@ -137,7 +137,7 @@ $iso_langue_en_cours);
 <?php
 // Calculate totalamount
 $query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, 
-			od.id_order_detail, od.product_price, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
+			od.id_order_detail, od.product_price, od.reduction_percent, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
 			o.date_add, o.valid
 			FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 			WHERE product_id = ".$id_product."
@@ -150,10 +150,10 @@ $subresult = Db::getInstance()->ExecuteS($query);
 $nbr_achats = 0;
 $nbr_amount = 0;
 
-$i=0;
+$i=0;$totalamountearned=0;
 foreach ($subresult AS $subrow) 
 {
-	$i++;
+	$i+=$subrow['product_quantity'];
 	$nbr_achats = $subrow['nbra'];
 	$nbr_amount = $subrow['amount'];
 	
@@ -161,7 +161,7 @@ foreach ($subresult AS $subrow)
 	?>
 
 	<tr bgcolor="<?php echo $colorTab; ?>">
-		<td><?php echo $i; ?></td>
+		<td><?php echo ($subrow['product_quantity']>1?($i+1-$subrow['product_quantity']).'-':'').$i; ?></td>
 		<td><?php 
 			echo '<b>'.$subrow['lastname'].' '.$subrow['firstname'].'</b> ('.$subrow['email'].')'; 
 			echo '<br>'.aff("Inscrit le: ", "Registered on: ", $iso_langue_en_cours).$subrow['cust_date_add'];
@@ -171,8 +171,14 @@ foreach ($subresult AS $subrow)
 		<td align="right"><?php 
 			if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 			{
-				if ($subrow['reduction_amount'] > 0) echo ($subrow['product_price']-$subrow['reduction_amount']+0).' ('.($subrow['product_price']+0).')';
-				else echo ($subrow['product_price']+0); 
+				$amountearnedunit=(float) ($subrow['product_price']-$subrow['reduction_amount']+0);
+				if ($subrow['reduction_percent'] > 0) $amountearnedunit=round($amountearnedunit*(100-$subrow['reduction_percent'])/100,1);
+				$amountearned=$amountearnedunit*$subrow['product_quantity'];
+
+				$totalamountearned+=$amountearned;
+				
+				if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) echo $amountearnedunit.' ('.($subrow['product_price']+0).')';
+				else echo $amountearnedunit.($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'');
 			}
 			else
 			{
@@ -186,6 +192,7 @@ foreach ($subresult AS $subrow)
 	$colorTabNbr++;
 }
 ?>
+<tr bgcolor="<?php echo $colorTab; ?>"><td colspan="3"><?php echo aff("Total", "Total", $iso_langue_en_cours); ?></td><td align="right"><?php echo $totalamountearned; ?></td></tr>
 </table>
 
 

@@ -210,8 +210,9 @@ if (sizeof($result))
 			$colorTab="#eeeeee";
 
 		// Calculate totalamount for this product
-		$query = "SELECT count( od.id_order_detail ) as nbra, 
-					sum( (od.product_price - od.reduction_amount) * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
+		//$query = "SELECT count( od.id_order_detail ) as nbra, 
+		$query = "SELECT SUM( od.product_quantity ) as nbra, 
+					sum( (od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
 					sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
 					min( o.date_add ) as min_date";
 		$query.= "	FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
@@ -219,7 +220,7 @@ if (sizeof($result))
 					AND o.id_order = od.id_order";
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-		prestalog($query);
+		prestalog("Request to count product sells ".$query);
 
 		$subresult = Db::getInstance()->ExecuteS($query);
 		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -242,14 +243,14 @@ if (sizeof($result))
 		$totalamount+=$nbr_amount;
 
 		// Calculate totalamountclaimable (amount validated supplier can claim)
-		$query = "SELECT count( od.id_order_detail ) as nbra, 
-					sum( (od.product_price - od.reduction_amount) * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
+		$query = "SELECT SUM( od.product_quantity ) as nbra, 
+					sum( (od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
 					sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
 					min( o.date_add ) as min_date
 					FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 					WHERE od.product_id = ".$id_product."
 					AND o.id_order = od.id_order
-					AND date_add < DATE_ADD('".date("Y-m-d 00:00:00",mktime())."', INTERVAL -2 MONTH)";	// 2 month
+					AND date_add < DATE_ADD('".date("Y-m-d 00:00:00",mktime())."', INTERVAL - ".$mindelaymonth." MONTH)";	// 2 month
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
 		prestalog($query);
@@ -503,7 +504,7 @@ print '<br>';
 // Total amount you can claim
 echo aff("Montant total validé: ", "Total validated amount: ", $iso_langue_en_cours);
 print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
-echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de 2 mois de rétractation)", "&nbsp; (any sell is validated after a 2 month delay)", $iso_langue_en_cours);
+echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation)", "&nbsp; (any sell is validated after a ".$mindelaymonth." month delay)", $iso_langue_en_cours);
 print '<br>';
 // List of payments
 if (count($dolistoreinvoices))
@@ -558,7 +559,7 @@ if (empty($dateafter) && empty($datebefore))
 	$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
 	print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;</font></b><br>";
 	// Remain to receive in 2 months
-	echo aff("Montant restant à réclamer dans 2 mois: ","Remained amount to claim in 2 month: ", $iso_langue_en_cours);
+	echo aff("Montant restant à réclamer dans ".$mindelaymonth." mois: ","Remained amount to claim in ".$mindelaymonth." month: ", $iso_langue_en_cours);
 	$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
 	print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;</font></b><br>";
 	print '<br>';
