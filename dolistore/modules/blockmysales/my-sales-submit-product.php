@@ -3,6 +3,7 @@
 /* SSL Management */
 $useSSL = true;
 
+require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
@@ -29,12 +30,23 @@ foreach ($languages AS $language) {
 }
 $upload=0;
 
+
 /*
  * Actions
  */
 
+
+//annuler le produit
+if ($_GET['cel'] || $_POST["cel"]) 
+{
+	unlink ($_POST["product_file_path"]);
+	echo "<script>window.location='../../index.php';</script>";
+	exit;
+}
+
+
 //upload du fichier
-if ($_GET["up"] == 1) 
+if ($_GET["up"] || $_POST["up"]) 
 {
 	$error=0;
 
@@ -147,19 +159,14 @@ if ($_GET["up"] == 1)
 
 
 //soumission du produit
-if ($_GET["sub"] == 1) 
+if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"]))) 
 {
-
 	$flagError = 0;
 	$status = $_POST['active']; if ($status == "") $status = 0;
 	$product_file_name = $_POST["product_file_name"];
 	$product_file_path = $_POST["product_file_path"];
 
 	prestalog("We click on 'Submit this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
-
-	//prise des prix
-	$prix_ttc = $_POST["priceTI"];
-	$prix_ht = $prix_ttc;
 
 	if ($upload < 0 || (empty($_POST["product_file_name"]) && empty($_FILES['virtual_product_file']['name'])))
 	{
@@ -211,20 +218,15 @@ if ($_GET["sub"] == 1)
 
 
 	//si pas derreur de saisis, traitement en base
-	if ($flagError == 0) {
+	if ($flagError == 0) 
+	{
+		$taxe_rate = $_POST['rate_tax'];
+		$taxe_id = $_POST["id_tax"];
+		if (empty($taxe_id)) $taxe_id = 0;
 
-		//recuperation de la taxe
-		/*$taxe_input = $_POST["id_tax"];
-		$taxes = Tax::getTaxes($cookie->id_lang);
-
-		foreach ($taxes AS $taxe) {
-			$taxVal = ($taxe['rate']/100);
-
-			if ($taxVal == $taxe_input)
-				$taxe_id = $taxe['id_tax'];
-		}
-		if ($taxe_id == "") $taxe_id = 0;*/
-		$taxe_id = 0;
+		// Define prices
+		$prix_ht = $_POST["price"];
+		$prix_ttc = round($prix_ht * (100 + (float) $taxe_rate) / 100, 2);
 
 		//prise des date
 		$dateToday = date ("Y-m-d");
@@ -387,13 +389,6 @@ if ($_GET["sub"] == 1)
 
 
 
-//annuler le produit
-if ($_GET['cel'] == 1) {
-	unlink ($_POST["product_file_path"]);
-	echo "<script>window.location='../../index.php';</script>";
-}
-
-
 
 /*
  * View
@@ -409,7 +404,7 @@ echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2
 
 <?php
 
-print '<input type="checkbox" name="agreewithtermofuse"> ';
+print '<input type="checkbox" required="required" name="agreewithtermofuse"> ';
 echo aff('J\'ai lu et suis d\'accord avec les conditions d\'utilisations disponible sur <a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" target="_blank">http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes</a>',
 		 'I\'ve read and I agree with terms and conditions of use available on page <a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>', $iso_langue_en_cours);
 print '<br>';
@@ -463,13 +458,11 @@ echo '
 
 ';
 
-
-
-
-
 ?>
 
-<FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit">
+
+
+<FORM name="fmysalessubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit" action="my-sales-submit-product.php">
 
 <table width="100%" border="0" style="padding-bottom: 5px;">
 
@@ -553,43 +546,25 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
-
- <!--
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente hors taxe : ", "Pre-tax sale price : ", $iso_langue_en_cours); ?> </td>
+    <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-      <input size="6" maxlength="6" id="priceTE" name="priceTE" onkeyup="javascript:this.value = this.value.replace(/,/g, '.'); priceTI.value=this.value;" type="text"
-	   value="<?php if ($_POST["priceTE"] != 0 && $_POST["priceTE"] != "") echo $_POST["priceTE"]; ?>"
-	  > Euros
-    </td>
-  </tr>
+        <input required="required" size="6" maxlength="6" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
-  <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Taxe : ", "Tax : ", $iso_langue_en_cours); ?></td>
-    <td>
-
-    <?php
-
+    	<?php
+		$taxVal = 19.6;
 		$taxes = Tax::getTaxes($cookie->id_lang);
 
-		echo '<select onchange="javascript:priceTI.value=(parseFloat(priceTE.value)+parseFloat(priceTE.value*this.value));" name="id_tax" id="id_tax">';
-			echo '<option value="0"';  if ($_POST["id_tax"] == 0 || $_POST["id_tax"] == "") echo "selected='selected'"; echo '>'; echo aff("Sans taxe", "No tax", $iso_langue_en_cours); echo '</option>';
-
-			foreach ($taxes AS $taxe) {
-				$taxVal = ($taxe['rate']/100);
-				echo '<option value="'.$taxVal.'"';  if ($_POST["id_tax"] == $taxVal) echo "selected='selected'"; echo '>'.$taxe['name'].'</option>';
-			}
-		echo '</select>';
-	?>
-    </td>
-  </tr>
-  -->
-
-   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
-    <td>
-        <input size="6" maxlength="6" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo $_POST["priceTI"]; else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
-		<?php print aff(" Euros &nbsp; (0 si gratuit)"," Euros &nbsp; (0 means free)", $iso_langue_en_cours); ?>
+		foreach ($taxes AS $taxe) 
+		{
+			if ($taxe['rate'] != $taxVal) continue;
+			echo '<input type="hidden" name="id_tax" id="id_tax" value="'.$taxe['id_tax'].'">';
+			echo '<input type="hidden" name="rate_tax" id="rate_tax" value="'.$taxe['rate'].'">';
+			print '<br>';
+			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto this final amount.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur ce montant total également.", $iso_langue_en_cours);
+		}
+		?>
 	</td>
   </tr>
 
@@ -599,7 +574,7 @@ echo '
   </tr>
 
 
-
+	<!-- Categories -->
   <tr>
     <td width="14%" valign="top">
     <?php echo aff("Cocher toutes les categories dans lesquelles le produit apparaitra : ", "Check all categories in which product will appear : ", $iso_langue_en_cours); ?>
@@ -610,17 +585,26 @@ echo '
 		echo '<table width="100%" border="0" cellspacing="5" cellpadding="0">';
 
         $categories = Category::getSimpleCategories($cookie->id_lang);
-
         $x = 0;
         foreach ($categories AS $categorie) {
+			/*if (in_array($categorie['id_category'],array(1,2,4))) 
+			{
+				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
+				echo $categorie['name'];		
+				echo '</td></tr>';
+				continue; 	// We discard some categories
+			}*/
 
-			$query = 'SELECT `active` FROM `'._DB_PREFIX_.'category`
-			WHERE `id_category` = \''.$categorie['id_category'].'\'
-			';
+			$query = 'SELECT id_category, active, level_depth, id_parent FROM `'._DB_PREFIX_.'category` WHERE `id_category` = \''.$categorie['id_category'].'\'';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+			$level = 0; $active = 0;
 			foreach ($result AS $row)
+			{
 				$active = $row['active'];
+				$level = $row['level_depth'];
+			}
 
 			if ($categorie['id_category'] > 1 && $active == 1) {
 
@@ -629,16 +613,14 @@ echo '
 				else
 				 $bgcolor="#FFDBB7";
 
-				echo '<tr bgcolor="'.$bgcolor.'">
-						<td nowrap="nowrap" valign="top" align="left">
-							<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
+				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
+				//echo str_repeat('&nbsp;', $level);
+				echo '<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
 
 				if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
 
-				echo ' />
-							'.$categorie['name'].'
-						</td>
-					</tr>';
+				echo ' />'.$categorie['name'];
+				echo '</td></tr>';
 				$x++;
 			}
         }
@@ -721,7 +703,7 @@ echo '
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaulten='
 Module version: <strong>1.0</strong><br>
-Publisher/Licence: <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
+Publisher/Licence: <strong>'.$publisher.'</strong> / <strong>AGPL</strong><br>
 User interface language: <strong>English</strong><br>
 Help/Support: <strong>None / <strike>Forum www.dolibarr.org</strike> / <strike>Mail to contact@publisher.com</strike></strong><br>
 </ul>
@@ -744,7 +726,7 @@ Prerequisites:<br>
 </ul>';
 			$defaultfr='
 Module version: <strong>1.0</strong><br>
-Editeur/Licence: <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
+Editeur/Licence: <strong>'.$publisher.'</strong> / <strong>AGPL</strong><br>
 Langage interface: <strong>Anglais</strong><br>
 Assistance: <strong>Aucune / <strike>Forum www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
 Pr&eacute;requis: <br>
@@ -766,7 +748,7 @@ Installation:<br>
 </ul>';
 			$defaultes='
 Versión del Módulo: <strong>1.0</strong><br>
-Creador/Licencia:  <strong>'.$publisher.'</strong> / <strong>GPL</strong><br>
+Creador/Licencia:  <strong>'.$publisher.'</strong> / <strong>AGPL</strong><br>
 Idioma interfaz usuario: <strong>Inglés</strong><br>
 Ayuda/Soporte: <strong>No / <strike>foro www.dolibarr.org</strike> / <strike>mail a contacto@creador.com</strike></strong><br>
 Prerrequisitos: <br>
@@ -807,15 +789,8 @@ Para instalar este módulo:<br>
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
 		<?php // print 'xxxy: '.$tmpname.' - '.$tmppath; ?>
-		<button style="font-weight: 700;" type="button" <?php if (empty($tmpname) || empty($tmppath)) print 'disabled="disabled" '; ?>
-		onclick="javascript: document.fmysalessubprod.action='?sub=1'; document.fmysalessubprod.submit();">
-		<?php print aff("Valider ce produit", "Submit this product", $iso_langue_en_cours); ?>
-		</button>
-		 &nbsp; &nbsp; &nbsp; &nbsp;
-		<button type="button" 
-		onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>'); document.fmysalessubprod.action='?cel=1'; document.fmysalessubprod.submit();">
-		<?php print aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
-		</button>
+		<input name="sub" type="submit" <?php if (empty($tmpname) || empty($tmppath)) print 'disabled="disabled"'; ?> value="<?php print aff(" Valider ce produit ", " Submit this product ", $iso_langue_en_cours); ?>">
+		<input name="cel" type="submit" value="<?php print aff(" Annuler ", " Cancel ", $iso_langue_en_cours); ?>">
 	</td>
   </tr>
 

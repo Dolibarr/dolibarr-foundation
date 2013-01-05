@@ -3,6 +3,7 @@
 /* SSL Management */
 $useSSL = true;
 
+require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/../../init.php');
@@ -63,8 +64,17 @@ if (testProductAppartenance($customer_id, $product_id))
  */
 
 
+//annuler le produit
+if ($_GET['cel'] || $_POST["cel"]) 
+{
+	unlink ($_POST["product_file_path"]);
+	echo "<script>window.location='my-sales-manage-product.php';</script>";
+	exit;
+}
+
+
 //upload du fichier
-if ($_GET["up"] == 1)
+if ($_GET["up"] || $_POST["up"])
 {
 	$error=0;
 
@@ -170,23 +180,17 @@ if ($_GET["up"] == 1)
 	}
 }
 
+var_dump($_POST);
 
 //Mise a jour du produit
-if ($_GET["upd"] == 1) {
-
+if ($_GET["upd"] || ($_POST["upd"] && empty($_GET["up"]))) 
+{
 	$flagError = 0;
 	$status = $_POST['active'];
 	$product_file_name = $_POST["product_file_name"];
 	$product_file_path = $_POST["product_file_path"];
 
 	prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
-
-	//prise des prix
-	$prix_ttc = $_POST["priceTI"];
-	$prix_ht = $prix_ttc;
-
-	if ($status == "" || $prix_ht == "")
-		$flagError = 1;
 
 	//prise des libelles
 	for ($x = 0; $languageTAB[$x]; $x++ ) {
@@ -233,9 +237,15 @@ if ($_GET["upd"] == 1) {
 
 
 	//si pas derreur de saisis, traitement en base
-	if ($flagError == 0) {
+	if ($flagError == 0) 
+	{
+		$taxe_rate = $_POST['rate_tax'];
+		$taxe_id = $_POST["id_tax"];
+		if (empty($taxe_id)) $taxe_id = 0;
 
-		$taxe_id = 0;
+		// Define prices
+		$prix_ht = $_POST["price"];
+		$prix_ttc = round($prix_ht * (100 + (float) $taxe_rate) / 100, 2);
 
 		//prise des date
 		$dateToday = date ("Y-m-d");
@@ -374,7 +384,7 @@ if ($_GET["upd"] == 1) {
 
 		//gestion des fichiers selon prix
 		$oldPrice = round($_GET["op"],2);
-		$newPrice =  round($_POST["priceTI"],2);
+		$newPrice =  round($_POST["price"],2);
 
 		// Si un fichier a ete modifier ou le prix modifie
 		if ($newfile || $oldPrice != $newPrice) 
@@ -479,13 +489,16 @@ FROM `'._DB_PREFIX_.'product`
 WHERE `id_product` = '.$product_id.' ';
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-foreach ($result AS $row) {
+foreach ($result AS $row) 
+{
+	$price = $row['price'];	
 	$wholesale_price = $row['wholesale_price'];
 	$active = $row['active'];
 	$reference = $row['reference'];
 
 	$_POST['active'] = $active;
-	$_POST["priceTI"] = $wholesale_price;
+	//$_POST["price"] = $wholesale_price;
+	$_POST["price"] = $price;
 }
 
 
@@ -591,7 +604,7 @@ echo '
 
 ?>
 
-<FORM name="fmysalesmodifiysubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit">
+<FORM name="fmysalesmodifiysubprod" method="POST" ENCTYPE="multipart/form-data" class="formsubmit"  action="my-sales-modify-product.php">
 
 <table width="100%" border="0" style="padding-bottom: 5px;">
 
@@ -677,9 +690,24 @@ echo '
 
 
    <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente TTC : ", "Sale price (incl tax) : ", $iso_langue_en_cours); ?></td>
+    <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input size="6" maxlength="6" name="priceTI" id="priceTI" value="<?php if ($_POST["priceTI"] != 0 && $_POST["priceTI"] != "") echo round($_POST["priceTI"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text"> Euros
+        <input required="required" size="6" maxlength="6" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
+
+    	<?php
+		$taxVal = 19.6;
+		$taxes = Tax::getTaxes($cookie->id_lang);
+
+		foreach ($taxes AS $taxe) 
+		{
+			if ($taxe['rate'] != $taxVal) continue;
+			echo '<input type="hidden" name="id_tax" id="id_tax" value="'.$taxe['id_tax'].'">';
+			echo '<input type="hidden" name="rate_tax" id="rate_tax" value="'.$taxe['rate'].'">';
+			print '<br>';
+			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto this final amount.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur ce montant total également.", $iso_langue_en_cours);
+		}
+		?>
     </td>
   </tr>
 
@@ -703,14 +731,24 @@ echo '
 
         $x = 0;
         foreach ($categories AS $categorie) {
+			/*if (in_array($categorie['id_category'],array(1,2,4))) 
+			{
+				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
+				echo $categorie['name'];		
+				echo '</td></tr>';
+				continue; 	// We discard some categories
+			}*/
 
-			$query = 'SELECT `active` FROM `'._DB_PREFIX_.'category`
-			WHERE `id_category` = \''.$categorie['id_category'].'\'
-			';
+			$query = 'SELECT id_category, active, level_depth, id_parent FROM `'._DB_PREFIX_.'category` WHERE `id_category` = \''.$categorie['id_category'].'\'';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+			$level = 0; $active = 0;
 			foreach ($result AS $row)
+			{
 				$active = $row['active'];
+				$level = $row['level_depth'];
+			}
 
 			if ($categorie['id_category'] > 1 && $active == 1) {
 
@@ -719,9 +757,9 @@ echo '
 				else
 				 $bgcolor="#FFDBB7";
 
-				echo '<tr bgcolor="'.$bgcolor.'">
-						<td nowrap="nowrap" valign="top" align="left">
-							<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
+				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
+				//echo str_repeat('&nbsp;', $level);
+				echo '<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
 
 				if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
 
@@ -894,18 +932,12 @@ Para instalar este módulo:<br>
 <table width="100%" border="0" cellspacing="10" cellpadding="0">
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
-		<button style="font-weight: 700;" type="button" onclick="javascript:
-																 document.fmysalesmodifiysubprod.action='?upd=1&op=<?php echo $_POST["priceTI"]; ?>&id_p=<?php echo $product_id; ?>';
-                                                                 document.fmysalesmodifiysubprod.submit();"
-																 >
-			<?php echo aff("Modifier ce produit", "Update this product", $iso_langue_en_cours); ?>
-		</button>
-		 &nbsp; &nbsp; &nbsp; &nbsp;
-		<button type="button" onclick="JavaScript:alert('<?php echo aff("Enregistrement abandonné", "Recording canceled", $iso_langue_en_cours); ?>');
-        											document.fmysalesmodifiysubprod.action='/modules/blockmysales/my-sales-manage-product.php';
-                                                    document.fmysalesmodifiysubprod.submit();">
-			<?php echo aff("Annuler", "Cancel", $iso_langue_en_cours); ?>
-	</td>
+		<input name="op" type="hidden" value="<?php echo $_POST["price"]; ?>">
+		<input name="id_p" type="hidden" value="<?php echo $product_id; ?>">
+
+		<input name="upd" type="submit" value="<?php print aff(" Modifier ce produit ", " Update this product ", $iso_langue_en_cours); ?>">
+		<input name="cel" type="submit" value="<?php print aff(" Annuler ", " Cancel ", $iso_langue_en_cours); ?>">
+		</td>
   </tr>
 
 </table>

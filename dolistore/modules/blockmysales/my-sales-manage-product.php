@@ -154,7 +154,7 @@ $iso_langue_en_cours);
 $min_date = 0;
 
 // Get list of products
-$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, pl.name, pl.description_short';
+$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, pl.name, pl.description_short';
 $query.= ' FROM '._DB_PREFIX_.'product as p';
 $query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
 if ($customer_id != 'all') $query.= ' WHERE p.reference like "c'.$customer_id.'d2%"';
@@ -177,6 +177,7 @@ if (sizeof($result))
 		$location = $row['location'];
 		$active = $row['active'];
 		$price = $row['price'];
+		$price_ttc = $row['wholesale_price'];
 
 		//recuperation nom fichier
 		$query = 'SELECT display_filename, date_deposit FROM '._DB_PREFIX_.'product_download
@@ -274,7 +275,9 @@ if (sizeof($result))
 		?>
 		<tr bgcolor="<?php echo $colorTab; ?>">
 		    <td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
-		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a> (<?php echo round($price); ?>€)
+		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a> (<?php 
+				echo aff('Current price: '.round($price).'€ excl tax, '.round($price_ttc).'€ incl tax', 'Prix actuel: '.round($price,2).'€ HT, '.round($price_ttc,2).'€ TTC', $iso_langue_en_cours);
+			?>)
 			<?php 
 			print '<br>';
 			echo $description_short; 
@@ -497,12 +500,12 @@ print '</form>';
 echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_langue_en_cours);
 print "<b>".$totalnbsellpaid."</b>";
 print '<br>';
-// Total amount earned
-echo aff("Montant total gagné: ", "Total amount earned: ", $iso_langue_en_cours);
+// Total payment received
+echo aff("Montant total paiements reçus: ", "Total payment received: ", $iso_langue_en_cours);
 print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
 print '<br>';
 // Total amount you can claim
-echo aff("Montant total validé: ", "Total validated amount: ", $iso_langue_en_cours);
+echo aff("Montant total paiements validés: ", "Total validated payments: ", $iso_langue_en_cours);
 print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
 echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation)", "&nbsp; (any sell is validated after a ".$mindelaymonth." month delay)", $iso_langue_en_cours);
 print '<br>';
@@ -510,7 +513,7 @@ print '<br>';
 if (count($dolistoreinvoices))
 {
 	print '<br>'."\n";
-	echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore'): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received "), $iso_langue_en_cours);
+	echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore' sur lignes ou en note privée): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received back"), $iso_langue_en_cours);
 	print '<br>'."\n";
 	$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
 	foreach($sortdolistoreinvoices as $item)
@@ -577,9 +580,11 @@ if (empty($dateafter) && empty($datebefore))
 		{
 			if ($remaintoreceive > $minamount)
 			{
-				echo aff("Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir, par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).",
-						"You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay, by email to <b>dolistore@dolibarr.org</b>. Don't forget to add your bank account number for bank transaction (BIC ou SWIFT).", $iso_langue_en_cours);
+				echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir (Total TTC = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).',
+						'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay (Total incl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).', $iso_langue_en_cours);
 				print '<br>';
+				//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
+				//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);
 			}
 			else
 			{
