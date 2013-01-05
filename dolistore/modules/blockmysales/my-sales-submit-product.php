@@ -549,7 +549,7 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input required="required" size="6" maxlength="6" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],2); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+        <input required="required" size="7" maxlength="7" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
 		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
     	<?php
@@ -672,8 +672,7 @@ echo '
             onkeyup="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-            cols="40" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
-			<br />
+            cols="60" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
     </td>
   </tr>
   <?php } ?>
@@ -789,8 +788,9 @@ Para instalar este módulo:<br>
   <tr>
 	    <td colspan="2" nowrap="nowrap" align="center">
 		<?php // print 'xxxy: '.$tmpname.' - '.$tmppath; ?>
-		<input name="sub" type="submit" <?php if (empty($tmpname) || empty($tmppath)) print 'disabled="disabled"'; ?> value="<?php print aff(" Valider ce produit ", " Submit this product ", $iso_langue_en_cours); ?>">
-		<input name="cel" type="submit" value="<?php print aff(" Annuler ", " Cancel ", $iso_langue_en_cours); ?>">
+		<input class="button_large" name="sub" type="submit" <?php if (empty($tmpname) || empty($tmppath)) print 'disabled="disabled"'; ?> value="<?php print aff(" Valider ce produit ", " Submit this product ", $iso_langue_en_cours); ?>">
+		&nbsp; &nbsp; &nbsp;
+		<input class="button_large" name="cel" type="submit" value="<?php print aff(" Annuler ", " Cancel ", $iso_langue_en_cours); ?>">
 	</td>
   </tr>
 
