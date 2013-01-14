@@ -146,7 +146,7 @@ $iso_langue_en_cours);
     <td nowrap="nowrap"><b><?php echo aff("Image", "Picture", $iso_langue_en_cours); ?></b></td>
     <td nowrap="nowrap"><b><?php echo aff("Produit", "Product", $iso_langue_en_cours); ?></b></td>
     <td nowrap="nowrap"><b> &nbsp;<?php echo aff("Nb", "Nb", $iso_langue_en_cours); ?></b> &nbsp;</td>
-    <td nowrap="nowrap"><b><?php echo aff("Montant<br>gagné", "Amount<br>earned", $iso_langue_en_cours); ?></b></td>
+    <td nowrap="nowrap"><b><?php echo aff("Montant<br>gagné HT", "Amount<br>earned (excl tax)", $iso_langue_en_cours); ?></b></td>
     <!--<td nowrap="nowrap"><b><?php echo aff("Supp", "Delete", $iso_langue_en_cours); ?></b></td> -->
   </tr>
 
@@ -177,7 +177,7 @@ if (sizeof($result))
 		$location = $row['location'];
 		$active = $row['active'];
 		$price = $row['price'];
-		$price_ttc = $row['wholesale_price'];
+		$price_ttc = round($row['price'] * (100 + $vatrate) / 100, 2);
 
 		//recuperation nom fichier
 		$query = 'SELECT display_filename, date_deposit FROM '._DB_PREFIX_.'product_download
@@ -211,9 +211,9 @@ if (sizeof($result))
 			$colorTab="#eeeeee";
 
 		// Calculate totalamount for this product
-		//$query = "SELECT count( od.id_order_detail ) as nbra, 
 		$query = "SELECT SUM( od.product_quantity ) as nbra, 
-					sum( (od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
+					sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid, 2) ) as amount_ht,
+					sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid * (100 + od.tax_rate) / 100, 2) ) as amount_ttc,
 					sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
 					min( o.date_add ) as min_date";
 		$query.= "	FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
@@ -230,7 +230,7 @@ if (sizeof($result))
 		$nbr_amount = 0;
 		foreach ($subresult AS $subrow) {
 			$nbr_achats = $subrow['nbra'];
-			$nbr_amount = $subrow['amount'];
+			$nbr_amount = $subrow['amount_ht'];
 			$nbr_qtysold = $subrow['qtysold'];
 			if ($subrow['min_date'] && $subrow['qtysold'])
 			{
@@ -245,7 +245,8 @@ if (sizeof($result))
 
 		// Calculate totalamountclaimable (amount validated supplier can claim)
 		$query = "SELECT SUM( od.product_quantity ) as nbra, 
-					sum( (od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid) as amount,
+					sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid, 2) ) as amount_ht,
+					sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid * (100 + od.tax_rate) / 100, 2) ) as amount_ttc,
 					sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
 					min( o.date_add ) as min_date
 					FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
@@ -261,7 +262,7 @@ if (sizeof($result))
 
 		$nbr_amount2 = 0;
 		foreach ($subresult AS $subrow) {
-			$nbr_amount2 = $subrow['amount'];
+			$nbr_amount2 = $subrow['amount_ht'];
 			if ($subrow['min_date'] && $subrow['qtysold'])
 			{
 				if ($min_date2) $min_date2 = min($min_date2,$subrow['min_date']);
@@ -468,7 +469,9 @@ if ($socid)
 					'ref_supplier'=>$invoice['ref_supplier'],
 					'status'=>$invoice['status'],
 					'date'=>$invoice['date_invoice'],
-					'amount'=>$invoice['total'],
+					'amount_ht'=>$invoice['total_net'],
+					'amount_vat'=>$invoice['total_vat'],
+					'amount_ttc'=>$invoice['total'],
 					'fk_thirdparty'=>$invoice['fk_thirdparty']
 				);
 				$alreadyreceived+=$invoice['total'];
@@ -501,12 +504,15 @@ echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_
 print "<b>".$totalnbsellpaid."</b>";
 print '<br>';
 // Total payment received
-echo aff("Montant total paiements reçus: ", "Total payment received: ", $iso_langue_en_cours);
-print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;</b>";
-print '<br>';
+echo aff("Montant total ventes faites reçus: ", "Total of sells done: ", $iso_langue_en_cours);
+print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;";
+echo aff(" HT"," excl tax", $iso_langue_en_cours);
+print '</b><br>';
 // Total amount you can claim
-echo aff("Montant total paiements validés: ", "Total validated payments: ", $iso_langue_en_cours);
-print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;</b>";
+echo aff("Montant total ventes validées: ", "Total validated sells: ", $iso_langue_en_cours);
+print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;";
+echo aff(" HT"," excl tax", $iso_langue_en_cours);
+print "</b>";
 echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation)", "&nbsp; (any sell is validated after a ".$mindelaymonth." month delay)", $iso_langue_en_cours);
 print '<br>';
 // List of payments
@@ -520,14 +526,15 @@ if (count($dolistoreinvoices))
 	{
 		echo aff("Date: ","Date: ", $iso_langue_en_cours);
 		print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
-		//echo aff("Montant: ","Amount: ", $iso_langue_en_cours);
-		print ' <b>'.$item['amount'].'&#8364;</b>';
+		print ' <b>'.$item['amount_ht'].'&#8364;';
+		print aff(" HT"," excl tax", $iso_langue_en_cours);
+		print '</b>';
 		if ($item['ref_supplier'])
 		{
 			echo ' - '.aff("Ref fourn: ","Supplier ref: ", $iso_langue_en_cours);
 			print ' <b>'.$item['ref_supplier'].'</b>';
 		}
-		if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment inprocess", $iso_langue_en_cours);
+		if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment in process", $iso_langue_en_cours);
 		if ($item['ref'] || $customer_id == 'all') 
 		{
 			print ' <img title="';
@@ -560,19 +567,23 @@ if (empty($dateafter) && empty($datebefore))
 	// Remain to receive now
 	echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
 	$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
-	print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;</font></b><br>";
+	print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
+	echo aff(" HT"," excl tax", $iso_langue_en_cours);
+	print "</font></b>";
+	print "<br>";
 	// Remain to receive in 2 months
 	echo aff("Montant restant à réclamer dans ".$mindelaymonth." mois: ","Remained amount to claim in ".$mindelaymonth." month: ", $iso_langue_en_cours);
 	$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
-	print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;</font></b><br>";
-	print '<br>';
+	print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;";
+	echo aff(" HT"," excl tax", $iso_langue_en_cours);
+	print "</font></b>";
+	print '<br><br>';
 
 	// Message to claim
 	if ($remaintoreceive)
 	{
 		$minamount=($iscee?$minamountcee:$minamountnotcee);
-		echo aff("Montant minimum pour réclamer le reversement pour votre pays (<strong>".$country."</strong>): <strong>".$minamount."</strong> euros.","Minimum amount to claim payments for your country (<strong>".$country."</strong>): <strong>".$minamount."</strong> euros.", $iso_langue_en_cours).'<br>';
-//		echo aff("Montant commission transfert bancaire pour votre pays (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':' environ 30 euros')."</strong>.","Fee for bank transfert for your country (<strong>".$country."</strong>): <strong>".($iscee?'Free':'around 30 euros')."</strong>.", $iso_langue_en_cours).'<br>';
+		echo aff("Montant minimum pour réclamer le reversement pour votre pays (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;","Minimum amount to claim payments for your country (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;.", $iso_langue_en_cours).'<br>';
 		echo aff("Montant commission frais change pour votre monnaie (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':'selon votre banque')."</strong>.","Charge for change for your currency (<strong>".$country."</strong>): <strong>".($iscee?'Free':'depends on your bank')."</strong>.", $iso_langue_en_cours).'<br>';
 		print '<br>';
 
@@ -580,8 +591,8 @@ if (empty($dateafter) && empty($datebefore))
 		{
 			if ($remaintoreceive > $minamount)
 			{
-				echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir (Total TTC = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).',
-						'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay (Total incl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).', $iso_langue_en_cours);
+				echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).',
+						'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).', $iso_langue_en_cours);
 				print '<br>';
 				//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
 				//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);

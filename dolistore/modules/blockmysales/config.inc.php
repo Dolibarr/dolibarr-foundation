@@ -12,4 +12,6 @@ $minamountcee=50;
 $minamountnotcee=200;
 
 $mindelaymonth=1;
+
+$vatrate=19.6;
 ?>

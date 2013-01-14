@@ -242,7 +242,7 @@ if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"])))
 		//insertion du produit en base
 		$query = 'INSERT INTO '._DB_PREFIX_.'product (
 		`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`) VALUES (
-		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ttc.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',    \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
+		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ht.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',    \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
 		)';
 
 		$result = Db::getInstance()->ExecuteS($query);
@@ -562,7 +562,7 @@ echo '
 			echo '<input type="hidden" name="id_tax" id="id_tax" value="'.$taxe['id_tax'].'">';
 			echo '<input type="hidden" name="rate_tax" id="rate_tax" value="'.$taxe['rate'].'">';
 			print '<br>';
-			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto this final amount.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur ce montant total également.", $iso_langue_en_cours);
+			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto the price excluding tax.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur le montant sans cette taxe.", $iso_langue_en_cours);
 		}
 		?>
 	</td>

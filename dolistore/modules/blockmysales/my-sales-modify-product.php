@@ -497,7 +497,6 @@ foreach ($result AS $row)
 	$reference = $row['reference'];
 
 	$_POST['active'] = $active;
-	//$_POST["price"] = $wholesale_price;
 	$_POST["price"] = $price;
 }
 
