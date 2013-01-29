@@ -43,9 +43,11 @@ function prestalog($message, $level=LOG_INFO)
  */
 function validateZipFile(&$zip,$originalfilename,$zipfile)
 {
+	$error=0;
+
 	prestalog("Validate zip file ".$zipfile);
 	$subdir=basename($zipfile);
-	$dir='/home/httpd/vhosts/dolistore.com/tmp/'.$subdir;
+	$dir='/home/dolibarr/dolistore.com/tmp/'.$subdir;
 	mkdir($dir);
 	$zip->extractTo($dir.'/');
 	$zip->close();
