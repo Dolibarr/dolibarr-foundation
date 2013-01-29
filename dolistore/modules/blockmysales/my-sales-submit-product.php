@@ -6,7 +6,7 @@ $useSSL = true;
 require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 
@@ -37,16 +37,16 @@ $upload=0;
 
 
 //annuler le produit
-if ($_GET['cel'] || $_POST["cel"]) 
+if (! empty($_GET['cel']) || ! empty($_POST["cel"])) 
 {
-	unlink ($_POST["product_file_path"]);
+	if (! empty($_POST["product_file_path"])) unlink($_POST["product_file_path"]);
 	echo "<script>window.location='../../index.php';</script>";
 	exit;
 }
 
 
 //upload du fichier
-if ($_GET["up"] || $_POST["up"]) 
+if (! empty($_GET["up"]) || ! empty($_POST["up"])) 
 {
 	$error=0;
 
@@ -159,7 +159,7 @@ if ($_GET["up"] || $_POST["up"])
 
 
 //soumission du produit
-if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"]))) 
+if (! empty($_GET["sub"]) || (! empty($_POST["sub"]) && empty($_GET["up"]))) 
 {
 	$flagError = 0;
 	$status = $_POST['active']; if ($status == "") $status = 0;
@@ -174,7 +174,7 @@ if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"])))
 	}
 
 	//prise des libelles
-	for ($x = 0; $languageTAB[$x]; $x++ ) {
+	for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
 
 		$product_name = $resume = $description = "";
 		$product_name = $_POST["product_name_l".$languageTAB[$x]['id_lang']];
@@ -394,8 +394,8 @@ if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"])))
  * View
  */
 
-$tmpname=($_POST["product_file_name"] != "" ? $_POST["product_file_name"] : ($_FILES['virtual_product_file']['name'] != "" ? $_FILES['virtual_product_file']['name'] : "" ));
-$tmppath=($_POST["product_file_path"] != "" ? $_POST["product_file_path"] : ($chemin_destination != "" ? $chemin_destination : ""));
+$tmpname=((! empty($_POST["product_file_name"])) ? $_POST["product_file_name"] : ((! empty($_FILES['virtual_product_file']['name'])) ? $_FILES['virtual_product_file']['name'] : "" ));
+$tmppath=((! empty($_POST["product_file_path"])) ? $_POST["product_file_path"] : ((! empty($chemin_destination)) ? $chemin_destination : ""));
 
 
 echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2>", $iso_langue_en_cours);
@@ -473,8 +473,8 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
-    	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input class="inputlarge" name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
+    	<?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
+        	<input class="inputlarge" name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo empty($_POST["product_name_l".$languageTAB[$x]['id_lang']])?'':$_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
@@ -516,7 +516,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Package à diffuser<br>(fichier .zip pour<br>un module ou theme)", "Package to distribute<br>(.zip file for<br> a module or theme)", $iso_langue_en_cours); ?></td>
     <td>
         <?php
-		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
+		if ($upload >= 0 && (! empty($_POST["product_file_name"]) || ! empty($_FILES['virtual_product_file']['name']))) 
 		{
 			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
 			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
@@ -549,7 +549,7 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input required="required" size="7" maxlength="7" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+        <input required="required" size="7" maxlength="7" name="price" id="price" value="<?php if (! empty($_POST["price"])) echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
 		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
     	<?php
@@ -617,7 +617,7 @@ echo '
 				//echo str_repeat('&nbsp;', $level);
 				echo '<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
 
-				if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
+				if (! empty($_POST['categories_checkbox_'.$categorie['id_category']]) && $_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
 
 				echo ' />'.$categorie['name'];
 				echo '</td></tr>';
@@ -637,8 +637,8 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">
-        <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input class="inputlarge" name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
+        <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
+        	<input class="inputlarge" name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo empty($_POST["keywords_".$languageTAB[$x]['id_lang']])?'':$_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php
 			echo $languageTAB[$x]['iso_code'];
@@ -655,7 +655,7 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
-  <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+  <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
 	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
@@ -672,7 +672,7 @@ echo '
             onkeyup="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-            cols="60" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
+            cols="60" rows="3"><?php echo empty($_POST["resume_".$languageTAB[$x]['id_lang']])?'':$_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
     </td>
   </tr>
   <?php } ?>
@@ -681,7 +681,7 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
-  <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+  <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
     <tr>
         <td colspan="2"><br>
         	<?php echo aff("Description large ", "Large description ", $iso_langue_en_cours); ?>
@@ -718,7 +718,7 @@ Prerequisites:<br>
 <li> Uncompress the zip file, for example with command </li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>unzip</span> '.($file_name?$file_name:'modulefile.zip').'</pre>
+<pre><span>unzip</span> '.(! empty($file_name)?$file_name:'modulefile.zip').'</pre>
 </div>
 </div>
 <li> Module or skin is then available and can be activated. </li>
@@ -740,7 +740,7 @@ Installation:<br>
 <li> Decompressez le fichier zip, par exemple par la commande </li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>unzip</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
+<pre><span>unzip</span> '.(! empty($file_name)?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
 <li> Le module ou thème est alors disponible et activable. </li>
@@ -762,7 +762,7 @@ Para instalar este módulo:<br>
 <li> Descomprima el zip archivo, por ejamplo usando el comando</li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>unzip</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
+<pre><span>unzip</span> '.(! empty($file_name)?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
 <li> El módulo o tema está listo para ser activado.</li>

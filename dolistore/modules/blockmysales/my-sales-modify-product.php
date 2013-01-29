@@ -6,14 +6,14 @@ $useSSL = true;
 require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 
 // Get env variables
 $id_langue_en_cours = $cookie->id_lang;
-$customer_id = $cookie->id_customer;
-$product_id = $_GET['id_p']?$_GET['id_p']:$_POST['id_p'];
+$customer_id = empty($cookie->id_customer)?'':$cookie->id_customer;
+$product_id = (! empty($_GET['id_p']))?$_GET['id_p']:$_POST['id_p'];
 if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
 
 
@@ -65,16 +65,16 @@ if (testProductAppartenance($customer_id, $product_id))
 
 
 //annuler le produit
-if ($_GET['cel'] || $_POST["cel"]) 
+if (! empty($_GET['cel']) || ! empty($_POST["cel"])) 
 {
-	unlink ($_POST["product_file_path"]);
+	if (! empty($_POST["product_file_path"])) unlink($_POST["product_file_path"]);
 	echo "<script>window.location='my-sales-manage-product.php';</script>";
 	exit;
 }
 
 
 //upload du fichier
-if ($_GET["up"] || $_POST["up"])
+if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 {
 	$error=0;
 
@@ -183,7 +183,7 @@ if ($_GET["up"] || $_POST["up"])
 //var_dump($_POST);
 
 //Mise a jour du produit
-if ($_GET["upd"] || ($_POST["upd"] && empty($_GET["up"]))) 
+if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"]))) 
 {
 	$flagError = 0;
 	$status = $_POST['active'];
@@ -550,8 +550,8 @@ print '<br>';
 print '<br>';
 
 print aff(
-'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant '.(100-$commission).'% pour soutenir le développement du projet Dolibarr ERP/CRM)...',
-'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute '.$commission.'% of payments, the remaining '.(100-$commission).'% are kept to help the development of Dolibarr ERP/CRM project)...',
+'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant '.(100-$commissioncee).'% des ventes HT pour soutenir le développement du projet Dolibarr ERP/CRM)...',
+'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute '.$commissioncee.'% of sells, the remaining '.(100-$commissioncee).'% are kept to help the development of Dolibarr ERP/CRM project)...',
 $iso_langue_en_cours);
 
 echo '
@@ -623,7 +623,7 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
     <td>
-    	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+    	<?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
         	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="22" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
 			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>
             <br />
@@ -658,7 +658,7 @@ echo '
 	<?php echo $file_name; ?><br /><br />
 
         <?php
-		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
+		if ((empty($upload) || $upload >= 0) && (! empty($_POST["product_file_name"]) || ! empty($_FILES['virtual_product_file']['name']))) 
 		{
 			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
 			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
@@ -677,8 +677,8 @@ echo '
 		}
 		?>
 		<br>
-		<input type="hidden" name="product_file_name" id="product_file_name" value="<?php if ($_POST["product_file_name"] != "") echo $_POST["product_file_name"]; if ($_FILES['virtual_product_file']['name'] != "") echo $_FILES['virtual_product_file']['name']; ?>" >
-		<input type="hidden" name="product_file_path" id="product_file_path" value="<?php if ($_POST["product_file_path"] != "") echo $_POST["product_file_path"]; if ($chemin_destination != "") echo $chemin_destination; ?>" >
+		<input type="hidden" name="product_file_name" id="product_file_name" value="<?php if (! empty($_POST["product_file_name"])) echo $_POST["product_file_name"]; if (! empty($_FILES['virtual_product_file']['name'])) echo $_FILES['virtual_product_file']['name']; ?>" >
+		<input type="hidden" name="product_file_path" id="product_file_path" value="<?php if (! empty($_POST["product_file_path"])) echo $_POST["product_file_path"]; if (! empty($chemin_destination)) echo $chemin_destination; ?>" >
     </td>
   </tr>
 
@@ -760,7 +760,7 @@ echo '
 				//echo str_repeat('&nbsp;', $level);
 				echo '<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
 
-				if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
+				if (! empty($_POST['categories_checkbox_'.$categorie['id_category']]) && $_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
 
 				echo ' />
 							'.$categorie['name'].'
@@ -781,7 +781,7 @@ echo '
 
 
 
-  <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+  <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
 	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
@@ -811,7 +811,7 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
     <td nowrap="nowrap">
-        <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+        <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
         	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
 			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>
             <br />
@@ -823,7 +823,7 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
-  <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+  <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
     <tr>
         <td colspan="2">
         	<?php echo aff("Description large : ", "Large description : ", $iso_langue_en_cours); ?>

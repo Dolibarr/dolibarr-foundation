@@ -5,7 +5,7 @@ $useSSL = true;
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 // Get env variables
@@ -98,7 +98,7 @@ if ($id_image != "")
 else
 	$imgProduct = '../../img/p/en-default-small.jpg';
 
-if ($colorTabNbr%2)
+if (! empty($colorTabNbr) && $colorTabNbr % 2)
 	$colorTab="#ffffff";
 else
 	$colorTab="#eeeeee";
@@ -150,14 +150,12 @@ prestalog($query);
 
 //print $query;
 $subresult = Db::getInstance()->ExecuteS($query);
-$nbr_achats = 0;
 
 $i=0;$totalamountearned=0;
 foreach ($subresult AS $subrow) 
 {
 	$i+=$subrow['product_quantity'];
-	$nbr_achats = $subrow['nbra'];
-
+	
 	$colorTabNbr = 1;
 	?>
 
@@ -178,7 +176,7 @@ foreach ($subresult AS $subrow)
 
 				$totalamountearned+=$amountearned;
 				
-				if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) echo $amountearnedunit.' ('.($subrow['amount']+0).')';
+				if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) echo $amountearnedunit.' ('.($subrow['amount_ht']+0).')';
 				else echo $amountearnedunit.($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'');
 			}
 			else

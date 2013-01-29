@@ -6,7 +6,7 @@ $useSSL = true;
 require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 
@@ -84,6 +84,7 @@ $totalnbsell=0;
 $totalnbsellpaid=0;
 // totalamount
 $totalamount=0;
+$totalamountclaimable=0;
 // datestart
 if (empty($datestart))
 {
@@ -234,7 +235,7 @@ if (sizeof($result))
 			$nbr_qtysold = $subrow['qtysold'];
 			if ($subrow['min_date'] && $subrow['qtysold'])
 			{
-				if ($min_date) $min_date = min($min_date,$subrow['min_date']);
+				if (! empty($min_date)) $min_date = min($min_date,$subrow['min_date']);
 				else $min_date=$subrow['min_date'];
 			}
 		}
@@ -265,7 +266,7 @@ if (sizeof($result))
 			$nbr_amount2 = $subrow['amount_ht'];
 			if ($subrow['min_date'] && $subrow['qtysold'])
 			{
-				if ($min_date2) $min_date2 = min($min_date2,$subrow['min_date']);
+				if (! empty($min_date2)) $min_date2 = min($min_date2,$subrow['min_date']);
 				else $min_date2=$subrow['min_date'];
 			}
 		}
@@ -340,7 +341,7 @@ $alreadyreceived=0;
 $datelastpayment=0;
 
 // Search third party and payments already done
-define(NUSOAP_PATH,'nusoap');
+define('NUSOAP_PATH','nusoap');
 
 require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
 $dolibarr_main_url_root='http://asso.dolibarr.org/dolibarr/';
@@ -412,7 +413,7 @@ else $socid='all';
 // Call the WebService method to get amount received
 if ($socid)
 {
-	// Define $datelastpayment and $alreadyreceived
+	// Define $dolistoreinvoices
 	$WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_supplier_invoice.php';
 	$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
 	prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
@@ -462,7 +463,6 @@ if ($socid)
 
 			if ($isfordolistore)
 			{
-
 				$dolistoreinvoices[]=array(
 					'id'=>$invoice['id'],
 					'ref'=>$invoice['ref'],
@@ -474,7 +474,6 @@ if ($socid)
 					'amount_ttc'=>$invoice['total'],
 					'fk_thirdparty'=>$invoice['fk_thirdparty']
 				);
-				$alreadyreceived+=$invoice['total'];
 			}
 		}
 	}
@@ -489,13 +488,13 @@ echo aff("Vos informations revenus", "Your payment information", $iso_langue_en_
 print '</h2>';
 
 print '<form name="filter" action"'.$_SERVER["PHP_SELF"].'" method="POST">';
-print aff('Filtre date entre','Filter on date between', $iso_langue_en_cours);
-print '<input type="text" name="dateafter" value="'.$_POST["dateafter"].'" size="11">';
-print ' '.aff('et','and', $iso_langue_en_cours);
-print '<input type="text" name="datebefore" value="'.$_POST["datebefore"].'" size="11">';
+print aff('Filtre date entre ','Filter on date between ', $iso_langue_en_cours);
+print '<input type="text" name="dateafter" value="'.(empty($_POST["dateafter"])?'':$_POST["dateafter"]).'" size="11">';
+print ' '.aff('et','and', $iso_langue_en_cours).' ';
+print '<input type="text" name="datebefore" value="'.(empty($_POST["datebefore"])?'':$_POST["datebefore"]).'" size="11">';
 print ' (YYYY-MM-DD) &nbsp;';
-print '<input type="submit" name="submit" value="'.aff("Rafraichir","Refresh",$iso_langue_en_cours).'">';
-print '<input type="hidden" name="id_customer" value="'.$id_customer.'">';
+print '<input type="submit" name="submit" value="'.aff("Rafraichir","Refresh",$iso_langue_en_cours).'" class="button">';
+print '<input type="hidden" name="id_customer" value="'.(empty($id_customer)?'':$id_customer).'">';
 print '<br>';
 print '</form>';
 
@@ -522,12 +521,26 @@ if (count($dolistoreinvoices))
 	echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore' sur lignes ou en note privée): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received back"), $iso_langue_en_cours);
 	print '<br>'."\n";
 	$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
+	$before2013=0;
 	foreach($sortdolistoreinvoices as $item)
 	{
+		$tmpdate=preg_replace('/(\s|T)00:00:00Z/','',$item['date']);
+		if ((strcmp($tmpdate, '2013-01-01') < 0) && empty($before2013))
+		{
+			$before2013=1;
+			print aff("Avant le 2013-01-01:<br>","Before 2013-01-01:<br>",$iso_langue_en_cours);
+		}
+		if ($before2013 && (strcmp($tmpdate, '2013-01-01') >= 0) && empty($after2013))
+		{
+			$after2013=1;
+			print aff("Après le 2013-01-01:<br>","After 2013-01-01:<br>",$iso_langue_en_cours);
+		}
 		echo aff("Date: ","Date: ", $iso_langue_en_cours);
-		print ' <b>'.preg_replace('/\s00:00:00Z/','',$item['date']).'</b> - ';
-		print ' <b>'.$item['amount_ht'].'&#8364;';
-		print aff(" HT"," excl tax", $iso_langue_en_cours);
+		print ' <b>'.$tmpdate.'</b> - ';
+		if ((strcmp($tmpdate,'2013-01-01') < 0)) print ' <b>'.$item['amount_ttc'].'&#8364;';
+		else print ' <b>'.$item['amount_ht'].'&#8364;';
+		if ((strcmp($tmpdate,'2013-01-01') < 0)) print aff(" TTC"," incl tax", $iso_langue_en_cours);
+		else print aff(" HT"," excl tax", $iso_langue_en_cours);
 		print '</b>';
 		if ($item['ref_supplier'])
 		{
@@ -550,6 +563,8 @@ if (count($dolistoreinvoices))
 		}
 
 		print '<br>'."\n";
+		if (strcmp($tmpdate,'2013-01-01') < 0) $alreadyreceived+=$item['amount_ttc'];
+		else $alreadyreceived+=$item['amount_ht'];
 		//var_dump($dolistoreinvoices);
 	}
 }
@@ -591,8 +606,8 @@ if (empty($dateafter) && empty($datebefore))
 		{
 			if ($remaintoreceive > $minamount)
 			{
-				echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).',
-						'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).', $iso_langue_en_cours);
+				echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).',
+						'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).', $iso_langue_en_cours);
 				print '<br>';
 				//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
 				//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);

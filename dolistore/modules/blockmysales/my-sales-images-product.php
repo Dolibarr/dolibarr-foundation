@@ -5,7 +5,7 @@ $useSSL = true;
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 $id_langue_en_cours = $cookie->id_lang;
@@ -53,7 +53,7 @@ if (testProductAppartenance($customer_id, $product_id))
 {
 
 	//upload du fichier
-	if ($_GET["up"] == 1) {
+	if (! empty($_GET["up"]) && $_GET["up"] == 1) {
 		if ($_FILES['image_product']['error']) {
 				  switch ($_FILES['image_product']['error']){
 						   case 1: // UPLOAD_ERR_INI_SIZE
@@ -190,7 +190,7 @@ if (testProductAppartenance($customer_id, $product_id))
 
 
 	//suppression dune image
-	if ($_GET['del'] != "") {
+	if (! empty($_GET['del'])) {
 
 		$id_image = $_GET['del'];
 
