@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+
 /* SSL Management */
 $useSSL = true;
 
@@ -15,7 +17,7 @@ $id_langue_en_cours = $cookie->id_lang;
 $customer_id = empty($cookie->id_customer)?'':$cookie->id_customer;
 $product_id = (! empty($_GET['id_p']))?$_GET['id_p']:$_POST['id_p'];
 if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
-
+$upload=0;
 
 $languages = Language::getLanguages();
 
@@ -144,7 +146,7 @@ if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 		if ($res === TRUE) 
 		{
 			$resarray=validateZipFile($zip,$originalfilename,$_FILES['virtual_product_file']['tmp_name']);
-			$zip->close();
+			//$zip->close();	// already close by validateZipFile
 			$error=$resarray['error'];
 			$upload=$resarray['upload'];
 		}
@@ -193,7 +195,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 	prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 	//prise des libelles
-	for ($x = 0; $languageTAB[$x]; $x++ ) {
+	for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
 
 		$product_name = $resume = $description = "";
 		$product_name = $_POST["product_name_l".$languageTAB[$x]['id_lang']];
@@ -228,7 +230,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 	//recuperation de la categorie par defaut
 	$categories = Category::getSimpleCategories($cookie->id_lang);
 	foreach ($categories AS $categorie) {
-		if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
+		if (! empty($_POST['categories_checkbox_'.$categorie['id_category']]) && $_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
 			$id_categorie_default = $categorie['id_category'];
 			break;
 		}
@@ -277,7 +279,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 
 
 		//mise en base des libelle anglais et fr et autre s'il y a
-		for ($x = 0; $product_nameTAB[$x]; $x++)
+		for ($x = 0; ! empty($product_nameTAB[$x]); $x++)
 		{
 			$languageTAB[$x]['id_lang'];
 			$languageTAB[$x]['name'];
@@ -311,7 +313,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 		prestalog("We delete all links to tags for id_product ".$id_product);
 
 		// Add tag description of product
-		for ($x = 0; $product_nameTAB[$x]; $x++)
+		for ($x = 0; ! empty($product_nameTAB[$x]); $x++)
 		{
 			$id_lang=$languageTAB[$x]['id_lang'];
 			$tags=preg_split('/[\s,]+/',$keywordsTAB[$x]);
@@ -383,7 +385,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 		}
 
 		//gestion des fichiers selon prix
-		$oldPrice = round($_GET["op"],2);
+		$oldPrice = round(! empty($_GET["op"])?$_GET["op"]:0,2);
 		$newPrice =  round($_POST["price"],2);
 
 		// Si un fichier a ete modifier ou le prix modifie
@@ -455,7 +457,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 		$categories = Category::getSimpleCategories($cookie->id_lang);
 	    foreach ($categories AS $categorie) {
 
-			if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
+			if (! empty($_POST['categories_checkbox_'.$categorie['id_category']]) && $_POST['categories_checkbox_'.$categorie['id_category']] == 1) {
 				$query = 'INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`) VALUES
 						('.$categorie['id_category'].', '.$product_id.', 1);';
 				prestalog("Add category of product sql=".$query);
@@ -475,6 +477,9 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 		echo "<div style='color:#FF0000'>";echo aff("Vous devez choisir une categorie", "You have to choose a category", $iso_langue_en_cours); echo " </div><br>";
 	}
 
+	if (empty($flagError)) {
+		echo "<div style='color:#008800'>";echo aff("Modifications enregistrées.", "Changes recorded.", $iso_langue_en_cours); echo " </div><br>";
+	}
 }
 
 

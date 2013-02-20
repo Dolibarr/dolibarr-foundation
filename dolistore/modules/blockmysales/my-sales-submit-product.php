@@ -117,7 +117,7 @@ if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 		if ($res === TRUE) 
 		{
 			$resarray=validateZipFile($zip,$originalfilename,$_FILES['virtual_product_file']['tmp_name']);
-			$zip->close();
+			//$zip->close(); // already close by validateZipFile
 			$error=$resarray['error'];
 			$upload=$resarray['upload'];
 		}

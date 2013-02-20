@@ -16,7 +16,7 @@ $customer_id = $cookie->id_customer;
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 if (! empty($_GET["id_customer"]))  $customer_id=$_GET["id_customer"];
 if (! empty($_POST["id_customer"])) $customer_id=$_POST["id_customer"];
-
+$admin=0;
 
 // Check if current user is also an employee with admin user
 $query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee
@@ -30,6 +30,7 @@ if (empty($subresult[0]['id_employee']))	// If not an admin user
 		die();
 	}
 }
+else $admin=1;
 
 $query = "SELECT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company, a.city, a.id_country, co.iso_code";
 $query.= " FROM "._DB_PREFIX_."customer as c";
@@ -120,8 +121,8 @@ $dolistoreinvoices=array();
 
 if ($customer_id != 'all')
 {
-echo aff("Les statistiques sont celles des téléchargements/ventes pour les composants soumis par l'utilisateur courant (<b>".$publisher.($company?" - ".$company:"").($country?" - ".$country:"")."</b>)",
-"Statistics are for download/sells of components submited by for current user (<b>".$publisher.($company?" - ".$company:"").($country?" - ".$country:"")."</b>)",
+echo aff("Les statistiques sont celles des téléchargements/ventes pour les composants soumis par l'utilisateur courant:<br><b>Nom: ".$publisher.($company?"<br>Société: ".$company:"").($country?"<br>Pays: ".$country:"")."</b>",
+"Statistics are for download/sells of components submited by for current user:<br><b>Name: ".$publisher.($company?"<br>Company: ".$company:"").($country?"<br>Country: ".$country:"")."</b>",
 $iso_langue_en_cours);
 }
 else
@@ -277,9 +278,9 @@ if (sizeof($result))
 		?>
 		<tr bgcolor="<?php echo $colorTab; ?>">
 		    <td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
-		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a> (<?php 
-				echo aff('Current price: '.round($price).'€ excl tax, '.round($price_ttc).'€ incl tax', 'Prix actuel: '.round($price,2).'€ HT, '.round($price_ttc,2).'€ TTC', $iso_langue_en_cours);
-			?>)
+		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a><br><?php 
+				echo aff('Current price: '.round($price,5).'€ excl tax, '.round($price_ttc).'€ incl tax', 'Prix actuel: '.round($price,5).'€ HT, '.round($price_ttc,2).'€ TTC', $iso_langue_en_cours);
+			?>
 			<?php 
 			print '<br>';
 			echo $description_short; 
@@ -406,6 +407,13 @@ if ($customer_id != 'all')
 			$foundthirdparty=true;
 			//var_dump($socid);
 		}
+	}
+
+	if (! $foundthirdparty && $admin)
+	{
+		print '<br>';
+		print aff('Le tiers "'.$company.'" n\'a pas été trouvé dans le système.','Third party "'.$company.'" was not found into system', $iso_langue_en_cours);
+		print '<br><br>';
 	}
 }
 else $socid='all';
