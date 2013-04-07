@@ -13,6 +13,7 @@ $customer_id = $cookie->id_customer;
 $product_id = $_GET['id_p'];
 
 
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
 $languages = Language::getLanguages();
 
@@ -85,10 +86,10 @@ if (testProductAppartenance($customer_id, $product_id))
 			}
 
 			//check du remplissage des champs
-			for ($x = 0; $languageTAB[$x]; $x++ ) {
+			for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
 
 				$image_description = "";
-				$image_description = $_POST["legende_image_".$languageTAB[$x]['id_lang']];
+				$image_description = isset($_POST["legende_image_".$languageTAB[$x]['id_lang']])?$_POST["legende_image_".$languageTAB[$x]['id_lang']]:'';
 
 				/*if ($image_description[$x] == "") {
 					echo "<div style='color:#FF0000'>"; echo aff("Tous les champs sont obligatoires.", "All fields are required.", $iso_langue_en_cours); echo " </div>";
@@ -112,6 +113,7 @@ if (testProductAppartenance($customer_id, $product_id))
 					WHERE `id_product` = '.$product_id.'
 					';
 					$result = Db::getInstance()->ExecuteS($query);
+
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 					$position = 1;
 					$is_cover = 1;
@@ -128,8 +130,8 @@ if (testProductAppartenance($customer_id, $product_id))
 						'.$product_id.', '.$position.', '.$is_cover.'
 						)';
 					$result = Db::getInstance()->ExecuteS($query);
-					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
+					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
 					//recuperation de l'id de l'image
 					$query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image`
@@ -137,16 +139,18 @@ if (testProductAppartenance($customer_id, $product_id))
 					AND `position` = '.$position.'
 					AND `cover` = '.$is_cover.'
 					';
+
 					$result = Db::getInstance()->ExecuteS($query);
+
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 					foreach ($result AS $row)
 						$id_image = $row['id_image'];
 
 
-					for ($x = 0; $languageTAB[$x]; $x++ ) {
+					for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
 
 						$image_description = "";
-						$image_description = $_POST["legende_image_".$languageTAB[$x]['id_lang']];
+						$image_description = isset($_POST["legende_image_".$languageTAB[$x]['id_lang']])?$_POST["legende_image_".$languageTAB[$x]['id_lang']]:'';
 						$image_description = addslashes(strip_tags($image_description));
 
 						$query = 'INSERT INTO `'._DB_PREFIX_.'image_lang` (
@@ -163,7 +167,7 @@ if (testProductAppartenance($customer_id, $product_id))
 					$fichier_img_original 	= '../../img/p/'.$product_id.'-'.$id_image.'.'.$extention_image;
 
 					rename($chemin_destination, $fichier_img_original);
-					unlink($chemin_destination);
+					@unlink($chemin_destination);	// If rename fails, we delete
 
 					if ($extention_image != 'jpg')
 					{
@@ -185,7 +189,6 @@ if (testProductAppartenance($customer_id, $product_id))
 			}
 		}
 	}
-
 
 
 
@@ -217,7 +220,6 @@ if (testProductAppartenance($customer_id, $product_id))
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 			}
 		}
-
 
 		//delete des images en base et reele
 		$query = 'DELETE FROM `'._DB_PREFIX_.'image`
@@ -254,10 +256,11 @@ $query = 'SELECT
 `id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`,
 `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`
 FROM `'._DB_PREFIX_.'product`
-WHERE `id_product` = '.$product_id.' ';
+WHERE `id_product` = '.$product_id;
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-foreach ($result AS $row) {
+foreach ($result AS $row) 
+{
 	$wholesale_price = $row['wholesale_price'];
 	$active = $row['active'];
 	$reference = $row['reference'];
@@ -269,7 +272,7 @@ foreach ($result AS $row) {
 ?>
 
 
-<?php echo aff("<h2>Images de module/produits</h2>", "<h2>module/plugin pictures</h2>", $iso_langue_en_cours); ?>
+<?php echo aff("<h2>Images du module/produit</h2>", "<h2>Module/plugin pictures</h2>", $iso_langue_en_cours); ?>
 <br />
 
 <FORM name="fmysalesimgprod" method="POST" ENCTYPE="multipart/form-data" class="std">
@@ -305,19 +308,6 @@ foreach ($result AS $row) {
     </p>
     </td>
   </tr>
-
-<!--
-  <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Legende : ", "Legend : ", $iso_langue_en_cours); ?></td>
-    <td nowrap="nowrap">
-   		<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input type="text" name="legende_image_<?php echo $languageTAB[$x]['id_lang']; ?>" value="<?php echo $_POST["legende_image_".$languageTAB[$x]['id_lang']]; ?>" size="30" maxlength="100">
-			<?php echo $languageTAB[$x]['iso_code']; ?>
-            <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"><br />
-        <?php } ?>
-    </td>
-  </tr>
--->
 
   <tr>
     <td colspan="2" align="center"><br>

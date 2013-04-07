@@ -52,6 +52,8 @@ else
 }
 
 
+prestalog("Acces to page my-sales-manage-product.php ".$publisher." ".$company);
+
 $languages = Language::getLanguages();
 
 $x = 0;
@@ -419,6 +421,7 @@ if ($customer_id != 'all')
 else $socid='all';
 
 // Call the WebService method to get amount received
+$errorcallws=0;
 if ($socid)
 {
 	// Define $dolistoreinvoices
@@ -437,8 +440,9 @@ if ($socid)
 	if (! $result)
 	{
 	    print 'Error '.$soapclient->error_str;
-	    die;
+		$errorcallws++;
 	}
+
 	if ($result['result']['result_code'] == 'OK')
 	{
 		foreach($result['invoices'] as $invoice)
@@ -450,8 +454,16 @@ if ($socid)
 				&& ! preg_match('/agios/i',$invoice['ref_supplier'])
 				&& ! preg_match('/frais/i',$invoice['ref_supplier'])
 			) $isfordolistore=1;
+
 			if (! $isfordolistore)
 			{
+				if (count($invoice['lines']) < 1)
+				{
+					print 'Error during call of web service '.$WS_METHOD.'. Result='.$result['result']['result_code'].'. No lines for invoice found.';
+					$errorcallws++;
+					break;
+				}
+
 				foreach($invoice['lines'] as $line)
 				{
 					if (preg_match('/dolistore/i',$line['desc'])
@@ -464,6 +476,7 @@ if ($socid)
 					}
 				}
 			}
+			//print 'date='.$dateinvoice.' isfordolistore='.$isfordolistore;exit;
 
 			/*print $dateinvoice.'-'.$dateafter.'-'.$datebefore.'<br>';
 			if ($datebefore && $datebefore < $dateinvoice) $isfordolistore=0;
@@ -487,7 +500,8 @@ if ($socid)
 	}
 	else
 	{
-		print 'Error during call of web service '.$WS_METHOD.' result='.$result['result']['result_code'];
+		print 'Error during call of web service '.$WS_METHOD.' result='.$result['result']['result_code'].' '.$result['result']['result_label'];
+		$errorcallws++;
 	}
 }
 
@@ -495,149 +509,155 @@ print '<h2>';
 echo aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
 print '</h2>';
 
-print '<form name="filter" action"'.$_SERVER["PHP_SELF"].'" method="POST">';
-print aff('Filtre date entre ','Filter on date between ', $iso_langue_en_cours);
-print '<input type="text" name="dateafter" value="'.(empty($_POST["dateafter"])?'':$_POST["dateafter"]).'" size="11">';
-print ' '.aff('et','and', $iso_langue_en_cours).' ';
-print '<input type="text" name="datebefore" value="'.(empty($_POST["datebefore"])?'':$_POST["datebefore"]).'" size="11">';
-print ' (YYYY-MM-DD) &nbsp;';
-print '<input type="submit" name="submit" value="'.aff("Rafraichir","Refresh",$iso_langue_en_cours).'" class="button">';
-print '<input type="hidden" name="id_customer" value="'.(empty($id_customer)?'':$id_customer).'">';
-print '<br>';
-print '</form>';
-
-// Total number of sells
-echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_langue_en_cours);
-print "<b>".$totalnbsellpaid."</b>";
-print '<br>';
-// Total payment received
-echo aff("Montant total ventes faites reçus: ", "Total of sells done: ", $iso_langue_en_cours);
-print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;";
-echo aff(" HT"," excl tax", $iso_langue_en_cours);
-print '</b><br>';
-// Total amount you can claim
-echo aff("Montant total ventes validées: ", "Total validated sells: ", $iso_langue_en_cours);
-print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;";
-echo aff(" HT"," excl tax", $iso_langue_en_cours);
-print "</b>";
-echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation)", "&nbsp; (any sell is validated after a ".$mindelaymonth." month delay)", $iso_langue_en_cours);
-print '<br>';
-// List of payments
-if (count($dolistoreinvoices))
+if (empty($errorcallws))
 {
-	print '<br>'."\n";
-	echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore' sur lignes ou en note privée): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received back"), $iso_langue_en_cours);
-	print '<br>'."\n";
-	$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
-	$before2013=0;
-	foreach($sortdolistoreinvoices as $item)
-	{
-		$tmpdate=preg_replace('/(\s|T)00:00:00Z/','',$item['date']);
-		if ((strcmp($tmpdate, '2013-01-01') < 0) && empty($before2013))
-		{
-			$before2013=1;
-			print aff("Avant le 2013-01-01:<br>","Before 2013-01-01:<br>",$iso_langue_en_cours);
-		}
-		if ($before2013 && (strcmp($tmpdate, '2013-01-01') >= 0) && empty($after2013))
-		{
-			$after2013=1;
-			print aff("Après le 2013-01-01:<br>","After 2013-01-01:<br>",$iso_langue_en_cours);
-		}
-		echo aff("Date: ","Date: ", $iso_langue_en_cours);
-		print ' <b>'.$tmpdate.'</b> - ';
-		if ((strcmp($tmpdate,'2013-01-01') < 0)) print ' <b>'.$item['amount_ttc'].'&#8364;';
-		else print ' <b>'.$item['amount_ht'].'&#8364;';
-		if ((strcmp($tmpdate,'2013-01-01') < 0)) print aff(" TTC"," incl tax", $iso_langue_en_cours);
-		else print aff(" HT"," excl tax", $iso_langue_en_cours);
-		print '</b>';
-		if ($item['ref_supplier'])
-		{
-			echo ' - '.aff("Ref fourn: ","Supplier ref: ", $iso_langue_en_cours);
-			print ' <b>'.$item['ref_supplier'].'</b>';
-		}
-		if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment in process", $iso_langue_en_cours);
-		if ($item['ref'] || $customer_id == 'all') 
-		{
-			print ' <img title="';
-			echo aff("Ref Dolibarr -> Facture: ","Ref Dolibarr -> Invoice: ", $iso_langue_en_cours);
-			print ' '.$item['ref'];
-			//if ($customer_id == 'all')
-			//{
-				print ' - ';
-				echo aff("Fournisseur: ","Supplier: ", $iso_langue_en_cours);
-				print ' '.$item['fk_thirdparty'];
-			//}
-			print '" src="/img/admin/asterisk.gif">';
-		}
-
-		print '<br>'."\n";
-		if (strcmp($tmpdate,'2013-01-01') < 0) $alreadyreceived+=$item['amount_ttc'];
-		else $alreadyreceived+=$item['amount_ht'];
-		//var_dump($dolistoreinvoices);
-	}
-}
-else
-{
-	echo aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
-	if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
-	else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
+	print '<form name="filter" action"'.$_SERVER["PHP_SELF"].'" method="POST">';
+	print aff('Filtre date entre ','Filter on date between ', $iso_langue_en_cours);
+	print '<input type="text" name="dateafter" value="'.(empty($_POST["dateafter"])?'':$_POST["dateafter"]).'" size="11">';
+	print ' '.aff('et','and', $iso_langue_en_cours).' ';
+	print '<input type="text" name="datebefore" value="'.(empty($_POST["datebefore"])?'':$_POST["datebefore"]).'" size="11">';
+	print ' (YYYY-MM-DD) &nbsp;';
+	print '<input type="submit" name="submit" value="'.aff("Rafraichir","Refresh",$iso_langue_en_cours).'" class="button">';
+	print '<input type="hidden" name="id_customer" value="'.(empty($id_customer)?'':$id_customer).'">';
 	print '<br>';
-}
-print '<br>';
+	print '</form>';
 
-if (empty($dateafter) && empty($datebefore))
-{
-	// Remain to receive now
-	echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
-	$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
-	print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
+	// Total number of sells
+	echo aff("Nombre de total de ventes payantes: ", "Number of paid sells: ", $iso_langue_en_cours);
+	print "<b>".$totalnbsellpaid."</b>";
+	print '<br>';
+	// Total payment received
+	echo aff("Montant total ventes faites reçus: ", "Total of sells done: ", $iso_langue_en_cours);
+	print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;";
 	echo aff(" HT"," excl tax", $iso_langue_en_cours);
-	print "</font></b>";
-	print "<br>";
-	// Remain to receive in 2 months
-	echo aff("Montant restant à réclamer dans ".$mindelaymonth." mois: ","Remained amount to claim in ".$mindelaymonth." month: ", $iso_langue_en_cours);
-	$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
-	print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;";
+	print '</b><br>';
+	// Total amount you can claim
+	echo aff("Montant total ventes validées: ", "Total validated sells: ", $iso_langue_en_cours);
+	print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;";
 	echo aff(" HT"," excl tax", $iso_langue_en_cours);
-	print "</font></b>";
-	print '<br><br>';
-
-	// Message to claim
-	if ($remaintoreceive)
+	print "</b>";
+	echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation)", "&nbsp; (any sell is validated after a ".$mindelaymonth." month delay)", $iso_langue_en_cours);
+	print '<br>';
+	// List of payments
+	if (count($dolistoreinvoices))
 	{
-		$minamount=($iscee?$minamountcee:$minamountnotcee);
-		echo aff("Montant minimum pour réclamer le reversement pour votre pays (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;","Minimum amount to claim payments for your country (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;.", $iso_langue_en_cours).'<br>';
-		echo aff("Montant commission frais change pour votre monnaie (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':'selon votre banque')."</strong>.","Charge for change for your currency (<strong>".$country."</strong>): <strong>".($iscee?'Free':'depends on your bank')."</strong>.", $iso_langue_en_cours).'<br>';
-		print '<br>';
-
-		if ($customer_id != 'all')
+		print '<br>'."\n";
+		echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore' sur lignes ou en note privée): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received back"), $iso_langue_en_cours);
+		print '<br>'."\n";
+		$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
+		$before2013=0;
+		foreach($sortdolistoreinvoices as $item)
 		{
-			if ($remaintoreceive > $minamount)
+			$tmpdate=preg_replace('/(\s|T)00:00:00Z/','',$item['date']);
+			if ((strcmp($tmpdate, '2013-01-01') < 0) && empty($before2013))
 			{
-				echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT).',
-						'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).', $iso_langue_en_cours);
-				print '<br>';
-				//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
-				//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);
+				$before2013=1;
+				print aff("Avant le 2013-01-01:<br>","Before 2013-01-01:<br>",$iso_langue_en_cours);
 			}
-			else
+			if ($before2013 && (strcmp($tmpdate, '2013-01-01') >= 0) && empty($after2013))
 			{
-				echo aff("Il n'est pas possible de réclamer de reversements pour le moment (montant inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (amount lower than ".$minamount." euros).", $iso_langue_en_cours);
-				print '<br>';
+				$after2013=1;
+				print aff("Après le 2013-01-01:<br>","After 2013-01-01:<br>",$iso_langue_en_cours);
 			}
+			echo aff("Date: ","Date: ", $iso_langue_en_cours);
+			print ' <b>'.$tmpdate.'</b> - ';
+			if ((strcmp($tmpdate,'2013-01-01') < 0)) print ' <b>'.$item['amount_ttc'].'&#8364;';
+			else print ' <b>'.$item['amount_ht'].'&#8364;';
+			if ((strcmp($tmpdate,'2013-01-01') < 0)) print aff(" TTC"," incl tax", $iso_langue_en_cours);
+			else print aff(" HT"," excl tax", $iso_langue_en_cours);
+			print '</b>';
+			if ($item['ref_supplier'])
+			{
+				echo ' - '.aff("Ref fourn: ","Supplier ref: ", $iso_langue_en_cours);
+				print ' <b>'.$item['ref_supplier'].'</b>';
+			}
+			if ($item['status'] != 2) print ' - '.aff("Paiement en cours", "Payment in process", $iso_langue_en_cours);
+			if ($item['ref'] || $customer_id == 'all') 
+			{
+				print ' <img title="';
+				echo aff("Ref Dolibarr -> Facture: ","Ref Dolibarr -> Invoice: ", $iso_langue_en_cours);
+				print ' '.$item['ref'];
+				//if ($customer_id == 'all')
+				//{
+					print ' - ';
+					echo aff("Fournisseur: ","Supplier: ", $iso_langue_en_cours);
+					print ' '.$item['fk_thirdparty'];
+				//}
+				print '" src="/img/admin/asterisk.gif">';
+			}
+
+			print '<br>'."\n";
+			if (strcmp($tmpdate,'2013-01-01') < 0) $alreadyreceived+=$item['amount_ttc'];
+			else $alreadyreceived+=$item['amount_ht'];
+			//var_dump($dolistoreinvoices);
 		}
 	}
 	else
 	{
-		if ($customer_id != 'all')
-		{
-			echo aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
-			print '<br>';
-		}
+		echo aff("Date du dernier reversement des gains: ","Last payment date: ", $iso_langue_en_cours);
+		if ($datelastpayment) print '<b>'.date('Y-m-d',$datelastpayment).'</b>';
+		else print aff("<b>Aucun reversement reçu</b>","<b>No payment received yet</b>", $iso_langue_en_cours);
+		print '<br>';
 	}
 	print '<br>';
-}
 
+	if (empty($dateafter) && empty($datebefore))
+	{
+		// Remain to receive now
+		echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
+		$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
+		print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
+		echo aff(" HT"," excl tax", $iso_langue_en_cours);
+		print "</font></b>";
+		print "<br>";
+		// Remain to receive in 2 months
+		echo aff("Montant restant à réclamer dans ".$mindelaymonth." mois: ","Remained amount to claim in ".$mindelaymonth." month: ", $iso_langue_en_cours);
+		$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
+		print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;";
+		echo aff(" HT"," excl tax", $iso_langue_en_cours);
+		print "</font></b>";
+		print '<br><br>';
+
+		// Message to claim
+		if ($remaintoreceive)
+		{
+			$minamount=($iscee?$minamountcee:$minamountnotcee);
+			echo aff("Montant minimum pour réclamer le reversement pour votre pays (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;","Minimum amount to claim payments for your country (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;.", $iso_langue_en_cours).'<br>';
+			echo aff("Montant commission frais change pour votre monnaie (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':'selon votre banque')."</strong>.","Charge for change for your currency (<strong>".$country."</strong>): <strong>".($iscee?'Free':'depends on your bank')."</strong>.", $iso_langue_en_cours).'<br>';
+			print '<br>';
+
+			if ($customer_id != 'all')
+			{
+				if ($remaintoreceive > $minamount)
+				{
+					echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT). Si vous avez besoin des informations sur l\'association:<br>Numéro de TVA '.$vatnumber.'<br>Adresse: 265, rue de la vallée, 45160 Olivet, FRANCE.',
+							'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).<br>If you need information about foundation:<br>VAT number: '.$vatnumber.'<br>Address: 265, rue de la vallée, 45160 Olivet, FRANCE<br>', $iso_langue_en_cours);
+					print '<br>';
+					//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
+					//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);
+				}
+				else
+				{
+					echo aff("Il n'est pas possible de réclamer de reversements pour le moment (montant inférieur à ".$minamount." euros).","It is not possible to claim payments for the moment (amount lower than ".$minamount." euros).", $iso_langue_en_cours);
+					print '<br>';
+				}
+			}
+		}
+		else
+		{
+			if ($customer_id != 'all')
+			{
+				echo aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
+				print '<br>';
+			}
+		}
+		print '<br>';
+	}
+}
+else
+{
+	echo aff("Due à un problème technique, vos informations paiements ne sont acutellement pas disponibles.", "Due to a technical problem, your payment information are not available for the moment.", $iso_langue_en_cours);
+}
 
 
 include(dirname(__FILE__).'/../../footer.php');
