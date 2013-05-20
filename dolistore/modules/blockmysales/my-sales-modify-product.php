@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);	// Commenting this make warinng after update
 
 /* SSL Management */
 $useSSL = true;
@@ -13,11 +13,27 @@ include(dirname(__FILE__).'/lib.php');
 
 
 // Get env variables
+$upload=0;
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = empty($cookie->id_customer)?'':$cookie->id_customer;
 $product_id = (! empty($_GET['id_p']))?$_GET['id_p']:$_POST['id_p'];
 if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
-$upload=0;
+$admin=0;
+
+// Check if current user is also an employee with admin user
+$query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee
+		WHERE lastname = '".addslashes($cookie->customer_lastname)."' and firstname = '".addslashes($cookie->customer_firstname)."'";
+$subresult = Db::getInstance()->ExecuteS($query);
+if (empty($subresult[0]['id_employee']))	// If not an admin user
+{
+	if ($customer_id != $cookie->id_customer)
+	{
+		print 'Error, you need to be an admin user to view other customers/suppliers.';
+		die();
+	}
+}
+else $admin=1;
+
 
 $languages = Language::getLanguages();
 
@@ -188,7 +204,8 @@ if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"]))) 
 {
 	$flagError = 0;
-	$status = $_POST['active'];
+	$status = (isset($_POST['active'])?$_POST['active']:-1);
+	if (! $admin) $status = -1;
 	$product_file_name = $_POST["product_file_name"];
 	$product_file_path = $_POST["product_file_path"];
 
@@ -269,9 +286,9 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 				`wholesale_price` 		= '.$prix_ttc.',
 				`reduction_from` 		= \''.$dateToday.'\',
 				`reduction_to` 			= \''.$dateToday.'\',
-				`reference` 			= \''.$reference.'\',
-				`active` 				= '.$status.',
-				`indexed` 				= 1,
+				`reference` 			= \''.$reference.'\',';
+		if ($status >= 0) $query.= ' `active` = '.$status.',';		// We don't change if status is -1
+		$query.= ' `indexed` 				= 1,
 				`date_upd` 				= \''.$dateNow.'\'
 				WHERE `id_product` = '.$product_id.' ';
 		$result = Db::getInstance()->ExecuteS($query);
@@ -643,7 +660,7 @@ echo '
   <tr>
     <td valign="top">Status : </td>
     <td>
-    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] == "") echo "checked='checked'"; ?> type="radio" style="border:none">
+    <input name="active" id="active_on" value="1" <?php if ($_POST['active'] == 1 || $_POST['active'] == "") echo "checked='checked'"; ?> type="radio" style="border:none" disabled="disabled">
     <img src="../../img/os/2.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;"> <?php echo aff("Actif", "Enabled", $iso_langue_en_cours); ?>
     <br />
 	<input name="active" id="active_off" value="0" <?php if ($_POST['active'] == 0 && $_POST['active'] != "") echo "checked='checked'"; ?> type="radio" style="border:none">

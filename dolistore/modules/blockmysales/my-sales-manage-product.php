@@ -1,5 +1,7 @@
 <?php
 
+//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+
 /* SSL Management */
 $useSSL = true;
 
@@ -32,6 +34,7 @@ if (empty($subresult[0]['id_employee']))	// If not an admin user
 }
 else $admin=1;
 
+// Get publisher, company and country
 $query = "SELECT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company, a.city, a.id_country, co.iso_code";
 $query.= " FROM "._DB_PREFIX_."customer as c";
 $query.= " LEFT JOIN "._DB_PREFIX_."address as a ON a.id_customer = c.id_customer AND a.deleted = 0";
@@ -256,7 +259,7 @@ if (sizeof($result))
 					FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 					WHERE od.product_id = ".$id_product."
 					AND o.id_order = od.id_order
-					AND date_add < DATE_ADD('".date("Y-m-d 00:00:00",mktime())."', INTERVAL - ".$mindelaymonth." MONTH)";	// 2 month
+					AND date_add <= DATE_ADD('".date("Y-m-d 23:59:59",mktime())."', INTERVAL - ".$mindelaymonth." MONTH)";
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
 		prestalog($query);
@@ -319,6 +322,50 @@ else
 	echo aff("Pas de module soumis", "No submited modules", $iso_langue_en_cours);
 	print '</td></tr>';
 }
+
+
+// Calculate totalvoucher
+$query = "SELECT SUM( od.value ) as total_voucher
+			FROM "._DB_PREFIX_."order_discount as od,  "._DB_PREFIX_."orders as o
+			WHERE od.name like '%C".($customer_id != 'all' ? $customer_id : "%")."'
+			AND o.id_order = od.id_order";
+$query.= " AND date_add <= '".date("Y-m-d 23:59:59",mktime())."'";
+if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
+if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+prestalog($query);
+
+$subresult = Db::getInstance()->ExecuteS($query);
+if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+$totalvoucher_ttc = 0;
+foreach ($subresult AS $subrow) 
+{
+	$totalvoucher_ttc += $subrow['total_voucher'];
+}
+$totalvoucher_ht = round($totalvoucher_ttc / (100 + $vatrate) * 100, 2);
+
+
+// Calculate totalvoucherclaimable
+$query = "SELECT SUM( od.value ) as total_voucher
+			FROM "._DB_PREFIX_."order_discount as od,  "._DB_PREFIX_."orders as o
+			WHERE od.name like '%C".($customer_id != 'all' ? $customer_id : "%")."'
+			AND o.id_order = od.id_order";
+$query.= " AND date_add <= DATE_ADD('".date("Y-m-d 23:59:59",mktime())."', INTERVAL - ".$mindelaymonth." MONTH)";
+if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
+if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+prestalog($query);
+
+$subresult = Db::getInstance()->ExecuteS($query);
+if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+$totalvoucherclaimable_ttc = 0;
+foreach ($subresult AS $subrow) 
+{
+	$totalvoucherclaimable_ttc += $subrow['total_voucher'];
+}
+$totalvoucherclaimable_ht = round($totalvoucherclaimable_ttc / (100 + $vatrate) * 100, 2);
+
+
 ?>
 </table>
 
@@ -338,8 +385,8 @@ else
 <?php
 
 // define variables
-$mytotalamount=round($foundationfeerate*$totalamount,2);
-$mytotalamountclaimable=round($foundationfeerate*$totalamountclaimable,2);
+$mytotalamount=round($foundationfeerate*($totalamount - $totalvoucher_ht),2);
+$mytotalamountclaimable=round($foundationfeerate*($totalamountclaimable - $totalvoucherclaimable_ht),2);
 $alreadyreceived=0;
 $datelastpayment=0;
 
@@ -450,7 +497,7 @@ if ($socid)
 			$dateinvoice=substr($invoice['date_invoice'],0,10);
 
 			$isfordolistore=0;
-			if (preg_match('/dolistore/i',$invoice['note'])
+			if (preg_match('/dolistore/i',$invoice['note_private'])
 				&& ! preg_match('/agios/i',$invoice['ref_supplier'])
 				&& ! preg_match('/frais/i',$invoice['ref_supplier'])
 			) $isfordolistore=1;
@@ -528,21 +575,36 @@ if (empty($errorcallws))
 	print '<br>';
 	// Total payment received
 	echo aff("Montant total ventes faites reçus: ", "Total of sells done: ", $iso_langue_en_cours);
-	print "<b>".($foundationfeerate*100)."% x ".$totalamount." = ".$mytotalamount."&#8364;";
+	print "<b>".($foundationfeerate*100)."% x ";
+	if ($totalvoucher_ht) print "(";
+	print $totalamount;
+	if ($totalvoucher_ht) print " - ".$totalvoucher_ht."**)";
+	print " = ".$mytotalamount."&#8364;";
 	echo aff(" HT"," excl tax", $iso_langue_en_cours);
 	print '</b><br>';
 	// Total amount you can claim
 	echo aff("Montant total ventes validées: ", "Total validated sells: ", $iso_langue_en_cours);
-	print "<b>".($foundationfeerate*100)."% x ".$totalamountclaimable." = ".$mytotalamountclaimable."&#8364;";
-	echo aff(" HT"," excl tax", $iso_langue_en_cours);
-	print "</b>";
-	echo aff(" &nbsp; (toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation)", "&nbsp; (any sell is validated after a ".$mindelaymonth." month delay)", $iso_langue_en_cours);
+	print "<b>".($foundationfeerate*100)."% x ";
+	if ($totalvoucherclaimable_ht) print "(";
+	print $totalamountclaimable;
+	if ($totalvoucherclaimable_ht) print " - ".$totalvoucherclaimable_ht."**)";
+	print " = ".$mytotalamountclaimable."&#8364;";
+	echo aff(" HT*"," excl tax*", $iso_langue_en_cours);
+	print "</b><br>";
+	echo aff("* Toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation", "** any sell is validated after a ".$mindelaymonth." month delay", $iso_langue_en_cours);
 	print '<br>';
+	// Total amount of voucher you give
+	if ($totalvoucherclaimable_ht || $totalvoucher_ht) 
+	{
+		echo aff("** Montant total de bons de réductions accordés HT", "** Total amount of vouchers offered excl tax", $iso_langue_en_cours);
+		print '<br>';
+	}
+	
 	// List of payments
 	if (count($dolistoreinvoices))
 	{
 		print '<br>'."\n";
-		echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore' sur lignes ou en note privée): ":"Reversements déjà reçus"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Last payments received back"), $iso_langue_en_cours);
+		echo aff(($customer_id == 'all'?"Gains déjà reversés (factures comportant 'dolistore' sur lignes ou en note privée): ":"Reversements déjà reçus (toutes dates)"),($customer_id == 'all'?"Payments already distributed (invoices with 'dolistore')":"Payments received back (all time)"), $iso_langue_en_cours);
 		print '<br>'."\n";
 		$sortdolistoreinvoices=dol_sort_array($dolistoreinvoices,'date');
 		$before2013=0;
@@ -603,20 +665,22 @@ if (empty($errorcallws))
 
 	if (empty($dateafter) && empty($datebefore))
 	{
-		// Remain to receive now
-		echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
-		$remaintoreceive=$mytotalamountclaimable-$alreadyreceived;
-		print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
-		echo aff(" HT"," excl tax", $iso_langue_en_cours);
-		print "</font></b>";
-		print "<br>";
-		// Remain to receive in 2 months
+		// Remain to receive in 1 months
 		echo aff("Montant restant à réclamer dans ".$mindelaymonth." mois: ","Remained amount to claim in ".$mindelaymonth." month: ", $iso_langue_en_cours);
-		$remaintoreceivein2month=$mytotalamount-$alreadyreceived;
+		//print "$mytotalamount - $alreadyreceived";
+		$remaintoreceivein2month = $mytotalamount - $alreadyreceived;
 		print '<b><font color="#DF7E00">'.round($remaintoreceivein2month,2)."&#8364;";
 		echo aff(" HT"," excl tax", $iso_langue_en_cours);
 		print "</font></b>";
-		print '<br><br>';
+		print '<br>';
+		// Remain to receive now
+		echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
+		$remaintoreceive = $mytotalamountclaimable - $alreadyreceived;
+		print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
+		echo aff(" HT"," excl tax", $iso_langue_en_cours);
+		print "</font></b>";
+		print '<br>';
+		print "<br>";
 
 		// Message to claim
 		if ($remaintoreceive)
@@ -630,8 +694,8 @@ if (empty($errorcallws))
 			{
 				if ($remaintoreceive > $minamount)
 				{
-					echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT). Si vous avez besoin des informations sur l\'association:<br>Numéro de TVA '.$vatnumber.'<br>Adresse: 265, rue de la vallée, 45160 Olivet, FRANCE.',
-							'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).<br>If you need information about foundation:<br>VAT number: '.$vatnumber.'<br>Address: 265, rue de la vallée, 45160 Olivet, FRANCE<br>', $iso_langue_en_cours);
+					echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT). Si vous avez besoin des informations sur l\'association:<br>Raison sociale: Association Dolibarr<br>Numéro de TVA '.$vatnumber.'<br>Adresse: 265, rue de la vallée, 45160 Olivet, FRANCE.<br>Web: <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a>',
+							'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).<br>If you need information about foundation:<br>Name: Association Dolibarr<br>VAT number: '.$vatnumber.'<br>Address: 265, rue de la vallée, 45160 Olivet, FRANCE<br>Web: <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a>', $iso_langue_en_cours);
 					print '<br>';
 					//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
 					//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);

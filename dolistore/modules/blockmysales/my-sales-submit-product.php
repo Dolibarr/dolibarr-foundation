@@ -1,5 +1,7 @@
 <?php
 
+//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+
 /* SSL Management */
 $useSSL = true;
 
@@ -10,7 +12,28 @@ include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/lib.php');
 
 
+// Get env variables
+$upload=0;
 $id_langue_en_cours = $cookie->id_lang;
+$customer_id = empty($cookie->id_customer)?'':$cookie->id_customer;
+$product_id = (! empty($_GET['id_p']))?$_GET['id_p']:$_POST['id_p'];
+if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
+$admin=0;
+
+// Check if current user is also an employee with admin user
+$query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee
+		WHERE lastname = '".addslashes($cookie->customer_lastname)."' and firstname = '".addslashes($cookie->customer_firstname)."'";
+$subresult = Db::getInstance()->ExecuteS($query);
+if (empty($subresult[0]['id_employee']))	// If not an admin user
+{
+	if ($customer_id != $cookie->id_customer)
+	{
+		print 'Error, you need to be an admin user to view other customers/suppliers.';
+		die();
+	}
+}
+else $admin=1;
+
 
 $languages = Language::getLanguages();
 
@@ -28,7 +51,6 @@ foreach ($languages AS $language) {
 
 	$x++;
 }
-$upload=0;
 
 
 /*
@@ -162,7 +184,9 @@ if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 if (! empty($_GET["sub"]) || (! empty($_POST["sub"]) && empty($_GET["up"]))) 
 {
 	$flagError = 0;
-	$status = $_POST['active']; if ($status == "") $status = 0;
+	$status = $_POST['active']; 
+	if (! $admin) $status = 0;
+	if (empty($status)) $status = 0;
 	$product_file_name = $_POST["product_file_name"];
 	$product_file_path = $_POST["product_file_path"];
 
@@ -242,7 +266,7 @@ if (! empty($_GET["sub"]) || (! empty($_POST["sub"]) && empty($_GET["up"])))
 		//insertion du produit en base
 		$query = 'INSERT INTO '._DB_PREFIX_.'product (
 		`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`) VALUES (
-		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ht.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',    \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
+		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ht.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',     \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
 		)';
 
 		$result = Db::getInstance()->ExecuteS($query);
