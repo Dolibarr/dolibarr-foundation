@@ -188,9 +188,14 @@ class MailAlerts extends Module
 			//FHE : Find sellers to send him a mail that a module have been buy
 			foreach($idprods as $idprod) { 
 			
+				Logger::addLog('mailalerts: idprod= '.$idprod, 1);
+				
 				$query = 'SELECT p.reference';
 				$query.= ' FROM '._DB_PREFIX_.'product as p';
 				$query.= ' WHERE p.id_product="'.$idprod.'"';
+				
+				Logger::addLog('mailalerts: $query= '.$query, 1);
+				
 				$result = Db::getInstance()->ExecuteS($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -201,19 +206,29 @@ class MailAlerts extends Module
 						$ref_product = $row['reference'];
 						//Find the id customer 
 						$d2indice = strpos($ref_product,'d2');
+						
+						Logger::addLog('mailalerts: $ref_product= '.$ref_product, 1);
+						
 						if ($d2indice!==false) {
 							$id_sellers = substr( $ref_product, 1, $d2indice);
+							
+							Logger::addLog('mailalerts: $id_sellers= '.$id_sellers, 1);
 
 							//Find sellers email
 							$queryemail = 'SELECT c.email';
 							$queryemail.= ' FROM '._DB_PREFIX_.'customer as c';
 							$queryemail.= ' WHERE c.id_customer="'.$id_sellers.'"';
+							
+							Logger::addLog('mailalerts: $queryemail= '.$queryemail, 1);
+							
 							$resultemail = Db::getInstance()->ExecuteS($queryemail);
 							if ($resultemail === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$queryemail));
 							if (sizeof($resultemail))
 							{
 								foreach ($resultemail AS $rowemail)
 								{
+									Logger::addLog('mailalerts: $rowemail[email]= '.$rowemail['email'], 1);
+									
 									Mail::Send($id_lang, $template, $subject, $templateVars, $rowemail['email'], NULL, $configuration['PS_SHOP_EMAIL'], $configuration['PS_SHOP_NAME'], NULL, NULL, dirname(__FILE__).'/mails/');
 								}
 							}
