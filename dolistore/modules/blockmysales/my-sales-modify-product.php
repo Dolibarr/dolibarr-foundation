@@ -571,11 +571,6 @@ echo aff('J\'ai lu et suis d\'accord avec les conditions d\'utilisations disponi
 print '<br>';
 print '<br>';
 
-print aff(
-'Toute vente sera d\'abord encaissée par l\'association Dolibarr. Tous les semestres, vous pouvez, via votre compte, réclamer le montant encaissé qui vous sera reversé (L\'association prenant '.(100-$commissioncee).'% des ventes HT pour soutenir le développement du projet Dolibarr ERP/CRM)...',
-'Payment for any sell will be first received by the Dolibarr foundation. Every six month, from your account, you can ask your money back (The foundation redistribute '.$commissioncee.'% of sells, the remaining '.(100-$commissioncee).'% are kept to help the development of Dolibarr ERP/CRM project)...',
-$iso_langue_en_cours);
-
 echo '
 
 <script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
@@ -643,10 +638,13 @@ echo '
   </tr>
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
-    <td>
+    <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
     	<?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
-        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="22" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="48" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
 			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>
             <br />
         <?php } ?>
@@ -709,11 +707,11 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
-
+  <!-- Price -->
    <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input required="required" size="7" maxlength="7" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+        <input required="required" size="9" maxlength="7" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
 		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
     	<?php
@@ -726,7 +724,7 @@ echo '
 			echo '<input type="hidden" name="id_tax" id="id_tax" value="'.$taxe['id_tax'].'">';
 			echo '<input type="hidden" name="rate_tax" id="rate_tax" value="'.$taxe['rate'].'">';
 			print '<br>';
-			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto this final amount.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur ce montant total également.", $iso_langue_en_cours);
+			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto this final amount.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur le montant des ventes sans cette taxe.", $iso_langue_en_cours);
 		}
 		?>
     </td>
@@ -751,7 +749,8 @@ echo '
         $categories = Category::getSimpleCategories($cookie->id_lang);
 
         $x = 0;
-        foreach ($categories AS $categorie) {
+        foreach ($categories AS $categorie) 
+		{
 			/*if (in_array($categorie['id_category'],array(1,2,4))) 
 			{
 				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
@@ -760,7 +759,9 @@ echo '
 				continue; 	// We discard some categories
 			}*/
 
-			$query = 'SELECT id_category, active, level_depth, id_parent FROM `'._DB_PREFIX_.'category` WHERE `id_category` = \''.$categorie['id_category'].'\'';
+			$query = 'SELECT c.id_category, c.active, c.level_depth, c.id_parent';
+			$query.= ' FROM '._DB_PREFIX_.'category as c';
+			$query.= ' WHERE c.id_category = \''.$categorie['id_category'].'\'';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -802,7 +803,7 @@ echo '
   </tr>
 
 
-
+  <!-- Summary -->
   <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
@@ -820,7 +821,7 @@ echo '
             onkeyup="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-            cols="60" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
+            style="width: 100%;" rows="5"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
     </td>
   </tr>
   <?php } ?>
@@ -830,11 +831,15 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
+  <!-- Keywords -->
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
-    <td nowrap="nowrap">
+    <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
+  </tr>
+
+  <tr>
+    <td colspan="2" nowrap="nowrap">
         <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
-        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="48" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
 			<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>"> <?php echo $languageTAB[$x]['iso_code']; ?>
             <br />
         <?php } ?>

@@ -418,6 +418,28 @@ if (! empty($_GET["sub"]) || (! empty($_POST["sub"]) && empty($_GET["up"])))
  * View
  */
 
+
+// Define default value
+if ($_GET['cloneid'])
+{
+	// Get product id
+	$query = 'SELECT p.id_product, p.price, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, l.iso_code';
+	$query.= ' FROM '._DB_PREFIX_.'product as p, '._DB_PREFIX_.'product_lang as pl, '._DB_PREFIX_.'lang as l 
+	WHERE l.id_lang = pl.id_lang AND p.id_product = pl.id_product AND p.id_product = '.((int) $_GET['cloneid']);
+	$result = Db::getInstance()->ExecuteS($query);
+	if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+	foreach ($result AS $row)
+	{
+		$def_product_name[$row['iso_code']]=$row['name'];
+		$def_price=$row['price'];
+		$def_metakeywords[$row['iso_code']]=$row['meta_keywords'];
+		$def_description_short[$row['iso_code']]=$row['description_short'];
+		$def_description[$row['iso_code']]=$row['description'];
+	}
+
+}
+
+
 $tmpname=((! empty($_POST["product_file_name"])) ? $_POST["product_file_name"] : ((! empty($_FILES['virtual_product_file']['name'])) ? $_FILES['virtual_product_file']['name'] : "" ));
 $tmppath=((! empty($_POST["product_file_path"])) ? $_POST["product_file_path"] : ((! empty($chemin_destination)) ? $chemin_destination : ""));
 
@@ -427,10 +449,14 @@ echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2
 <br />
 
 <?php
+print 'Avant de soumettre un module, assurez vous qu\'il soit conforme au <a href="http://wiki.dolibarr.org/index.php/Module_Dolistore_Validation_Regles" target="_blanck">condition de validation</a><BR>';
 
-print '<input type="checkbox" required="required" name="agreewithtermofuse"> ';
-echo aff('J\'ai lu et suis d\'accord avec les conditions d\'utilisations disponible sur <a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" target="_blank">http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes</a>',
-		 'I\'ve read and I agree with terms and conditions of use available on page <a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>', $iso_langue_en_cours);
+print '<br>';
+
+echo aff('Merci également de lire les conditions d\'utilisation de la place de marché sur <a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" target="_blank">http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes</a>','Thanks also to read terms and conditions of market place on page <a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>', $iso_langue_en_cours);
+print '<br><input type="checkbox" required="required" name="agreewithtermofuse"> ';
+echo aff('J\'ai lu et suis d\'accord avec ces conditions d\'utilisations',
+		 'I\'ve read and I agree with terms and conditions', $iso_langue_en_cours);
 print '<br>';
 print '<br>';
 
@@ -482,6 +508,7 @@ echo '
 
 ';
 
+
 ?>
 
 
@@ -495,10 +522,13 @@ echo '
   </tr>
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
-    <td>
+    <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
     	<?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
-        	<input class="inputlarge" name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo empty($_POST["product_name_l".$languageTAB[$x]['id_lang']])?'':$_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="48" maxlength="100" value="<?php echo empty($_POST["product_name_l".$languageTAB[$x]['id_lang']])?$def_product_name[$languageTAB[$x]['iso_code']]:$_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
@@ -573,7 +603,7 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input required="required" size="7" maxlength="7" name="price" id="price" value="<?php if (! empty($_POST["price"])) echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+        <input required="required" size="9" maxlength="7" name="price" id="price" value="<?php if (! empty($_POST["price"])) echo round($_POST["price"],5); else print ($def_price?$def_price:'0'); ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
 		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
     	<?php
@@ -586,7 +616,7 @@ echo '
 			echo '<input type="hidden" name="id_tax" id="id_tax" value="'.$taxe['id_tax'].'">';
 			echo '<input type="hidden" name="rate_tax" id="rate_tax" value="'.$taxe['rate'].'">';
 			print '<br>';
-			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto the price excluding tax.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur le montant sans cette taxe.", $iso_langue_en_cours);
+			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto the price excluding tax.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur le montant des ventes sans cette taxe.", $iso_langue_en_cours);
 		}
 		?>
 	</td>
@@ -610,7 +640,8 @@ echo '
 
         $categories = Category::getSimpleCategories($cookie->id_lang);
         $x = 0;
-        foreach ($categories AS $categorie) {
+        foreach ($categories AS $categorie) 
+		{
 			/*if (in_array($categorie['id_category'],array(1,2,4))) 
 			{
 				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
@@ -619,7 +650,11 @@ echo '
 				continue; 	// We discard some categories
 			}*/
 
-			$query = 'SELECT id_category, active, level_depth, id_parent FROM `'._DB_PREFIX_.'category` WHERE `id_category` = \''.$categorie['id_category'].'\'';
+			$query = 'SELECT c.id_category, c.active, c.level_depth, c.id_parent';
+			if ($_GET['cloneid']) $query.=', cp.id_product';
+			$query.= ' FROM '._DB_PREFIX_.'category as c';
+			if ($_GET['cloneid']) $query.=' LEFT JOIN '._DB_PREFIX_.'category_product as cp ON c.id_category = cp.id_category AND cp.id_product = '.((int) $_GET['cloneid']);
+			$query.= ' WHERE c.id_category = \''.$categorie['id_category'].'\'';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -628,6 +663,7 @@ echo '
 			{
 				$active = $row['active'];
 				$level = $row['level_depth'];
+				$enabledforcloneidproduct = $row['id_product'];
 			}
 
 			if ($categorie['id_category'] > 1 && $active == 1) {
@@ -642,6 +678,7 @@ echo '
 				echo '<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
 
 				if (! empty($_POST['categories_checkbox_'.$categorie['id_category']]) && $_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
+				else if ($enabledforcloneidproduct) echo " checked ";
 
 				echo ' />'.$categorie['name'];
 				echo '</td></tr>';
@@ -658,11 +695,15 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
+  <!-- keywords -->
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
-    <td nowrap="nowrap">
+	<td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
+  </tr>
+
+  <tr>
+    <td colspan="2" nowrap="nowrap">
         <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
-        	<input class="inputlarge" name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo empty($_POST["keywords_".$languageTAB[$x]['id_lang']])?'':$_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="48" maxlength="100" value="<?php echo empty($_POST["keywords_".$languageTAB[$x]['id_lang']])?($def_metakeywords[$languageTAB[$x]['iso_code']]):$_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php
 			echo $languageTAB[$x]['iso_code'];
@@ -675,6 +716,7 @@ echo '
   </tr>
 
 
+  <!-- Summary -->
   <tr>
     <td colspan="2"><hr></td>
   </tr>
@@ -696,7 +738,7 @@ echo '
             onkeyup="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-            cols="60" rows="3"><?php echo empty($_POST["resume_".$languageTAB[$x]['id_lang']])?'':$_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
+            style="width: 100%" rows="5"><?php echo empty($_POST["resume_".$languageTAB[$x]['id_lang']])?($def_description_short[$languageTAB[$x]['iso_code']]):$_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
     </td>
   </tr>
   <?php } ?>
@@ -718,11 +760,10 @@ echo '
     </tr>
     <tr>
         <td colspan="2">
-            <textarea class="rte" cols="100" rows="10"
+            <textarea class="rte" cols="100" rows="12"
 			  id="description_<?php echo $languageTAB[$x]['id_lang']; ?>"
 			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">
 			<?php
-
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaulten='
 Module version: <strong>1.0</strong><br>
@@ -794,9 +835,16 @@ Para instalar este módulo:<br>
 
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
 			{
-				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
-				else if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
-				else print $defaulten;
+				if (! empty($def_description[$languageTAB[$x]['iso_code']]))
+				{
+					print $def_description[$languageTAB[$x]['iso_code']];
+				}
+				else
+				{
+					if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
+					else if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
+					else print $defaulten;
+				}
 			}
 			else echo $_POST["description_".$languageTAB[$x]['id_lang']];
 

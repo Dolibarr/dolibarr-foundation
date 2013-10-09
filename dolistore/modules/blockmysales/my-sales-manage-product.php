@@ -80,7 +80,7 @@ foreach ($languages AS $language) {
 <br />
 
 <?php
-$iscee=in_array($country,array('AT','BE','CH','IT','DE','DK','ES','FR','GB','LU','MC','NL','UK','PO','PT'));
+$iscee=in_array($country,array('AT','BE','IT','DE','DK','ES','FR','GB','LU','MC','NL','PO','PT'));	// Countries using euros
 $commission=$iscee?$commissioncee:$commissionnotcee;
 
 // foundationfreerate
@@ -282,7 +282,9 @@ if (sizeof($result))
 		// Show line of product
 		?>
 		<tr bgcolor="<?php echo $colorTab; ?>">
-		    <td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
+		    
+			<td valign="top"><a href="./my-sales-images-product.php?id_p=<?php echo $id_product; ?>"><img src="<?php echo $imgProduct; ?>" border="1" /></a></td>
+
 		    <td><a href="./my-sales-modify-product.php?id_p=<?php echo $id_product; ?>"><?php echo $name; ?></a><br><?php 
 				echo aff('Current price: '.round($price,5).'€ excl tax, '.round($price_ttc).'€ incl tax', 'Prix actuel: '.round($price,5).'€ HT, '.round($price_ttc,2).'€ TTC', $iso_langue_en_cours);
 			?>
@@ -294,12 +296,16 @@ if (sizeof($result))
 			else echo '<img src="../../img/os/6.gif" alt="Enabled" title="Enabled" style="padding: 0px 5px;">';
 			print '<br>';			
 			print aff("Fichier", "File", $iso_langue_en_cours).': '.$filename.'<br>'.aff("Date","Date", $iso_langue_en_cours).' '.$datedeposit;
+
+			if ($_GET["clone"])	print '<br><center><a href="my-sales-submit-product.php?cloneid='.$id_product.'">'.aff("Clone this product","Cloner ce produit", $iso_langue_en_cours).'</a></center>';
 			?>
 			</td>
+
 		    <td align="right" nowrap="nowrap">
 				<a href="./my-sales-list.php?id_p=<?php echo $id_product; ?>"><?php echo $nbr_qtysold; ?></a>
 				<?php if ($nbr_achats && $nbr_qtysold != $nbr_achats) echo '<br>+'.($nbr_achats-$nbr_qtysold).' '.aff('rejeté','refunded', $iso_langue_en_cours).'<br>'; ?>
 			</td>
+
 		    <td align="right"><?php
 			if ($nbr_amount > 0)
 			{
@@ -310,6 +316,7 @@ if (sizeof($result))
 			echo round($nbr_amount,2); ?>&#8364;
 			</td>
 		    <!--<td>&nbsp;</td> -->
+
 		</tr>
 
 		<?php
@@ -500,6 +507,7 @@ if ($socid)
 			if (preg_match('/dolistore/i',$invoice['note_private'])
 				&& ! preg_match('/agios/i',$invoice['ref_supplier'])
 				&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+				&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
 			) $isfordolistore=1;
 
 			if (! $isfordolistore)
@@ -517,6 +525,7 @@ if ($socid)
 						&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
 						&& ! preg_match('/agios/i',$invoice['ref_supplier'])
 						&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+						&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
 					)
 					{
 						$isfordolistore++;
@@ -694,8 +703,8 @@ if (empty($errorcallws))
 			{
 				if ($remaintoreceive > $minamount)
 				{
-					echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT). Si vous avez besoin des informations sur l\'association:<br>Raison sociale: Association Dolibarr<br>Numéro de TVA '.$vatnumber.'<br>Adresse: 265, rue de la vallée, 45160 Olivet, FRANCE.<br>Web: <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a>',
-							'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).<br>If you need information about foundation:<br>Name: Association Dolibarr<br>VAT number: '.$vatnumber.'<br>Address: 265, rue de la vallée, 45160 Olivet, FRANCE<br>Web: <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a>', $iso_langue_en_cours);
+					echo aff('Vous pouvez réclamer le montant restant à payer en envoyant une facture à <b>Association Dolibarr, France</b>, du montant restant à percevoir (Total HT = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), par mail à <b>dolistore@dolibarr.org</b>, en indiquant vos coordonnées bancaires pour le virement (RIB ou SWIFT). Si vous avez besoin des informations sur l\'association:<br>Raison sociale: Association Dolibarr<br>Numéro de TVA: '.$vatnumber.'<br>Adresse: 265, rue de la vallée, 45160 Olivet, FRANCE.<br>Web: <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a><br>Rem: Votre facture doit être en euros, l\'ordre de versement sera passé en euros.',
+							'You can claim remained amount to pay by sending an invoice to <b>Association Dolibarr, France</b>, with remain to pay (Total excl tax = <font color="#DF7E00">'.round($remaintoreceive,2).'&#8364;</font>), by email to <b>dolistore@dolibarr.org</b>. Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).<br>If you need information about foundation:<br>Name: Association Dolibarr<br>VAT number: '.$vatnumber.'<br>Address: 265, rue de la vallée, 45160 Olivet, FRANCE<br>Web: <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a><br>Note: Your invoice must use euro currency, withdrawal order will also be done in euros.', $iso_langue_en_cours);
 					print '<br>';
 					//echo aff("Le taux de TVA à appliquer sur la facture est de zero (y compris pour les sociétés européennes car bénéficiant du facture intra VAT, VAT de l'association FRXXXXX)",
 					//		"VAT rate to use into your invoice is zero", $iso_langue_en_cours);
