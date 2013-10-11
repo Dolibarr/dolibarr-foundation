@@ -18,6 +18,8 @@ $customer_id = $cookie->id_customer;
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 if (! empty($_GET["id_customer"]))  $customer_id=$_GET["id_customer"];
 if (! empty($_POST["id_customer"])) $customer_id=$_POST["id_customer"];
+if (! empty($_GET["active"]))  $active=$_GET["active"];
+if (! empty($_POST["active"])) $active=$_POST["active"];
 $admin=0;
 
 // Check if current user is also an employee with admin user
@@ -164,7 +166,10 @@ $min_date = 0;
 $query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, pl.name, pl.description_short';
 $query.= ' FROM '._DB_PREFIX_.'product as p';
 $query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
-if ($customer_id != 'all') $query.= ' WHERE p.reference like "c'.$customer_id.'d2%"';
+$query.= ' WHERE 1 = 1';
+if ($customer_id != 'all') $query.= ' AND p.reference like "c'.$customer_id.'d2%"';
+if ($active == 'no')  $query.= ' AND active = FALSE';
+if ($active == 'yes') $query.= ' AND active = TRUE';
 $query.= ' ORDER BY pl.name';
 $result = Db::getInstance()->ExecuteS($query);
 if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -331,6 +336,28 @@ else
 }
 
 
+$voucherareok=1;
+
+
+// Check there is no bad voucher name (All voucher must be named "xxxxCidseller").
+// Having bad voucher name makes to forget to remove discounts.
+$query = "SELECT od.name, od.id_order FROM "._DB_PREFIX_."order_discount as od";
+prestalog($query);
+
+$subresult = Db::getInstance()->ExecuteS($query);
+if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+foreach ($subresult AS $subrow) 
+{
+	$vouchername = $subrow['name'];
+	$idorder = $subrow['id_order'];
+	if (! preg_match('/.*C[0-9]+$/', $vouchername)) 
+	{
+		$voucherareok=0;
+		print '<font color="#AA0000">Error, a bad voucher "'.$vouchername.'" name was found into database and applied to order "'.$idorder.'". Please come back later when problem is fixed</font><br>'."\n";
+	}
+}
+
 // Calculate totalvoucher
 $query = "SELECT SUM( od.value ) as total_voucher
 			FROM "._DB_PREFIX_."order_discount as od,  "._DB_PREFIX_."orders as o
@@ -371,7 +398,6 @@ foreach ($subresult AS $subrow)
 	$totalvoucherclaimable_ttc += $subrow['total_voucher'];
 }
 $totalvoucherclaimable_ht = round($totalvoucherclaimable_ttc / (100 + $vatrate) * 100, 2);
-
 
 ?>
 </table>
@@ -565,7 +591,7 @@ print '<h2>';
 echo aff("Vos informations revenus", "Your payment information", $iso_langue_en_cours);
 print '</h2>';
 
-if (empty($errorcallws))
+if (empty($errorcallws) && $voucherareok)
 {
 	print '<form name="filter" action"'.$_SERVER["PHP_SELF"].'" method="POST">';
 	print aff('Filtre date entre ','Filter on date between ', $iso_langue_en_cours);
@@ -727,11 +753,15 @@ if (empty($errorcallws))
 		print '<br>';
 	}
 }
-else
+
+if (! empty($errorcallws))
 {
 	echo aff("Due à un problème technique, vos informations paiements ne sont acutellement pas disponibles.", "Due to a technical problem, your payment information are not available for the moment.", $iso_langue_en_cours);
 }
-
+if (empty($voucherareok))
+{
+	echo aff("Due à un problème de configuration, vos informations paiements ne sont acutellement pas disponibles.", "Due to a setup problem, your payment information are not available for the moment.", $iso_langue_en_cours);
+}
 
 include(dirname(__FILE__).'/../../footer.php');
 
