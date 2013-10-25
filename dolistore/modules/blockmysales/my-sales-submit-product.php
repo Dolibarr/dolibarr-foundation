@@ -1,16 +1,39 @@
 <?php
 
+//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+
 /* SSL Management */
 $useSSL = true;
 
 require_once('config.inc.php');
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 
+// Get env variables
+$upload=0;
 $id_langue_en_cours = $cookie->id_lang;
+$customer_id = empty($cookie->id_customer)?'':$cookie->id_customer;
+$product_id = (! empty($_GET['id_p']))?$_GET['id_p']:$_POST['id_p'];
+if (! empty($_GET["id_customer"])) $customer_id=$_GET["id_customer"];
+$admin=0;
+
+// Check if current user is also an employee with admin user
+$query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee
+		WHERE lastname = '".addslashes($cookie->customer_lastname)."' and firstname = '".addslashes($cookie->customer_firstname)."'";
+$subresult = Db::getInstance()->ExecuteS($query);
+if (empty($subresult[0]['id_employee']))	// If not an admin user
+{
+	if ($customer_id != $cookie->id_customer)
+	{
+		print 'Error, you need to be an admin user to view other customers/suppliers.';
+		die();
+	}
+}
+else $admin=1;
+
 
 $languages = Language::getLanguages();
 
@@ -28,7 +51,6 @@ foreach ($languages AS $language) {
 
 	$x++;
 }
-$upload=0;
 
 
 /*
@@ -37,16 +59,16 @@ $upload=0;
 
 
 //annuler le produit
-if ($_GET['cel'] || $_POST["cel"]) 
+if (! empty($_GET['cel']) || ! empty($_POST["cel"])) 
 {
-	unlink ($_POST["product_file_path"]);
+	if (! empty($_POST["product_file_path"])) unlink($_POST["product_file_path"]);
 	echo "<script>window.location='../../index.php';</script>";
 	exit;
 }
 
 
 //upload du fichier
-if ($_GET["up"] || $_POST["up"]) 
+if (! empty($_GET["up"]) || ! empty($_POST["up"])) 
 {
 	$error=0;
 
@@ -117,7 +139,7 @@ if ($_GET["up"] || $_POST["up"])
 		if ($res === TRUE) 
 		{
 			$resarray=validateZipFile($zip,$originalfilename,$_FILES['virtual_product_file']['tmp_name']);
-			$zip->close();
+			//$zip->close(); // already close by validateZipFile
 			$error=$resarray['error'];
 			$upload=$resarray['upload'];
 		}
@@ -159,10 +181,12 @@ if ($_GET["up"] || $_POST["up"])
 
 
 //soumission du produit
-if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"]))) 
+if (! empty($_GET["sub"]) || (! empty($_POST["sub"]) && empty($_GET["up"]))) 
 {
 	$flagError = 0;
-	$status = $_POST['active']; if ($status == "") $status = 0;
+	$status = $_POST['active']; 
+	if (! $admin) $status = 0;
+	if (empty($status)) $status = 0;
 	$product_file_name = $_POST["product_file_name"];
 	$product_file_path = $_POST["product_file_path"];
 
@@ -174,7 +198,7 @@ if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"])))
 	}
 
 	//prise des libelles
-	for ($x = 0; $languageTAB[$x]; $x++ ) {
+	for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
 
 		$product_name = $resume = $description = "";
 		$product_name = $_POST["product_name_l".$languageTAB[$x]['id_lang']];
@@ -242,7 +266,7 @@ if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"])))
 		//insertion du produit en base
 		$query = 'INSERT INTO '._DB_PREFIX_.'product (
 		`id_supplier`, `id_manufacturer`, `id_tax`, `id_category_default`, `id_color_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`) VALUES (
-		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ht.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',    \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
+		            0,                 0, '.$taxe_id.', '.$id_categorie_default.',          0,          0,   \'\',     0.00,   '.$qty.', '.$prix_ht.', '.$prix_ht.',             0.00,                   0, \''.$dateToday.'\', \''.$dateToday.'\', \''.$reference.'\',     \'\',       \'\',        0,              0,                   0,              0,                  0,             0, '.$status.',      1, \''.$dateNow.'\', \''.$dateNow.'\'
 		)';
 
 		$result = Db::getInstance()->ExecuteS($query);
@@ -394,8 +418,30 @@ if ($_GET["sub"] || ($_POST["sub"] && empty($_GET["up"])))
  * View
  */
 
-$tmpname=($_POST["product_file_name"] != "" ? $_POST["product_file_name"] : ($_FILES['virtual_product_file']['name'] != "" ? $_FILES['virtual_product_file']['name'] : "" ));
-$tmppath=($_POST["product_file_path"] != "" ? $_POST["product_file_path"] : ($chemin_destination != "" ? $chemin_destination : ""));
+
+// Define default value
+if ($_GET['cloneid'])
+{
+	// Get product id
+	$query = 'SELECT p.id_product, p.price, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, l.iso_code';
+	$query.= ' FROM '._DB_PREFIX_.'product as p, '._DB_PREFIX_.'product_lang as pl, '._DB_PREFIX_.'lang as l 
+	WHERE l.id_lang = pl.id_lang AND p.id_product = pl.id_product AND p.id_product = '.((int) $_GET['cloneid']);
+	$result = Db::getInstance()->ExecuteS($query);
+	if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+	foreach ($result AS $row)
+	{
+		$def_product_name[$row['iso_code']]=$row['name'];
+		$def_price=$row['price'];
+		$def_metakeywords[$row['iso_code']]=$row['meta_keywords'];
+		$def_description_short[$row['iso_code']]=$row['description_short'];
+		$def_description[$row['iso_code']]=$row['description'];
+	}
+
+}
+
+
+$tmpname=((! empty($_POST["product_file_name"])) ? $_POST["product_file_name"] : ((! empty($_FILES['virtual_product_file']['name'])) ? $_FILES['virtual_product_file']['name'] : "" ));
+$tmppath=((! empty($_POST["product_file_path"])) ? $_POST["product_file_path"] : ((! empty($chemin_destination)) ? $chemin_destination : ""));
 
 
 echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2>", $iso_langue_en_cours);
@@ -403,10 +449,14 @@ echo aff("<h2>Soumettre un module/produit</h2>", "<h2>Submit a module/plugin</h2
 <br />
 
 <?php
+print 'Avant de soumettre un module, assurez vous qu\'il soit conforme au <a href="http://wiki.dolibarr.org/index.php/Module_Dolistore_Validation_Regles" target="_blanck">condition de validation</a><BR>';
 
-print '<input type="checkbox" required="required" name="agreewithtermofuse"> ';
-echo aff('J\'ai lu et suis d\'accord avec les conditions d\'utilisations disponible sur <a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" target="_blank">http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes</a>',
-		 'I\'ve read and I agree with terms and conditions of use available on page <a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>', $iso_langue_en_cours);
+print '<br>';
+
+echo aff('Merci également de lire les conditions d\'utilisation de la place de marché sur <a href="http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes" target="_blank">http://www.dolistore.com/lang-fr/content/3-conditions-generales-de-ventes</a>','Thanks also to read terms and conditions of market place on page <a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>', $iso_langue_en_cours);
+print '<br><input type="checkbox" required="required" name="agreewithtermofuse"> ';
+echo aff('J\'ai lu et suis d\'accord avec ces conditions d\'utilisations',
+		 'I\'ve read and I agree with terms and conditions', $iso_langue_en_cours);
 print '<br>';
 print '<br>';
 
@@ -458,6 +508,7 @@ echo '
 
 ';
 
+
 ?>
 
 
@@ -471,10 +522,13 @@ echo '
   </tr>
 
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
-    <td>
-    	<?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input class="inputlarge" name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
+    <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("Nom du module/produit", "Module/product name : ", $iso_langue_en_cours); ?> </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+    	<?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
+        	<input name="product_name_l<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="48" maxlength="100" value="<?php echo empty($_POST["product_name_l".$languageTAB[$x]['id_lang']])?$def_product_name[$languageTAB[$x]['iso_code']]:$_POST["product_name_l".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php echo $languageTAB[$x]['iso_code'];
 			if ($languageTAB[$x]['iso_code'] == 'en') echo ', '.aff("obligatoire","mandatory",$iso_langue_en_cours);
@@ -516,7 +570,7 @@ echo '
     <td nowrap="nowrap" valign="top"><?php echo aff("Package à diffuser<br>(fichier .zip pour<br>un module ou theme)", "Package to distribute<br>(.zip file for<br> a module or theme)", $iso_langue_en_cours); ?></td>
     <td>
         <?php
-		if ($upload >= 0 && ($_POST["product_file_name"] != "" || $_FILES['virtual_product_file']['name'] != "")) 
+		if ($upload >= 0 && (! empty($_POST["product_file_name"]) || ! empty($_FILES['virtual_product_file']['name']))) 
 		{
 			if ($_POST["product_file_name"] != "") $file_name = $_POST["product_file_name"];
 			if ($_FILES['virtual_product_file']['name'] != "") $file_name = $_FILES['virtual_product_file']['name'];
@@ -549,7 +603,7 @@ echo '
   <tr>
     <td nowrap="nowrap" valign="top"><?php echo aff("Prix de vente HT : ", "Sale price (excl tax) : ", $iso_langue_en_cours); ?></td>
     <td>
-        <input required="required" size="7" maxlength="7" name="price" id="price" value="<?php if ($_POST["price"] != 0 && $_POST["price"] != "") echo round($_POST["price"],5); else print '0'; ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
+        <input required="required" size="9" maxlength="7" name="price" id="price" value="<?php if (! empty($_POST["price"])) echo round($_POST["price"],5); else print ($def_price?$def_price:'0'); ?>" onkeyup="javascript:this.value = this.value.replace(/,/g, '.');" type="text">
 		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
     	<?php
@@ -562,7 +616,7 @@ echo '
 			echo '<input type="hidden" name="id_tax" id="id_tax" value="'.$taxe['id_tax'].'">';
 			echo '<input type="hidden" name="rate_tax" id="rate_tax" value="'.$taxe['rate'].'">';
 			print '<br>';
-			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto the price excluding tax.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur le montant sans cette taxe.", $iso_langue_en_cours);
+			print aff("According to foundation status, a vat rate of ".$taxVal." will be added to this price, if price is not null. Your ".$commissioncee."% part is calculated onto the price excluding tax.", "Compte tenu du status de l'association Dolibarr, une taxe de ".$taxVal." sera ajoutée à ce montant pour déterminer le prix final (si ce montant n'est pas nul). Votre part de ".$commissioncee."% est calculée sur le montant des ventes sans cette taxe.", $iso_langue_en_cours);
 		}
 		?>
 	</td>
@@ -586,7 +640,8 @@ echo '
 
         $categories = Category::getSimpleCategories($cookie->id_lang);
         $x = 0;
-        foreach ($categories AS $categorie) {
+        foreach ($categories AS $categorie) 
+		{
 			/*if (in_array($categorie['id_category'],array(1,2,4))) 
 			{
 				echo '<tr bgcolor="'.$bgcolor.'"><td nowrap="nowrap" valign="top" align="left">';
@@ -595,7 +650,11 @@ echo '
 				continue; 	// We discard some categories
 			}*/
 
-			$query = 'SELECT id_category, active, level_depth, id_parent FROM `'._DB_PREFIX_.'category` WHERE `id_category` = \''.$categorie['id_category'].'\'';
+			$query = 'SELECT c.id_category, c.active, c.level_depth, c.id_parent';
+			if ($_GET['cloneid']) $query.=', cp.id_product';
+			$query.= ' FROM '._DB_PREFIX_.'category as c';
+			if ($_GET['cloneid']) $query.=' LEFT JOIN '._DB_PREFIX_.'category_product as cp ON c.id_category = cp.id_category AND cp.id_product = '.((int) $_GET['cloneid']);
+			$query.= ' WHERE c.id_category = \''.$categorie['id_category'].'\'';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -604,6 +663,7 @@ echo '
 			{
 				$active = $row['active'];
 				$level = $row['level_depth'];
+				$enabledforcloneidproduct = $row['id_product'];
 			}
 
 			if ($categorie['id_category'] > 1 && $active == 1) {
@@ -617,7 +677,8 @@ echo '
 				//echo str_repeat('&nbsp;', $level);
 				echo '<input name="categories_checkbox_'.$categorie['id_category'].'" type="checkbox" value="1" ';
 
-				if ($_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
+				if (! empty($_POST['categories_checkbox_'.$categorie['id_category']]) && $_POST['categories_checkbox_'.$categorie['id_category']] == 1) echo " checked ";
+				else if ($enabledforcloneidproduct) echo " checked ";
 
 				echo ' />'.$categorie['name'];
 				echo '</td></tr>';
@@ -634,11 +695,15 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
+  <!-- keywords -->
   <tr>
-    <td nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
-    <td nowrap="nowrap">
-        <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
-        	<input class="inputlarge" name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="26" maxlength="100" value="<?php echo $_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
+	<td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("Mots cl&eacute;s : ", "Keywords : ", $iso_langue_en_cours); ?></td>
+  </tr>
+
+  <tr>
+    <td colspan="2" nowrap="nowrap">
+        <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
+        	<input name="keywords_<?php echo $languageTAB[$x]['id_lang']; ?>" type="text" size="48" maxlength="100" value="<?php echo empty($_POST["keywords_".$languageTAB[$x]['id_lang']])?($def_metakeywords[$languageTAB[$x]['iso_code']]):$_POST["keywords_".$languageTAB[$x]['id_lang']]; ?>" />
             <img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
 			<?php
 			echo $languageTAB[$x]['iso_code'];
@@ -651,11 +716,12 @@ echo '
   </tr>
 
 
+  <!-- Summary -->
   <tr>
     <td colspan="2"><hr></td>
   </tr>
 
-  <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+  <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
   <tr>
     <td colspan="2" nowrap="nowrap" valign="top"><?php echo aff("R&eacute;sum&eacute ", "Short description ", $iso_langue_en_cours); ?>
 	(<img src="<?php echo $languageTAB[$x]['img']; ?>" alt="<?php echo $languageTAB[$x]['iso_code']; ?>">
@@ -672,7 +738,7 @@ echo '
             onkeyup="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onkeydown="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
             onchange="javascript:resumeLength_<?php echo $languageTAB[$x]['id_lang']; ?>.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-            cols="60" rows="3"><?php echo $_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
+            style="width: 100%" rows="5"><?php echo empty($_POST["resume_".$languageTAB[$x]['id_lang']])?($def_description_short[$languageTAB[$x]['iso_code']]):$_POST["resume_".$languageTAB[$x]['id_lang']]; ?></textarea>
     </td>
   </tr>
   <?php } ?>
@@ -681,7 +747,7 @@ echo '
     <td colspan="2"><hr></td>
   </tr>
 
-  <?php for ($x = 0; $languageTAB[$x]; $x++ ) { ?>
+  <?php for ($x = 0; ! empty($languageTAB[$x]); $x++ ) { ?>
     <tr>
         <td colspan="2"><br>
         	<?php echo aff("Description large ", "Large description ", $iso_langue_en_cours); ?>
@@ -694,11 +760,10 @@ echo '
     </tr>
     <tr>
         <td colspan="2">
-            <textarea class="rte" cols="100" rows="10"
+            <textarea class="rte" cols="100" rows="12"
 			  id="description_<?php echo $languageTAB[$x]['id_lang']; ?>"
 			name="description_<?php echo $languageTAB[$x]['id_lang']; ?>">
 			<?php
-
 			$publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
 			$defaulten='
 Module version: <strong>1.0</strong><br>
@@ -718,7 +783,7 @@ Prerequisites:<br>
 <li> Uncompress the zip file, for example with command </li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>unzip</span> '.($file_name?$file_name:'modulefile.zip').'</pre>
+<pre><span>unzip</span> '.(! empty($file_name)?$file_name:'modulefile.zip').'</pre>
 </div>
 </div>
 <li> Module or skin is then available and can be activated. </li>
@@ -740,7 +805,7 @@ Installation:<br>
 <li> Decompressez le fichier zip, par exemple par la commande </li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>unzip</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
+<pre><span>unzip</span> '.(! empty($file_name)?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
 <li> Le module ou thème est alors disponible et activable. </li>
@@ -762,7 +827,7 @@ Para instalar este módulo:<br>
 <li> Descomprima el zip archivo, por ejamplo usando el comando</li>
 <div style="text-align: left;" dir="ltr">
 <div style="font-family: monospace;">
-<pre><span>unzip</span> '.($file_name?$file_name:'fichiermodule.zip').'</pre>
+<pre><span>unzip</span> '.(! empty($file_name)?$file_name:'fichiermodule.zip').'</pre>
 </div>
 </div>
 <li> El módulo o tema está listo para ser activado.</li>
@@ -770,9 +835,16 @@ Para instalar este módulo:<br>
 
 			if (empty($_POST["description_".$languageTAB[$x]['id_lang']]))
 			{
-				if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
-				else if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
-				else print $defaulten;
+				if (! empty($def_description[$languageTAB[$x]['iso_code']]))
+				{
+					print $def_description[$languageTAB[$x]['iso_code']];
+				}
+				else
+				{
+					if ($languageTAB[$x]['iso_code'] == 'fr') print $defaultfr;
+					else if ($languageTAB[$x]['iso_code'] == 'es') print $defaultes;
+					else print $defaulten;
+				}
 			}
 			else echo $_POST["description_".$languageTAB[$x]['id_lang']];
 

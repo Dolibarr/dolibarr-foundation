@@ -15,8 +15,8 @@ function aff($lb_fr, $lb_other, $iso_langue_en_cours) {
  */
 function prestalog($message, $level=LOG_INFO)
 {
-    $filelog="prestalog.log";
-    $file=@fopen($filelog,"a+");
+    $filelog="/home/dolibarr/dolistore.com/httpdocs/logs/prestalog.log";
+    $file=fopen($filelog,"a+");
     if ($file)
     {
         $ip='???';  // $ip contains information to identify computer that run the code
@@ -43,12 +43,32 @@ function prestalog($message, $level=LOG_INFO)
  */
 function validateZipFile(&$zip,$originalfilename,$zipfile)
 {
+	$error=0;
+
 	prestalog("Validate zip file ".$zipfile);
 	$subdir=basename($zipfile);
-	$dir='/home/httpd/vhosts/dolistore.com/tmp/'.$subdir;
+	$dir='/home/dolibarr/dolistore.com/tmp/'.$subdir;
 	mkdir($dir);
 	$zip->extractTo($dir.'/');
 	$zip->close();
+
+	// First we check if we need to change $dir (for zip that are module/htdocs/module instead of htdocs/module)
+	if (! $error && $dh = opendir($dir)) 
+	{
+		$nbofsubdirs=0;
+		while (($file = readdir($dh)) !== false) 
+		{
+			if ($file == '.' || $file == '..') continue;
+			prestalog("We check if dir ".$dir.'/'.$file.'/htdocs exits');
+			if (is_dir($dir.'/'.$file.'/htdocs')) 
+			{
+				prestalog('Dir '.$dir.'/'.$file.'/htdocs exist. So we use dir='.$dir.'/'.$file.' as root for package to analyse.');
+				$dir=$dir.'/'.$file;
+				break;
+			} 
+		}
+		closedir($dh);
+	}
 
 	// Analyze files
 	$upload=0;
@@ -64,10 +84,10 @@ function validateZipFile(&$zip,$originalfilename,$zipfile)
 		// It's a module or theme file
 		if (! $error && ($ismodule || $istheme) && $dh = opendir($dir)) 
 		{
-			$nbofsubdirs=0;
+			$nbofsubdirs=0; $direrror='';
 			while (($file = readdir($dh)) !== false) 
 			{
-				if ($file == '.' || $file == '..') continue;
+				if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt') continue;
 				prestalog("subdirs found for package:".$file);
 				$nbofsubdirs++;
 				$alloweddirs=array('htdocs','docs','scripts','test','build',($ismodule?$ismodule:($istheme?$istheme:'')));
@@ -75,47 +95,50 @@ function validateZipFile(&$zip,$originalfilename,$zipfile)
 				{
 					$upload=-1;
 					$error++;
+					$direrror=$file;
 					break;
 				}
 			}
 			if ($error)
 			{
-				echo "<div style='color:#FF0000'>Sorry, a module file can only contains, into zip root:<br>\nOnly one directory matching module or theme name<br>\nor several directories matching following names: ".join(',',$alloweddirs)."<br>\n";
-				echo "If you think this is an error, send your package by email at contact@dolibarr.org";
+				echo "<div style='color:#FF0000'>Validation of zip file at ".date('Y-m-d H:i:s')." fails.<br>Sorry, a module file can only contains, into zip root:<br>\n- only 1 directory matching your module or theme name,<br>\n- or several directories matching following names: ./htdocs/yourmodulename, ./docs, ./scripts, ./test or ./build.<br>But we found a directory or file with name ".$direrror.".<br><br>\n";
 				echo "</div>";
+				$validation=0;
 			}
 			closedir($dh);
 		}				
-		// It's a module or theme file
+		// It's a module or theme file (check htdocs directory)
 		if (! $error && $ismodule && is_dir($dir.'/htdocs') && $dh = opendir($dir.'/htdocs')) 
 		{
-			prestalog("we scan ".$dir."/htdocs to be sure there is only one directory into htdocs");
+			prestalog("we scan ".$dir."/htdocs to be sure there is only one directory (with name of your module) into htdocs");
 			$nbofsubdir=0;
 			prestalog("check there is only one dir into htdocs");
 			while (($file = readdir($dh)) !== false) 
 			{
-				if ($file == '.' || $file == '..') continue;
+				if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt') continue;
 				if ($file == 'includes') continue;		// For old dolibarr version compatibility
 				prestalog("we found ".$file);
 				$nbofsubdir++;
 			}
 			closedir($dh);
-#			if ($nbofsubdir >= 2)
-#			{
-#				echo "<div style='color:#FF0000'>Sorry, starting with Dolibarr 3.2 version, a module file can contains only one dir with name of module into the htdocs directory.";
-#				echo 'See <a href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>.';
-#				echo "</div>";
-#				$upload=-1;
-#				$error++;
-#			}
+			if ($nbofsubdir >= 2)
+			{
+				echo "<div style='color:#FF0000'>Warning, starting with Dolibarr 3.3 version, a module file can contains only one dir with name of module (into root of zip or into the htdocs directory).";
+				echo "</div>";
+				//$upload=-1;
+				//$error++;
+				//$validation=0;
+			}
 		}				
 	}
 
 	if (! $validation)
 	{
-		echo "<div style='color:#FF0000'>Your zip file does not look to match Dolibarr package rules.";
-		echo "If you think this is an error, send your package by email at contact@dolibarr.org";
-		echo "</div>";
+		echo "<div style='color:#FF0000'>Your zip file does not look to match Dolibarr package rules.<br>";
+		echo 'See <a target="_blank" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>.<br>';
+		echo "Remind: A module can not provide directories/files found into Dolibarr standard distribution.<br>\n"; 				
+		echo "If you think this is an error or don't undertand this message, send your package by email at contact@dolibarr.org";
+		echo "</div><br>";
 		$upload=-1;
 		$error++;
 	}

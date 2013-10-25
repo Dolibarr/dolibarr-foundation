@@ -5,7 +5,7 @@ $useSSL = true;
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/../../init.php');
+//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
 
 // Get env variables
@@ -98,7 +98,7 @@ if ($id_image != "")
 else
 	$imgProduct = '../../img/p/en-default-small.jpg';
 
-if ($colorTabNbr%2)
+if (! empty($colorTabNbr) && $colorTabNbr % 2)
 	$colorTab="#ffffff";
 else
 	$colorTab="#eeeeee";
@@ -138,7 +138,7 @@ $iso_langue_en_cours);
 // Calculate totalamount
 $query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, 
 			od.id_order_detail, od.product_price, od.tax_rate, 
-			ROUND(od.product_price, 2) as amount_ht, 
+			ROUND(od.product_price, 5) as amount_ht, 
 			ROUND(od.product_price * (100 + od.tax_rate) / 100, 2) as amount_ttc, 
 			od.reduction_percent, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
 			o.date_add, o.valid
@@ -150,14 +150,12 @@ prestalog($query);
 
 //print $query;
 $subresult = Db::getInstance()->ExecuteS($query);
-$nbr_achats = 0;
 
 $i=0;$totalamountearned=0;
 foreach ($subresult AS $subrow) 
 {
 	$i+=$subrow['product_quantity'];
-	$nbr_achats = $subrow['nbra'];
-
+	
 	$colorTabNbr = 1;
 	?>
 
@@ -173,13 +171,13 @@ foreach ($subresult AS $subrow)
 			if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 			{
 				$amountearnedunit=(float) ($subrow['amount_ht']-$subrow['reduction_amount']+0);
-				if ($subrow['reduction_percent'] > 0) $amountearnedunit=round($amountearnedunit*(100-$subrow['reduction_percent'])/100,1);
+				if ($subrow['reduction_percent'] > 0) $amountearnedunit=round($amountearnedunit*(100-$subrow['reduction_percent'])/100,5);
 				$amountearned=$amountearnedunit*$subrow['product_quantity'];
 
 				$totalamountearned+=$amountearned;
 				
-				if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) echo $amountearnedunit.' ('.($subrow['amount']+0).')';
-				else echo $amountearnedunit.($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'');
+				if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) echo round($amountearnedunit,5).' ('.($subrow['amount_ht']+0).')';
+				else echo round($amountearnedunit,5).($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'');
 			}
 			else
 			{
@@ -193,7 +191,7 @@ foreach ($subresult AS $subrow)
 	$colorTabNbr++;
 }
 ?>
-<tr bgcolor="<?php echo $colorTab; ?>"><td colspan="3"><?php echo aff("Total HT", "Total excl taxes", $iso_langue_en_cours); ?></td><td align="right"><?php echo $totalamountearned; ?></td></tr>
+<tr bgcolor="<?php echo $colorTab; ?>"><td colspan="3"><?php echo aff("Total HT", "Total excl taxes", $iso_langue_en_cours); ?></td><td align="right"><?php echo round($totalamountearned,2); ?></td></tr>
 </table>
 
 
