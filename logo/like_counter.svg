@@ -14,9 +14,9 @@
    height="300"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="like_counter.svg"
-   inkscape:export-filename="/home/ldestail/git/foundation/logo/like_counter_1000.png"
+   inkscape:export-filename="/home/ldestailleur/git/foundation/logo/like_counter_2500.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -144,7 +144,7 @@
        x2="180.13281"
        y2="845.39734"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.96475514,0,0,0.96475514,9.2225634,-0.27598216)" />
+       gradientTransform="matrix(0.84600198,0,0,0.84600201,-0.72157504,-0.24201112)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -159,8 +159,8 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-width="1598"
+     inkscape:window-height="850"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -199,16 +199,16 @@
        width="261.806" />
     <text
        xml:space="preserve"
-       style="font-size:95.02333832px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3878);fill-opacity:1;stroke:#000000;stroke-width:1.16840243;stroke-opacity:1;font-family:Sans"
-       x="22.348423"
-       y="954.32245"
+       style="font-size:83.3267746px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3878);fill-opacity:1;stroke:#000000;stroke-width:1.02458203;stroke-opacity:1;font-family:Sans"
+       x="10.788604"
+       y="836.85352"
        id="text3059"
        sodipodi:linespacing="125%"
-       transform="scale(1.0239253,0.97663375)"><tspan
+       transform="scale(0.89788883,1.1137236)"><tspan
          sodipodi:role="line"
          id="tspan3061"
-         x="22.348423"
-         y="954.32245"
-         style="font-size:171.04200745px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:url(#linearGradient3878);fill-opacity:1;stroke:#000000;stroke-width:1.16840243;stroke-opacity:1;font-family:Impact;-inkscape-font-specification:Impact Bold">1000</tspan></text>
+         x="10.788604"
+         y="836.85352"
+         style="font-size:149.9881897px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:url(#linearGradient3878);fill-opacity:1;stroke:#000000;stroke-width:1.02458203;stroke-opacity:1;font-family:Impact;-inkscape-font-specification:Impact Bold">2500</tspan></text>
   </g>
 </svg>
