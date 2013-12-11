@@ -626,7 +626,7 @@ if (empty($errorcallws) && $voucherareok)
 	print " = ".$mytotalamountclaimable."&#8364;";
 	echo aff(" HT*"," excl tax*", $iso_langue_en_cours);
 	print "</b><br>";
-	echo aff("* Toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation", "** any sell is validated after a ".$mindelaymonth." month delay", $iso_langue_en_cours);
+	echo aff("* Toute vente n'est validée complètement qu'après un délai de ".$mindelaymonth." mois de rétractation", "* any sell is validated after a ".$mindelaymonth." month delay", $iso_langue_en_cours);
 	print '<br>';
 	// Total amount of voucher you give
 	if ($totalvoucherclaimable_ht || $totalvoucher_ht) 
@@ -645,6 +645,7 @@ if (empty($errorcallws) && $voucherareok)
 		$before2013=0;
 		foreach($sortdolistoreinvoices as $item)
 		{
+			$lastdate='2000-01-01';
 			$tmpdate=preg_replace('/(\s|T)00:00:00Z/','',$item['date']);
 			if ((strcmp($tmpdate, '2013-01-01') < 0) && empty($before2013))
 			{
@@ -656,6 +657,7 @@ if (empty($errorcallws) && $voucherareok)
 				$after2013=1;
 				print aff("Après le 2013-01-01:<br>","After 2013-01-01:<br>",$iso_langue_en_cours);
 			}
+			if ($tmpdate > $lastdate) $lastdate = $tmpdate;
 			echo aff("Date: ","Date: ", $iso_langue_en_cours);
 			print ' <b>'.$tmpdate.'</b> - ';
 			if ((strcmp($tmpdate,'2013-01-01') < 0)) print ' <b>'.$item['amount_ttc'].'&#8364;';
@@ -700,6 +702,8 @@ if (empty($errorcallws) && $voucherareok)
 
 	if (empty($dateafter) && empty($datebefore))
 	{
+		$showremaintoreceive=1;
+
 		// Remain to receive in 1 months
 		echo aff("Montant restant à réclamer dans ".$mindelaymonth." mois: ","Remained amount to claim in ".$mindelaymonth." month: ", $iso_langue_en_cours);
 		//print "$mytotalamount - $alreadyreceived";
@@ -711,15 +715,26 @@ if (empty($errorcallws) && $voucherareok)
 		// Remain to receive now
 		echo aff("Montant restant à réclamer à ce jour: ","Remained amount to claim today: ", $iso_langue_en_cours);
 		$remaintoreceive = $mytotalamountclaimable - $alreadyreceived;
-		print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
-		echo aff(" HT"," excl tax", $iso_langue_en_cours);
-		print "</font></b>";
-		print '<br>';
-		print "<br>";
+		$firstdayofmonth=date("Y-m",mktime()).'-01';
+		if ((strcmp($lastdate,$firstdayofmonth) > 0) && $customer_id != 'all')
+		{
+			print '<b><font color="#DF7E00">';
+			echo aff("Non possible, un paiement a déjà eu lieu ce mois ci (après le ".$firstdayofmonth.")","Not possible, a payment was already done this month (after ".$firstdayofmonth.")", $iso_langue_en_cours);
+			$showremaintoreceive=0;
+			print "</font></b>";
+		}
+		else
+		{
+			print '<b><font color="#DF7E00">'.round($remaintoreceive,2)."&#8364;";
+			echo aff(" HT"," excl tax", $iso_langue_en_cours);
+			print "</font></b>";
+			print '<br>';
+		}
 
 		// Message to claim
-		if ($remaintoreceive)
+		if ($remaintoreceive > 0 && $showremaintoreceive)
 		{
+			print "<br>";
 			$minamount=($iscee?$minamountcee:$minamountnotcee);
 			echo aff("Montant minimum pour réclamer le reversement pour votre pays (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;","Minimum amount to claim payments for your country (<strong>".$country."</strong>): <strong>".$minamount."</strong>&#8364;.", $iso_langue_en_cours).'<br>';
 			echo aff("Montant commission frais change pour votre monnaie (<strong>".$country."</strong>): <strong>".($iscee?'Gratuit':'selon votre banque')."</strong>.","Charge for change for your currency (<strong>".$country."</strong>): <strong>".($iscee?'Free':'depends on your bank')."</strong>.", $iso_langue_en_cours).'<br>';
@@ -746,7 +761,16 @@ if (empty($errorcallws) && $voucherareok)
 		{
 			if ($customer_id != 'all')
 			{
-				echo aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
+				if ($showremaintoreceive)
+				{
+					print "<br>";
+					echo aff("Il n'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.", "It is not possible to claim payments for the moment. Your sold is null.", $iso_langue_en_cours);
+				}
+				else
+				{
+					echo aff(', sinon, il serait de '.$remaintoreceive."&#8364;", ', otherwise it should be '.$remaintoreceive."&#8364;",$iso_langue_en_cours);
+					if ($remaintoreceive < 0) echo aff(' - <font color="red">Montant négatif. Vous avez perçu plus qu\'autorisé.</font>',' - <font color="red">Negative amount. You recevied more than allowed.</font>', $iso_langue_en_cours);
+				}
 				print '<br>';
 			}
 		}
