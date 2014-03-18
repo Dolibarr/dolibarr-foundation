@@ -246,7 +246,7 @@ if (! empty($_GET["sub"]) || (! empty($_POST["sub"]) && empty($_GET["up"])))
 	{
 		$taxe_rate = $_POST['rate_tax'];
 		$taxe_id = $_POST["id_tax"];
-		if (empty($taxe_id)) $taxe_id = 0;
+		if (empty($taxe_id)) $taxe_id = $vatid;
 
 		// Define prices
 		$prix_ht = $_POST["price"];
@@ -607,7 +607,7 @@ echo '
 		<?php print aff(' Euros &nbsp; ("0" si "gratuit")',' Euros &nbsp; ("0" means "free")', $iso_langue_en_cours); ?>
 
     	<?php
-		$taxVal = 19.6;
+		$taxVal = $vatrate;
 		$taxes = Tax::getTaxes($cookie->id_lang);
 
 		foreach ($taxes AS $taxe) 

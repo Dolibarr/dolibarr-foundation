@@ -125,11 +125,11 @@ function validateZipFile(&$zip,$originalfilename,$zipfile)
 			{
 				echo "<div style='color:#FF0000'>Warning, starting with Dolibarr 3.3 version, a module file can contains only one dir with name of module (into root of zip or into the htdocs directory).";
 				echo "</div>";
-				//$upload=-1;
-				//$error++;
-				//$validation=0;
+				$upload=-1;
+				$error++;
+				$validation=0;
 			}
-		}				
+		}			
 	}
 
 	if (! $validation)
