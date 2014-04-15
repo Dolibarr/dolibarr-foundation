@@ -233,7 +233,8 @@ if (sizeof($result))
 					AND o.id_order = od.id_order";
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-		prestalog("Request to count product sells ".$query);
+		prestalog("Request to count totalamount ".$query);
+		print '<!-- calculate totalamount '.$query.' -->'."\n";
 
 		$subresult = Db::getInstance()->ExecuteS($query);
 		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -264,10 +265,11 @@ if (sizeof($result))
 					FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 					WHERE od.product_id = ".$id_product."
 					AND o.id_order = od.id_order
-					AND date_add <= DATE_ADD('".date("Y-m-d 23:59:59",mktime())."', INTERVAL - ".$mindelaymonth." MONTH)";
+					AND o.date_add <= DATE_ADD('".date("Y-m-d 23:59:59",mktime())."', INTERVAL - ".$mindelaymonth." MONTH)";
 		if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 		if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-		prestalog($query);
+		prestalog("Request to count totatamountclaimable ".$query);
+		print '<!-- calculate totatamountclaimable '.$query.' -->'."\n";
 
 		$subresult = Db::getInstance()->ExecuteS($query);
 		if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -363,10 +365,11 @@ $query = "SELECT SUM( od.value ) as total_voucher
 			FROM "._DB_PREFIX_."order_discount as od,  "._DB_PREFIX_."orders as o
 			WHERE od.name like '%C".($customer_id != 'all' ? $customer_id : "%")."'
 			AND o.id_order = od.id_order";
-$query.= " AND date_add <= '".date("Y-m-d 23:59:59",mktime())."'";
+//$query.= " AND o.date_add <= '".date("Y-m-d 23:59:59",mktime())."'";
 if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
 prestalog($query);
+print '<!-- query='.$query.' -->'."\n";
 
 $subresult = Db::getInstance()->ExecuteS($query);
 if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -388,6 +391,7 @@ $query.= " AND date_add <= DATE_ADD('".date("Y-m-d 23:59:59",mktime())."', INTER
 if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
 prestalog($query);
+print '<!-- query='.$query.' -->'."\n";
 
 $subresult = Db::getInstance()->ExecuteS($query);
 if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -780,12 +784,25 @@ if (empty($errorcallws) && $voucherareok)
 
 if (! empty($errorcallws))
 {
-	echo aff("Due à un problème technique, vos informations paiements ne sont acutellement pas disponibles.", "Due to a technical problem, your payment information are not available for the moment.", $iso_langue_en_cours);
+	echo aff("Due à un problème technique, vos informations paiements ne sont actuellement pas disponibles.", "Due to a technical problem, your payment information are not available for the moment.", $iso_langue_en_cours);
 }
 if (empty($voucherareok))
 {
-	echo aff("Due à un problème de configuration, vos informations paiements ne sont acutellement pas disponibles.", "Due to a setup problem, your payment information are not available for the moment.", $iso_langue_en_cours);
+	echo aff("Due à un problème de configuration, vos informations paiements ne sont actuellement pas disponibles.", "Due to a setup problem, your payment information are not available for the moment.", $iso_langue_en_cours);
 }
+
+
+if ($customer_id > 0 && $customer_id == 2)
+{
+	print '<h2>';
+	echo aff("Download file of sells", "Télécharger fichier liste des ventes", $iso_langue_en_cours);
+	print '</h2>';
+
+	print '<a href="./my-sales-list.php?id_p=download">';
+	echo aff("Download", "Télécharger", $iso_langue_en_cours);
+	print '</a>';
+}
+
 
 include(dirname(__FILE__).'/../../footer.php');
 

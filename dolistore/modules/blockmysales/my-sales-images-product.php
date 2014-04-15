@@ -310,7 +310,7 @@ foreach ($result AS $row)
   </tr>
 
   <tr>
-    <td colspan="2" align="center"><br>
+    <td colspan="2" align="center">
     	<a href="javascript:document.fmysalesimgprod.action='?up=1&id_p=<?php echo $_GET['id_p']; ?>'; document.fmysalesimgprod.submit();">
           <?php echo aff("Soumettre cette nouvelle image >> ", "Submit this new picture >> ", $iso_langue_en_cours); ?>
         </a>
@@ -325,10 +325,9 @@ foreach ($result AS $row)
 
 
 <table width="100%" border="0" cellspacing="10" cellpadding="0">
-   <?php
-   $query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-			 WHERE `id_product` = '.$product_id.'
-			';
+	<?php
+	$query = 'SELECT id_image, position, cover FROM '._DB_PREFIX_.'image WHERE id_product = '.$product_id.' order by cover DESC, position';
+
 	$result = Db::getInstance()->ExecuteS($query);
 	if ($result === false) die(Tools::displayError('Invalid SQL query!: '.$query));
 
@@ -341,15 +340,17 @@ foreach ($result AS $row)
 		<?php
 		foreach ($result AS $row)
 		{
-		   $id_image = $row['id_image'];
-
+			$id_image = $row['id_image'];
+			$position = $row['position'];
+			$cover = $row['cover'];
 		?>
 		  <tr>
-			<td nowrap="nowrap" valign="top">
+			<td nowrap="nowrap" valign="middle">
 				<img src="../../img/p/<?php echo "$product_id-$id_image";?>-large.jpg" />
 			</td>
-			<td nowrap="nowrap" valign="top">
-				<a href="javascript:document.fmysalesimgprod.action='?del=<?php echo $id_image; ?>&id_p=<?php echo $_GET['id_p']; ?>'; document.fmysalesimgprod.submit();"><?php aff("Supprimer cette image", "Delete this picture", $iso_langue_en_cours); ?></a>
+			<td nowrap="nowrap" valign="middle">
+				<a href="javascript:document.fmysalesimgprod.action='?del=<?php echo $id_image; ?>&id_p=<?php echo $_GET['id_p']; ?>'; document.fmysalesimgprod.submit();"><?php echo aff("Supprimer cette image", "Delete this picture", $iso_langue_en_cours); ?></a>
+				<?php echo ($cover?'<br>'.aff('(Image principale du produit)','(Main image of product)', $iso_langue_en_cours):''); ?>
 			</td>
 		  </tr>
 		<?php

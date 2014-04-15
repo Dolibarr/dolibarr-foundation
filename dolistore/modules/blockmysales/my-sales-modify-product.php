@@ -260,7 +260,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 	{
 		$taxe_rate = $_POST['rate_tax'];
 		$taxe_id = $_POST["id_tax"];
-		if (empty($taxe_id)) $taxe_id = 0;
+		if (empty($taxe_id)) $taxe_id = $vatid;
 
 		// Define prices
 		$prix_ht = $_POST["price"];
@@ -496,6 +496,7 @@ if (! empty($_GET["upd"]) || (! empty($_POST["upd"]) && empty($_GET["up"])))
 
 	if (empty($flagError)) {
 		echo "<div style='color:#008800'>";echo aff("Modifications enregistrées.", "Changes recorded.", $iso_langue_en_cours); echo " </div><br>";
+		unset($_POST["product_file_path"]);
 	}
 }
 

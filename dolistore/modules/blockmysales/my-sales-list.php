@@ -4,11 +4,11 @@
 $useSSL = true;
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../header.php');
-//include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/../../init.php');
 
 // Get env variables
+$id_product = $_GET['id_p'];
 $id_langue_en_cours = $cookie->id_lang;
 $customer_id = $cookie->id_customer;
 $publisher=trim($cookie->customer_firstname.' '.$cookie->customer_lastname);
@@ -61,60 +61,129 @@ foreach ($languages AS $language) {
 	$x++;
 }
 
+$arraylistofproducts=array();
 
-$query = 'SELECT `id_product`, `reference` FROM `'._DB_PREFIX_.'product`
-			WHERE `reference` like "c'.$customer_id.'d2%"';
-$result = Db::getInstance()->ExecuteS($query);
+// Get list of products for customer
+if ($id_product == 'all' || $id_product == 'download')
+{
+	$id_product_list='';
 
-if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+	$query = 'SELECT p.id_product, p.reference, pl.name';
+	$query.= ' FROM '._DB_PREFIX_.'product as p';
+	$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl ON pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
+	$query.= ' WHERE reference like "c'.$customer_id.'d2%"';
+	$result = Db::getInstance()->ExecuteS($query);
+	if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+	foreach ($result AS $subrow) 
+	{
+		if (! empty($id_product_list)) $id_product_list.=",";
+		$id_product_list.="'".$subrow['id_product']."'";
+		$arraylistofproducts[$subrow['id_product']]=$subrow['name'];
+	}
 
+	if (empty($id_product_list)) $id_product_list="''";
+}
+else
+{
+	// Get information of product into user language
+	$query = 'SELECT name, description_short  FROM '._DB_PREFIX_.'product_lang
+			WHERE id_product = '.$id_product.'
+			AND id_lang = '.$id_langue_en_cours;
+	$subresult = Db::getInstance()->ExecuteS($query);
+	$name = "";
+	$description_short = "";
+	foreach ($subresult AS $subrow) {
+		$name = $subrow['name'];
+		$description_short = $subrow['description_short'];
+	}
 
-$id_product = $_GET['id_p'];
+	// Get image of product
+	$query = 'SELECT id_image FROM '._DB_PREFIX_.'image
+			WHERE id_product = '.$id_product.'
+			AND cover = 1';
+	$subresult = Db::getInstance()->ExecuteS($query);
+	$id_image = "";
+	foreach ($subresult AS $subrow) {
+		$id_image = $subrow['id_image'];
+	}
 
-//recuperation des informations ds la langue de l'utilisateur
-$query = 'SELECT `name`, `description_short`  FROM `'._DB_PREFIX_.'product_lang`
-		WHERE `id_product` = '.$id_product.'
-		AND `id_lang` = '.$id_langue_en_cours;
-$subresult = Db::getInstance()->ExecuteS($query);
-$name = "";
-$description_short = "";
-foreach ($subresult AS $subrow) {
-	$name = $subrow['name'];
-	$description_short = $subrow['description_short'];
+	if ($id_image != "")
+		$imgProduct = '../../img/p/'.$id_product.'-'.$id_image.'-small.jpg';
+	else
+		$imgProduct = '../../img/p/en-default-small.jpg';
+
 }
 
-//recuperation de limage du produit
-$query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.$id_product.'
-		AND cover = 1';
-$subresult = Db::getInstance()->ExecuteS($query);
-$id_image = "";
-foreach ($subresult AS $subrow) {
-	$id_image = $subrow['id_image'];
+// Select for list
+$query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, 
+			od.id_order_detail, od.product_price, od.tax_rate, od.product_id,
+			ROUND(od.product_price, 5) as amount_ht, 
+			ROUND(od.product_price * (100 + od.tax_rate) / 100, 2) as amount_ttc, 
+			od.reduction_percent, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
+			o.date_add, o.valid
+			FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
+			WHERE o.id_order = od.id_order AND c.id_customer = o.id_customer";
+if ($id_product == 'all' || $id_product == 'download') $query.=" AND od.product_id IN (".$id_product_list.")";
+else $query.=" AND od.product_id = ".$id_product;
+
+prestalog($query);
+
+
+if ($id_product == 'download')
+{
+	$subresult = Db::getInstance()->ExecuteS($query);
+
+	$i=0;$totalamountearned=0;
+	$colorTabNbr=0;
+	foreach ($subresult AS $subrow) 
+	{
+		$i+=$subrow['product_quantity'];
+		print ($subrow['product_quantity']>1?($i+1-$subrow['product_quantity']).'-':'').$i.";";
+		print $subrow['lastname'].' '.$subrow['firstname'].";";
+		print $subrow['cust_date_add'].";";
+		print $subrow['email'].";";
+		print $arraylistofproducts[$subrow['product_id']].";";
+		if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
+		{
+			$amountearnedunit=(float) ($subrow['amount_ht']-$subrow['reduction_amount']+0);
+			if ($subrow['reduction_percent'] > 0) $amountearnedunit=round($amountearnedunit*(100-$subrow['reduction_percent'])/100,5);
+			$amountearned=$amountearnedunit*$subrow['product_quantity'];
+
+			$totalamountearned+=$amountearned;
+			
+			print $amountearned.";";
+
+			if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) echo round($amountearnedunit,5).' ('.($subrow['amount_ht']+0).')';
+			else echo round($amountearnedunit,5).($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'');
+		}
+		else
+		{
+			print aff('Rejeté','Refunded',$iso_langue_en_cours);
+		}
+		print "\r\n";
+	}
+
+	exit;
 }
 
-if ($id_image != "")
-	$imgProduct = '../../img/p/'.$id_product.'-'.$id_image.'-small.jpg';
-else
-	$imgProduct = '../../img/p/en-default-small.jpg';
 
-if (! empty($colorTabNbr) && $colorTabNbr % 2)
-	$colorTab="#ffffff";
+// HTML header
+
+include(dirname(__FILE__).'/../../header.php');
+
+if ($id_product == 'all') 
+{
+	echo aff("<h2>Liste des ventes de tous les produits</h2>", "<h2>List of sells for all products</h2>", $iso_langue_en_cours);
+}
 else
-	$colorTab="#eeeeee";
+{
+	echo aff("<h2>Liste des ventes de produit</h2>", "<h2>List of sells for product</h2>", $iso_langue_en_cours);
+
+	echo aff('Ventes pour le produit <b>'.$name.'</b>', 'Sells for product <b>'.$name.'</b>', $iso_langue_en_cours);
+}
 
 ?>
 
-
-
-<?php echo aff("<h2>Liste des ventes de produit</h2>", "<h2>List of sells for product</h2>", $iso_langue_en_cours); ?>
-
-<?php
-echo aff(
-'Ventes pour le produit <b>'.$name.'</b>',
-'Sells for product <b>'.$name.'</b>',
-$iso_langue_en_cours);
-?>
 
 <br><br>
 
@@ -123,50 +192,46 @@ $iso_langue_en_cours);
 <tr>
 <td>
 
-
-
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   <tr bgcolor="#CCCCCC">
     <td nowrap="nowrap"><b><?php echo aff("Num", "Nb", $iso_langue_en_cours); ?></b></td>
     <td nowrap="nowrap"><b><?php echo aff("Nom", "Name", $iso_langue_en_cours); ?></b></td>
 	<td nowrap="nowrap" align="center"><b><?php echo aff("Date", "Date", $iso_langue_en_cours); ?></b></td>
+	<?php
+		if ($id_product == 'all') print '<td>'.aff("Product", "Produit", $iso_langue_en_cours).'</td>';
+	?>
     <td nowrap="nowrap"><b><?php echo aff("Montant HT", "Amount (excl tax)", $iso_langue_en_cours); ?></b></td>
     <!--<td nowrap="nowrap"><b><?php echo aff("Supp", "Delete", $iso_langue_en_cours); ?></b></td> -->
   </tr>
 
 <?php
-// Calculate totalamount
-$query = "SELECT c.id_customer, c.email, c.lastname, c.firstname, c.date_add as cust_date_add, c.date_upd as cust_date_upd, 
-			od.id_order_detail, od.product_price, od.tax_rate, 
-			ROUND(od.product_price, 5) as amount_ht, 
-			ROUND(od.product_price * (100 + od.tax_rate) / 100, 2) as amount_ttc, 
-			od.reduction_percent, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
-			o.date_add, o.valid
-			FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
-			WHERE product_id = ".$id_product."
-			AND c.id_customer = o.id_customer 
-		    AND o.id_order = od.id_order";
-prestalog($query);
 
 //print $query;
 $subresult = Db::getInstance()->ExecuteS($query);
 
 $i=0;$totalamountearned=0;
+$colorTabNbr=0;
 foreach ($subresult AS $subrow) 
 {
 	$i+=$subrow['product_quantity'];
 	
-	$colorTabNbr = 1;
+	if (! empty($colorTabNbr) && $colorTabNbr % 2)
+		$colorTab="#ffffff";
+	else
+		$colorTab="#eeeeee";
 	?>
 
 	<tr bgcolor="<?php echo $colorTab; ?>">
 		<td><?php echo ($subrow['product_quantity']>1?($i+1-$subrow['product_quantity']).'-':'').$i; ?></td>
 		<td><?php 
-			echo '<b>'.$subrow['lastname'].' '.$subrow['firstname'].'</b> ('.$subrow['email'].')'; 
+			echo '<b>'.$subrow['lastname'].' '.$subrow['firstname'].'</b><br>('.$subrow['email'].')'; 
 			echo '<br>'.aff("Inscrit le: ", "Registered on: ", $iso_langue_en_cours).$subrow['cust_date_add'];
 		?>
 		</td>
 		<td align="center"><?php echo $subrow['date_add']; ?></td>
+		<?php
+			if ($id_product == 'all') print '<td>'.$arraylistofproducts[$subrow['product_id']].'</td>';
+		?>
 		<td align="right"><?php 
 			if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 			{
@@ -190,8 +255,16 @@ foreach ($subresult AS $subrow)
 	<?php
 	$colorTabNbr++;
 }
+
+if (! empty($colorTabNbr) && $colorTabNbr % 2)
+	$colorTab="#ffffff";
+else
+	$colorTab="#eeeeee";
+
+$colspan=3;
+if ($id_product == 'all') $colspan++;
 ?>
-<tr bgcolor="<?php echo $colorTab; ?>"><td colspan="3"><?php echo aff("Total HT", "Total excl taxes", $iso_langue_en_cours); ?></td><td align="right"><?php echo round($totalamountearned,2); ?></td></tr>
+<tr bgcolor="<?php echo $colorTab; ?>"><td colspan="<?php echo $colspan; ?>"><?php echo aff("Total HT", "Total excl taxes", $iso_langue_en_cours); ?></td><td align="right"><?php echo round($totalamountearned,2); ?></td></tr>
 </table>
 
 
