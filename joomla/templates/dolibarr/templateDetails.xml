@@ -1,43 +1,60 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<mosinstall type="template" version="1.0">
-  <name>dolibarr</name>
-  <creationDate>02/2007</creationDate>
-  <author>Eldy (Laurent Destailleur)</author>
-  <copyright>This template is released under GNU/GPL License.</copyright>
-  <authorEmail>contact@dolibarr.org</authorEmail>
-  <authorUrl>www.dolibarr.org</authorUrl>
-  <version>1.0</version>
-  <description>Dolibarr portal template for Joomla 1.5.22. This template is provided by the Dolibarr foundation and ca be used by any local portal dedicated to Dolibarr ERP-CRM project.</description>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
+<extension version="3.0" type="template" client="site" method="upgrade">
+	<name>dolibarr</name>
+	<version>2.0</version>
+	<creationDate>2014-02</creationDate>
+	<author>Dolibarr template for Joomla 3.2</author>
+	<authorEmail>contact@dolibarr.org</authorEmail>
+	<copyright>Copyright (C) 2014</copyright>
+	<description>TPL_DOLIBARR_XML_DESCRIPTION</description>
 	<files>
+		<filename>favicon.ico</filename>
+		<filename>index.html</filename>
 		<filename>index.php</filename>
 		<filename>template_thumbnail.png</filename>
-		<filename>menu.php</filename>
-		<filename>templates.php</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_preview.png</filename>
+		<folder>images</folder>
+		<folder>css</folder>
+		<folder>html</folder>
 	</files>
-	<images>
-		<filename>images/banner_01.jpg</filename>
-		<filename>images/banner_02.jpg</filename>
-		<filename>images/bg.jpg</filename>
-		<filename>images/bg_inside.gif</filename>
-		<filename>images/body_bg.jpg</filename>
-		<filename>images/footer_bg.jpg</filename>
-		<filename>images/home.gif</filename>
-		<filename>images/indent1.png</filename>
-		<filename>images/lr_bg.gif</filename>
-		<filename>images/mail.gif</filename>
-		<filename>images/mainlevel.gif</filename>
-		<filename>images/mainlevel_h.gif</filename>
-		<filename>images/moduletable_th_bg.gif</filename>
-		<filename>images/subbullet.gif</filename>
-		<filename>images/table_bg.gif</filename>
-		<filename>images/topmenu_bg.gif</filename>
-		<filename>images/topmenu_bg_over.gif</filename>
-		<filename>images/topmenu_left.gif</filename>
-		<filename>images/topmenu_right.gif</filename>
-		<filename>images/toppath.gif</filename>
-
-	</images>
-	<css>
-		<filename>css/template_css.css</filename>
-	</css>
-</mosinstall>
+	<positions>
+		<position>position-0</position>
+		<position>position-1</position>
+		<position>position-2</position>
+		<position>position-3</position>
+		<position>position-4</position>
+		<position>position-5</position>
+		<position>position-6</position>
+		<position>position-7</position>
+		<position>position-8</position>
+		<position>position-9</position>
+		<position>position-10</position>
+		<position>position-11</position>
+		<position>position-12</position>
+		<position>position-13</position>
+		<position>position-14</position>
+		<position>position-15</position>
+		<position>position-16</position>
+		<position>position-17</position>
+		<position>position-18</position>
+		<position>position-19</position>
+	</positions>
+	<languages folder="language">
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_dolibarr.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_dolibarr.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="advanced">
+				<field 
+					name="templateBackgroundColor" 
+					type="color" 
+					default="#F4F6F7"
+					label="TPL_DOLIBARR_BACKGROUND_COLOR_LABEL"
+					description="TPL_DOLIBARR_BACKGROUND_COLOR_DESC" />                    
+			</fieldset>
+		</fields>
+	</config>
+</extension>
