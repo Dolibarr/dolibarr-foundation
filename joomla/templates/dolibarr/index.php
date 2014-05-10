@@ -1,236 +1,312 @@
-<?php defined( "_VALID_MOS" ) or die( "Direct Access to this location is not allowed." );$iso = split( '=', _ISO );echo '<?xml version="1.0" encoding="'. $iso[1] .'"?' .'>';?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?php
+/**
+ * @copyright	Copyright (C) 2014 Laurent Destailleur
+ * @license		GNU/GPL
+ **/
+
+defined('_JEXEC') or die;
+$app = JFactory::getApplication();
+JHtml::_('behavior.framework');	// If we don't add this, the "/media/system/js/mootools-core.js" and /media/system/js/core.js" lib are not loaded making errors on "Class" method not found.
+?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
 <head>
-<?php mosShowHead(); ?>
-<meta http-equiv="Content-Type" content="text/html" <?php echo _ISO; ?> />
-<meta name="Updowner-verification" content="1328821adac0666e174e84809a4cc72e" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<jdoc:include type="head" />
+<link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/system.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/general.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/template.css" type="text/css" />
+<link rel="image_src" type="image/jpeg" href="http://www.dolibarr.fr/images/stories/dolibarr.png" />
+	<?php
+	if ($this->params->get('templateColor'))
+	{
+	?>
+		<style type="text/css">
+			body
+			{
+				background-color: <?php echo $this->params->get('templateBackgroundColor');?>
+			}
+		</style>
+	<?php
+	}
+	?>
+	<?php
+	// verifies si on a besoin des colonnes
+	$mainclass = '';
+	if (!$this->countModules('position-7'))
+	{
+		$mainclass .= " noleft";
+	}
+	if (!$this->countModules('position-6') || $app->input->getCmd('task', '') == 'edit')
+	{
+		$mainclass .= " noright";
+	}
+	$mainclass = trim($mainclass);
+	?>
+	<?php
+	$nbmodulesrow1 = (bool)$this->countModules('position-8') + (bool)$this->countModules('position-9') + (bool)$this->countModules('position-10') + (bool)$this->countModules('position-11');
+	?>
+	<?php
+	$nbmodulesrow2 = (bool)$this->countModules('position-12') + (bool)$this->countModules('position-13') + (bool)$this->countModules('position-14') + (bool)$this->countModules('position-15');
+	?>
+	<?php
+	$nbmodulesrow3 = (bool)$this->countModules('position-16') + (bool)$this->countModules('position-17') + (bool)$this->countModules('position-18') + (bool)$this->countModules('position-19');
+	?>
+<!-- Google tags -->
+<link href="https://plus.google.com/+DolibarrFr" rel="publisher" />
 <meta name="verify-v1" content="5uTEtcSaRHlZVnb3L4x4QrpRzdw3zMZ51+mJxf/4Cd8=" />
 <meta name="verify-v1" content="ygCOli7T1nnmmIz2ikasGV2Y+1DLmLcsblrDp+tSo/Q=" />
-<?php if ( $my->id ) { initEditor(); } ?>
-<?php echo "<link rel=\"stylesheet\" href=\"$GLOBALS[mosConfig_live_site]/templates/$GLOBALS[cur_template]/css/template_css.css\" type=\"text/css\"/>" ; ?>
-<!-- Google analytics -->
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9049390-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-<!-- End google analytics --> 
-<style type="text/css" media="screen">
-      .ribbon {
-        background-color: #a00;
-        overflow: hidden;
-        /* top left corner */
-        position: fixed;
-        left: -3em;
-        top: 2.5em;
-        /* 45 deg ccw rotation */
-        -moz-transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
-        -moz-box-shadow: 0 0 1em #888;
-        -webkit-box-shadow: 0 0 1em #888;
-      }
-      .ribbon a {
-        border: 1px solid #faa;
-        color: #fff;
-        display: block;
-        font: bold 81.25% 'Helvetiva Neue', Helvetica, Arial, sans-serif;
-        margin: 0.05em 0 0.075em 0;
-        padding: 0.5em 3.5em;
-        text-align: center;
-        text-decoration: none;
-        text-shadow: 0 0 0.5em #444;
-      }
-</style>
+<!-- Updowner tags -->
+<meta name="Updowner-verification" content="1328821adac0666e174e84809a4cc72e" />
+<!-- Twitter tags -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@dolibarr_france">
+<meta name="twitter:title" content="Dolibarr ERP CRM Portail France">
+<meta name="twitter:description" content="Dolibarr ERP/CRM (PGI) est un logiciel Open Source de gestion commerciale gratuit pour gérer une activitée professionnelle ou associative (PME/PMI, travailleurs indépendants, associations, artisans, auto-entrepreneurs), son fonctionnement modulaire permet d'alléger son interface en fonction des besoins de l'entreprise">
+<meta name="twitter:creator" content="@dolibarr_france">
+<meta name="twitter:image:src" content="http://www.dolibarr.fr/images/stories/dolibarr.png">
+<meta name="twitter:domain" content="dolibarr.fr">
+<meta name="twitter:app:name:iphone" content="">
+<meta name="twitter:app:name:ipad" content="">
+<meta name="twitter:app:name:googleplay" content="">
+<meta name="twitter:app:url:iphone" content="">
+<meta name="twitter:app:url:ipad" content="">
+<meta name="twitter:app:url:googleplay" content="">
+<meta name="twitter:app:id:iphone" content="">
+<meta name="twitter:app:id:ipad" content="">
+<meta name="twitter:app:id:googleplay" content="">
 </head>
 <body class="body">
 
-<style type="text/css">
-<!--
-#rt-main-surround, #rt-variation .bg3 .module-content, #rt-variation .title3 .module-title {background:#ffffff;}
-#rt-variation .bg3, #rt-variation .bg3 .title, #rt-variation .title3 .title, #rt-variation .bg3 ul.menu li > a:hover, #rt-variation .bg3 ul.menu li.active > a {color:#474747;}
-#rt-variation .bg3 a, #rt-variation .bg3 .title span, #rt-variation .bg3 .button, #rt-variation .title3 .title span {color:#2c68a3;}
-#rt-main-header, .menutop ul, .menutop .drop-top, #rt-variation .bg1 .module-content, #rt-variation .title1 .module-title {background:#2c68a3;}
-#rt-main-header, #rt-main-header .title, #rt-header, #rt-main-header .menutop li > .item, .menutop ul li .item, #rt-variation .bg1, #rt-variation .bg1 .title, #rt-variation .title1 .title, #rt-variation .bg1 ul.menu li > a:hover, #rt-variation .bg1 ul.menu li.active > a, #rt-navigation li.root .item {color:#dedede;}
-#rt-main-header .title span, #rt-variation .bg1 a, #rt-variation .bg1 .title span, #rt-variation .bg1 .button, #rt-variation .title1 .title span {color:#cce6ff;}
-#rt-feature, #rt-utility, #roksearch_results, #roksearch_results .rokajaxsearch-overlay, #rt-variation .bg2 .module-content, #rt-variation .title2 .module-title {background:#ffffff;}
-#rt-feature, #rt-feature .title, #rt-utility, #rt-utility .title, #roksearch_results, #roksearch_results span, #rt-variation .bg2, #rt-variation .bg2 .title, #rt-variation .title2 .title, #rt-variation .bg2 ul.menu li > a:hover, #rt-variation .bg2 ul.menu li.active > a {color:#474747;}
-#rt-feature a, #rt-utility a, #rt-feature .title span, #rt-utility .title span, #roksearch_results a, #roksearch_results h3, #rt-variation .bg2 a, #rt-variation .bg2 .title span, #rt-variation .bg2 .button, #rt-variation .title2 .title span {color:#2c68a3;}
-#rt-mainbody-bg, #rt-variation .bg4 .module-content, #rt-variation .title4 .module-title {background:#ffffff;}
-#rt-mainbody-bg, #rt-mainbody-bg .title, #rt-mainbody-bg .rt-article-title, #rt-mainbody-bg ul.menu li > a:hover, #rt-mainbody-bg ul.menu li.active > a, #rt-variation .bg4, #rt-variation .bg4 .title, #rt-variation .title4 .title, #rt-variation .bg4 ul.menu li > a:hover, #rt-variation .bg4 ul.menu li.active > a {color:#474747;}
-#rt-mainbody-bg a, #rt-mainbody-bg .title span, #rt-mainbody-bg .rt-article-title span, #rt-variation .bg4 a, #rt-variation .bg4 .title span, #rt-variation .bg4 .button, #rt-variation .title4 .title span {color:#2c68a3;}
-#rt-bottom, #rt-main-footer, #rt-variation .bg5 .module-content, #rt-variation .title5 .module-title {background:#2c68a3;}
-#rt-bottom, #rt-bottom .title, #rt-footer, #rt-footer .title, #rt-copyright, #rt-copyright .title, #rt-debug, #rt-debug .title, #rt-variation .bg5, #rt-variation .bg5 .title, #rt-variation .title5 .title, #rt-variation .bg5 ul.menu li > a:hover, #rt-variation .bg5 ul.menu li.active > a {color:#474747;}
-#rt-bottom a, #rt-bottom .title span, #rt-footer a, #rt-footer .title span, #rt-copyright a, #rt-copyright .title span, #rt-debug a, #rt-debug .title span, #rt-variation .bg5 a, #rt-variation .bg5 .title span, #rt-variation .bg5 .button, #rt-variation .title5 .title span {color:#2c68a3;}
--->
-</style>
-<div id="rt-main-header" class="header-shadows-light"><div id="rt-header-overlay" class="header-overlay-none">
-<div id="rt-main-header2">
-<div id="rt-header-graphic" class="header-graphic-header-6">
+<script>
+// Create the state-indicator element
+var indicator = document.createElement('div');
+indicator.className = 'state-indicator';
+document.body.appendChild(indicator);
+// Create a method which returns device state
+function getDeviceState() {
+    return parseInt(window.getComputedStyle(indicator).getPropertyValue('z-index'), 10);
+}
+//alert(getDeviceState());
 
+/* Information on media 
+    var dpr = window.devicePixelRatio,
+    msg = '';
+	if (dpr) { msg += 'devicePixelRatio: ' + dpr; } // devicePixelRatio property
+	
+	if (window.matchMedia) { // matchMedia method
+    if (window.matchMedia('(min-resolution: 96dpi)').matches) { msg += '\ndpi: true'; }	// resolution feature & dpi unit
+    if (window.matchMedia('(min-resolution: 1dppx)').matches) { msg += '\ndppx: true'; }	// resolution feature & dppx unit
+    if (window.matchMedia('(-webkit-min-device-pixel-ratio: 1)').matches) { msg += '\n-wk-dpr: true'; }	// -webkit-device-pixel-ratio feature
+    if (window.matchMedia('(-o-min-device-pixel-ratio: 1/1)').matches) { msg += '\n-o-dpr: true'; }	// -o-device-pixel-ratio feature
+}
+window.alert(msg);
+*/
+</script>
 
-<!-- Top banner Logo -->
-<div id="rt-header">
-<div class="rt-container">
-<div class=""><div class="shadow-right"><div class="shadow-bottom">
-					
-<div class="rt-grid-12 rt-alpha rt-omega">
-<div class="rt-block" style="height: 130px;">
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<div style="float: left">
-<a href="/"><img src="/templates/dolibarr/images/bg2.png" id="rt-logo"></a>
+  ga('create', 'UA-9049390-9', 'dolibarr.fr');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+<!-- End google analytics --> 
+	
+<div class="plusone">
+	<!-- Plus one -->
+	<g:plusone size="small" href="http://www.dolibarr.fr/"></g:plusone>
+	<script type="text/javascript">
+	(function() {
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = 'http://apis.google.com/js/plusone.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	})();
+	</script>
 </div>
-<div style="float: right" id="dolbanner">
-<?php mosLoadModules('banner'); ?>
-</div>
 
-</div>
-</div>
-
-<div class="clear"></div>
-</div></div></div>
-</div>
-</div>
-<!-- End top banner logo -->
-
-<!-- navigation -->
-<div id="rt-navigation" style="height: 54px;"><div id="rt-navigation2" style="height: 54px;"><div id="rt-navigation3" style="height: 54px;">
-<div class="rt-container" style="height: 54px;">
-<div class="shadow-left" style="height: 54px;"><div class="shadow-right" style="height: 54px;">
-
-<?php include('menu.php'); ?>	
-
-<div class="clear"></div>
-</div></div>
-</div>
-</div></div></div>
-<!-- End navigation -->
-
-
+<span itemscope itemtype="http://schema.org/SoftwareApplication">
+<header>
+	<div id="header" class="clearfix">
+			<a id="logo" href="<?php echo $this->baseurl; ?>">
+				<img src="<?php echo JURI::root() ?>templates/<?php echo $this->template ?>/images/bg2.png" alt="<?php echo $app->getCfg('sitename') ?>" width="200" height="59"/> <?php if ($this->params->get('sitedescription')) { echo '<div class="site-description">'. htmlspecialchars($this->params->get('sitedescription')) .'</div>'; } ?>
+			</a>
+			<div id="headermodule">
+				<jdoc:include type="modules" name="position-0" style="none" />
+			</div>
+		</div>
+		
+		<?php if ($this->countModules('position-1')): ?>
+		<div id="nav" class="">
+			<div id="decalmenu" class="backshadow">
+			<jdoc:include type="modules" name="position-1" style="none" />
+			</div>
+			<div class="backshadow arrowafterul"></div>
+			<div class="backshadow">
+			<jdoc:include type="modules" name="position-2" style="none" />
+			</div>
+		</div>
+		<?php endif; ?>
+	</div>
+</header>
 
 <div id="main-surround" class="main-shadows-light">
-<div id="container"><div class="shadow-left"><div class="shadow-right">
 
+		<div class="wrapper">
+<div class="shadow-left"><div class="shadow-right">
 
-
-
-<table cellpadding="0" cellspacing="0">
-
-	<tr>
-<?php if (preg_match('/\/forum/',$_SERVER['SCRIPT_URL'])) { ?>
-	<td class="leftcol" valign="top">
-			<?php mosLoadModules('left'); ?>
-	</td>
-<?php } ?>
-	<td class="maincol" valign="top">
-
-
-<!-- Intro -->
-<?php 
-if (empty($_SERVER['SCRIPT_URL']) || in_array($_SERVER['SCRIPT_URL'],array('/')) && ! isset($_GET['searchword']))
-{
-	print '<div>';
-	mosLoadModules('user1');
-	print '</div>';
-
-	print '<table><tr><td valign="top">';
-	mosLoadModules('user2');
-	print '</td><td valign="top">';
-	mosLoadModules('user3');
-	print '</td></tr></table>';
-
-	print '<br>';
-
-	print '<div>';
-	mosLoadModules('user4');
-	print '</div>';
-
-
-	if (in_array($_SERVER['SCRIPT_URL'],array('/','/lastnews')) && ! preg_match('/searchword/',$_SERVER['QUERY_STRING'])) print '<br><div class="componentheading" style="margin-left:6px;">Last news</div><br>';
-}
-if (empty($_SERVER['SCRIPT_URL']) || in_array($_SERVER['SCRIPT_URL'],array('/foundation','/foundation?jid=3')))
-{
-
-}
-?>
-
-		<div style="padding:0px 2px 0px 2px;">
-			<?php mosMainBody(); ?>
+		<?php if ($nbmodulesrow1): ?>
+		<div id="row1modules" class="clearfix <?php echo 'n'.$nbmodulesrow1 ?>">
+			<?php if ($this->countModules('position-8')) : ?>
+			<div class="row1module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-8" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
+			<?php if ($this->countModules('position-9')) : ?>
+			<div class="row1module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-9" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
+			<?php if ($this->countModules('position-10')) : ?>
+			<div class="row1module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-10" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
+			<?php if ($this->countModules('position-11')) : ?>
+			<div class="row1module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-11" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
 		</div>
-	</td>
-
-<?php if (! preg_match('/\/forum/',$_SERVER['SCRIPT_URL'])) { ?>
-
-	<td class="rightcol" valign="top">
-
-		<!-- search form -->
-		<?php if (! preg_match('/(component\/user|component\/search)/',$_SERVER['SCRIPT_URL']) && ! isset($_GET['searchword'])) { ?>
-		<div id="rt-utility" class="feature-shadows-light">
-		<div id="rt-utility2" style="height: 40px;"><div id="rt-utility3">
-
-		<div class="rt-grid-4">
-		<form name="rokajaxsearch" id="rokajaxsearch" class="light" action="http://dolibarr.org/" method="get">
-		<div class="rokajaxsearchbg1">
-		<div class="roksearch-wrapper">
-		<input id="roksearch_search_str" name="searchword" type="text" class="inputbox" value="" autocomplete="off" value="<?php echo $_POST['searchword']; ?>">
+		<?php endif; ?>
+		
+		
+		<div id="main" class="clearfix <?php echo $mainclass ?>">
+			<?php if ($this->countModules('position-7')): ?>
+			<div id="left">
+				<div class="inner rounded">
+					<jdoc:include type="modules" name="position-7" style="xhtml" />
+				</div>
+			</div>
+			<?php endif; ?>
+			
+			<div id="center" class="rounder white">
+				<?php if (empty($_SERVER['SCRIPT_URL']) || in_array($_SERVER['SCRIPT_URL'],array('/')) && ! isset($_GET['layout']) && ! isset($_GET['searchword']) && ! isset($_GET['start'])) { ?>
+				<div id="slideshow">
+					<jdoc:include type="modules" name="position-3" style="xhtml" />
+				</div>
+				<?php } ?>
+								
+				<div class="inner">
+					<jdoc:include type="modules" name="position-5" style="xhtml" />
+					<jdoc:include type="message" />
+					<?php if (empty($_SERVER['SCRIPT_URL']) || in_array($_SERVER['SCRIPT_URL'],array('/')) && ! isset($_GET['layout']) && ! isset($_GET['searchword']) && ! isset($_GET['start'])) { ?>
+					<h3>Dernières actualités...</h3><hr />
+					<?php } ?>
+					<jdoc:include type="component" />
+					<jdoc:include type="modules" name="position-2" style="xhtml" />
+				</div>
+			</div>
+			<?php if ($this->countModules('position-6')) : ?>
+			<div id="right">
+				<div class="inner rounded">
+					<jdoc:include type="modules" name="position-6" style="xhtml" />
+				</div>
+			</div>
+			<?php endif; ?>
 		</div>
-		<input type="hidden" name="searchphrase" value="all">
-		<input type="hidden" name="limit" value="50">
-		<input type="hidden" name="ordering" value="newest">
-		<input type="hidden" name="view" value="search">
-		<input type="hidden" name="Itemid" value="99999999">
-		<input type="hidden" name="option" value="com_search">
-		<input type="hidden" name="areas[0]" value="content">
-		<input type="hidden" name="areas[1]" value="categories">
-		<input type="hidden" name="areas[2]" value="sections">
-		<input type="hidden" name="areas[3]" value="newsfeeds">
-		<!--<input type="hidden" name="areas[4]" value="plug_kunenasearch">-->
+		<?php if ($nbmodulesrow2): ?>
+		<div id="row2modules" class="clearfix <?php echo 'n'.$nbmodulesrow2 ?>">
+			<?php if ($this->countModules('position-12')) : ?>
+			<div class="row2module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-12" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
+			<?php if ($this->countModules('position-13')) : ?>
+			<div class="row2module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-13" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
+			<?php if ($this->countModules('position-14')) : ?>
+			<div class="row2module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-14" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
+			<?php if ($this->countModules('position-15')) : ?>
+			<div class="row2module">
+				<div class="inner rounded white">
+					<jdoc:include type="modules" name="position-15" style="perso" />
+				</div>
+			</div>
+			<?php endif; ?>
 		</div>
-		<div id="rokajaxsearch_tmp" style="visibility:hidden;display:none;"></div>
-		</form>	
-		</div>
+		<?php endif; ?>
 
-		</div>
-		</div>
-		</div>
-		<?php } ?>
-		<!-- end search form -->
-
-		<?php mosLoadModules('right'); ?>
-		<?php $sg = 'banner'; include "templates.php"; ?>
-	</td>
-
-<?php } ?>
-
-	</tr>
-</table>
-
-<div class="footer_bg">
-<div class="footer">
-<?php $sg = ''; include "templates.php"; ?>
-<A href="http://sourceforge.net/projects/dolibarr/"><img src="http://sourceforge.net/sflogo.php?group_id=153900&type=1" width="1" height="1" border="0" alt="SourceForge"></A>
+</div></div>	
+	</div>
 </div>
-</div>
 
-</div>
-</div>
-</div>
-</div>
+<div id="body2">
+		<div class="wrapper2">
+			<?php if ($nbmodulesrow3): ?>
+			<div id="row3modules" class="clearfix <?php echo 'n'.$nbmodulesrow2 ?>">
+					<?php if ($this->countModules('position-16')) : ?>
+					<div class="row3module">
+						<div class="inner">
+							<jdoc:include type="modules" name="position-16" style="xhtml" />
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php if ($this->countModules('position-17')) : ?>
+					<div class="row3module">
+						<div class="inner">
+							<jdoc:include type="modules" name="position-17" style="xhtml" />
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php if ($this->countModules('position-18')) : ?>
+					<div class="row3module">
+						<div class="inner">
+							<jdoc:include type="modules" name="position-18" style="xhtml" />
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php if ($this->countModules('position-19')) : ?>
+					<div class="row3module">
+						<div class="inner">
+							<jdoc:include type="modules" name="position-19" style="xhtml" />
+						</div>
+					</div>
+					<?php endif; ?>
+			</div>
+			<?php endif; ?>
+			<div id="footer">
+				<jdoc:include type="modules" name="position-4" style="none" />
+				<span itemprop="name">Dolibarr ERP &amp; CRM</span> &copy; 2003-2014 - Gestion d'entreprise ou d'association<br/>
+			</div>
+		</div>
+</div></span>
 
-</center>
-
-<div class="ribbon">                                                                                                    
-    <a href="http://github.com/Dolibarr/dolibarr" target="_blank">Fork me on GitHub</a>                                 
-</div> 
+<jdoc:include type="modules" name="debug" style="none" />
 
 </body>
 </html>
-
