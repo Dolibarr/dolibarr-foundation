@@ -14,7 +14,7 @@
    height="297mm"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="dolibarr_124x124.svg">
   <defs
      id="defs4">
@@ -318,6 +318,37 @@
        id="linearGradient3077"
        xlink:href="#linearGradient3767-1-0-4-1-6-6"
        inkscape:collect="always" />
+    <linearGradient
+       y2="289.19193"
+       x2="330.96988"
+       y1="289.19193"
+       x1="205.42113"
+       gradientTransform="matrix(2.0603828,0,0,2.0603828,115.78961,-723.84612)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3113"
+       xlink:href="#linearGradient3767-1-0-4-8"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient3767-1-0-4-8">
+      <stop
+         style="stop-color:#4479ab;stop-opacity:1;"
+         offset="0"
+         id="stop3769-2-0-2-8" />
+      <stop
+         style="stop-color:#1b4b77;stop-opacity:1;"
+         offset="1"
+         id="stop3771-8-3-6-4" />
+    </linearGradient>
+    <linearGradient
+       y2="289.19193"
+       x2="330.96988"
+       y1="289.19193"
+       x1="205.42113"
+       gradientTransform="matrix(0.98063953,0,0,0.98063953,351.25341,-818.12387)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3206"
+       xlink:href="#linearGradient3767-1-0-4-8"
+       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -326,14 +357,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8623232"
+     inkscape:zoom="1.4311616"
      inkscape:cx="364.672"
-     inkscape:cy="506.38984"
+     inkscape:cy="327.10242"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-width="1598"
+     inkscape:window-height="850"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -639,16 +670,48 @@
        y="646.58429"
        x="375.30954"
        id="image3112"
-       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAIAAAAmzuBxAAAAA3NCSVQICAjb4U/gAAAAwklEQVQY
-lVWQvW3DQBSDv0tuCRWaw1MYHsBFsobhUdx5B2+U1KkE3N37YQopUESweAD5CIJF7MjjvbIIuN8B
-ZVIKIDNakzvu/fGoAEhf30TwfEoCdLnIjGlKqIBSRBCxyZLMNAyzBALydsvMiAgPdzezMUbvvV+v
-P2sGpUjaA/6w9q2AWpMkhI6OZUmoCaU1nc+46/XaxNNJZmWeN8e7u8ww29/H0Bhr05rwZs40yYyP
-TyR6K/OMu8wSyvJvvjyuufIXLIPJgrISOwYAAAAASUVORK5CYII=
-"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAIAAAAmzuBxAAAAA3NCSVQICAjb4U/gAAAAwklEQVQY lVWQvW3DQBSDv0tuCRWaw1MYHsBFsobhUdx5B2+U1KkE3N37YQopUESweAD5CIJF7MjjvbIIuN8B ZVIKIDNakzvu/fGoAEhf30TwfEoCdLnIjGlKqIBSRBCxyZLMNAyzBALydsvMiAgPdzezMUbvvV+v P2sGpUjaA/6w9q2AWpMkhI6OZUmoCaU1nc+46/XaxNNJZmWeN8e7u8ww29/H0Bhr05rwZs40yYyP TyR6K/OMu8wSyvJvvjyuufIXLIPJgrISOwYAAAAASUVORK5CYII= "
        height="14.493666"
        width="21.830362"
        inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo/dolibarr_256x256_ch.png"
        inkscape:export-xdpi="185.42999"
        inkscape:export-ydpi="185.42999" />
+    <rect
+       style="fill:url(#linearGradient3206);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3765-7-6-6-3"
+       width="121.84324"
+       height="121.84324"
+       x="553.3349"
+       y="-595.45245"
+       transform="matrix(0,1,-1,0,0,0)"
+       inkscape:export-filename="/home/ldestailleur/git/foundation/logo/dolibarr_256x256_ma.png"
+       inkscape:export-xdpi="189.10001"
+       inkscape:export-ydpi="189.10001" />
+    <text
+       xml:space="preserve"
+       style="font-size:117.60074615px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="487.15442"
+       y="657.94434"
+       id="text3775-8-8-5-2"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0073138,0.9927393)"
+       inkscape:export-filename="/home/ldestailleur/git/foundation/logo/dolibarr_256x256_ma.png"
+       inkscape:export-xdpi="189.10001"
+       inkscape:export-ydpi="189.10001"><tspan
+         sodipodi:role="line"
+         id="tspan3777-1-6-7-2"
+         x="487.15442"
+         y="657.94434"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+    <image
+       y="648.89276"
+       x="566.3515"
+       id="image3165"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAIAAAD5gJpuAAAAA3NCSVQICAjb4U/gAAAA+UlEQVQo kX2SO04DUQxFz8AQZQmkyAKoEMrysqssAwkQBRIFVXaA+CTje/1MMRMSBMKF5eL4+tsVR2sncQLg X74rYL0GqjUyAeRKl41dUtklYbeIt82mH/VquwVGgsyKaBJ2hSr2FSKT5RLoJ+1/6YooqRsGQ9+g y5yqS9i70t21mrW6jdmBLgkFcDY1faCb9Hj5+jGP93k8L2OiI2oYynloKceEKCfDcPMyeyCgu3rS REdURGcb+oQz+5su6dxa3euoHVERQNk5VhjnQyqprNrtK/OUHhPGpfeGC4nFYpwBm4jediYKnEhd ZmXS3KD7/HnIP6+bJ0/wBU0fPbTQ3QbEAAAAAElFTkSuQmCC "
+       height="16.114313"
+       width="21.213779"
+       inkscape:export-filename="/home/ldestailleur/git/foundation/logo/dolibarr_256x256_ma.png"
+       inkscape:export-xdpi="189.10001"
+       inkscape:export-ydpi="189.10001" />
   </g>
 </svg>
