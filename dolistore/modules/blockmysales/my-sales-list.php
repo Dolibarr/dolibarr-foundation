@@ -135,6 +135,18 @@ if ($id_product == 'download')
 
 	$i=0;$totalamountearned=0;
 	$colorTabNbr=0;
+
+	print 'Module sell nb;';
+	print 'Customer;';
+	print 'Customer date creation;';
+	print 'Customer email;';
+	print 'Date sell;';
+	print 'Product id;';
+	print 'Product label;';
+	print 'Amount earned;';
+	print 'Note';
+	print "\n";
+
 	foreach ($subresult AS $subrow) 
 	{
 		$i+=$subrow['product_quantity'];
@@ -142,6 +154,7 @@ if ($id_product == 'download')
 		print $subrow['lastname'].' '.$subrow['firstname'].";";
 		print $subrow['cust_date_add'].";";
 		print $subrow['email'].";";
+		print $subrow['date_add'].";";
 		print $arraylistofproducts[$subrow['product_id']].";";
 		if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 		{
@@ -158,7 +171,7 @@ if ($id_product == 'download')
 		}
 		else
 		{
-			print aff('Rejeté','Refunded',$iso_langue_en_cours);
+			print aff('Rejeté','Refunded',$iso_langue_en_cours).";";
 		}
 		print "\r\n";
 	}

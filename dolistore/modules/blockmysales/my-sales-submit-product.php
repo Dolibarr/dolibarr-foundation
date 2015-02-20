@@ -94,10 +94,10 @@ if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 		$error++;
 	}
 
-	if (! $error && ! preg_match('/(\.odt|\.pdf|\.svg|\.zip|\.txt)$/i',$originalfilename))
+	if (! $error && ! preg_match('/(\.apk|\.odt|\.pdf|\.svg|\.zip|\.txt)$/i',$originalfilename))
 	{
-		$rulesfr.="Le nom du fichier package doit avoir une extension .odt, .pdf, .svg, .zip ou .txt<br>";
-		$rulesen.="Package file name must end with extension .odt, .pdf, .svg, .zip or .txt<br>";
+		$rulesfr.="Le nom du fichier package doit avoir une extension .odt, .pdf, .svg, .zip, .txt ou .apk<br>";
+		$rulesen.="Package file name must end with extension .odt, .pdf, .svg, .zip, .txt or .apk<br>";
 		echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
 		echo "<br>";
 		$upload=-1;
@@ -118,12 +118,12 @@ if (! empty($_GET["up"]) || ! empty($_POST["up"]))
 	{
 		$rulesfr="";
 		$rulesen='';
-		if (! preg_match('/^module_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
+		if (! preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
 			&& ! preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename))
 		{
-			$rulesfr.="Le nom du fichier package doit avoir un nom du type module_monpackage-x.y(.z).zip<br>";
+			$rulesfr.="Le nom du fichier package doit avoir un nom du type module_monpackage-x.y(.z).zip pour un module dolibarr, ou moduleabc_monpackage-x.y(.z).zip pour un module pour une application abc.<br>";
 			$rulesfr.="Essayer de fabriquer votre package avec un outil Dolibarr officiel récent ('htdocs/build/makepack-dolibarrmodule.pl' pour les modules ou ''htdocs/build/makepack-dolibarrtheme.pl' pour les themes).";
-			$rulesen.="Package file name must match module_mypackage-x.y(.z).zip<br>";
+			$rulesen.="Package file name must match module_mypackage-x.y(.z).zip for a dolibarr module, or moduleavx_mypackage-x.y(.z).zip for a module for an application abc.<br>";
 			$rulesen.="Try to build your package with a recent Dolibarr official tool ('htdocs/build/makepack-dolibarrmodule.pl' or 'htdocs/build/makepack-dolibarrtheme.pl' for themes)";
 			echo "<div style='color:#FF0000'>".aff("Le package ne respecte pas certaines regles:<br>".$rulesfr,"Package seems to not respect some rules:<br>".$rulesen,$iso_langue_en_cours)."</div>";
 			echo "<br>";

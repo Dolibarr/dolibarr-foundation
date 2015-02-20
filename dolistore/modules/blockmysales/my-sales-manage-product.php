@@ -128,7 +128,7 @@ $dolistoreinvoices=array();
 
 if ($customer_id != 'all')
 {
-echo aff("Les statistiques sont celles des téléchargements/ventes pour les composants soumis par l'utilisateur courant:<br><b>Nom: ".$publisher.($company?"<br>Société: ".$company:"").($country?"<br>Pays: ".$country:"")."</b>",
+echo aff("Les statistiques sont celles des téléchargements/ventes pour les composants soumis par l'utilisateur courant:<br><b>Nom compte DoliStore: ".$publisher.($company?"<br>Société dans l'adresse DoliStore: ".$company:"").($country?"<br>Pays dans l'adresse DoliStore: ".$country:"")."</b>",
 "Statistics are for download/sells of components submited by for current user:<br><b>Name: ".$publisher.($company?"<br>Company: ".$company:"").($country?"<br>Country: ".$country:"")."</b>",
 $iso_langue_en_cours);
 }
@@ -491,6 +491,28 @@ if ($customer_id != 'all')
 		if ($socid)
 		{
 			$foundthirdparty=true;
+			print '<!-- We found thirdparty with id = '.$socid.' -->';
+			//var_dump($socid);
+		}
+	}
+
+	if (! $foundthirdparty)
+	{
+		$parameters = array('authentication'=>$authentication,'id'=>0,'ref'=>$company.' ('.$publisher.')');
+		$WS_METHOD  = 'getThirdParty';
+		prestalog("Call method ".$WS_METHOD." for ref=".$company.' ('.$publisher.')');
+		$result = $soapclient->call($WS_METHOD,$parameters);
+		if (! $result)
+		{
+		    print 'Error '.$soapclient->error_str;
+		    die;
+		}
+
+		//var_dump($result);
+		$socid=$result['thirdparty']['id'];
+		if ($socid)
+		{
+			$foundthirdparty=true;
 			//var_dump($socid);
 		}
 	}
@@ -533,6 +555,8 @@ if ($socid)
 		{
 			$dateinvoice=substr($invoice['date_invoice'],0,10);
 
+			// Rule to detect invoice found is for dolistore payment back
+			// More info into logs/prestalog.log
 			$isfordolistore=0;
 			if (preg_match('/dolistore/i',$invoice['note_private'])
 				&& ! preg_match('/agios/i',$invoice['ref_supplier'])
@@ -562,9 +586,10 @@ if ($socid)
 					}
 				}
 			}
+			
 			//print 'date='.$dateinvoice.' isfordolistore='.$isfordolistore;exit;
 
-			/*print $dateinvoice.'-'.$dateafter.'-'.$datebefore.'<br>';
+			/*print $dateinvoice.'-'.$dateafter.'-'.$datebefore.'-'.<br>';
 			if ($datebefore && $datebefore < $dateinvoice) $isfordolistore=0;
 			if ($dateafter && $dateafter > $dateinvoice) $isfordolistore=0;*/
 
