@@ -1,0 +1,24 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Sei uno dei nostri migliori clienti, però sono
+<span><strong>{days_threshold}</strong></span> giorni che non effettui
+un ordine.
+
+Il tuo carrello è stato salvato, puoi riprendere l'ordine visitando
+il nostro negozio: {shop_url} [{shop_url}]
+
+Vogliamo ringraziarti per la tua fiducia nei nostri confronti e
+vogliamo farti uno sconto del {amount}% sul tuo prossimo ordine!
+Questa offerta è valida per {days} giorni, quindi non perdere un solo
+istante! 		 
+
+ECCO IL TUO BUONO: {voucher_num}
+
+Inserisci questo codice nel tuo carrello per ottenere lo sconto. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

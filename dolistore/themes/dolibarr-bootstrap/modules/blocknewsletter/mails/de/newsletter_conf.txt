@@ -1,0 +1,11 @@
+
+[{shop_url}] 
+
+Hallo, 
+
+VIELEN DANK, DASS SIE SICH FÜR UNSEREN NEWSLETTER REGISTRIERT
+HABEN! 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

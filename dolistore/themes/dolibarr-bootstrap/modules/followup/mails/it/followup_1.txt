@@ -1,0 +1,22 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Abbiamo notato che durante la tua ultima visita a {shop_name}, non
+hai completato un ordine che avevi iniziato.
+
+Il tuo carrello è stato salvato, puoi riprendere l'ordine visitando
+il nostro negozio: {shop_url} [{shop_url}]
+
+Come incentivo, possiamo offrirti uno sconto del {amount}% sul tuo
+prossimo ordine! Questa offerta è valida per {days} giorni, quindi
+non perdere un solo istante! 		 
+
+ECCO IL TUO BUONO: {voucher_num}
+
+Inserisci questo codice nel tuo carrello per ottenere lo sconto. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

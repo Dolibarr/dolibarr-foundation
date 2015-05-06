@@ -1,0 +1,30 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname},
+
+I dati di accesso del tuo account presso {shop_name} 
+
+I tuoi dati di accesso sono:
+
+INDIRIZZO E-MAIL: {email}
+
+PASSWORD: {passwd} 		 
+
+Consigli di sicurezza:
+
+* Tieni al sicuro i dati del tuo account.
+
+* Non far sapere a nessuno i tuoi dati di accesso.
+
+* Cambia regolarmente la tua password.
+
+* Se sospetti che qualcuno stia utilizzando illegalmente il tuo
+account, avvertici immediatamente.
+
+Adesso puoi effettuare ordini nel nostro sito: {shop_name}
+[{shop_url}] 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

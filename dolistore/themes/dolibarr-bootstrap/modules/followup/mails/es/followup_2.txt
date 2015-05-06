@@ -1,0 +1,19 @@
+
+[{shop_url}] 
+
+Hola {firstname} {lastname},
+
+Gracias por su orden en {shop_name} 
+
+¡Le enviamos un descuento de {amount}% para su siguiente pedido! Es
+nuestra forma de decirle ¡gracias! Esta oferta es válida durante
+{days} días, ¡puede aprovecharla desde ahora!
+
+AQUÍ ESTÁ TU CUPÓN: {voucher_num}
+
+Introduzca este código en tu carrito de compras para obtener el
+descuento. 		 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

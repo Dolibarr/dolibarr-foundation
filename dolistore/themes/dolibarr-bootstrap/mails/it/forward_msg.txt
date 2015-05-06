@@ -1,0 +1,14 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+{employee} ti ha voluto trasmettere la seguente discussione. 
+
+STORICO CONVERSAZIONE: {messages}
+
+{employee} ha aggiunto "{comment}" 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

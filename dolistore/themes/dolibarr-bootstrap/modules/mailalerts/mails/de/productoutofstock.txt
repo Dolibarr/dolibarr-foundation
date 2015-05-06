@@ -1,0 +1,16 @@
+
+[{shop_url}] 
+
+Hallo, 
+
+Verbleibender Lagerbestand ist niedriger als der Minimalwert:
+{last_qty}.
+
+VERBLEIBENDER LAGERBESTAND: {qty}
+
+Wir raten Ihnen, die Produktseite im Administrator zu öffnen, um
+Ihren Lagerbestand aufzufüllen. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

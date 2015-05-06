@@ -1,0 +1,13 @@
+
+[{shop_url}] 
+
+Hola, 
+
+La cobertura de stock es ahora menor que el mínimo especificado en:
+{warning_coverage}.
+
+ACTUAL PORTADA EXISTENCIA: {current_coverage} 		 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

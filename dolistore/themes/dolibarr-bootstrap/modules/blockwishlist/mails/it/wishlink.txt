@@ -1,0 +1,13 @@
+
+[{shop_url}] 
+
+Salve, 
+
+{shop_name} ti invita a mandare questo link ai tuoi amici, così che
+essi possano vedere la tua lista dei desideri: {wishlist}
+
+{message} [{message}] 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

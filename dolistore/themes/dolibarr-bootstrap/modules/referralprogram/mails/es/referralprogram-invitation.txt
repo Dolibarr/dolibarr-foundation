@@ -1,0 +1,21 @@
+
+[{shop_url}] 
+
+{firstname_friend} {lastname_friend}, ¡únete! 
+
+¡Tu amigo {firstname} {lastname} quiere referirte en {shop_name}
+[{shop_url}]!
+
+Nos llena de orgullo y satisfacción ofrecerte un tiquet valorado en
+{discount} para que lo uses en tu próxima compra. ¡Se referido y
+obtén un tiquet de descuento de {discount}! Nada más simple. ¡Haga
+clic aquí! [{link}] 		 
+
+Recuerde que debe especificar el correo electrónico a tu amigo como
+patrocinador en el registro: {email}.
+
+Saludos. 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

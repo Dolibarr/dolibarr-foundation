@@ -1,0 +1,16 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Abbiamo aggiornato lo stato del tuo buono di restituzione
+n.{id_order_return}, il nuovo stato è: "{state_order_return}"
+
+Puoi visualizzare il tuo ordine e scaricare la eventuale fattura
+dalla sezione "Cronologia ordini" [{history_url}] nel
+tuo account utente cliccando su "Il mio account"
+[{my_account_url}] all'interno del sito. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

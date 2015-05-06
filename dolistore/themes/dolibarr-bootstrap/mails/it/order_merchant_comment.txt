@@ -1,0 +1,13 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Hai ricevuto un nuovo messaggio da {shop_name} riguardante l'ordine
+avente riferimento {order_name}.
+
+MESSAGGIO: {message} 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

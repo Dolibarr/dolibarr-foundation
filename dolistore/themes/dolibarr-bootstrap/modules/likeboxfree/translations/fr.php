@@ -1,0 +1,30 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_39b0e854bf1f412c4d4f5c53d4edfd8c'] = 'Fanpage like box free';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_9b9b30cc5124cb38a0b4f37bb3d2f0bb'] = 'Ce module ajoute bloc Likebox spéciale avec votre fanpage sur Facebook. Maintenant tout le monde peut aimer votre fanpage facebook!';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmation';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_7a7d57029c0de7a52035f23f44e94b38'] = 'Likebox configuration';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_265bc69afdaf77a2b20642a84cb2b129'] = 'Likebox paramètres visuels';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_c19a11786e82b0736dc4735f1bd6e552'] = 'URL de la page Facebook';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_381e99d9115db381c11785957d9e508d'] = 'L\'URL de la page Facebook pour Likebox';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_32954654ac8fe66a1d09be19001de2d4'] = 'largeur';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_9cddcd63ac79b2d3a082816b7f63f2a5'] = 'La largeur du plugin Likebox';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_eec6c4bdbd339edf8cbea68becb85244'] = 'hauteur';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_623d21d65296ba114e9869f19750fd04'] = 'La hauteur du plugin Likebox';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_6761e135fa31a256983cc0de4ff8d7d9'] = 'Jeu de couleurs.';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_a82fd95db10ff25dfad39f07372ebe37'] = 'Les couleurs foncées';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_2ac43aa43bf473f9a9c09b4b608619d3'] = 'Les couleurs claires';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_96a5b485a34b99798846a5106214bead'] = 'La palette de couleurs du plugin Likebox. Notez que de fond est toujours transparente pour correspondre à votre couleur de fond. Ce paramètre modifie la couleur de premier plan pour le travail bien sur un fond clair ou foncé';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_83cccf4d0f83339c027ad7395fa4d0b9'] = 'Voir les photos (visages de profil)';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_82432be27dcfce6316adae8964c64677'] = 'Afficher les photos de profil dans le plugin Likebox';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_9df092bf9043e0783aa7a950eef6427d'] = 'Couleur de la bordure:';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_071e98b48cf92976a3e9c78358ca4b5c'] = 'La couleur de la bordure du plugin Likebox. Cliquez et vérifier la couleur';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_2e9864c4cae842d71fc0b5ffe1d9d7d2'] = 'flux de profil';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_f2f74c24b7138f32c05a4dc259600b88'] = 'Voir \"flux de profil\" (sur le mur) dans le plugin Likebox';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_b796c5bd7ecdb3f4a130bafbe46579d1'] = 'montrer tête';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_a436543a292ec5bdd53083bcb1f4889f'] = 'Voir \"retrouvez nous sur facebook\" barre en haut. Afficher seulement les cours d\'eau ou lorsque l\'un des visages sont présents';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_9daf1fb753b42c3cdc8f1d01669cd6d8'] = 'Enregistrer les paramètres';
+$_MODULE['<{likeboxfree}dolibarr-bootstrap>likeboxfree_701ce215fb238c7cd5b9aa57b08d79b0'] = 'Aperçu Likebox';

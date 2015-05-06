@@ -1,0 +1,15 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Abbiamo emesseo una nota credito nei tuoi confronti riguardo
+l'ordine numero {order_name}. 
+
+Puoi visualizzare i dettagli sulla nota credito e scaricare
+eventuali fatture dalla sezione "Le mie note credito"
+[{history_url}] del tuo account sul nostro sito. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

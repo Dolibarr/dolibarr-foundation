@@ -1,0 +1,32 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname},
+
+Grazie per aver ordinato presso {shop_name}! 
+
+Il tuo ordine numero {order_name} è stato inviato con successo e
+sarà SPEDITO NON APPENA COMPLETERAI LA PROCEDURA DI PAGAMENTO. 
+
+Hai scelto di pagare con assegno. 
+
+Invia il pagamento:
+
+IMPORTO: {total_paid}
+
+INTESTATO A: {cheque_name}
+
+SPEDISCI L'ASSEGNO A: {cheque_address} 		 
+
+Puoi visualizzare il tuo ordine e scaricare la eventuale fattura
+dalla sezione "Cronologia ordini" [{history_url}] nel
+tuo account utente cliccando su "Il mio account"
+[{my_account_url}] all'interno del sito. 
+
+Se hai un account utente ospite, puoi seguire le fasi del tuo
+ordine tramite "Tracking ospite"
+[{guest_tracking_url}] sul nostro sito. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

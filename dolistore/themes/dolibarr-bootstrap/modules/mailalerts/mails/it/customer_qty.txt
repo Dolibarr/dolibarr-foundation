@@ -1,0 +1,15 @@
+
+[{shop_url}] 
+
+Salve, 
+
+L'articolo è di nuovo in magazzino.
+
+Puoi accedere alla pagina del prodotto cliccando sul link: {product}
+[{product_link}]
+
+Puoi ordinarlo fin d'ora dal nostro negozio online. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

@@ -1,0 +1,19 @@
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: #555!important;
+}
+.ui-widget {
+	font-family: inherit!important;/*{ffDefault}*/
+	font-size: inherit!important;/*{fsDefault}*/
+}
+.ui-widget-content {
+	color: inherit!important;/*{fcContent}*/
+}
+.ui-widget-content a {
+	color: #DC7306!important;/*{fcContent}*/
+}
+.ui-widget-content a.button_large {
+	color: #222!important;/*{fcContent}*/
+}
+label {
+    font-weight: inherit!important;
+}

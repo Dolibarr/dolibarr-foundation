@@ -1,0 +1,24 @@
+
+[{shop_url}] 
+
+Hola {firstname} {lastname}, 
+
+Nos dimos cuenta de que durante su última visita en
+<span><strong>{shop_name}</strong></span>, que no ha validado la orden
+que había comenzado.
+
+Su carrito ha sido guardado, puede reanudar su solicitud por visitar
+nuestra tienda: {shop_url} [{shop_url}]
+
+¡Le ofrecemos un descuento de {amount}% en su siguiente pedido! Esta
+oferta es válida durante {days} días, ¡no pierda ni un momento para
+aprovecharla! 		 
+
+AQUÍ ESTÁ TU CUPÓN: {voucher_num}
+
+Introduzca este código en tu carrito de compras para obtener el
+descuento. 		 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

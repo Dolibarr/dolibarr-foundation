@@ -1,0 +1,34 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname},
+
+Grazie per aver ordinato presso {shop_name}! 
+
+Il tuo ordine numero {order_name} è stato inviato con successo e
+sarà SPEDITO NON APPENA COMPLETERAI LA PROCEDURA DI PAGAMENTO. 
+
+Hai scelto di pagare con bonifico bancario. 
+
+Ecco gli estremi per il pagamento:
+
+IMPORTO: {total_paid}
+
+TITOLARE DEL CONTO: {bankwire_owner}
+
+DETTAGLI SULL'ACCOUNT: {bankwire_details}
+
+DETTAGLI SULLA BANCA: {bankwire_address} 		 
+
+Puoi visualizzare il tuo ordine e scaricare la eventuale fattura
+dalla sezione "Cronologia ordini" [{history_url}] nel
+tuo account utente cliccando su "Il mio account"
+[{my_account_url}] all'interno del sito. 
+
+Se hai un account utente ospite, puoi seguire le fasi del tuo
+ordine tramite "Tracking ospite"
+[{guest_tracking_url}] sul nostro sito. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

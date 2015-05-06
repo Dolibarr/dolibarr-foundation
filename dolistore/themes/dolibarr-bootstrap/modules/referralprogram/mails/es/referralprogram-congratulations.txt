@@ -1,0 +1,17 @@
+
+[{shop_url}] 
+
+¡Enhorabuena! 
+
+¡Tu amigo {sponsored_firstname} {sponsored_lastname} ha realizado su
+primera compra en {shop_name} [{shop_url}]!
+
+Nos llena de orgullo y satisfacción ofrecerte un tiquet valorado en
+{discount_display} (VOUCHER # {discount_name}) para que lo uses en tu
+próxima compra. 		 
+
+Saludos. 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

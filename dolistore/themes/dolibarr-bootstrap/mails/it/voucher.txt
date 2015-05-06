@@ -1,0 +1,16 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+È stato creato un buono sconto a tuo nome a seguito del tuo ordine
+avente riferimento {order_name}.
+
+CODICE BUONO SCONTO: {voucher_num} dell'importo di {voucher_amount}
+
+Sarà sufficiente che al momento di pagare per il prossimo ordine, tu
+inserisca questo codice. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

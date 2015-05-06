@@ -1,0 +1,17 @@
+
+[{shop_url}] 
+
+Hallo {firstname} {lastname}, 
+
+Für Ihre Empfehlung erhalten Sie von uns einems ein Gutschein auf
+Ihren Namen.
+
+Hier Ihr persönlicher Gutscheincode: {voucher_num}Über:
+{voucher_amount}.
+
+Kopieren Sie diesen Code bei Ihrer nächsten Bestellung während des
+Bezahlvorgangs einfach in das Gutscheinfeld. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

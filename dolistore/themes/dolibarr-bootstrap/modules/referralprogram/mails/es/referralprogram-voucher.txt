@@ -1,0 +1,16 @@
+
+[{shop_url}] 
+
+Hola {firstname} {lastname}, 
+
+Le informamos de que usted acaba de obtener una orden de compra
+después de su remisión.
+
+Código del cupón: {voucher_num},de un total de {voucher_amount}.
+
+Copia y pegue este código durante el proceso de pago de su próxima
+orden. 		 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

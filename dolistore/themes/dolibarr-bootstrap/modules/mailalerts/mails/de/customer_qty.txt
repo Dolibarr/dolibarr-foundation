@@ -1,0 +1,15 @@
+
+[{shop_url}] 
+
+Hallo, 
+
+{product} ist ab sofort wieder erhältlich.
+
+Wechseln Sie einfach auf die Produktseite, indem Sie auf den
+folgenden Link klicken: {product} [{product_link}]
+
+Sie können es sofort bestellen! 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

@@ -1,0 +1,15 @@
+
+[{shop_url}] 
+
+Hola, 
+
+De hecho, el tema es una vez más en acciones.
+
+Puede acceder a la página del producto haciendo clic en el enlace
+{product} [{product_link}]
+
+Puede solicitar ahora mismo en nuestra tienda on-line. 		 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

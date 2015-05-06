@@ -1,0 +1,33 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_8f0ed7c57fca428f7e3f8e64d2f00918'] = 'Blocco categorie';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_15a6f5841d9e4d7e62bec3319b4b7036'] = 'Aggiunge un blocco con le categorie di prodotto';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_23e0d4ecc25de9b2777fdaca3e2f3193'] = 'Profondità massima: numero non valido.';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_0cf328636f0d607ac24a5c435866b94b'] = 'HTML dinamico: scelta non valida.';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_1379a6b19242372c1f23cc9adedfcdd6'] = 'Albero categoria';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_c6d333d07d30f7b4c31a94bbd510bf88'] = 'Seleziona quale categoria deve essere mostrata nel blocco. La categoria corrente è quella che il visitatore sta attualmente visionando.';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_89b278a71f2be5f620307502326587a0'] = 'Categoria principale';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_62381fc27e62649a16182a616de3f7ea'] = 'Categoria attuale';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_52b68aaa602d202c340d9e4e9157f276'] = 'Categoria collegata';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_199f6ead1ce5a19131b6b6c568306d81'] = 'Categoria corrente se priva di sottocategorie, altrimenti la categoria padre';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_19561e33450d1d3dfe6af08df5710dd0'] = 'Profondità massima';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_584d4e251b6f778eda9cfc2fc756b0b0'] = 'Imposta la profondità massima per i sottolivelli mostrati in questo blocco (0 = infiniti).';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_971fd8cc345d8bd9f92e9f7d88fdf20c'] = 'Dinamico';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_c10efcaa2a8ff4eedaa3538fff78eb53'] = 'Attiva la modalità dinamica (animata) per i sottolivelli delle categorie.';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Attivato';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_b9f5c797ebbf55adccdd8539a65a0241'] = 'Disattivato';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_6b46ae48421828d9973deec5fa9aa0c3'] = 'Ordina';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_54e4f98fb34254a6678f0795476811ed'] = 'Per nome';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_883f0bd41a4fcee55680446ce7bec0d9'] = 'Per posizione';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_06f1ac65b0a6a548339a38b348e64d79'] = 'Ordine di selezione';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_e3cf5ac19407b1a62c6fccaff675a53b'] = 'Decrescente';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_cf3fb1ff52ea1eed3347ac5401ee7f0c'] = 'Crescente';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_5f73e737cedf8f4ccf880473a7823005'] = 'Quante colonne del footer preferisci?';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_af1b98adf7f686b84cd0b443e022b7a0'] = 'Categorie';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_footer_af1b98adf7f686b84cd0b443e022b7a0'] = 'Categorie';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_admin_c69d9eead832257f587f7c9ec0026fe2'] = 'Puoi caricare un massimo di 3 immagini.';
+$_MODULE['<{blockcategories}dolibarr-bootstrap>blockcategories_admin_acc66e14d297c1bfc20986bf593cb054'] = 'Anteprime';

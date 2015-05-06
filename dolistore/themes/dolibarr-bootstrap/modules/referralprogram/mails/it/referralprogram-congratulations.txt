@@ -1,0 +1,18 @@
+
+[{shop_url}] 
+
+Congratulazioni! 
+
+L'amico che hai raccomandato
+{sponsored_firstname}{sponsored_lastname} ha fatto il suo primo ordine
+su {shop_name} [{shop_url}]!
+
+Siamo felici di offrirti un buono del valore di {discount_display}
+(BUONO N° {discount_name}) che potrai utilizzare per il tuo prossimo
+ordine. 		 
+
+Cordiali saluti, 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

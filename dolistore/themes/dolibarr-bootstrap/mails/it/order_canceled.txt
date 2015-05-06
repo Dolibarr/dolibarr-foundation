@@ -1,0 +1,21 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Il tuo ordine numero {order_name} su {shop_name} è stato
+annullato. 
+
+Puoi visualizzare il tuo ordine e scaricare la eventuale fattura
+dalla sezione "Cronologia ordini" [{history_url}] nel
+tuo account utente cliccando su "Il mio account"
+[{my_account_url}] all'interno del sito. 
+
+Se hai un account ospite, adesso puoi seguire il tuo ordine
+tramite la sezione "Tracking Ospite"
+[{guest_tracking_url}?id_order={order_name}] sul
+nostro sito. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

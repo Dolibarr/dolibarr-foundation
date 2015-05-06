@@ -1,0 +1,24 @@
+
+[{shop_url}] 
+
+Hallo {firstname} {lastname}, 
+
+Sie sind einer unserer besten Kunden, seit {days_threshold} Tagen
+haben Sie nichts mehr bestellt.
+
+Ihr Warenkorb wurde gespeichert, Sie können Ihre Bestellung
+abschließen, indem Sie auf unsere Shop-Seite gehen: {shop_url}
+[{shop_url}]
+
+Wir möchten Ihnen für Ihr Vertrauen danken und Ihnen einen Rabatt
+über {amount}% für Ihre nächste Bestellung geben! Dieses Angebot
+gilt nur noch {days} days, Tage, also warten Sie nicht länger! 		 
+
+HIER IST IHR GUTSCHEIN: {voucher_num}
+
+Kopieren Sie diesen Code bei Ihrer nächsten Bestellung während des
+Bezahlvorgangs einfach in das Gutscheinfeld. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

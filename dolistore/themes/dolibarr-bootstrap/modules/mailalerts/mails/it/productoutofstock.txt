@@ -1,0 +1,16 @@
+
+[{shop_url}] 
+
+Salve, 
+
+La quantità rimanente è adesso inferiore al minimo previsto di
+{last_qty}.
+
+RIMANENZA: {qty}
+
+Si consiglia di aprire la Pagina Prodotto di amministrazione prodotti
+per ricostituire l'inventario. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

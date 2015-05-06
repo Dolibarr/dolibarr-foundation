@@ -1,0 +1,19 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+Il tuo account ospite per {shop_name} è stato convertito in un
+account cliente. 
+
+INDIRIZZO E-MAIL: {email}
+
+PASSWORD: {passwd} 		 
+
+Fai attenzione nel condividere con altri i tuoi dati di accesso. 
+
+Puoi accedere al tuo account nel nostro sito: {shop_url} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

@@ -9,7 +9,7 @@
 *
 * @author   Dietrich Ayala <dietrich@ganx4.com>
 * @author   Scott Nichol <snichol@users.sourceforge.net>
-* @version  $Id: class.soap_parser.php,v 1.1 2010/12/09 19:57:36 eldy Exp $
+* @version  $Id: class.soap_parser.php,v 1.5 2010/06/03 13:47:06 hregis Exp $
 * @access   public
 */
 class nusoap_parser extends nusoap_base {

@@ -1,0 +1,5 @@
+{shop_name}
+Atención al cliente: {firstname} {lastname}
+Orden: {order_name}
+De pago: {payment}
+Total de TI: ({total_paid} {currency})

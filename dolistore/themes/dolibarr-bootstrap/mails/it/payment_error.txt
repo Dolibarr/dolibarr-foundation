@@ -1,0 +1,25 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname}, 
+
+C'è un problema con il tuo pagamento a {shop_name} per l'ordine
+avente riferimento {order_name}. Ti preghiamo di contattarci appena
+possibile.
+
+IL TUO ORDINE NON SARÀ EVASO FINO A CHE NON AVREMO RISOLTO IL
+PROBLEMA. 		 
+
+Puoi visualizzare il tuo ordine e scaricare la eventuale fattura
+dalla sezione "Cronologia ordini" [{history_url}] nel
+tuo account utente cliccando su "Il mio account"
+[{my_account_url}] all'interno del sito. 
+
+Se hai un account ospite, adesso puoi seguire il tuo ordine
+tramite la sezione "Tracking Ospite"
+[{guest_tracking_url}?id_order={order_name}] sul
+nostro sito. 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

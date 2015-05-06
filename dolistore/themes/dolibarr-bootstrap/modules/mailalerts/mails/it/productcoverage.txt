@@ -1,0 +1,13 @@
+
+[{shop_url}] 
+
+Salve, 
+
+La quantità delle scorte di riserva sono minori della quantità
+indicata di: {warning_coverage}.
+
+SCORTA DI RISERVA ATTUALE: {current_coverage} 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

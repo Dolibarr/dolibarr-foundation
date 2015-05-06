@@ -1,0 +1,18 @@
+
+[{shop_url}] 
+
+Salve {firstname} {lastname},
+
+Grazie del tuo ordine su {shop_name} 
+
+Per ringraziarti, vogliamo darti uno sconto del {amount}% sul tuo
+prossimo ordine! Questa offerta è valida per {days} giorni, dunque
+non perdere un solo istante!
+
+ECCO IL TUO BUONO: {voucher_num}
+
+Inserisci questo codice nel tuo carrello per ottenere lo sconto. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
