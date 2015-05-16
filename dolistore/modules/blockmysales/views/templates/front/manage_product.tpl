@@ -85,7 +85,6 @@
 		<div id="manageproduct_tabs-2">
 			<br>
 			{if $voucherareok}
-				{if $foundthirdparty}
 					<div>
 						<form name="filter" action="{$phpself}" method="POST">
 						{l s='Filter on date between' mod='blockmysales'} <input type="text" id="dateafter" name="dateafter" size="11" {if $dateafter}value="{$dateafter|date_format:'%Y-%m-%d'}"{/if}>
@@ -101,6 +100,8 @@
 					{if $totalvoucherclaimable_ht || $totalvoucher_ht}
 						<div>{l s='** Total amount of vouchers offered excl tax' mod='blockmysales'}</div>
 					{/if}
+
+				{if $foundthirdparty}
 					<p>
 						<div>
 						{if $customer_id == 'all'}
@@ -115,6 +116,17 @@
 							{/foreach}
 						{/if}
 					</p>
+				{else}
+					<br>
+					<div>
+					<font color="#800">
+					{l s='Third party %s was not found into our payment backoffice system.' sprintf=$company mod='blockmysales'}<br>
+					Search was done on <strong>{$searchwasdoneon}</strong><br>
+					{l s='If you already received a payment, please contact us to contact@dolibarr.org to fix this, this means following information are wrong.' mod='bloackmysales'}</font>:<br>
+					{l s='If you never request any payment yet, you can trust following informations.' mod='bloackmysales'}
+					</div>
+				{/if}
+
 					{if !$dateafter && !$datebefore}
 						<p>
 							<div>{l s='Remained amount to claim in %s month:' sprintf=$mindelaymonth mod='blockmysales'} {$remaintoreceivein2month}{l s='€ excl tax' mod='blockmysales'}</div>
@@ -166,9 +178,6 @@
 							</div>
 						</p>
 					{/if}
-				{else}
-					<div><h3>{l s='Third party %s was not found into system' sprintf=$company mod='blockmysales'}</h3></div>
-				{/if}
 				{if $soapclient_error || $webservice_error}
 					{if $soapclient_error}
 						<div><h3>{l s='Error: %s' sprintf=$soapclient_error mod='blockmysales'}</h3></div>

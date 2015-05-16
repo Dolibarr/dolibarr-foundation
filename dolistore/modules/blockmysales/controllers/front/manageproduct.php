@@ -67,7 +67,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$country=trim($customer['iso_code']);
 					$this->context->smarty->assign('country', $country);
 
-					$iscee=in_array($country,array('AT','BE','IT','DE','DK','ES','FR','GB','LU','MC','NL','PO','PT'));	// Countries using euros
+					$iscee=in_array($country,array('AT','BE','IT','DE','DK','ES','FR','GB','GR','LU','MC','NL','PO','PT'));	// Countries using euros
 					$commission=$iscee?$commissioncee:$commissionnotcee;
 					$this->context->smarty->assign('iscee', $iscee);
 
@@ -333,11 +333,19 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							if ($customer_id != 'all')
 							{
 								$WS_METHOD  = 'getThirdParty';
-								$allparameters = array(
-										array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher),
-										array('authentication'=>$authentication,'id'=>0,'ref'=>$company),
-										array('authentication'=>$authentication,'id'=>0,'ref'=>$company.' ('.$publisher.')')
-								);
+
+								$allparameters = array();
+								$searchwasdoneonarray = array();
+								$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher); $searchwasdoneonarray[] = $publisher;
+								if ($company)
+								{
+									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$company); $searchwasdoneonarray[] =$company;
+									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$company.' ('.$publisher.')'); $searchwasdoneonarray[] = $company.' ('.$publisher.')';
+									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher.' ('.$company.')'); $searchwasdoneonarray[] = $publisher.' ('.$company.')';
+								}
+								$searchwasdoneon=join(", ",$searchwasdoneonarray);
+								
+								$this->context->smarty->assign('searchwasdoneon', $searchwasdoneon);
 
 								if (! $foundthirdparty)
 								{
