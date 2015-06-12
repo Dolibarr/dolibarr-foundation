@@ -344,7 +344,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher.' ('.$company.')'); $searchwasdoneonarray[] = $publisher.' ('.$company.')';
 								}
 								$searchwasdoneon=join(", ",$searchwasdoneonarray);
-								
+
 								$this->context->smarty->assign('searchwasdoneon', $searchwasdoneon);
 
 								if (! $foundthirdparty)
@@ -378,6 +378,8 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							// Call the WebService method to get amount received
 							$errorcallws=0;
+							$lastdate='2000-01-01';
+
 							if ($socid > 0 || $socid == 'all')
 							{
 								// Define $dolistoreinvoices
@@ -466,7 +468,6 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								//$errorcallws++; // for debug
 								$dolistoreinvoiceslines=array();
-								$lastdate='2000-01-01';
 
 								if (empty($errorcallws))
 								{
