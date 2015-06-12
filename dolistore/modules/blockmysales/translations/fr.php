@@ -71,7 +71,7 @@ $_MODULE['<{blockmysales}prestashop>manage_product_5e2d686f98a0393613824731019d7
 $_MODULE['<{blockmysales}prestashop>manage_product_b4f46e745c2f141aa7b712d8c7c782b1'] = '** Montant total de bons de réductions accordés HT';
 $_MODULE['<{blockmysales}prestashop>manage_product_0e4f0b7de84e8339f77d1fd5c882d558'] = 'Gains déjà reversés (factures comportant \"dolistore\" sur lignes ou en note privée) :';
 $_MODULE['<{blockmysales}prestashop>manage_product_0a7502c654d00a15e8680c3bf11c6e6d'] = 'Reversements déjà reçus (toutes dates)';
-$_MODULE['<{blockmysales}prestashop>manage_product_fb4bbd489da9ced9cff3a9812e57fbcb'] = 'Le tiers %s n\'a pas été trouvé le système de paiement du backoffice.';
+$_MODULE['<{blockmysales}prestashop>manage_product_fb4bbd489da9ced9cff3a9812e57fbcb'] = 'Le tiers %s n\'a pas été trouvé sur le système de paiement du backoffice.';
 $_MODULE['<{blockmysales}prestashop>manage_product_d44c99cb82ac784bb7d1ef4e8fb9a58f'] = 'Montant restant à réclamer dans %s mois :';
 $_MODULE['<{blockmysales}prestashop>manage_product_adf3567a2a8aa726639b401db0e881e7'] = 'Montant restant à réclamer à ce jour :';
 $_MODULE['<{blockmysales}prestashop>manage_product_e7cc4477ddd1169b50dcec956f2bc7ed'] = 'Non possible, un paiement a déjà eu lieu ce mois ci (après le %s)';
