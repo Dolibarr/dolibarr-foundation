@@ -43,6 +43,7 @@
 					<td nowrap="nowrap"><b>{l s='Product' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Nb' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Amount' mod='blockmysales'}<br>{l s='earned (excl tax)' mod='blockmysales'}</b></td>
+					<td nowrap="nowrap"><b>{l s='Tools' mod='blockmysales'}</b></td>
 				</tr>
 	
 		    {foreach from=$products key=id item=item}
@@ -76,7 +77,12 @@
 						{if $item.nbr_amount > 0}{$foundationfeerate*100}% {l s='Of' mod='blockmysales'}<br>{/if}
 						{$item.nbr_amount}&#8364;
 					</td>
-		
+					
+					<td align="right">
+						<a href="{$phpself}?id_p={$item.id_product}&tab=submit">
+							<img src="{$modules_dir}/blockmysales/img/icon_clone.png" alt="{l s='Clone this product card' mod='blockmysales'}" title="{l s='Clone this product card' mod='blockmysales'}" border="0" />
+						</a>
+					</td>
 				</tr>
 		    {/foreach}
 			</table>
