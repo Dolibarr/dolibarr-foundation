@@ -1,0 +1,59 @@
+
+[{shop_url}] 
+
+¡Enhorabuena! 
+
+Tiene un nuevo pedido en su tienda {shop_name} realizado por el
+cliente : {firstname} {lastname} ({email}) 
+
+PEDIDO: {order_name} Situado en {date}
+
+PAGO: {payment} 		 
+
+REFERENCIA
+
+PRODUCTO
+
+PRECIO UNITARIO
+
+CANTIDAD
+
+PRECIO TOTAL
+
+{items} 
+
+PRODUCTOS 
+
+{total_products} 
+
+DESCUENTOS 
+
+{total_discounts} 
+
+PAPEL DE REGALO 
+
+{total_wrapping} 
+
+TRANSPORTE 
+
+{total_shipping} 
+
+IMPUESTO TOTAL 
+
+{total_tax_paid} 
+
+PAGO TOTAL 
+
+{total_paid} 
+
+{carrier} 
+
+{delivery_block_html} 
+
+{invoice_block_html} 
+
+{message} 
+
+{shop_name} [{shop_url}] creado por
+PrestaShop(tm) [http://www.prestashop.com/] 
+

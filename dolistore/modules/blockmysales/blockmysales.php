@@ -3,8 +3,16 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+if (!defined('_CAN_LOAD_FILES_'))
+	exit;
+
 class BlockMySales extends Module
 {
+	private $merchant_mails;
+	private $merchant_order;
+
+	const __MA_MAIL_DELIMITOR__ = "\n";
+
 	public function __construct()
 	{
 		$this->name = 'blockmysales';
@@ -15,15 +23,25 @@ class BlockMySales extends Module
 		$this->bootstrap = true;
 		parent::__construct();
 
+		if ($this->id)
+			$this->init();
+
 		$this->displayName = $this->l('My modules/products block');
 		$this->description = $this->l('Displays a block to submit/edit its own product');
+	}
+
+	private function init()
+	{
+		$this->merchant_mails = str_replace(',', self::__MA_MAIL_DELIMITOR__, (string)Configuration::get('MA_MERCHANT_MAILS'));
+		$this->merchant_order = (int)Configuration::get('MA_MERCHANT_ORDER');
 	}
 
 	public function install()
 	{
 		if (!parent::install() ||
 				!$this->registerHook('displayCustomerAccount') ||
-				!$this->registerHook('displayMyAccountBlock')
+				!$this->registerHook('displayMyAccountBlock') ||
+				!$this->registerHook('actionValidateOrder')
 		)
 			return false;
 
@@ -63,6 +81,239 @@ class BlockMySales extends Module
 		$this->smarty->assign('link_module', $link);
 
 		return $this->display(__FILE__, 'my-account.tpl');
+	}
+
+	public function hookActionValidateOrder($params)
+	{
+		if (!$this->merchant_order || empty($this->merchant_mails))
+			return;
+
+		include_once(dirname(__FILE__).'/../mailalerts/MailAlert.php');
+
+		// Getting differents vars
+		$context = Context::getContext();
+		$id_lang = (int)$context->language->id;
+		$id_shop = (int)$context->shop->id;
+		$currency = $params['currency'];
+		$order = $params['order'];
+		$customer = $params['customer'];
+		$configuration = Configuration::getMultiple(
+				array(
+						'PS_SHOP_EMAIL',
+						'PS_MAIL_METHOD',
+						'PS_MAIL_SERVER',
+						'PS_MAIL_USER',
+						'PS_MAIL_PASSWD',
+						'PS_SHOP_NAME',
+						'PS_MAIL_COLOR'
+				), $id_lang, null, $id_shop
+		);
+		$delivery = new Address((int)$order->id_address_delivery);
+		$invoice = new Address((int)$order->id_address_invoice);
+		$order_date_text = Tools::displayDate($order->date_add);
+		$carrier = new Carrier((int)$order->id_carrier);
+		$message = $this->getAllMessages($order->id);
+
+		if (!$message || empty($message))
+			$message = $this->l('No message');
+
+		$items_table = '';
+
+		//FHE : Add array to keep product id of the order
+		$idprods=array();
+
+		$products = $params['order']->getProducts();
+		$customized_datas = Product::getAllCustomizedDatas((int)$params['cart']->id);
+		Product::addCustomizationPrice($products, $customized_datas);
+		foreach ($products as $key => $product)
+		{
+			//FHE : Add array to keep product id of the order
+			$idprods[]=$product['product_id'];
+
+			$unit_price = Product::getTaxCalculationMethod($customer->id) == PS_TAX_EXC ? $product['product_price'] : $product['product_price_wt'];
+
+			$customization_text = '';
+			if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
+			{
+				foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery] as $customization)
+				{
+					if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
+						foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
+							$customization_text .= $text['name'].': '.$text['value'].'<br />';
+
+						if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
+							$customization_text .= count($customization['datas'][Product::CUSTOMIZE_FILE]).' '.$this->l('image(s)').'<br />';
+
+						$customization_text .= '---<br />';
+				}
+				if (method_exists('Tools', 'rtrimString'))
+					$customization_text = Tools::rtrimString($customization_text, '---<br />');
+				else
+					$customization_text = preg_replace('/---<br \/>$/', '', $customization_text);
+			}
+
+			$items_table .=
+			'<tr style="background-color:'.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
+					<td style="padding:0.6em 0.4em;">'.$product['product_reference'].'</td>
+					<td style="padding:0.6em 0.4em;">
+						<strong>'
+								.$product['product_name']
+								.(isset($product['attributes_small']) ? ' '.$product['attributes_small'] : '')
+								.(!empty($customization_text) ? '<br />'.$customization_text : '')
+								.'</strong>
+					</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">'.Tools::displayPrice($unit_price, $currency, false).'</td>
+					<td style="padding:0.6em 0.4em; text-align:center;">'.(int)$product['product_quantity'].'</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">'
+								.Tools::displayPrice(($unit_price * $product['product_quantity']), $currency, false)
+								.'</td>
+				</tr>';
+		}
+		foreach ($params['order']->getCartRules() as $discount)
+		{
+			$items_table .=
+			'<tr style="background-color:#EBECEE;">
+						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">'.$this->l('Voucher code:').' '.$discount['name'].'</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">-'.Tools::displayPrice($discount['value'], $currency, false).'</td>
+			</tr>';
+		}
+		if ($delivery->id_state)
+			$delivery_state = new State((int)$delivery->id_state);
+		if ($invoice->id_state)
+			$invoice_state = new State((int)$invoice->id_state);
+
+		if (Product::getTaxCalculationMethod($customer->id) == PS_TAX_EXC)
+			$total_products = $order->getTotalProductsWithoutTaxes();
+		else
+			$total_products = $order->getTotalProductsWithTaxes();
+
+		// Filling-in vars for email
+		$template_vars = array(
+				'{firstname}' => $customer->firstname,
+				'{lastname}' => $customer->lastname,
+				'{email}' => $customer->email,
+				'{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
+				'{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
+				'{delivery_block_html}' => MailAlert::getFormatedAddress(
+						$delivery, '<br />', array(
+								'firstname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>',
+								'lastname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>'
+						)
+				),
+				'{invoice_block_html}' => MailAlert::getFormatedAddress(
+						$invoice, '<br />', array(
+								'firstname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>',
+								'lastname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>'
+						)
+				),
+				'{delivery_company}' => $delivery->company,
+				'{delivery_firstname}' => $delivery->firstname,
+				'{delivery_lastname}' => $delivery->lastname,
+				'{delivery_address1}' => $delivery->address1,
+				'{delivery_address2}' => $delivery->address2,
+				'{delivery_city}' => $delivery->city,
+				'{delivery_postal_code}' => $delivery->postcode,
+				'{delivery_country}' => $delivery->country,
+				'{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
+				'{delivery_phone}' => $delivery->phone ? $delivery->phone : $delivery->phone_mobile,
+				'{delivery_other}' => $delivery->other,
+				'{invoice_company}' => $invoice->company,
+				'{invoice_firstname}' => $invoice->firstname,
+				'{invoice_lastname}' => $invoice->lastname,
+				'{invoice_address2}' => $invoice->address2,
+				'{invoice_address1}' => $invoice->address1,
+				'{invoice_city}' => $invoice->city,
+				'{invoice_postal_code}' => $invoice->postcode,
+				'{invoice_country}' => $invoice->country,
+				'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
+				'{invoice_phone}' => $invoice->phone ? $invoice->phone : $invoice->phone_mobile,
+				'{invoice_other}' => $invoice->other,
+				'{order_name}' => $order->reference,
+				'{shop_name}' => $configuration['PS_SHOP_NAME'],
+				'{date}' => $order_date_text,
+				'{carrier}' => (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name),
+				'{payment}' => Tools::substr($order->payment, 0, 32),
+				'{items}' => $items_table,
+				'{total_paid}' => Tools::displayPrice($order->total_paid, $currency),
+				'{total_products}' => Tools::displayPrice($total_products, $currency),
+				'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency),
+				'{total_shipping}' => Tools::displayPrice($order->total_shipping, $currency),
+				'{total_tax_paid}' => Tools::displayPrice(
+						($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl),
+						$currency,
+						false
+				),
+				'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $currency),
+				'{currency}' => $currency->sign,
+				'{message}' => $message
+		);
+
+		//FHE : Find sellers to send him a mail that a module have been buy
+		foreach($idprods as $idprod) {
+
+			Logger::addLog('mailalerts: idprod= '.$idprod, 1);
+
+			$query = 'SELECT p.reference';
+			$query.= ' FROM '._DB_PREFIX_.'product as p';
+			$query.= ' WHERE p.id_product="'.$idprod.'"';
+
+			Logger::addLog('mailalerts: $query= '.$query, 1);
+
+			$result = Db::getInstance()->executeS($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+			if (count($result))
+			{
+				foreach ($result as $row)	// For each product
+				{
+					$ref_product = $row['reference'];
+					//Find the id customer
+					$d2indice = strpos($ref_product,'d2');
+
+					Logger::addLog('mailalerts: $ref_product= '.$ref_product, 1);
+
+					if ($d2indice!==false) {
+						$id_sellers = substr($ref_product, 1, $d2indice);
+
+						Logger::addLog('mailalerts: $id_sellers= '.$id_sellers, 1);
+
+						//Find sellers email
+						$queryemail = 'SELECT c.email';
+						$queryemail.= ' FROM '._DB_PREFIX_.'customer as c';
+						$queryemail.= ' WHERE c.id_customer="'.$id_sellers.'"';
+
+						Logger::addLog('mailalerts: $queryemail= '.$queryemail, 1);
+
+						$resultemail = Db::getInstance()->executeS($queryemail);
+						if ($resultemail === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$queryemail));
+						if (count($resultemail))
+						{
+							foreach ($resultemail as $rowemail)
+							{
+								Logger::addLog('mailalerts: $rowemail[email]= '.$rowemail['email'], 1);
+
+								Mail::Send(
+										$id_lang,
+										'new_order',
+										sprintf(Mail::l('New order : #%d - %s', $id_lang), $order->id, $order->reference),
+										$template_vars,
+										$rowemail['email'],
+										null,
+										$configuration['PS_SHOP_EMAIL'],
+										$configuration['PS_SHOP_NAME'],
+										null,
+										null,
+										dirname(__FILE__).'/mails/',
+										null,
+										$id_shop
+								);
+							}
+						}
+					}
+				}
+			}
+
+		}
 	}
 
 	public static function getCustomer($context_customer, $request_customer_id)
@@ -1333,6 +1584,21 @@ class BlockMySales extends Module
 
 		return $tiny_mce_code;
 	}
+
+	public function getAllMessages($id)
+	{
+		$messages = Db::getInstance()->executeS('
+			SELECT `message`
+			FROM `'._DB_PREFIX_.'message`
+			WHERE `id_order` = '.(int)$id.'
+			ORDER BY `id_message` ASC');
+		$result = array();
+		foreach ($messages as $message)
+			$result[] = $message['message'];
+
+		return implode('<br/>', $result);
+	}
+
 }
 
 ?>
