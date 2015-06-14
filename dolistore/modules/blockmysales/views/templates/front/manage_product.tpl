@@ -37,10 +37,10 @@
 		{if $products}
 		<!-- Product list tab -->
 		<div id="manageproduct_tabs-1">
-			<table width="100%" border="0" cellspacing="2" cellpadding="0">
+			<table id="manageproduct_productlist">
 				<tr bgcolor="#CCCCCC">
 					<td nowrap="nowrap"><b>{l s='Picture' mod='blockmysales'}</b></td>
-					<td nowrap="nowrap"><b>{l s='Product' mod='blockmysales'}</b></td>
+					<td nowrap="nowrap" width="100%"><b>{l s='Product' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Nb' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Amount' mod='blockmysales'}<br>{l s='earned (excl tax)' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Tools' mod='blockmysales'}</b></td>
