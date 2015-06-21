@@ -37,12 +37,13 @@
 		{if $products}
 		<!-- Product list tab -->
 		<div id="manageproduct_tabs-1">
-			<table width="100%" border="0" cellspacing="2" cellpadding="0">
+			<table id="manageproduct_productlist">
 				<tr bgcolor="#CCCCCC">
 					<td nowrap="nowrap"><b>{l s='Picture' mod='blockmysales'}</b></td>
-					<td nowrap="nowrap"><b>{l s='Product' mod='blockmysales'}</b></td>
+					<td nowrap="nowrap" width="100%"><b>{l s='Product' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Nb' mod='blockmysales'}</b></td>
 					<td nowrap="nowrap"><b>{l s='Amount' mod='blockmysales'}<br>{l s='earned (excl tax)' mod='blockmysales'}</b></td>
+					<td nowrap="nowrap"><b>{l s='Tools' mod='blockmysales'}</b></td>
 				</tr>
 	
 		    {foreach from=$products key=id item=item}
@@ -76,7 +77,12 @@
 						{if $item.nbr_amount > 0}{$foundationfeerate*100}% {l s='Of' mod='blockmysales'}<br>{/if}
 						{$item.nbr_amount}&#8364;
 					</td>
-		
+					
+					<td align="right">
+						<a href="{$phpself}?id_p={$item.id_product}&tab=submit">
+							<img src="{$modules_dir}/blockmysales/img/icon_clone.png" alt="{l s='Clone this product card' mod='blockmysales'}" title="{l s='Clone this product card' mod='blockmysales'}" border="0" />
+						</a>
+					</td>
 				</tr>
 		    {/foreach}
 			</table>
@@ -85,21 +91,21 @@
 		<div id="manageproduct_tabs-2">
 			<br>
 			{if $voucherareok}
-					<div>
-						<form name="filter" action="{$phpself}" method="POST">
-						{l s='Filter on date between' mod='blockmysales'} <input type="text" id="dateafter" name="dateafter" size="11" {if $dateafter}value="{$dateafter|date_format:'%Y-%m-%d'}"{/if}>
-						{l s='and' mod='blockmysales'} <input type="text" id="datebefore" name="datebefore" size="11" {if $dateafter}value="{$datebefore|date_format:'%Y-%m-%d'}"{/if}>
-						<input type="submit" name="submit" value="{l s='Refresh' mod='blockmysales'}" class="button">
-						<input type="hidden" name="id_customer" value="{if $customer_id}{$customer_id}{/if}"><a href="{$phpself}" class="button">{l s='Reset' mod='blockmysales'}</a>
-						</form>
-					</div>
-					<div>{l s='Number of paid sells:' mod='blockmysales'} <b>{$totalnbsellpaid}</b></div>
-					<div>{l s='Total of sells done:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucher_ht}({/if}{$totalamount}{if $totalvoucher_ht} - {$totalvoucher_ht}**){/if} = {$mytotalamount}{l s='€ incl tax' mod='blockmysales'}</b></div>
-					<div>{l s='Total validated sells:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucherclaimable_ht}({/if}{$totalamountclaimable}{if $totalvoucherclaimable_ht} - {$totalvoucherclaimable_ht}**){/if} = {$mytotalamountclaimable}{l s='€ incl tax' mod='blockmysales'}</b></div>
-					<div>{l s='* any sell is validated after a %s month delay' sprintf=$mindelaymonth mod='blockmysales'}</div>
-					{if $totalvoucherclaimable_ht || $totalvoucher_ht}
-						<div>{l s='** Total amount of vouchers offered excl tax' mod='blockmysales'}</div>
-					{/if}
+				<div>
+					<form name="filter" action="{$phpself}" method="POST">
+					{l s='Filter on date between' mod='blockmysales'} <input type="text" id="dateafter" name="dateafter" size="11" {if $dateafter}value="{$dateafter|date_format:'%Y-%m-%d'}"{/if}>
+					{l s='and' mod='blockmysales'} <input type="text" id="datebefore" name="datebefore" size="11" {if $dateafter}value="{$datebefore|date_format:'%Y-%m-%d'}"{/if}>
+					<input type="submit" name="submit" value="{l s='Refresh' mod='blockmysales'}" class="button">
+					<input type="hidden" name="id_customer" value="{if $customer_id}{$customer_id}{/if}"><a href="{$phpself}" class="button">{l s='Reset' mod='blockmysales'}</a>
+					</form>
+				</div>
+				<div>{l s='Number of paid sells:' mod='blockmysales'} <b>{$totalnbsellpaid}</b></div>
+				<div>{l s='Total of sells done:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucher_ht}({/if}{$totalamount}{if $totalvoucher_ht} - {$totalvoucher_ht}**){/if} = {$mytotalamount}{l s='€ incl tax' mod='blockmysales'}</b></div>
+				<div>{l s='Total validated sells:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucherclaimable_ht}({/if}{$totalamountclaimable}{if $totalvoucherclaimable_ht} - {$totalvoucherclaimable_ht}**){/if} = {$mytotalamountclaimable}{l s='€ incl tax' mod='blockmysales'}</b></div>
+				<div>{l s='* any sell is validated after a %s month delay' sprintf=$mindelaymonth mod='blockmysales'}</div>
+				{if $totalvoucherclaimable_ht || $totalvoucher_ht}
+					<div>{l s='** Total amount of vouchers offered excl tax' mod='blockmysales'}</div>
+				{/if}
 
 				{if $foundthirdparty}
 					<p>
@@ -118,66 +124,68 @@
 					</p>
 				{else}
 					<br>
+					<div class="alert alert-danger">
+						{l s='Third party %s was not found into our payment backoffice system.' sprintf=$company mod='blockmysales'}<br>
+						Search was done on <strong>{$searchwasdoneon}</strong><br>
+						{l s='If you already received a payment, please contact us to contact@dolibarr.org to fix this, this means following information are wrong.' mod='bloackmysales'}:
+					</div>
 					<div>
-					<font color="#800">
-					{l s='Third party %s was not found into our payment backoffice system.' sprintf=$company mod='blockmysales'}<br>
-					Search was done on <strong>{$searchwasdoneon}</strong><br>
-					{l s='If you already received a payment, please contact us to contact@dolibarr.org to fix this, this means following information are wrong.' mod='bloackmysales'}</font>:<br>
-					{l s='If you never request any payment yet, you can trust following informations.' mod='bloackmysales'}
+						{l s='If you never request any payment yet, you can trust following informations.' mod='bloackmysales'}
 					</div>
 				{/if}
 
-					{if !$dateafter && !$datebefore}
-						<p>
-							<div>{l s='Remained amount to claim in %s month:' sprintf=$mindelaymonth mod='blockmysales'} {$remaintoreceivein2month}{l s='€ excl tax' mod='blockmysales'}</div>
-							<div>
-								{l s='Remained amount to claim today:' mod='blockmysales'}
-								{if $showremaintoreceive}
-									<b><font color="#DF7E00">{$remaintoreceive}{l s='€ excl tax' mod='blockmysales'}</font></b>
+				{if !$dateafter && !$datebefore}
+					<p>
+						<div>{l s='Remained amount to claim in %s month:' sprintf=$mindelaymonth mod='blockmysales'} {$remaintoreceivein2month}{l s='€ excl tax' mod='blockmysales'}</div>
+						<div>
+							{l s='Remained amount to claim today:' mod='blockmysales'}
+							{if $showremaintoreceive}
+								<b><font color="#DF7E00">{$remaintoreceive}{l s='€ excl tax' mod='blockmysales'}</font></b>
+							{else}
+								<b><font color="#DF7E00">{l s='Not possible, a payment was already done this month (after %s)' sprintf=$firstdayofmonth mod='blockmysales'}</font></b>
+							{/if}
+						</div>
+					</p>
+					<p>
+						<div>
+						{if $remaintoreceive > 0 && $showremaintoreceive}
+							<p>
+								<div>{l s='Minimum amount to claim payments for your country' mod='blockmysales'} (<strong>{$country}</strong>): <strong>{$minamount}</strong>&#8364;</div>
+								<div>{l s='Charge for change for your currency' mod='blockmysales'} (<strong>{$country}</strong>): <strong>{if $iscee}{l s='Free' mod='blockmysales'}{else}{l s='depends on your bank' mod='blockmysales'}{/if}</strong></div>
+							</p>
+							<p>
+								{if $customer_id != 'all'}
+									<div>{l s='You can claim remained amount to pay by sending an invoice to' mod='blockmysales'} <b>Association Dolibarr, France</b>,</div>
+									<div>{l s='with remain to pay' mod='blockmysales'} ({l s='Total excl tax' mod='blockmysales'} = <font color="#DF7E00">{$remaintoreceive}&#8364;</font>),</div>
+									<div>{l s='by email to' mod='blockmysales'} <b>dolistore@dolibarr.org</b>. {l s='Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).' mod='blockmysales'}</div>
+									<div>{l s='If you need information about foundation:' mod='blockmysales'}</div>
+									<div>{l s='Name:' mod='blockmysales'} Association Dolibarr</div>
+									<div>{l s='VAT number:' mod='blockmysales'} {$vatnumber}</div>
+									<div>{l s='Address:' mod='blockmysales'} 265, rue de la vallée, 45160 Olivet, FRANCE</div>
+									<div>{l s='Web:' mod='blockmysales'} <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a></div>
+									<div>{l s='Note: Your invoice must use euro currency, withdrawal order will also be done in euros.' mod='blockmysales'}</div>
 								{else}
-									<b><font color="#DF7E00">{l s='Not possible, a payment was already done this month (after %s)' sprintf=$firstdayofmonth mod='blockmysales'}</font></b>
+									<div>{l s='It is not possible to claim payments for the moment (amount lower than %s euros)' sprintf=$minamount mod='blockmysales'}</div>
 								{/if}
-							</div>
-						</p>
-						<p>
-							<div>
-							{if $remaintoreceive > 0 && $showremaintoreceive}
+							</p>
+						{else}
+							{if $customer_id != 'all'}
 								<p>
-									<div>{l s='Minimum amount to claim payments for your country' mod='blockmysales'} (<strong>{$country}</strong>): <strong>{$minamount}</strong>&#8364;</div>
-									<div>{l s='Charge for change for your currency' mod='blockmysales'} (<strong>{$country}</strong>): <strong>{if $iscee}{l s='Free' mod='blockmysales'}{else}{l s='depends on your bank' mod='blockmysales'}{/if}</strong></div>
-								</p>
-								<p>
-									{if $customer_id != 'all'}
-										<div>{l s='You can claim remained amount to pay by sending an invoice to' mod='blockmysales'} <b>Association Dolibarr, France</b>,</div>
-										<div>{l s='with remain to pay' mod='blockmysales'} ({l s='Total excl tax' mod='blockmysales'} = <font color="#DF7E00">{$remaintoreceive}&#8364;</font>),</div>
-										<div>{l s='by email to' mod='blockmysales'} <b>dolistore@dolibarr.org</b>. {l s='Don\'t forget to add your bank account number for bank transaction (BIC ou SWIFT).' mod='blockmysales'}</div>
-										<div>{l s='If you need information about foundation:' mod='blockmysales'}</div>
-										<div>{l s='Name:' mod='blockmysales'} Association Dolibarr</div>
-										<div>{l s='VAT number:' mod='blockmysales'} {$vatnumber}</div>
-										<div>{l s='Address:' mod='blockmysales'} 265, rue de la vallée, 45160 Olivet, FRANCE</div>
-										<div>{l s='Web:' mod='blockmysales'} <a href="http://asso.dolibarr.org/" target="_blank">http://asso.dolibarr.org/</a></div>
-										<div>{l s='Note: Your invoice must use euro currency, withdrawal order will also be done in euros.' mod='blockmysales'}</div>
+									{if $showremaintoreceive}
+										<div>{l s='It is not possible to claim payments for the moment. Your sold is null.' mod='blockmysales'}</div>
 									{else}
-										<div>{l s='It is not possible to claim payments for the moment (amount lower than %s euros)' sprintf=$minamount mod='blockmysales'}</div>
+										<div>
+											{l s=', otherwise it should be' mod='blockmysales'} {$remaintoreceive}&#8364;
+											{if $remaintoreceive < 0} - <font color="red">{l s='Negative amount. You recevied more than allowed.' mod='blockmysales'}</font>{/if}
+										</div>
 									{/if}
 								</p>
-							{else}
-								{if $customer_id != 'all'}
-									<p>
-										{if $showremaintoreceive}
-											<div>{l s='It is not possible to claim payments for the moment. Your sold is null.' mod='blockmysales'}</div>
-										{else}
-											<div>
-												{l s=', otherwise it should be' mod='blockmysales'} {$remaintoreceive}&#8364;
-												{if $remaintoreceive < 0} - <font color="red">{l s='Negative amount. You recevied more than allowed.' mod='blockmysales'}</font>{/if}
-											</div>
-										{/if}
-									</p>
-								{/if}
 							{/if}
-							</div>
-						</p>
-					{/if}
+						{/if}
+						</div>
+					</p>
+				{/if}
+				
 				{if $soapclient_error || $webservice_error}
 					{if $soapclient_error}
 						<div><h3>{l s='Error: %s' sprintf=$soapclient_error mod='blockmysales'}</h3></div>

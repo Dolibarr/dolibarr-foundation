@@ -1,0 +1,59 @@
+
+[{shop_url}] 
+
+Congratulazioni! 
+
+È stato effettuato un nuovo ordine su {shop_name} dal cliente:
+{firstname} {lastname} ({email}) 
+
+ORDINE: {order_name} Effettuato su {date}
+
+PAGAMENTO: {payment} 		 
+
+RIFERIMENTO
+
+PRODOTTO
+
+PREZZO UNITARIO
+
+QUANTITÀ
+
+PREZZO TOTALE
+
+{items} 
+
+PRODOTTI 
+
+{total_products} 
+
+BUONI SCONTO 
+
+{total_discounts} 
+
+CONFEZIONE REGALO 
+
+{total_wrapping} 
+
+SPEDIZIONE 
+
+{total_shipping} 
+
+TASSE PAGATE 
+
+{total_tax_paid} 
+
+TOTALE PAGATO 
+
+{total_paid} 
+
+{carrier} 
+
+{delivery_block_html} 
+
+{invoice_block_html} 
+
+{message} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

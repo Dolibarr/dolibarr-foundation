@@ -2,6 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{blockmysales}prestashop>cardproduct_cc61945cbbf46721a053467c395c666f'] = 'Remboursé';
 $_MODULE['<{blockmysales}prestashop>manageproduct_5fa60c42a653f00f607ce5df0f85d4ef'] = 'Avant %s :';
 $_MODULE['<{blockmysales}prestashop>manageproduct_e7468ba23cdc351e2ffe9af799615d5e'] = 'Après %s :';
 $_MODULE['<{blockmysales}prestashop>manageproduct_7ae482f677dd1f904dc2f0929c219052'] = 'Date :';
@@ -49,6 +50,7 @@ $_MODULE['<{blockmysales}prestashop>manage_product_deb10517653c255364175796ace35
 $_MODULE['<{blockmysales}prestashop>manage_product_04d25f81d9337b5b5c640de788559d87'] = 'Nb';
 $_MODULE['<{blockmysales}prestashop>manage_product_b2f40690858b404ed10e62bdf422c704'] = 'Montant';
 $_MODULE['<{blockmysales}prestashop>manage_product_472bad2c513de96d4de272efcfba561d'] = 'gagné HT';
+$_MODULE['<{blockmysales}prestashop>manage_product_8625e1de7be14c39b1d14dc03d822497'] = 'Outils';
 $_MODULE['<{blockmysales}prestashop>manage_product_10e224b216370192dbab67f883fe6296'] = 'Prix de vente :';
 $_MODULE['<{blockmysales}prestashop>manage_product_f3eb11d48f5536d61b147ecae8883631'] = '€ HT';
 $_MODULE['<{blockmysales}prestashop>manage_product_003f75c51241fb781a3a4d422a53bd33'] = '€ TTC';
@@ -57,6 +59,7 @@ $_MODULE['<{blockmysales}prestashop>manage_product_ae21d822d879539a75c3d6fd91c2a
 $_MODULE['<{blockmysales}prestashop>manage_product_0d8d58008ef5dd7afce337373ef73993'] = 'Date :';
 $_MODULE['<{blockmysales}prestashop>manage_product_ad32204fca182b862a5f97a5534c03a2'] = 'remboursé';
 $_MODULE['<{blockmysales}prestashop>manage_product_cdb81f21e18b5679feb341b73957f082'] = 'De';
+$_MODULE['<{blockmysales}prestashop>manage_product_243c29503a3cbb593887d48af34618f9'] = 'Cloner la fiche produit';
 $_MODULE['<{blockmysales}prestashop>manage_product_c00eac106113bcd19db03586eef816eb'] = 'Filtre date entre';
 $_MODULE['<{blockmysales}prestashop>manage_product_be5d5d37542d75f93a87094459f76678'] = 'et';
 $_MODULE['<{blockmysales}prestashop>manage_product_63a6a88c066880c5ac42394a22803ca6'] = 'Rafraichir';
@@ -68,6 +71,7 @@ $_MODULE['<{blockmysales}prestashop>manage_product_5e2d686f98a0393613824731019d7
 $_MODULE['<{blockmysales}prestashop>manage_product_b4f46e745c2f141aa7b712d8c7c782b1'] = '** Montant total de bons de réductions accordés HT';
 $_MODULE['<{blockmysales}prestashop>manage_product_0e4f0b7de84e8339f77d1fd5c882d558'] = 'Gains déjà reversés (factures comportant \"dolistore\" sur lignes ou en note privée) :';
 $_MODULE['<{blockmysales}prestashop>manage_product_0a7502c654d00a15e8680c3bf11c6e6d'] = 'Reversements déjà reçus (toutes dates)';
+$_MODULE['<{blockmysales}prestashop>manage_product_fb4bbd489da9ced9cff3a9812e57fbcb'] = 'Le tiers %s n\'a pas été trouvé sur le système de paiement du backoffice.';
 $_MODULE['<{blockmysales}prestashop>manage_product_d44c99cb82ac784bb7d1ef4e8fb9a58f'] = 'Montant restant à réclamer dans %s mois :';
 $_MODULE['<{blockmysales}prestashop>manage_product_adf3567a2a8aa726639b401db0e881e7'] = 'Montant restant à réclamer à ce jour :';
 $_MODULE['<{blockmysales}prestashop>manage_product_e7cc4477ddd1169b50dcec956f2bc7ed'] = 'Non possible, un paiement a déjà eu lieu ce mois ci (après le %s)';
@@ -89,10 +93,19 @@ $_MODULE['<{blockmysales}prestashop>manage_product_1da4a6efcaa9aa1fb90aad86d3e11
 $_MODULE['<{blockmysales}prestashop>manage_product_0438affea0ac329bb575b78648360480'] = 'Il n\'est pas possible de réclamer de reversements pour le moment. Votre solde est nul.';
 $_MODULE['<{blockmysales}prestashop>manage_product_001209b11976a7580ff791151c25a5c2'] = ', sinon, il serait de';
 $_MODULE['<{blockmysales}prestashop>manage_product_3babfa9e130b740b8c015d88ef50475c'] = 'Montant négatif. Vous avez perçu plus qu\'autorisé.';
-$_MODULE['<{blockmysales}prestashop>manage_product_33d0929b7888edafe6ca30c18eefdca1'] = 'La société %s n\'a pas été trouvée';
 $_MODULE['<{blockmysales}prestashop>manage_product_10e10a814f3c1f9a5e847376c975ea3c'] = 'Error : %s';
 $_MODULE['<{blockmysales}prestashop>manage_product_7be555c93a68d840a140a2e0076fe3d4'] = 'Erreur lors de l\'appel au web service %1$s result=%2$s %3$s';
 $_MODULE['<{blockmysales}prestashop>manage_product_1f6289eabcf688d9ea79e1a46defcc08'] = 'Due à un problème technique, vos informations paiements ne sont actuellement pas disponibles.';
+$_MODULE['<{blockmysales}prestashop>manage_product_ff0bccce41642811a0efa68f27b31f5a'] = 'Merci de revenir plus tard quand le problème sera résolu';
 $_MODULE['<{blockmysales}prestashop>manage_product_dd8ff5e49662fbce8e0e8318bc7f7b87'] = 'Due à un problème de configuration, vos informations paiements ne sont actuellement pas disponibles.';
+$_MODULE['<{blockmysales}prestashop>manage_product_9fa808dbefab75e863eb3a00027f8f56'] = 'Tous les champs anglais sont nécessaires.';
+$_MODULE['<{blockmysales}prestashop>manage_product_5cff7700ce49876a8674b3793e5c90c5'] = 'Vous devez uploader un fichier.';
+$_MODULE['<{blockmysales}prestashop>manage_product_38b4823ff9aaa9314cc60def0408fe22'] = 'Vous devez choisir une ou plusieurs catégorie(s).';
+$_MODULE['<{blockmysales}prestashop>manage_product_f6585bbfe31d38ecdf9d9fa2b2729182'] = 'Les changements ont été enregistrés.';
+$_MODULE['<{blockmysales}prestashop>manage_product_ce8cd1b299d00cbc57010dd4b3f143eb'] = 'Avant de soumettre un module, assurez-vous qu\'il est conforme avec';
+$_MODULE['<{blockmysales}prestashop>manage_product_a925b2e27f390cd7381480f7a935cdd9'] = 'http://wiki.dolibarr.org/index.php/Module_Dolistore_Validation_Regles';
+$_MODULE['<{blockmysales}prestashop>manage_product_9bc63bf4e63717dcab12c5020437abfb'] = 'les règles de validation';
+$_MODULE['<{blockmysales}prestashop>manage_product_07508265b76d7009cc27e5aaea758b82'] = 'Soumettre le module';
+$_MODULE['<{blockmysales}prestashop>manage_product_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{blockmysales}prestashop>manage_product_fca8a36b2cb4258e5d762b90bb8c1b43'] = 'Cet id client n\'existe pas.';
 $_MODULE['<{blockmysales}prestashop>my-account_152534fcdad1705727755f860b0b7419'] = 'Gérer mes modules';

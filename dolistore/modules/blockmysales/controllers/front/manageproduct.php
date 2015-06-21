@@ -344,7 +344,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher.' ('.$company.')'); $searchwasdoneonarray[] = $publisher.' ('.$company.')';
 								}
 								$searchwasdoneon=join(", ",$searchwasdoneonarray);
-								
+
 								$this->context->smarty->assign('searchwasdoneon', $searchwasdoneon);
 
 								if (! $foundthirdparty)
@@ -378,6 +378,8 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							// Call the WebService method to get amount received
 							$errorcallws=0;
+							$lastdate='2000-01-01';
+
 							if ($socid > 0 || $socid == 'all')
 							{
 								// Define $dolistoreinvoices
@@ -466,7 +468,6 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								//$errorcallws++; // for debug
 								$dolistoreinvoiceslines=array();
-								$lastdate='2000-01-01';
 
 								if (empty($errorcallws))
 								{
@@ -610,6 +611,25 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						$newproduct['resume'][$language['id_lang']]			= Tools::getValue('resume_'.$language['id_lang']);
 						$newproduct['keywords'][$language['id_lang']] 		= trim(Tools::getValue('keywords_'.$language['id_lang']));
 						$newproduct['description'][$language['id_lang']] 	= Tools::getValue('description_'.$language['id_lang']);
+					}
+
+					// Define default value
+					if (Tools::isSubmit('id_p') && is_numeric(Tools::getValue('id_p')))
+					{
+						// Get product id
+						$query = 'SELECT p.id_product, p.price, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
+						$query.= ' FROM '._DB_PREFIX_.'product as p, '._DB_PREFIX_.'product_lang as pl, '._DB_PREFIX_.'lang as l WHERE l.id_lang = pl.id_lang AND p.id_product = pl.id_product AND p.id_product = '.((int) Tools::getValue('id_p'));
+						$result = Db::getInstance()->ExecuteS($query);
+						if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+						foreach ($result AS $row)
+						{
+							$newproduct['product_name'][$row['id_lang']] 	= $row['name'];
+							$newproduct['keywords'][$row['id_lang']] 		= $row['meta_keywords'];
+							$newproduct['resume'][$row['id_lang']] 			= $row['description_short'];
+							$newproduct['description'][$row['id_lang']] 	= $row['description'];
+							$newproduct['price'] 							= round($row['price'], 2);
+						}
 					}
 
 					//var_dump($newproduct);
