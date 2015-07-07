@@ -1292,6 +1292,7 @@ class BlockMySales extends Module
 		$result = Db::getInstance()->ExecuteS($query);
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
+		$is_cover = 0;
 		foreach ($result AS $row)
 			$is_cover = $row['cover'];
 

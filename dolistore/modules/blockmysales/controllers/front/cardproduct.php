@@ -16,9 +16,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 		// Adding TinyMce
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/tinymce/tinymce.min.js');
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/tinymce.inc.js');
+		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/admin.js');
 
 		// Adding JS files
 		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs'), 'base');
+		$this->addjQueryPlugin('tablednd');
+		$this->addjQueryPlugin('growl', null, false);
+		//$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.tablednd.js');
 
 		// Adding CSS style sheet
 		$this->context->controller->addCSS(__PS_BASE_URI__.'modules/blockmysales/css/global.css');
@@ -37,12 +41,14 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
     public function displayContent()
 	{
 		// Get env variables
-		$id_langue_en_cours = (int)$this->context->language->id;
+		$id_shop = (int)Shop::getContextShopID();
+		$id_lang = (int)$this->context->language->id;
 		$context_customer_id = (int)$this->context->customer->id;
 		$customer_id = $context_customer_id;
 
 		$this->context->smarty->assign('manageproductlink', $this->context->link->getModuleLink('blockmysales', 'manageproduct'));
-		$this->context->smarty->assign('lang_id', $id_langue_en_cours);
+		$this->context->smarty->assign('current_shop_id', $id_shop);
+		$this->context->smarty->assign('lang_id', $id_lang);
 
 		if (!empty($customer_id))
 		{
@@ -81,7 +87,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 						$query = 'SELECT p.id_product, p.reference, pl.name';
 						$query.= ' FROM '._DB_PREFIX_.'product as p';
-						$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl ON pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
+						$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl ON pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
 						$query.= ' WHERE reference LIKE "c'.$customer_id.'d2%"';
 						$result = Db::getInstance()->ExecuteS($query);
 						if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -99,7 +105,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 						// Get information of product into user language
 						$query = 'SELECT name, description_short  FROM '._DB_PREFIX_.'product_lang
 								WHERE id_product = '.(int)$product_id.'
-								AND id_lang = '.$id_langue_en_cours;
+								AND id_lang = '.$id_lang;
 						$subresult = Db::getInstance()->ExecuteS($query);
 						$name = "";
 						$description_short = "";
@@ -268,7 +274,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$addimage_flag=false;
 							$tinymce=BlockMySales::getTinyMce($this->context);
 
-							$this->context->smarty->assign('taxes', Tax::getTaxes($id_langue_en_cours));
+							$this->context->smarty->assign('taxes', Tax::getTaxes($id_lang));
 
 							$languages = Language::getLanguages();
 
@@ -369,7 +375,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$product['file_name'] =  $row['display_filename'];
 							}
 
-							$categories = Category::getSimpleCategories($id_langue_en_cours);
+							$categories = Category::getSimpleCategories($id_lang);
 							if ($categories)
 							{
 								foreach($categories as $key => $category)
@@ -388,7 +394,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$query = 'SELECT id_image, position, cover
 									FROM '._DB_PREFIX_.'image
 									WHERE id_product = '.$product_id.'
-									ORDER BY cover DESC, position';
+									ORDER BY position';
 							$images = Db::getInstance()->ExecuteS($query);
 							if ($result === false) die(Tools::displayError('Invalid SQL query!: '.$query));
 
