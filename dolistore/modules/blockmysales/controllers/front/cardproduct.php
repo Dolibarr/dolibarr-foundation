@@ -24,6 +24,8 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 		// Adding TinyMce
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/tinymce/tinymce.min.js');
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/tinymce.inc.js');
+
+		// Adding admin ajax function
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/admin.js');
 	}
 
