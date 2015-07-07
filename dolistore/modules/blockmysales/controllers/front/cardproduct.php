@@ -13,19 +13,18 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 	{
 		parent::setMedia();
 
+		// Adding CSS style sheet
+		$this->context->controller->addCSS(__PS_BASE_URI__.'modules/blockmysales/css/global.css');
+
+		// Adding JS files
+		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs'), 'base');
+		$this->context->controller->addjQueryPlugin('tablednd');
+		$this->context->controller->addjQueryPlugin('growl', null, false);
+
 		// Adding TinyMce
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/tinymce/tinymce.min.js');
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/tinymce.inc.js');
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/admin.js');
-
-		// Adding JS files
-		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs'), 'base');
-		$this->addjQueryPlugin('tablednd');
-		$this->addjQueryPlugin('growl', null, false);
-		//$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.tablednd.js');
-
-		// Adding CSS style sheet
-		$this->context->controller->addCSS(__PS_BASE_URI__.'modules/blockmysales/css/global.css');
 	}
 
     /**
