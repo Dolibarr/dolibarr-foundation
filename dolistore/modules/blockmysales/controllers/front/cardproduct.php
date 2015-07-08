@@ -2,11 +2,16 @@
 
 class blockmysalescardproductModuleFrontController extends ModuleFrontController
 {
+	private $mobile_device=false;
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->context = Context::getContext();
 		include_once $this->module->getLocalPath() . 'blockmysales.php';
+
+		if ($this->context->getMobileDevice() == true)
+			$this->mobile_device=true;
 	}
 
 	public function setMedia()
@@ -17,7 +22,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 		$this->context->controller->addCSS(__PS_BASE_URI__.'modules/blockmysales/css/global.css');
 
 		// Adding JS files
-		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs'), 'base');
+		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs', 'ui.draggable'), 'base');
 		$this->context->controller->addjQueryPlugin('tablednd');
 		$this->context->controller->addjQueryPlugin('growl', null, false);
 
@@ -27,6 +32,10 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 		// Adding admin ajax function
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/admin.js');
+
+		// Adding drag and drop for tablet and smartphone
+		if ($this->context->getMobileDevice() == true)
+			$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js');
 	}
 
     /**
@@ -50,6 +59,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 		$this->context->smarty->assign('manageproductlink', $this->context->link->getModuleLink('blockmysales', 'manageproduct'));
 		$this->context->smarty->assign('current_shop_id', $id_shop);
 		$this->context->smarty->assign('lang_id', $id_lang);
+		$this->context->smarty->assign('mobile_device', $this->mobile_device);
 
 		if (!empty($customer_id))
 		{

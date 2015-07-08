@@ -164,7 +164,7 @@
 											</thead>
 											<tbody id="imageList">
 											{foreach from=$images key=id item=image}
-												<tr id="{$image.id_image}">
+												<tr id="{$image.id_image}" class="tablet">
 													<td nowrap="nowrap" valign="middle">
 														<img src="{$link->getImageLink($product.link_rewrite[$lang_id], $image.id_image, 'large')}" />
 													</td>
@@ -176,7 +176,7 @@
 														</div>
 													</td>
 													<td class="cover" nowrap="nowrap" valign="middle">
-														<div class="bms-hand">{if $image.cover}<i class="icon-check-sign covered"></i>{else}<i class="icon-check-empty covered"></i>{/if}</div>
+														<div class="bms-hand">{if $image.cover}<i class="icon-check-sign covered{if $mobile_device} icon-2x{/if}"></i>{else}<i class="icon-check-empty covered{if $mobile_device} icon-2x{/if}"></i>{/if}</div>
 													</td>
 													<td nowrap="nowrap" valign="middle">
 														<a class="delete_product_image btn btn-default" href="javascript:document.fmysalesimgprod.action='?action=deleteimage&id_img={$image.id_image}&id_p={$product_id}&tab=images'; document.fmysalesimgprod.submit();">
@@ -290,5 +290,6 @@
 		}
 	});
 	{/literal}
+	{if $mobile_device}$('.tablet').draggable();{/if}
 </script>
 {if $tinymce}{$tinymce}{/if}
