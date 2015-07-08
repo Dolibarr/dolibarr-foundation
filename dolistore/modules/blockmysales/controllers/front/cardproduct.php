@@ -22,7 +22,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 		$this->context->controller->addCSS(__PS_BASE_URI__.'modules/blockmysales/css/global.css');
 
 		// Adding JS files
-		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs', 'ui.draggable'), 'base');
+		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs'), 'base');
 		if ($this->mobile_device == true) $this->context->controller->addJqueryUI(array('ui.draggable'));
 		$this->context->controller->addjQueryPlugin('tablednd');
 		$this->context->controller->addjQueryPlugin('growl', null, false);
