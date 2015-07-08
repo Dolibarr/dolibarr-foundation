@@ -246,7 +246,7 @@
 					stop = false;
 					image_up = '{';
 					$('#imageList').find('tr').each(function(i) {
-						$("#td_" +  $(this).attr("id")).html('<div class="dragGroup"><div class="positions">'+(i + 1)+'</div></div>');
+						$("#td_" +  $(this).attr("id")).html('<div class="dragGroup icon-move"><div class="positions">'+(i + 1)+'</div></div>');
 						if (!stop || (i + 1) == 2)
 							image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
 					});

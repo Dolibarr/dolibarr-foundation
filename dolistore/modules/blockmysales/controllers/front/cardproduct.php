@@ -23,6 +23,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 		// Adding JS files
 		$this->context->controller->addJqueryUI(array('ui.widget', 'ui.tabs', 'ui.draggable'), 'base');
+		if ($this->mobile_device == true) $this->context->controller->addJqueryUI(array('ui.draggable'));
 		$this->context->controller->addjQueryPlugin('tablednd');
 		$this->context->controller->addjQueryPlugin('growl', null, false);
 
@@ -34,7 +35,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 		$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/admin.js');
 
 		// Adding drag and drop for tablet and smartphone
-		if ($this->context->getMobileDevice() == true)
+		if ($this->mobile_device == true)
 			$this->context->controller->addJS(__PS_BASE_URI__.'modules/blockmysales/js/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js');
 	}
 
