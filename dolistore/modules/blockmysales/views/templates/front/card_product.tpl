@@ -109,12 +109,12 @@
 					
 				</div><!-- End modify product tab -->
 				<!-- Images product tab -->
-				<div id="productcard_tabs-3">
+				<div id="productcard_tabs-3" class="bootstrap">
 					<form name="fmysalesimgprod" method="POST" ENCTYPE="multipart/form-data" class="std">
-						<table>
+						<table width="100%">
 							<tr>
 								<td>
-									<table border="0" cellspacing="10" cellpadding="0">
+									<table id="addImageTable">
 										<tr>
 											<td colspan="2"><hr></td>
 										</tr>
@@ -146,30 +146,48 @@
 										<tr>
 											<td colspan="2"><hr></td>
 										</tr>
-										{if $images}
-											<tr>
-												<td nowrap="nowrap" valign="top" colspan="2">
-													{l s='Product\'s pictures:' mod='blockmysales'}
-												</td>
-											</tr>
-											{foreach from=$images key=id item=image}
-											<tr>
-												<td nowrap="nowrap" valign="middle">
-													<img src="{$link->getImageLink($product.link_rewrite[$lang_id], $image.id_image, 'large')}" />
-												</td>
-												<td nowrap="nowrap" valign="middle">
-													<a class="delete_product_image btn btn-default" href="javascript:document.fmysalesimgprod.action='?action=deleteimage&id_img={$image.id_image}&id_p={$product_id}&tab=images'; document.fmysalesimgprod.submit();">
-														{l s='Delete this picture' mod='blockmysales'}
-													</a>
-													{if $image.cover}<br>{l s='(Main image of product)' mod='blockmysales'}{/if}
-												</td>
-											</tr>
-											{/foreach}
-											<tr>
-												<td colspan="2"><br><hr>
-											</td>
-										{/if}
 									</table>
+									{if $images}
+										<table id="imageTable" class="table tableDnd">
+											<thead>
+												<tr class="nodrag nodrop">
+													<td nowrap="nowrap" valign="top">
+														{l s='Image' mod='blockmysales'}
+													</td>
+													<td nowrap="nowrap" valign="top">
+														{l s='Position' mod='blockmysales'}
+													</td>
+													<td nowrap="nowrap" valign="top">
+														{l s='Cover image' mod='blockmysales'}
+													</td>
+												</tr>
+											</thead>
+											<tbody id="imageList">
+											{foreach from=$images key=id item=image}
+												<tr id="{$image.id_image}" class="tablet">
+													<td nowrap="nowrap" valign="middle">
+														<img src="{$link->getImageLink($product.link_rewrite[$lang_id], $image.id_image, 'large')}" />
+													</td>
+													<td id="td_{$image.id_image}" class="pointer dragHandle positionImage">
+														<div class="dragGroup icon-move">
+															<div class="positions">
+																{$image.position}
+															</div>
+														</div>
+													</td>
+													<td class="cover" nowrap="nowrap" valign="middle">
+														<div class="bms-hand">{if $image.cover}<i class="icon-check-sign covered{if $mobile_device} icon-2x{/if}"></i>{else}<i class="icon-check-empty covered{if $mobile_device} icon-2x{/if}"></i>{/if}</div>
+													</td>
+													<td nowrap="nowrap" valign="middle">
+														<a class="delete_product_image btn btn-default" href="javascript:document.fmysalesimgprod.action='?action=deleteimage&id_img={$image.id_image}&id_p={$product_id}&tab=images'; document.fmysalesimgprod.submit();">
+															<i class="icon-trash"></i>
+														</a>
+													</td>
+												</tr>
+											{/foreach}
+											</tbody>
+										</table>
+									{/if}
 								</td>
 							</tr>
 						</table>
@@ -205,5 +223,73 @@
 			$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled');
 		}
 	});
+	{literal}
+	$(document).ready(function() {
+		{/literal}
+		var current_shop_id = {$current_shop_id|intval};
+		{literal}
+		var originalOrder = false;
+
+		$("#imageTable").tableDnD({	
+			dragHandle: 'dragHandle',
+			onDragClass: 'myDragClass',
+			onDragStart: function(table, row) {
+				originalOrder = $.tableDnD.serialize();
+				reOrder = ':even';
+				if (table.tBodies[0].rows[1] && $('#' + table.tBodies[0].rows[1].id).hasClass('alt_row'))
+					reOrder = ':odd';
+				$(table).find('#' + row.id).parent('tr').addClass('myDragClass');
+			},
+			onDrop: function(table, row) {
+				if (originalOrder != $.tableDnD.serialize()) {
+					current = $(row).attr("id");
+					stop = false;
+					image_up = '{';
+					$('#imageList').find('tr').each(function(i) {
+						$("#td_" +  $(this).attr("id")).html('<div class="dragGroup icon-move"><div class="positions">'+(i + 1)+'</div></div>');
+						if (!stop || (i + 1) == 2)
+							image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
+					});
+					image_up = image_up.slice(0, -1);
+					image_up += '}';
+					updateImagePosition(image_up);
+				}
+			}
+		});
+		
+		$('.covered').die().live('click', function(e) {
+			e.preventDefault();
+			id = $(this).parent().parent().parent().attr('id');
+			$("#imageList .cover i").each( function(i) {
+				$(this).removeClass('icon-check-sign').addClass('icon-check-empty');
+			});
+			$(this).removeClass('icon-check-empty').addClass('icon-check-sign');
+
+			if (current_shop_id != 0)
+				$('#' + current_shop_id + id).attr('check', true);
+			else
+				$(this).parent().parent().parent().children('td input').attr('check', true);
+			doAdminAjax({
+				"action":"updateCover",
+				"id_image":id,
+				"id_product" : {/literal}{$product_id}{literal},
+				"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
+				"ajax" : 1 }
+			);
+		});
+		
+		function updateImagePosition(json)
+		{
+			doAdminAjax(
+			{
+				"action":"updateImagePosition",
+				"json":json,
+				"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
+				"ajax" : 1
+			});
+		}
+	});
+	{/literal}
+	{if $mobile_device}$('.tablet').draggable();{/if}
 </script>
 {if $tinymce}{$tinymce}{/if}

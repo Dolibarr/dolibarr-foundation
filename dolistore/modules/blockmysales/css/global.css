@@ -17,3 +17,215 @@
 label {
     font-weight: inherit!important;
 }
+.icon-check-sign::before, .icon-check-empty::before {
+	color: #DC7306!important;
+}
+.bms-hand:hover {
+	cursor: pointer!important;
+}
+
+.icon, .page-sidebar-closed:not (.nav-topbar ):not (.mobile-nav ) .searchtab:before,
+	[class^="icon-"], [class^="process-icon-"], .bootstrap .alert.alert-warning:before,
+	.bootstrap .alert.alert-danger:before, .bootstrap #carrier_wizard .wizard_error:before,
+	.bootstrap .alert.alert-success:before, .bootstrap .alert.alert-info:before,
+	.bootstrap .alert.alert-addons:before, .bootstrap .alert.alert-onboarding:before,
+	.bootstrap .alert.alert-message:before, .bootstrap .table td.dragHandle .dragGroup:before,
+	.bootstrap #dashboard .loading .data_value:before, .bootstrap #employee-thumbnail:before,
+	.mce-ico, .chosen-container-single .chosen-single div b,
+	.chosen-container-single .chosen-search:before {
+	display: inline-block;
+	font-family: 'FontAwesome';
+	font-style: normal;
+	font-weight: normal;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale
+}
+
+.icon.pull-left, .page-sidebar-closed:not (.nav-topbar ):not (.mobile-nav
+	) .pull-left.searchtab:before, .pull-left[class^="icon-"], .pull-left[class^="process-icon-"],
+	.bootstrap .pull-left.alert.alert-warning:before, .bootstrap .pull-left.alert.alert-danger:before,
+	.bootstrap #carrier_wizard .pull-left.wizard_error:before, .bootstrap .pull-left.alert.alert-success:before,
+	.bootstrap .pull-left.alert.alert-info:before, .bootstrap .pull-left.alert.alert-addons:before,
+	.bootstrap .pull-left.alert.alert-onboarding:before, .bootstrap .pull-left.alert.alert-message:before,
+	.bootstrap .table td.dragHandle .pull-left.dragGroup:before, .bootstrap #dashboard .loading .pull-left.data_value:before,
+	.bootstrap .pull-left#employee-thumbnail:before, .pull-left.mce-ico,
+	.chosen-container-single .chosen-single div b.pull-left,
+	.chosen-container-single .pull-left.chosen-search:before {
+	margin-right: .3em
+}
+
+.icon.pull-right, .page-sidebar-closed:not (.nav-topbar ):not (.mobile-nav
+	) .pull-right.searchtab:before, .pull-right[class^="icon-"],
+	.pull-right[class^="process-icon-"], .bootstrap .pull-right.alert.alert-warning:before,
+	.bootstrap .pull-right.alert.alert-danger:before, .bootstrap #carrier_wizard .pull-right.wizard_error:before,
+	.bootstrap .pull-right.alert.alert-success:before, .bootstrap .pull-right.alert.alert-info:before,
+	.bootstrap .pull-right.alert.alert-addons:before, .bootstrap .pull-right.alert.alert-onboarding:before,
+	.bootstrap .pull-right.alert.alert-message:before, .bootstrap .table td.dragHandle .pull-right.dragGroup:before,
+	.bootstrap #dashboard .loading .pull-right.data_value:before,
+	.bootstrap .pull-right#employee-thumbnail:before, .pull-right.mce-ico,
+	.chosen-container-single .chosen-single div b.pull-right,
+	.chosen-container-single .pull-right.chosen-search:before {
+	margin-left: .3em
+}
+
+/*.icon-arrows:before, .icon-move:before, .bootstrap .table td.dragHandle .dragGroup:before {
+	content: "\f047"
+}*/
+
+.bootstrap .table td.dragHandle .dragGroup {
+	width: 80px;
+	cursor: move;
+	text-align: center;
+	position: relative;
+	font-size: 14px;
+	padding: 4px 4px 4px 20px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px
+}
+
+.bootstrap .table td.dragHandle .dragGroup:hover {
+	color: #fff;
+	background-color: #DC7306 !important
+}
+
+.bootstrap .table td.dragHandle .dragGroup:before {
+	display: block;
+	height: 16px;
+	width: 16px;
+	position: absolute;
+	top: 5px;
+}
+
+.bootstrap .table td.dragHandle .dragGroup .positions {
+	display: inline-block;
+	border: solid 1px #ccc;
+	background-color: #eee;
+	padding: 0 5px;
+	color: #aaa;
+	width: 43px;
+	text-shadow: #fff 1px 1px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px inset
+}
+
+.bootstrap .table tr.myDragClass {
+	padding: 10px;
+	background-color: #eee
+}
+
+.bootstrap .table tr.myDragClass td {
+	color: #fff !important;
+	background-color: #DC7306 !important;
+	-moz-transform: translate(5px, 10px);
+	-ms-transform: translate(5px, 10px);
+	-webkit-transform: translate(5px, 10px);
+	transform: translate(5px, 10px)
+}
+
+#growls {
+	z-index: 50000;
+	position: fixed
+}
+
+#growls.default {
+	top: 100px;
+	right: 10px
+}
+
+#growls.tl {
+	top: 10px;
+	left: 10px
+}
+
+#growls.tr {
+	top: 10px;
+	right: 10px
+}
+
+#growls.bl {
+	bottom: 10px;
+	left: 10px
+}
+
+#growls.br {
+	bottom: 10px;
+	right: 10px
+}
+
+.growl {
+	opacity: 1;
+	position: relative;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out
+}
+
+.growl.growl-incoming {
+	opacity: 0
+}
+
+.growl.growl-outgoing {
+	opacity: 0
+}
+
+.growl.growl-small {
+	width: 200px;
+	padding: 5px;
+	margin: 5px
+}
+
+.growl.growl-medium {
+	width: 250px;
+	padding: 10px;
+	margin: 10px
+}
+
+.growl.growl-large {
+	width: 300px;
+	padding: 15px;
+	margin: 15px
+}
+
+.growl.growl-default {
+	color: #FFF;
+	background: gray
+}
+
+.growl.growl-error {
+	color: #fff;
+	background: rgba(217, 83, 79, 0.8)
+}
+
+.growl.growl-notice {
+	color: #fff;
+	background: rgba(121, 189, 60, 0.8)
+}
+
+.growl.growl-warning {
+	color: #fff;
+	background: rgba(240, 173, 78, 0.8)
+}
+
+.growl .growl-close {
+	cursor: pointer;
+	font-size: 14px;
+	line-height: 18px;
+	font-weight: normal;
+	font-family: helvetica, verdana, sans-serif;
+	float: right
+}
+
+.growl .growl-title {
+	font-size: 18px;
+	line-height: 24px
+}
+
+.growl .growl-message {
+	font-size: 14px;
+	line-height: 18px
+}

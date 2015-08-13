@@ -41,7 +41,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 		// Get env variables
 		$active = '';
 		$products = array();
-		$id_langue_en_cours = (int)$this->context->language->id;
+		$id_lang = (int)$this->context->language->id;
 		$customer_id = (int)$this->context->customer->id;
 
 		if (!empty($customer_id))
@@ -100,7 +100,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					// Get list of products
 					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, pl.name, pl.description_short, pl.link_rewrite';
 					$query.= ' FROM '._DB_PREFIX_.'product as p';
-					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_langue_en_cours;
+					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
 					$query.= ' WHERE 1 = 1';
 					if ($customer_id != 'all') $query.= ' AND p.reference LIKE "c'.$customer_id.'d2%"';
 					if ($active == 'no')  $query.= ' AND active = FALSE';
@@ -634,7 +634,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 					//var_dump($newproduct);
 
-					$categories = Category::getSimpleCategories($id_langue_en_cours);
+					$categories = Category::getSimpleCategories($id_lang);
 					if ($categories)
 					{
 						foreach($categories as $key => $category)
@@ -695,7 +695,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$this->context->smarty->assign('file', $file);
 					$this->context->smarty->assign('product_file_name', $product_file_name);
 					$this->context->smarty->assign('virtual_product_file', $virtual_product_file);
-					$this->context->smarty->assign('taxes', Tax::getTaxes($id_langue_en_cours));
+					$this->context->smarty->assign('taxes', Tax::getTaxes($id_lang));
 
 				}
 				else
