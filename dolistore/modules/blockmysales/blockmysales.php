@@ -1178,7 +1178,7 @@ class BlockMySales extends Module
 			preg_match('/\.([a-zA-Z0-9]+)$/',$_FILES['image_product']['name'],$reg);
 			$extention_image = strtolower($reg[1]);
 			if (! in_array($extention_image, array("jpg","png","gif","jpeg"))) {
-				$flagError = sprintf($this->l('Your picture must have JPG or PNG format, the format %s is not authorized.'), strtoupper($extention_image));
+				$flagError = sprintf($this->l('Your picture must have JPG, GIF or PNG format, the format %s is not authorized.'), strtoupper($extention_image));
 			}
 
 			//si pas derreur de saisis, traitement en base
@@ -1221,12 +1221,12 @@ class BlockMySales extends Module
 					}
 
 					//insertion de l'image en base
-					$query = 'INSERT INTO `'._DB_PREFIX_.'image` (`id_product`, `position`, `cover`) VALUES ('.$id_product.', '.$position.', '.$is_cover.')';
+					$query = 'INSERT INTO `'._DB_PREFIX_.'image` (`id_product`, `position`, `cover`) VALUES ('.$id_product.', '.$position.', '.($is_cover?$is_cover:"null").')';
 					$result = Db::getInstance()->Execute($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
 					//recuperation de l'id de l'image
-					$query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image`	WHERE `id_product` = '.$id_product.' AND `position` = '.$position.'	AND `cover` = '.$is_cover;
+					$query = 'SELECT `id_image` FROM `'._DB_PREFIX_.'image`	WHERE `id_product` = '.$id_product.' AND `position` = '.$position;
 					$result = Db::getInstance()->ExecuteS($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -1234,7 +1234,7 @@ class BlockMySales extends Module
 						$id_image = $row['id_image'];
 
 					//insertion de l'image shop
-					$query = 'INSERT INTO `'._DB_PREFIX_.'image_shop` (`id_image`, `id_shop`, `cover`) VALUES ('.$id_image.', '.$id_shop.', '.$is_cover.')';
+					$query = 'INSERT INTO `'._DB_PREFIX_.'image_shop` (`id_image`, `id_shop`, `cover`) VALUES ('.$id_image.', '.$id_shop.', '.($is_cover?$is_cover:"null").')';
 					$result = Db::getInstance()->Execute($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -1292,6 +1292,7 @@ class BlockMySales extends Module
 		$result = Db::getInstance()->ExecuteS($query);
 		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
+		$is_cover = 0;
 		foreach ($result AS $row)
 			$is_cover = $row['cover'];
 
