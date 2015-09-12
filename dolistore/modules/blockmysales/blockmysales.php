@@ -1234,10 +1234,10 @@ class BlockMySales extends Module
 						$id_image = $row['id_image'];
 
 					//insertion de l'image shop
-					$query = 'INSERT INTO `'._DB_PREFIX_.'image_shop` (`id_image`, `id_shop`, `cover`) VALUES ('.$id_image.', '.$id_shop.', '.($is_cover?$is_cover:"null").')';
+					$query = 'INSERT INTO `'._DB_PREFIX_.'image_shop` (`id_product`, `id_image`, `id_shop`, `cover`) VALUES ('.$id_product.', '.$id_image.', '.$id_shop.', '.($is_cover?$is_cover:"null").')';
 					$result = Db::getInstance()->Execute($query);
-					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
-
+					//if ($result === false) die(Tools::displayError('Error !: '.$query));
+					
 
 					for ($x = 0; ! empty($languageTAB[$x]); $x++ )
 					{
