@@ -236,16 +236,17 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 									$totalamountearned+=$amountearned;
 
+									$sales[$i] = array_merge($sales[$i], array('product_quantity' => $subrow['product_quantity']));
+									$totalamountearnedunit = ($subrow['product_quantity'] > 1 ? $amountearnedunit * $subrow['product_quantity'] : $amountearnedunit);
+									$sales[$i] = array_merge($sales[$i], array('sale_amountearnedunit' => round($totalamountearnedunit,5)));
+
 									if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0)
 									{
-										$sales[$i] = array_merge($sales[$i], array('sale_amountearnedunit' => round($amountearnedunit,5)));
-										$sales[$i] = array_merge($sales[$i], array('sale_amount_ht' => ($subrow['amount_ht']+0)));
+										$totalamountunit = ($subrow['product_quantity'] > 1 ? $subrow['amount_ht'] * $subrow['product_quantity'] : $subrow['amount_ht']);
+										$sales[$i] = array_merge($sales[$i], array('sale_amount_ht' => ($totalamountunit+0)));
 									}
 									else
-									{
-										$sales[$i] = array_merge($sales[$i], array('sale_amountearnedunit' => round($amountearnedunit,5).($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'')));
 										$sales[$i] = array_merge($sales[$i], array('sale_amount_ht' => false));
-									}
 								}
 								else
 									$refunded=true;
