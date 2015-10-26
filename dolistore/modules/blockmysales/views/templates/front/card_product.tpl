@@ -293,3 +293,4 @@
 	{if $mobile_device}$('.tablet').draggable();{/if}
 </script>
 {if $tinymce}{$tinymce}{/if}
+

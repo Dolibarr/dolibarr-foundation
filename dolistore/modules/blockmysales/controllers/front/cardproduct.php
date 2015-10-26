@@ -156,8 +156,6 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if (Tools::isSubmit('usebr'))
 								$usebr = true;
 
-							if (!$usebr)
-								$csvlines.= "\n";
 							$csvlines.= 'Module sell nb;';
 							$csvlines.= 'Customer;';
 							$csvlines.= 'Customer date creation;';
@@ -176,11 +174,11 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							{
 								$i+=$subrow['product_quantity'];
 								$csvlines.= ($subrow['product_quantity']>1?($i+1-$subrow['product_quantity']).'-':'').$i.";";
-								$csvlines.= $subrow['lastname'].' '.$subrow['firstname'].";";
+								$csvlines.= '"'.$subrow['lastname'].' '.$subrow['firstname'].'";';
 								$csvlines.= $subrow['cust_date_add'].";";
 								$csvlines.= $subrow['email'].";";
 								$csvlines.= $subrow['date_add'].";";
-								$csvlines.= $arraylistofproducts[$subrow['product_id']].";";
+								$csvlines.= '"'.$arraylistofproducts[$subrow['product_id']].'";';
 								if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 								{
 									$amountearnedunit=(float) ($subrow['amount_ht']-$subrow['reduction_amount']+0);
@@ -204,7 +202,17 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 									$csvlines.= "<br>";
 							}
 
+                            // To report result into ps:
 							$this->context->smarty->assign('csvlines', $csvlines);
+							
+							// To report result as a new csv page:
+							header("Content-type: text/csv");
+							header("Content-Disposition: attachment; filename=list_of_sells_cid_".$customer_id.".csv");
+							header("Pragma: no-cache");
+							header("Expires: 0");
+
+							print $csvlines;
+							exit;
 						}
 						else
 						{

@@ -249,6 +249,11 @@
 			</div>
 		</div><!-- End submit new product tab -->
 	</div>
+
+	<br /><center>
+    <a target="_blank" href="https://www.dolistore.com/module/blockmysales/cardproduct?id_p=download&id_customer={$customer_id}">Télécharger la liste de toutes les ventes</a>
+	</center>
+
 {else}
 	<h3>{l s='This customer id can\'t be found.' mod='blockmysales'}</h3>
 {/if}
