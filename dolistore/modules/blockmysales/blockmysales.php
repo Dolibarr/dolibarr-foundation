@@ -1234,7 +1234,7 @@ class BlockMySales extends Module
 						$id_image = $row['id_image'];
 
 					//insertion de l'image shop
-					$query = 'INSERT INTO `'._DB_PREFIX_.'image_shop` (`id_image`, `id_shop`, `cover`) VALUES ('.$id_image.', '.$id_shop.', '.($is_cover?$is_cover:"null").')';
+					$query = 'INSERT INTO `'._DB_PREFIX_.'image_shop` (`id_product`, `id_image`, `id_shop`, `cover`) VALUES ('.$id_product.', '.$id_image.', '.$id_shop.', '.($is_cover?$is_cover:"null").')';
 					$result = Db::getInstance()->Execute($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -1310,7 +1310,15 @@ class BlockMySales extends Module
 
 			if ($next_id_image != "")
 			{
+				$query = 'UPDATE `'._DB_PREFIX_.'image` SET `cover` = NULL WHERE `id_image` ='.$id_image;
+				$result = Db::getInstance()->Execute($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
 				$query = 'UPDATE `'._DB_PREFIX_.'image` SET `cover` = 1 WHERE `id_image` ='.$next_id_image;
+				$result = Db::getInstance()->Execute($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+				$query = 'UPDATE `'._DB_PREFIX_.'image_shop` SET `cover` = NULL WHERE `id_image` ='.$id_image;
 				$result = Db::getInstance()->Execute($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
