@@ -56,6 +56,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 				if (!is_null($customer) && !empty($customer))
 				{
 					$this->context->smarty->assign('phpself', $this->context->link->getModuleLink('blockmysales', 'manageproduct'));
+					$this->context->smarty->assign('cardproduct', $this->context->link->getModuleLink('blockmysales', 'cardproduct'));
 					$this->context->smarty->assign('ps_bms_templates_dir', _PS_MODULE_DIR_.'blockmysales/views/templates/front');
 
 					$publisher=trim($customer['firstname'].' '.$customer['lastname']);

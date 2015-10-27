@@ -249,24 +249,41 @@
 			</div>
 		</div><!-- End submit new product tab -->
 	</div>
-
-	<br /><center>
-    <a target="_blank" href="https://www.dolistore.com/module/blockmysales/cardproduct?id_p=download&id_customer={$customer_id}">Télécharger la liste de toutes les ventes</a>
-	</center>
-
+	
+	{if $products}
+		<div id="sales_list_link"><a target="_blank" href="{$cardproduct}?id_p=download&id_customer={$customer_id}">{l s='Download the list of all sales' mod='blockmysales'}</a></div>
+	{/if}
 {else}
 	<h3>{l s='This customer id can\'t be found.' mod='blockmysales'}</h3>
 {/if}
 
 <script>
+{literal}
+$(document).ready(function() {
+	{/literal}{if !$products}{literal}
+		$( "#sales_list_link" ).hide();
+	{/literal}{/if}{literal}
 	$(function() {
-		$( "#manageproduct_tabs" ).tabs();
-		{if $dateafter || $datebefore}
+		$( "#manageproduct_tabs" ).tabs(
+		{/literal}{if $products}{literal}
+				{
+					beforeActivate: function( event, ui ) {
+						var manageproducttab = ui.newPanel.attr('id');
+						if (manageproducttab == 'manageproduct_tabs-3') {
+							$( "#sales_list_link" ).hide();
+						} else {
+							$( "#sales_list_link" ).show();
+						}
+					}
+				}
+		{/literal}{/if}{literal}
+		);
+		{/literal}{if $dateafter || $datebefore}{literal}
 			$( "#manageproduct_tabs" ).tabs("option", "active", $( "#manageproduct_tabs" ).find("manageproduct_tabs-2").index()-1 );
-		{/if}
-		{if $tab == 'submit'}
+		{/literal}{/if}{literal}
+		{/literal}{if $tab == 'submit'}{literal}
 			$( "#manageproduct_tabs" ).tabs("option", "active", $( "#manageproduct_tabs" ).find("manageproduct_tabs-3").index() );
-		{/if}
+		{/literal}{/if}{literal}
 	});
 	$(function() {
 		$( "#dateafter" ).datepicker({
@@ -287,5 +304,7 @@
 			$('#sub').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled');
 		}
 	});
+});
 </script>
+{/literal}
 {$tinymce}
