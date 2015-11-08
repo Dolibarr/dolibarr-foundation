@@ -78,19 +78,6 @@
     </linearGradient>
     <filter
        inkscape:collect="always"
-       id="filter8715"
-       x="-0.028235927"
-       width="1.0564719"
-       y="-0.14419246"
-       height="1.2883849"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="23.363567"
-         id="feGaussianBlur8717" />
-    </filter>
-    <filter
-       inkscape:collect="always"
        x="-0.029137833"
        width="1.0582757"
        y="-0.13610952"
@@ -240,8 +227,8 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer5"
      showgrid="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="850"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -253,7 +240,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -586,24 +573,24 @@
        inkscape:export-ydpi="299.7843" />
     <text
        xml:space="preserve"
-       style="font-size:60.39805603px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="397.0025"
-       y="421.94986"
+       style="font-size:70.95144653px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="456.75287"
+       y="388.81897"
        id="text4842"
        sodipodi:linespacing="125%"
-       transform="matrix(0.90569035,-0.17048709,0.01983927,1.1003956,0,0)"
+       transform="matrix(0.82702159,-0.16051408,-0.0225264,1.2135304,0,0)"
        inkscape:export-filename="/home/ldestailleur/git/foundation/logo/dolibarr_box_highres_en.png"
        inkscape:export-xdpi="299.7843"
        inkscape:export-ydpi="299.7843"><tspan
          sodipodi:role="line"
          id="tspan4844"
-         x="398.92532"
-         y="421.94986"
-         style="font-size:12.07961273px;text-align:center;text-anchor:middle;fill:#ffffff">The easy to use </tspan><tspan
+         x="459.01169"
+         y="388.81897"
+         style="font-size:14.1902914px;text-align:center;text-anchor:middle;fill:#ffffff">Easy to use </tspan><tspan
          sodipodi:role="line"
-         x="397.0025"
-         y="437.04938"
-         style="font-size:12.07961273px;text-align:center;text-anchor:middle;fill:#ffffff"
+         x="456.75287"
+         y="406.55682"
+         style="font-size:14.1902914px;text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan4850">software for Business</tspan></text>
     <path
        inkscape:connector-curvature="0"
