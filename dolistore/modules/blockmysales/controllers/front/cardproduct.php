@@ -107,7 +107,8 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 						{
 							if (! empty($id_product_list)) $id_product_list.=",";
 							$id_product_list.="'".$subrow['id_product']."'";
-							$arraylistofproducts[$subrow['id_product']]=$subrow['name'];
+							$arraylistofproducts[$subrow['id_product']]['name']=$subrow['name'];
+							$arraylistofproducts[$subrow['id_product']]['reference']=$subrow['reference'];
 						}
 
 						if (empty($id_product_list)) $id_product_list="''";
@@ -156,15 +157,17 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if (Tools::isSubmit('usebr'))
 								$usebr = true;
 
-							$csvlines.= 'Module sell nb;';
-							$csvlines.= 'Customer;';
-							$csvlines.= 'Customer date creation;';
-							$csvlines.= 'Customer email;';
-							$csvlines.= 'Date sell;';
-							$csvlines.= 'Product id;';
-							$csvlines.= 'Product label;';
-							$csvlines.= 'Amount earned;';
-							$csvlines.= 'Note';
+							$csvlines.= $this->module->l('Module sell nb', 'blockmysales').';';
+							$csvlines.= $this->module->l('Customer', 'blockmysales').';';
+							$csvlines.= $this->module->l('Customer date creation', 'blockmysales').';';
+							$csvlines.= $this->module->l('Customer email', 'blockmysales').';';
+							$csvlines.= $this->module->l('Date sell', 'blockmysales').';';
+							$csvlines.= $this->module->l('Product id', 'blockmysales').';';
+							$csvlines.= $this->module->l('Product label', 'blockmysales').';';
+							$csvlines.= $this->module->l('Product ref', 'blockmysales').';';
+							$csvlines.= $this->module->l('Amount earned', 'blockmysales').';';
+							$csvlines.= $this->module->l('Amount origin', 'blockmysales').';';
+							$csvlines.= $this->module->l('Note', 'blockmysales').';';
 							if (!$usebr)
 								$csvlines.= "\n";
 							else
@@ -178,7 +181,9 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$csvlines.= $subrow['cust_date_add'].";";
 								$csvlines.= $subrow['email'].";";
 								$csvlines.= $subrow['date_add'].";";
-								$csvlines.= '"'.$arraylistofproducts[$subrow['product_id']].'";';
+								$csvlines.= '"'.$subrow['product_id'].'";';
+								$csvlines.= '"'.$arraylistofproducts[$subrow['product_id']]['name'].'";';
+								$csvlines.= '"'.$arraylistofproducts[$subrow['product_id']]['reference'].'";';
 								if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 								{
 									$amountearnedunit=(float) ($subrow['amount_ht']-$subrow['reduction_amount']+0);
@@ -204,7 +209,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
                             // To report result into ps:
 							$this->context->smarty->assign('csvlines', $csvlines);
-							
+
 							// To report result as a new csv page:
 							header("Content-type: text/csv");
 							header("Content-Disposition: attachment; filename=list_of_sells_cid_".$customer_id.".csv");
@@ -233,7 +238,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$sales[$i] = array_merge($sales[$i], array('sale_number' => ($subrow['product_quantity']>1?($i+1-$subrow['product_quantity']).'-':'').$i));
 
 								if ($product_id == 'all')
-									$sales[$i] = array_merge($sales[$i], array('sale_product_name' => $arraylistofproducts[$subrow['product_id']]));
+									$sales[$i] = array_merge($sales[$i], array('sale_product_name' => $arraylistofproducts[$subrow['product_id']]['name']));
 
 								$refunded=false;
 								if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)

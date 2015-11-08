@@ -1,3 +1,8 @@
+#sales_list_link {
+	text-align: center;
+	padding-top: 10px;
+}
+
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
     color: #555!important;
 }
