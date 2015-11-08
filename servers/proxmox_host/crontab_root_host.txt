@@ -1,0 +1,4 @@
+@daily	/root/tools/purgeoldbackup.sh >/var/log/purgeoldbackup.log 2>&1		#Purge old backup files
+0 2 2,6,10,14,18,22,26,30 * * /root/tools/backupnltechno.sh >/var/log/backupnltechno.log 2>&1 	#Backup to nltechno
+0 2 4,8,12,16,20,24,28 * * /root/tools/backup2byte.sh >/var/log/backup2byte.log 2>&1   		#Backup to 2byte
+#0 3 2 * * /root/tools/dumpvm.sh > /var/log/dumpvm.log 2>&1
