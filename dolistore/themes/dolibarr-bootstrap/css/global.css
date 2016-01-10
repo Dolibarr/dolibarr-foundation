@@ -1016,7 +1016,9 @@ header .row #header_logo,
     width: 25%; }
 
   .col-lg-4 {
-    width: 33.33333%; }
+    /*width: 33.33333%; */
+    width: 36%;
+    }
 
   .col-lg-5 {
     width: 41.66667%; }
