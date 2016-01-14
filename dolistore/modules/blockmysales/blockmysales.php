@@ -482,7 +482,7 @@ class BlockMySales extends Module
 	/**
 	 * Check that a zip file is Dolibarr rule compliant
 	 */
-	public function validateZipFile(&$zip,$originalfilename,$zipfile)
+	private function validateZipFile(&$zip,$originalfilename,$zipfile)
 	{
 		$error=0;
 		$return = array(
@@ -696,7 +696,7 @@ class BlockMySales extends Module
 			}
 
 			//insertion du produit en base
-			$query = 'INSERT INTO '._DB_PREFIX_.'product (
+			$query = 'INSERT INTO `'._DB_PREFIX_.'product` (
 					`id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
 					`quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
 					`quantity_discount`, `customizable`, `uploadable_files`, `text_fields`,	`active`, `indexed`, `date_add`, `date_upd`
@@ -708,9 +708,9 @@ class BlockMySales extends Module
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
 			// Get product id
-			$query = 'SELECT id_product FROM '._DB_PREFIX_.'product
-					WHERE reference = \''.$reference.'\'
-					AND date_add = \''.$dateNow.'\' ';
+			$query = 'SELECT `id_product` FROM `'._DB_PREFIX_.'product`
+					WHERE `reference` = \''.$reference.'\'
+					AND `date_add` = \''.$dateNow.'\' ';
 			$result = Db::getInstance()->ExecuteS($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 			foreach ($result AS $row)
@@ -726,6 +726,16 @@ class BlockMySales extends Module
 					`price`, `wholesale_price`,	`customizable`, `uploadable_files`, `text_fields`,	`active`, `indexed`, `date_add`, `date_upd`
 					) VALUES (
 		            '.$id_product.', '.$id_shop.', '.$taxe_id.', '.$id_categorie_default.', 0, 0.00, '.$prix_ht.', '.$prix_ht.', 0, 0, 0, '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\'
+			)';
+
+			$result = Db::getInstance()->Execute($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+
+			// insertion du produit en stock
+			$query = 'INSERT INTO `'._DB_PREFIX_.'stock_available` (
+					`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`, `quantity`, `depends_on_stock`, `out_of_stock`
+					) VALUES (
+		            '.$id_product.', 0, '.$id_shop.', 0, '.$qty.', 0, 0
 			)';
 
 			$result = Db::getInstance()->Execute($query);
@@ -755,9 +765,7 @@ class BlockMySales extends Module
 					$id_tag=0;
 
 					// Search existing tag
-					$query = 'SELECT id_tag FROM '._DB_PREFIX_.'tag
-							WHERE id_lang = \''.$id_lang.'\'
-							AND name = \''.addslashes($tag).'\' ';
+					$query = 'SELECT `id_tag` FROM `'._DB_PREFIX_.'tag`	WHERE `id_lang` = \''.$id_lang.'\' AND name = \''.addslashes($tag).'\' ';
 					$result = Db::getInstance()->ExecuteS($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 					foreach ($result AS $row)
@@ -768,7 +776,7 @@ class BlockMySales extends Module
 
 					if (empty($id_tag))
 					{
-						$query = "INSERT INTO "._DB_PREFIX_."tag(id_lang, name) VALUES ('".$id_lang."', '".addslashes($tag)."')";
+						$query = 'INSERT INTO `'._DB_PREFIX_.'tag` (`id_lang`, `name`) VALUES (\''.$id_lang.'\', \''.addslashes($tag).'\')';
 						$result = Db::getInstance()->Execute($query);
 						//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 
@@ -779,7 +787,7 @@ class BlockMySales extends Module
 					if (! empty($id_tag) && $id_tag > 0)
 					{
 						// Add tag link
-						$query = "INSERT INTO "._DB_PREFIX_."product_tag(id_product, id_tag) VALUES ('".$id_product."', '".$id_tag."')";
+						$query = 'INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`) VALUES (\''.$id_product.'\', \''.$id_tag.'\')';
 						$result = Db::getInstance()->Execute($query);
 
 						//prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
@@ -796,12 +804,11 @@ class BlockMySales extends Module
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 
-
-			//mise en piece jointe du fichier
+			// Si produit gratuit mise en piece jointe du fichier
 			if ($prix_ht == 0)
 			{
 				//mise dans la base des fichiers joints
-				$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `mime`) VALUES ("'.$product_file_newname.'", "text/plain");';
+				$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `file_name`, `mime`) VALUES ("'.$product_file_newname.'", "'.$product_file_name.'", "binary/octet-stream");';
 				$result = Db::getInstance()->Execute($query);
 
 				//recuperation de l'id du fichier joint
@@ -821,6 +828,14 @@ class BlockMySales extends Module
 
 				//cree lien fichier vers fichiers joint
 				$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$id_product.', '.$id_attachment.')';
+				$result = Db::getInstance()->Execute($query);
+
+				// Désactive la mise en panier et l'affichage du prix dans la table product
+				$query = 'UPDATE `'._DB_PREFIX_.'product` SET `available_for_order` = 0, `show_price` = 0, `cache_has_attachments` = 1 WHERE `id_product` = '.$id_product;
+				$result = Db::getInstance()->Execute($query);
+
+				// Désactive la mise en panier et l'affichage du prix dans la table product_shop
+				$query = 'UPDATE `'._DB_PREFIX_.'product_shop` SET `available_for_order` = 0, `show_price` = 0 WHERE `id_product` = '.$id_product;
 				$result = Db::getInstance()->Execute($query);
 			}
 			else
@@ -853,12 +868,43 @@ class BlockMySales extends Module
 	public function updateProduct($id_product, $customer, $languageTAB)
 	{
 		$flagError = 0;
+		$id_shop = (int)Shop::getContextShopID();
 		$id_langue_en_cours = (int)$this->context->language->id;
 		$status = (Tools::isSubmit('active') ? Tools::getValue('active') : -1);
 		if (!$customer['admin']) $status = -1;
 		$product_file_name = Tools::getValue('product_file_name');
 		$product_file_path = Tools::getValue('product_file_path');
 
+		// repair stock_available table
+		/*
+		$query = 'SELECT `id_product`, `price` FROM `'._DB_PREFIX_.'product`';
+		$result = Db::getInstance()->ExecuteS($query);
+		if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+		foreach ($result AS $row)
+		{
+			$id_prod = $row['id_product'];
+			$price = $row['price'];
+			$qty = 1000;
+			if ($price == 0) $qty = 0;
+
+			$query = 'SELECT `id_product` FROM `'._DB_PREFIX_.'stock_available` WHERE `id_product` = '.$id_prod;
+			$result = Db::getInstance()->ExecuteS($query);
+			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+			if (empty($result))
+			{
+				// insertion du produit en stock
+				$query = 'INSERT INTO `'._DB_PREFIX_.'stock_available` (
+					`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`, `quantity`, `depends_on_stock`, `out_of_stock`
+					) VALUES (
+		            '.$id_prod.', 0, '.$id_shop.', 0, '.$qty.', 0, 0
+				)';
+
+				$result = Db::getInstance()->Execute($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
+				echo $query.'<br>';
+			}
+		}
+		*/
 		//prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 		//prise des libelles
@@ -916,6 +962,10 @@ class BlockMySales extends Module
 			$prix_ht = (Tools::isSubmit('price') ? Tools::getValue('price') : 0);
 			//$prix_ttc = round($prix_ht * (100 + (float) $taxe_rate) / 100, 2);
 
+			//gestion des fichiers selon prix
+			$oldPrice = round(Tools::isSubmit('op') ? Tools::getValue('op') : 0, 2);
+			$newPrice = round(Tools::isSubmit('price') ? Tools::getValue('price') : 0, 2);
+
 			//prise des date
 			$dateToday = date ("Y-m-d");
 			$dateNow = date ("Y-m-d H:i:s");
@@ -939,6 +989,9 @@ class BlockMySales extends Module
 					`id_tax_rules_group`	= '.$taxe_id.',
 					`reference` 			= \''.$reference.'\',';
 			if ($status >= 0) $query.= ' `active` = '.$status.',';		// We don't change if status is -1
+			if ($oldPrice == 0 && $newPrice > 0) {
+				$query.= ' `available_for_order` = 1, `show_price` = 1, `cache_has_attachments` = 0,';
+			}
 			$query.= ' `indexed` 			= 1,
 					`date_upd` 				= \''.$dateNow.'\'
 					WHERE `id_product` = '.$id_product.' ';
@@ -952,6 +1005,9 @@ class BlockMySales extends Module
 					`wholesale_price` 		= '.$prix_ht.',
 					`id_tax_rules_group`	= '.$taxe_id.',';
 			if ($status >= 0) $query.= ' `active` = '.$status.',';		// We don't change if status is -1
+			if ($oldPrice == 0 && $newPrice > 0) {
+				$query.= ' `available_for_order` = 1, `show_price` = 1,';
+			}
 			$query.= ' `indexed` 			= 1,
 					`date_upd` 				= \''.$dateNow.'\'
 					WHERE `id_product` = '.$id_product.' ';
@@ -998,9 +1054,7 @@ class BlockMySales extends Module
 					$id_tag=0;
 
 					// Search existing tag
-					$query = 'SELECT id_tag FROM '._DB_PREFIX_.'tag
-							WHERE id_lang = \''.$id_lang.'\'
-							AND name = \''.addslashes($tag).'\' ';
+					$query = 'SELECT `id_tag` FROM `'._DB_PREFIX_.'tag` WHERE `id_lang` = \''.$id_lang.'\' AND `name` = \''.addslashes($tag).'\' ';
 					$result = Db::getInstance()->ExecuteS($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 					foreach ($result AS $row)
@@ -1011,7 +1065,7 @@ class BlockMySales extends Module
 
 					if (empty($id_tag))
 					{
-						$query = "INSERT INTO "._DB_PREFIX_."tag(id_lang, name) VALUES ('".$id_lang."', '".addslashes($tag)."')";
+						$query = "INSERT INTO `"._DB_PREFIX_."tag` (`id_lang`, `name`) VALUES ('".$id_lang."', '".addslashes($tag)."')";
 						$result = Db::getInstance()->Execute($query);
 						//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 
@@ -1022,7 +1076,7 @@ class BlockMySales extends Module
 					if (! empty($id_tag) && $id_tag > 0)
 					{
 						// Add tag link
-						$query = "INSERT INTO "._DB_PREFIX_."product_tag(id_product, id_tag) VALUES ('".$id_product."', '".$id_tag."')";
+						$query = "INSERT INTO `"._DB_PREFIX_."product_tag` (`id_product`, `id_tag`) VALUES ('".$id_product."', '".$id_tag."')";
 						$result = Db::getInstance()->Execute($query);
 
 						//prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
@@ -1058,10 +1112,6 @@ class BlockMySales extends Module
 					$product_file_path = $row['filename'];
 				}
 			}
-
-			//gestion des fichiers selon prix
-			$oldPrice = round(Tools::isSubmit('op') ? Tools::getValue('op') : 0, 2);
-			$newPrice = round(Tools::isSubmit('price') ? Tools::getValue('price') : 0, 2);
 
 			// Si un fichier a ete modifier ou le prix modifie
 			if ($newfile || $oldPrice != $newPrice)
@@ -1110,7 +1160,7 @@ class BlockMySales extends Module
 						$id_attachment = $row['id_attachment'];
 						//prestalog("Add attachment for num ".$id_attachment);
 
-						for ($x = 0; $languageTAB[$x]; $x++ ) {
+						for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
 							$id_lang = $languageTAB[$x]['id_lang'];
 							$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
 							$result = Db::getInstance()->Execute($query);
@@ -1119,6 +1169,14 @@ class BlockMySales extends Module
 						$query = 'INSERT INTO `'._DB_PREFIX_.'product_attachment` (`id_product`, `id_attachment`) VALUES ('.$id_product.', '.$id_attachment.')';
 						$result = Db::getInstance()->Execute($query);
 					}
+
+					// Désactive la mise en panier et l'affichage du prix dans la table product
+					$query = 'UPDATE `'._DB_PREFIX_.'product` SET `available_for_order` = 0, `show_price` = 0, `cache_has_attachments` = 1 WHERE `id_product` = '.$id_product;
+					$result = Db::getInstance()->Execute($query);
+
+					// Désactive la mise en panier et l'affichage du prix dans la table product_shop
+					$query = 'UPDATE `'._DB_PREFIX_.'product_shop` SET `available_for_order` = 0, `show_price` = 0 WHERE `id_product` = '.$id_product;
+					$result = Db::getInstance()->Execute($query);
 				}
 			}
 

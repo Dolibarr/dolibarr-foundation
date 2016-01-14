@@ -307,10 +307,17 @@
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
 								{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 							{/if}
+						{else}
+							<div class="price">
+								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+									<span id="our_price_display" itemprop="price">{l s='Free'}</span>
+								</p>
+							</div>
 						{/if} {*close if for show price*}
 						{hook h="displayProductPriceBlock" product=$product type="weight"}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
+					{if $product->show_price}
 					<div class="product_attributes clearfix">
 						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
@@ -381,6 +388,7 @@
 							</div> <!-- end attributes -->
 						{/if}
 					</div> <!-- end product_attributes -->
+					{/if}
 					<div class="box-cart-bottom">
 						<div{if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || (isset($restricted_country_mode) && $restricted_country_mode) || $PS_CATALOG_MODE} class="unvisible"{/if}>
 							<p id="add_to_cart" class="buttons_bottom_block no-print">
