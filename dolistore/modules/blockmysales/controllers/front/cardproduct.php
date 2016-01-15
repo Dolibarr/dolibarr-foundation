@@ -300,6 +300,18 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$addimage_flag=false;
 							$tinymce=BlockMySales::getTinyMce($this->context);
 
+							$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
+
+							$vatrate = Configuration::get('BLOCKMYSALES_VATRATE');
+							$this->context->smarty->assign('vatrate', $vatrate);
+							$this->context->smarty->assign('vatratepercent', $vatrate.'%');
+
+							$commissioncee = Configuration::get('BLOCKMYSALES_COMMISSIONCEE');
+							$this->context->smarty->assign('commissioncee', $commissioncee.'%');
+
+							$taxrulegroupid = Configuration::get('BLOCKMYSALES_TAXRULEGROUPID');
+							$this->context->smarty->assign('taxrulegroupid', $taxrulegroupid);
+
 							$this->context->smarty->assign('taxes', Tax::getTaxes($id_lang));
 
 							$languages = Language::getLanguages();

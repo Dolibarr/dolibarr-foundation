@@ -62,7 +62,7 @@
 												<input type="hidden" name="id_tax" id="id_tax" value="{if $taxe.rate > 0}{$taxrulegroupid}{else}0{/if}" />
 												<input type="hidden" name="rate_tax" id="rate_tax" value="{$taxe.rate}" />
 												<br>
-												{l s='According to foundation status, a vat rate of %1$s will be added to this price, if price is not null. Your %2$s part is calculated onto this final amount.' sprintf=[$vatrate,$commissioncee] mod='blockmysales'}
+												{l s='According to foundation status, a vat rate of %1$s will be added to this price, if price is not null. Your %2$s part is calculated onto this final amount.' sprintf=[$vatratepercent,$commissioncee] mod='blockmysales'}
 												{break}
 											{/if}
 										{/foreach}

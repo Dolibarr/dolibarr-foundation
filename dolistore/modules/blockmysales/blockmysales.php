@@ -8,6 +8,9 @@ if (!defined('_CAN_LOAD_FILES_'))
 
 class BlockMySales extends Module
 {
+	private $_html = '';
+	private $post_errors = array();
+
 	private $merchant_mails;
 	private $merchant_order;
 
@@ -18,9 +21,9 @@ class BlockMySales extends Module
 		$this->name = 'blockmysales';
 		$this->author = 'DolibarrDev';
 		$this->tab = 'front_office_features';
-		$this->version = '2.0';
+		$this->version = '2.1';
 
-		$this->bootstrap = true;
+		//$this->bootstrap = true;
 		parent::__construct();
 
 		if ($this->id)
@@ -39,6 +42,7 @@ class BlockMySales extends Module
 	public function install()
 	{
 		if (!parent::install() ||
+				!Configuration::updateValue('BLOCKMYSALES_VERSION', $this->version) ||
 				!$this->registerHook('displayCustomerAccount') ||
 				!$this->registerHook('displayMyAccountBlock') ||
 				!$this->registerHook('actionValidateOrder')
@@ -50,12 +54,117 @@ class BlockMySales extends Module
 
 	public function uninstall()
 	{
-		return parent::uninstall();
+		if (!parent::uninstall() ||
+				//!$this->unregisterHook('displayCustomerAccount') ||
+				//!$this->unregisterHook('displayMyAccountBlock') ||
+				//!$this->unregisterHook('actionValidateOrder') ||
+				!Configuration::deleteByName('BLOCKMYSALES_VERSION') ||
+				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_URL') ||
+				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_LOGIN') ||
+				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_PASSWORD') ||
+				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_SECUREKEY') ||
+				!Configuration::deleteByName('BLOCKMYSALES_VATRATE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_VATNUMBER') ||
+				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONCEE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTCEE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONNOTCEE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTNOTCEE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_TAX_RULE_GROUP_ID') ||
+				!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH')
+		)
+			return false;
+
+		return true;
 	}
 
 	public function getContent()
 	{
+		$this->_html .= '<h2>'.$this->displayName.' Version '.Configuration::get('BLOCKMYSALES_VERSION').'</h2>';
 
+		if (!empty($_POST) && Tools::isSubmit('submitSave'))
+		{
+			$this->postValidation();
+			if (!count($this->post_errors))
+				$this->postProcess();
+				else
+					foreach ($this->post_errors as $err)
+						$this->_html .= '<div class="alert error"><img src="'._PS_IMG_.'admin/forbbiden.gif" alt="nok" />&nbsp;'.$err.'</div>';
+		}
+
+		/* var to report */
+		$module_dir = _MODULE_DIR_.$this->name;
+		$id_shop = (int)Context::getContext()->shop->id;
+
+		$webservices_url = Configuration::get('BLOCKMYSALES_WEBSERVICES_URL');
+		$webservices_login = Configuration::get('BLOCKMYSALES_WEBSERVICES_LOGIN');
+		$webservices_password = Configuration::get('BLOCKMYSALES_WEBSERVICES_PASSWORD');
+		$webservices_securekey = Configuration::get('BLOCKMYSALES_WEBSERVICES_SECUREKEY');
+
+		$vatrate = Configuration::get('BLOCKMYSALES_VATRATE');
+		$vatnumber = Configuration::get('BLOCKMYSALES_VATNUMBER');
+
+		$commissioncee = Configuration::get('BLOCKMYSALES_COMMISSIONCEE');
+		$minamountcee = Configuration::get('BLOCKMYSALES_MINAMOUNTCEE');
+		$commissionnotcee = Configuration::get('BLOCKMYSALES_COMMISSIONNOTCEE');
+		$minamountnotcee = Configuration::get('BLOCKMYSALES_MINAMOUNTNOTCEE');
+
+		$taxrulegroupid = Configuration::get('BLOCKMYSALES_TAXRULEGROUPID');
+		$taxrulesgroups = TaxRulesGroup::getTaxRulesGroupsForOptions();
+
+		$mindelaymonth = Configuration::get('BLOCKMYSALES_MINDELAYMONTH');
+
+		$this->context->smarty->assign(array(
+				'moduleDir' => $module_dir,
+				'webservices_url' => $webservices_url,
+				'webservices_login' => $webservices_login,
+				'webservices_password' => $webservices_password,
+				'webservices_securekey' => $webservices_securekey,
+				'vatrate' => $vatrate,
+				'vatnumber' => $vatnumber,
+				'commissioncee' => $commissioncee,
+				'minamountcee' => $minamountcee,
+				'commissionnotcee' => $commissionnotcee,
+				'minamountnotcee' => $minamountnotcee,
+				'taxrulegroupid' => $taxrulegroupid,
+				'taxrulesgroups' => $taxrulesgroups,
+				'mindelaymonth' => $mindelaymonth
+		));
+
+		return $this->_html .= $this->fetchTemplate('back_office.tpl');
+	}
+
+	/**
+	 * for validate data
+	 */
+	private function postValidation()
+	{
+		//if ((int)Tools::getValue('id_inodbox_manual_installation') == (int)Tools::getValue('id_inodbox_auto_installation'))
+			//$this->post_errors[] = $this->l('Manual installation cannot be the same as automatic installation');
+	}
+
+	/**
+	 * for record data
+	 */
+	private function postProcess()
+	{
+		if (Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_URL', Tools::getValue('webservices_url'))
+				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_LOGIN', Tools::getValue('webservices_login'))
+				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_PASSWORD', Tools::getValue('webservices_password'))
+				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_SECUREKEY', Tools::getValue('webservices_securekey'))
+				&& Configuration::updateValue('BLOCKMYSALES_VATRATE', Tools::getValue('vatrate'))
+				&& Configuration::updateValue('BLOCKMYSALES_VATNUMBER', Tools::getValue('vatnumber'))
+				&& Configuration::updateValue('BLOCKMYSALES_COMMISSIONCEE', Tools::getValue('commissioncee'))
+				&& Configuration::updateValue('BLOCKMYSALES_MINAMOUNTCEE', Tools::getValue('minamountcee'))
+				&& Configuration::updateValue('BLOCKMYSALES_COMMISSIONNOTCEE', Tools::getValue('commissionnotcee'))
+				&& Configuration::updateValue('BLOCKMYSALES_MINAMOUNTNOTCEE', Tools::getValue('minamountnotcee'))
+				&& Configuration::updateValue('BLOCKMYSALES_TAXRULEGROUPID', Tools::getValue('taxrulegroupid'))
+				&& Configuration::updateValue('BLOCKMYSALES_MINDELAYMONTH', Tools::getValue('mindelaymonth'))
+			)
+		{
+			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
+		}
+		else
+			$this->_html .= '<div class="alert error"><img src="'._PS_IMG_.'admin/forbbiden.gif" alt="nok"/>'.$this->l('Cannot save settings').'</div>';
 	}
 
 	public function hookDisplayCustomerAccount($params)
@@ -1664,6 +1773,47 @@ class BlockMySales extends Module
 			$result[] = $message['message'];
 
 		return implode('<br/>', $result);
+	}
+
+	private function fetchTemplate($name)
+	{
+		$views = 'views/templates/';
+		if (@filemtime(dirname(__FILE__).'/'.$views.'hook/'.$name))
+			return $this->display(__FILE__, $views.'hook/'.$name);
+			elseif (@filemtime(dirname(__FILE__).'/'.$views.'front/'.$name))
+			return $this->display(__FILE__, $views.'front/'.$name);
+			elseif (@filemtime(dirname(__FILE__).'/'.$views.'admin/'.$name))
+			return $this->display(__FILE__, $views.'admin/'.$name);
+	}
+
+	public static function formatSizeUnits($bytes, $decimal = 0)
+	{
+		if ($bytes >= 1073741824)
+		{
+			$bytes = number_format($bytes / 1073741824, (int)$decimal) . ' GB';
+		}
+		elseif ($bytes >= 1048576)
+		{
+			$bytes = number_format($bytes / 1048576, (int)$decimal) . ' MB';
+		}
+		elseif ($bytes >= 1024)
+		{
+			$bytes = number_format($bytes / 1024, (int)$decimal) . ' KB';
+		}
+		elseif ($bytes > 1)
+		{
+			$bytes = $bytes . ' bytes';
+		}
+		elseif ($bytes == 1)
+		{
+			$bytes = $bytes . ' byte';
+		}
+		else
+		{
+			$bytes = '0 bytes';
+		}
+
+		return $bytes;
 	}
 
 }
