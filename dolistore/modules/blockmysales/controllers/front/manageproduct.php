@@ -684,14 +684,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						}
 					}
 
-					$blockmysales = new BlockMySales();
-
 					/*
 					 * Action
 					 */
 
 					if ($action == "uploadfile")
 					{
+						$blockmysales = new BlockMySales();
 						$file = $blockmysales->checkZipFile();
 
 						if (Tools::isSubmit('product_file_name'))
@@ -705,6 +704,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					}
 					else if ($action == "create" && !$cancel)
 					{
+						$blockmysales = new BlockMySales();
 						$create_flag = $blockmysales->addProduct($customer, $languageTAB);
 						if ($create_flag > 0)
 						{

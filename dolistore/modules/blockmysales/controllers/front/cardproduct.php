@@ -321,14 +321,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$languageTAB[$key]['img'] = _THEME_LANG_DIR_.$language['id_lang'].'.jpg';
 							}
 
-							$blockmysales = new BlockMySales();
-
 							/*
 							 * Action
 							 */
 
 							if ($action == "uploadfile")
 							{
+								$blockmysales = new BlockMySales();
 								$file = $blockmysales->checkZipFile();
 
 								if (Tools::isSubmit('product_file_name'))	$product_file_name = Tools::getValue('product_file_name');
@@ -341,10 +340,12 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							}
 							else if ($action == "update" && !$cancel)
 							{
+								$blockmysales = new BlockMySales();
 								$update_flag = $blockmysales->updateProduct($product_id, $customer, $languageTAB);
 							}
 							else if ($action == "addimage")
 							{
+								$blockmysales = new BlockMySales();
 								$addimage_flag = $blockmysales->addImages($product_id, $customer_id, $languageTAB);
 							}
 							else if ($action == "deleteimage")
