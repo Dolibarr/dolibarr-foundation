@@ -288,8 +288,6 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 						$tinymce=false;
 						if (BlockMySales::checkProductOwner($customer_id, $product_id))
 						{
-							require_once dirname(__FILE__) . '/../../config.inc.php';
-
 							$owner=true;
 							$product=array();
 							$file=array('product_file_path' => null, 'upload' => 1, 'errormsg' => null);

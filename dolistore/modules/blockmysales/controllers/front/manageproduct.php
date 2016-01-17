@@ -36,8 +36,6 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
     public function displayContent()
 	{
-		require_once dirname(__FILE__) . '/../../config.inc.php';
-
 		// Get env variables
 		$active = '';
 		$products = array();
