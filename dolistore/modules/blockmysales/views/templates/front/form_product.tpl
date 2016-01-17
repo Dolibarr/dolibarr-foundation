@@ -130,84 +130,6 @@
 									<td colspan="2"><hr></td>
 								</tr>
 								
-								{capture assign=defaulten}
-								Module version: <strong>1.0</strong><br>
-								Publisher/Licence: <strong>{$publisher}</strong> / <strong>AGPL</strong><br>
-								User interface language: <strong>English</strong><br>
-								Help/Support: <strong>None / <strike>Forum www.dolibarr.org</strike> / <strike>Mail to contact@publisher.com</strike></strong><br>
-								Prerequisites:<br>
-								<ul>
-									<li> Dolibarr min version: <strong>{$minversion}</strong> </li>
-									<li> Dolibarr max version: <strong>{$maxversion}</strong> </li>
-								</ul>
-								<p>Install:</p>
-								<ul>
-									<li> Download the archive file of module (.zip file) from web site <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-									<li> Put the file into the root directory of Dolibarr. </li>
-									<li> Uncompress the zip file, for example with command </li>
-								</ul>
-									<div style="text-align: left;" dir="ltr">
-										<div style="font-family: monospace;">
-											<pre><span>unzip </span>{if $product.file_name}$product.file_name{else}modulefile.zip{/if}</pre>
-										</div>
-									</div>
-								<ul>
-									<li> Module or skin is then available and can be activated. </li>
-								</ul>
-								{/capture}
-								
-								{capture assign=defaultfr}
-								Module version: <strong>1.0</strong><br>
-								Editeur/Licence: <strong>{$publisher}</strong> / <strong>AGPL</strong><br>
-								Langage interface: <strong>Anglais</strong><br>
-								Assistance: <strong>Aucune / <strike>Forum www.dolibarr.org</strike> / <strike>Par mail à contact@editeur.com</strike></strong><br>
-								Pr&eacute;requis: <br>
-								<ul>
-									<li> Dolibarr min version: <strong>{$minversion}</strong> </li>
-									<li> Dolibarr max version: <strong>{$maxversion}</strong> </li>
-								</ul>
-								Installation:<br>
-								<ul>
-									<li> T&eacute;l&eacute;charger le fichier archive du module (.zip) depuis le site web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-									<li> Placer le fichier dans le r&eacute;pertoire racine de dolibarr. </li>
-									<li> Decompressez le fichier zip, par exemple par la commande </li>
-								</ul>
-									<div style="text-align: left;" dir="ltr">
-										<div style="font-family: monospace;">
-											<pre><span>unzip </span>{if $product.file_name}$product.file_name{else}fichiermodule.zip{/if}</pre>
-										</div>
-									</div>
-								<ul>
-									<li> Le module ou thème est alors disponible et activable. </li>
-								</ul>
-								{/capture}
-								
-								{capture assign=defaultes}
-								Versión del Módulo: <strong>1.0</strong><br>
-								Creador/Licencia:  <strong>{$publisher}</strong> / <strong>AGPL</strong><br>
-								Idioma interfaz usuario: <strong>Inglés</strong><br>
-								Ayuda/Soporte: <strong>No / <strike>foro www.dolibarr.org</strike> / <strike>mail a contacto@creador.com</strike></strong><br>
-								Prerrequisitos: <br>
-								<ul>
-									<li> Versión min Dolibarr: <strong>{$minversion}</strong></li>
-									<li> Versión max Dolibarr: <strong>{$maxversion}</strong></li>
-								</ul>
-								Para instalar este módulo:<br>
-								<ul>
-									<li> Descargar el archivo del módulo (archivo .zip) desde la web <a title="http://www.dolistore.com" rel="nofollow" href="http://www.dolistore.com/" target="_blank">DoliStore.com</a> </li>
-									<li> Ponga el archivo en el directorio raíz de Dolibarr.</li>
-									<li> Descomprima el zip archivo, por ejamplo usando el comando</li>
-								</ul>
-									<div style="text-align: left;" dir="ltr">
-										<div style="font-family: monospace;">
-											<pre><span>unzip </span>{if $product.file_name} $product.file_name{else}fichiermodule.zip{/if}</pre>
-										</div>
-									</div>
-								<ul>
-									<li> El módulo o tema está listo para ser activado.</li>
-								</ul>
-								{/capture}
-								
 								{foreach from=$languages key=id item=language}
 								<tr>
 									<td colspan="2">
@@ -221,9 +143,7 @@
 										{if $product.description[$language.id_lang]}
 											{$product.description[$language.id_lang]}
 										{else}
-											{if $language.iso_code == 'fr'}{$defaultfr}
-											{else if $language.iso_code == 'es'}{$defaultes}
-											{else}{$defaulten}{/if}
+											{$default_descriptions[$language.id_lang]}
 										{/if}
 										</textarea>
 									</td>

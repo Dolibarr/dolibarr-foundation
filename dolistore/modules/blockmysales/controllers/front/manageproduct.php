@@ -716,6 +716,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						}
 					}
 
+					$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
+					foreach ($descriptions as $key => $value)
+					{
+						$default_descriptions[$key] = str_replace('{$publisher}', $publisher, $value);
+						$default_descriptions[$key] = str_replace('{$product_file_name}', (!empty($product_file_name)?$product_file_name:'fichiermodule.zip'), $default_descriptions[$key]);
+						if (!empty($newproduct['description']))
+							$newproduct['description'][$key] = str_replace('fichiermodule.zip', (!empty($product_file_name)?$product_file_name:'fichiermodule.zip'), $newproduct['description'][$key]);
+					}
+					$this->context->smarty->assign('default_descriptions', $default_descriptions);
+
 					$this->context->smarty->assign('create_flag', $create_flag);
 					$this->context->smarty->assign('languages', $languageTAB);
 					$this->context->smarty->assign('tinymce',BlockMySales::getTinyMce($this->context));

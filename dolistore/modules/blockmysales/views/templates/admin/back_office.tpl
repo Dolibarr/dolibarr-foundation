@@ -109,6 +109,19 @@
 			<input type="text" size="5" name="mindelaymonth" value="{if isset($mindelaymonth)}{$mindelaymonth|escape:'htmlall':'UTF-8'}{/if}" />
             <p>{l s='Minimum period before which payment can be claimed' mod='blockmysales'}</p>
         </div>
+	</fieldset>
+	<fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/img/logo_petit.png" alt="" />{l s='Product card' mod='blockmysales'}</legend>
+		<label>{l s='Default long description' mod='blockmysales'} : </label>
+		<div class="margin-form">
+			{foreach from=$languages item=language}
+			<div id="html_rte_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
+				<textarea style="min-width: 400px; min-height: 300px;" class="rte autoload_rte" id="descriptions_{$language.id_lang}" name="descriptions_{$language.id_lang}">{if $descriptions[$language.id_lang]}{$descriptions[$language.id_lang]}{/if}</textarea>
+			</div>
+			{/foreach}
+		</div>
+		<span class="clear">&nbsp;</span>
+		{$displayFlags}
+		<div class="clear">&nbsp;</div>
 		<div class="margin-form">
             <input type="submit" value="{l s='Save' mod='blockmysales'}" name="submitSave" class="button" style="margin:10px 0px 0px 25px;" />
         </div>

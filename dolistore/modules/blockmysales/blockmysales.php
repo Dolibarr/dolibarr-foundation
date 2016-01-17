@@ -80,8 +80,6 @@ class BlockMySales extends Module
 
 	public function getContent()
 	{
-		$this->_html .= '<h2>'.$this->displayName.' Version '.Configuration::get('BLOCKMYSALES_VERSION').'</h2>';
-
 		if (!empty($_POST) && Tools::isSubmit('submitSave'))
 		{
 			$this->postValidation();
@@ -89,7 +87,7 @@ class BlockMySales extends Module
 				$this->postProcess();
 				else
 					foreach ($this->post_errors as $err)
-						$this->_html .= '<div class="alert error"><img src="'._PS_IMG_.'admin/forbbiden.gif" alt="nok" />&nbsp;'.$err.'</div>';
+						$this->_html .= $this->displayError($err);
 		}
 
 		/* var to report */
@@ -122,8 +120,49 @@ class BlockMySales extends Module
 
 		$mindelaymonth = Configuration::get('BLOCKMYSALES_MINDELAYMONTH');
 
+		/* Languages */
+		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$languages = Language::getLanguages();
+		$iso = Language::getIsoById($defaultLanguage);
+		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
+		$ad = dirname($_SERVER['PHP_SELF']);
+
+		$tiny_mce_code = '
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
+			<script type="text/javascript">
+			var iso = "'.$iso.'";
+			var pathCSS = "'._THEME_CSS_DIR_.'";
+			var ad = "'.$ad.'";
+			$(document).ready(function(){
+					tinySetup({
+						editor_selector :"autoload_rte",
+						theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
+						theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
+						theme_advanced_buttons3 : "",
+						theme_advanced_buttons4 : ""
+					});
+			});
+			</script>
+			';
+
+		$this->_html .= $tiny_mce_code . '
+		<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>
+		<link rel="stylesheet" type="text/css" href="'._MODULE_DIR_.$this->name.'/css/admin.css" />';
+
+		$this->_html .= '<h2>'.$this->displayName.' Version '.Configuration::get('BLOCKMYSALES_VERSION').'</h2>';
+
+		$displayFlags = $this->displayFlags($languages, $defaultLanguage, 'html_rte', 'html_rte', true);
+
+		$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
+
 		$this->context->smarty->assign(array(
 				'moduleDir' => $module_dir,
+				'defaultLanguage' => $defaultLanguage,
+				'languages' => $languages,
+				'tiny_mce_code' => $tiny_mce_code,
+				'displayFlags' => $displayFlags,
+				'descriptions' => $descriptions,
 				'webservices_url' => $webservices_url,
 				'webservices_login' => $webservices_login,
 				'webservices_password' => $webservices_password,
@@ -149,8 +188,18 @@ class BlockMySales extends Module
 	 */
 	private function postValidation()
 	{
-		//if ((int)Tools::getValue('id_inodbox_manual_installation') == (int)Tools::getValue('id_inodbox_auto_installation'))
-			//$this->post_errors[] = $this->l('Manual installation cannot be the same as automatic installation');
+		$languages = Language::getLanguages();
+
+		foreach ($languages as $language)
+		{
+			$value = Tools::getValue('descriptions_' . $language['id_lang']);
+
+			if ($language['iso_code'] == 'en' && empty($value))
+				$this->post_errors[] = $this->l('The English language is mandatory!');
+
+			if (!Validate::isCleanHtml($value))
+				$this->post_errors[] = $this->l('Invalid HTML field, javascript is forbidden');
+		}
 	}
 
 	/**
@@ -158,6 +207,14 @@ class BlockMySales extends Module
 	 */
 	private function postProcess()
 	{
+		$descriptions = array();
+		$languages = Language::getLanguages();
+
+		foreach ($languages as $language)
+		{
+			$descriptions[$language['id_lang']] = htmlentities(stripslashes(Tools::getValue('descriptions_' . $language['id_lang'])), ENT_COMPAT, 'UTF-8');
+		}
+
 		if (Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_URL', Tools::getValue('webservices_url'))
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_LOGIN', Tools::getValue('webservices_login'))
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_PASSWORD', Tools::getValue('webservices_password'))
@@ -171,12 +228,13 @@ class BlockMySales extends Module
 				&& Configuration::updateValue('BLOCKMYSALES_MINAMOUNTNOTCEE', Tools::getValue('minamountnotcee'))
 				&& Configuration::updateValue('BLOCKMYSALES_TAXRULEGROUPID', Tools::getValue('taxrulegroupid'))
 				&& Configuration::updateValue('BLOCKMYSALES_MINDELAYMONTH', Tools::getValue('mindelaymonth'))
+				&& Configuration::updateValue('BLOCKMYSALES_DESCRIPTIONS', json_encode($descriptions))
 			)
 		{
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 		else
-			$this->_html .= '<div class="alert error"><img src="'._PS_IMG_.'admin/forbbiden.gif" alt="nok"/>'.$this->l('Cannot save settings').'</div>';
+			$this->_html .= $this->displayError($this->l('Cannot save settings'));
 	}
 
 	public function hookDisplayCustomerAccount($params)
