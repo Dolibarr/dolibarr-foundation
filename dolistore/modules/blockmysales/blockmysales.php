@@ -63,6 +63,7 @@ class BlockMySales extends Module
 				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_LOGIN') ||
 				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_PASSWORD') ||
 				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_SECUREKEY') ||
+				!Configuration::deleteByName('BLOCKMYSALES_CEEZONEID') ||
 				!Configuration::deleteByName('BLOCKMYSALES_VATRATE') ||
 				!Configuration::deleteByName('BLOCKMYSALES_VATNUMBER') ||
 				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONCEE') ||
@@ -100,6 +101,14 @@ class BlockMySales extends Module
 		$webservices_password = Configuration::get('BLOCKMYSALES_WEBSERVICES_PASSWORD');
 		$webservices_securekey = Configuration::get('BLOCKMYSALES_WEBSERVICES_SECUREKEY');
 
+		$ceezoneid = Configuration::get('BLOCKMYSALES_CEEZONEID');
+		$zones = Zone::getZones(true);
+		$zones = array_merge($zones, array(array('id_zone' => 0, 'name' => $this->l('Any zone'))));
+		foreach ($zones as $key => $row) {
+			$id_zone[$key]  = $row['id_zone'];
+		}
+		array_multisort($id_zone, SORT_ASC, $zones);
+
 		$vatrate = Configuration::get('BLOCKMYSALES_VATRATE');
 		$vatnumber = Configuration::get('BLOCKMYSALES_VATNUMBER');
 
@@ -119,6 +128,8 @@ class BlockMySales extends Module
 				'webservices_login' => $webservices_login,
 				'webservices_password' => $webservices_password,
 				'webservices_securekey' => $webservices_securekey,
+				'zones' => $zones,
+				'ceezoneid' => $ceezoneid,
 				'vatrate' => $vatrate,
 				'vatnumber' => $vatnumber,
 				'commissioncee' => $commissioncee,
@@ -151,6 +162,7 @@ class BlockMySales extends Module
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_LOGIN', Tools::getValue('webservices_login'))
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_PASSWORD', Tools::getValue('webservices_password'))
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_SECUREKEY', Tools::getValue('webservices_securekey'))
+				&& Configuration::updateValue('BLOCKMYSALES_CEEZONEID', Tools::getValue('ceezoneid'))
 				&& Configuration::updateValue('BLOCKMYSALES_VATRATE', Tools::getValue('vatrate'))
 				&& Configuration::updateValue('BLOCKMYSALES_VATNUMBER', Tools::getValue('vatnumber'))
 				&& Configuration::updateValue('BLOCKMYSALES_COMMISSIONCEE', Tools::getValue('commissioncee'))

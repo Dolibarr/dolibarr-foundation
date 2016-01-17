@@ -82,7 +82,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 					$commissionnotcee = Configuration::get('BLOCKMYSALES_COMMISSIONNOTCEE');
 
-					$iscee=in_array($country,array('AT','BE','IT','DE','DK','ES','FR','GB','GR','LU','MC','NL','PO','PT'));	// Countries using euros
+					$ceezoneid = Configuration::get('BLOCKMYSALES_CEEZONEID');
+					$ceecountries = Country::getCountriesByZoneId($ceezoneid, $id_lang);
+					foreach($ceecountries as $ceecountry)
+					{
+						$countries[] = $ceecountry['iso_code'];
+					}
+					$iscee=in_array($country, $countries);	// Countries using euros
 					$commission=$iscee?$commissioncee:$commissionnotcee;
 					$this->context->smarty->assign('iscee', $iscee);
 

@@ -48,6 +48,19 @@
 	</fieldset>
 	<div class="clear">&nbsp;</div>
 	<fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/img/logo_petit.png" alt="" />{l s='Parameters' mod='blockmysales'}</legend>
+		<label>{l s='EEC zone' mod='blockmysales'} : </label>
+        <div class="margin-form">
+            <select name="ceezoneid">
+				{foreach from=$zones item=zone}
+					{if $zone.id_zone == $ceezoneid}
+						<option value="{$zone.id_zone|escape:'htmlall':'UTF-8'}" selected>{$zone.id_zone|escape:'htmlall':'UTF-8'} - {$zone.name|escape:'htmlall':'UTF-8'}</option>
+					{else}
+						<option value="{$zone.id_zone|escape:'htmlall':'UTF-8'}">{$zone.id_zone|escape:'htmlall':'UTF-8'} - {$zone.name|escape:'htmlall':'UTF-8'}</option>
+					{/if}
+				{/foreach}
+			</select>
+			<p>{l s='Select the EEC zone' mod='blockmysales'}</p>
+        </div>
 		<label>{l s='VAT rate' mod='blockmysales'} : </label>
         <div class="margin-form">
 			<input type="text" size="5" name="vatrate" value="{if isset($vatrate)}{$vatrate|escape:'htmlall':'UTF-8'}{/if}" />%
@@ -81,15 +94,15 @@
 		<label>{l s='Tax rules group' mod='blockmysales'} : </label>
         <div class="margin-form">
             <select name="taxrulegroupid">
-                {foreach from=$taxrulesgroups item=taxrulesgroup}
-                      {if $taxrulesgroup.id_tax_rules_group == $taxrulegroupid}
-                        <option value="{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'}" selected>{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'} - {$taxrulesgroup.name|escape:'htmlall':'UTF-8'}</option>
-                    {else}
-                        <option value="{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'}">{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'} - {$taxrulesgroup.name|escape:'htmlall':'UTF-8'}</option>
-                    {/if}
-                {/foreach}
-            </select>
-            <p>{l s='Select the tax rules group' mod='blockmysales'}</p>
+				{foreach from=$taxrulesgroups item=taxrulesgroup}
+					{if $taxrulesgroup.id_tax_rules_group == $taxrulegroupid}
+						<option value="{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'}" selected>{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'} - {$taxrulesgroup.name|escape:'htmlall':'UTF-8'}</option>
+					{else}
+						<option value="{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'}">{$taxrulesgroup.id_tax_rules_group|escape:'htmlall':'UTF-8'} - {$taxrulesgroup.name|escape:'htmlall':'UTF-8'}</option>
+					{/if}
+				{/foreach}
+			</select>
+			<p>{l s='Select the tax rules group' mod='blockmysales'}</p>
         </div>
         <label>{l s='Delay before payment (in months)' mod='blockmysales'} : </label>
         <div class="margin-form">
