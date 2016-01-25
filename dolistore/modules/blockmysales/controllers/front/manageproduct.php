@@ -36,8 +36,6 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
     public function displayContent()
 	{
-		require_once dirname(__FILE__) . '/../../config.inc.php';
-
 		// Get env variables
 		$active = '';
 		$products = array();
@@ -59,6 +57,8 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$this->context->smarty->assign('cardproduct', $this->context->link->getModuleLink('blockmysales', 'cardproduct'));
 					$this->context->smarty->assign('ps_bms_templates_dir', _PS_MODULE_DIR_.'blockmysales/views/templates/front');
 
+					$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
+
 					$publisher=trim($customer['firstname'].' '.$customer['lastname']);
 					$this->context->smarty->assign('publisher', $publisher);
 
@@ -68,12 +68,38 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$country=trim($customer['iso_code']);
 					$this->context->smarty->assign('country', $country);
 
-					$iscee=in_array($country,array('AT','BE','IT','DE','DK','ES','FR','GB','GR','LU','MC','NL','PO','PT'));	// Countries using euros
+					$vatrate = Configuration::get('BLOCKMYSALES_VATRATE');
+					$this->context->smarty->assign('vatrate', $vatrate);
+					$this->context->smarty->assign('vatratepercent', $vatrate.'%');
+
+					$vatnumber = Configuration::get('BLOCKMYSALES_VATNUMBER');
+					$this->context->smarty->assign('vatnumber', $vatnumber);
+
+					$commissioncee = Configuration::get('BLOCKMYSALES_COMMISSIONCEE');
+					$this->context->smarty->assign('commissioncee', $commissioncee.'%');
+
+					$commissionnotcee = Configuration::get('BLOCKMYSALES_COMMISSIONNOTCEE');
+
+					$ceezoneid = Configuration::get('BLOCKMYSALES_CEEZONEID');
+					$ceecountries = Country::getCountriesByZoneId($ceezoneid, $id_lang);
+					foreach($ceecountries as $ceecountry)
+					{
+						$countries[] = $ceecountry['iso_code'];
+					}
+					$iscee=in_array($country, $countries);	// Countries using euros
 					$commission=$iscee?$commissioncee:$commissionnotcee;
 					$this->context->smarty->assign('iscee', $iscee);
 
+					$minamountcee = Configuration::get('BLOCKMYSALES_MINAMOUNTCEE');
+					$minamountnotcee = Configuration::get('BLOCKMYSALES_MINAMOUNTNOTCEE');
 					$minamount=($iscee?$minamountcee:$minamountnotcee);
 					$this->context->smarty->assign('minamount', $minamount);
+
+					$taxrulegroupid = Configuration::get('BLOCKMYSALES_TAXRULEGROUPID');
+					$this->context->smarty->assign('taxrulegroupid', $taxrulegroupid);
+
+					$mindelaymonth = Configuration::get('BLOCKMYSALES_MINDELAYMONTH');
+					$this->context->smarty->assign('mindelaymonth', $mindelaymonth);
 
 					// foundationfreerate
 					$foundationfeerate=$commission/100;
@@ -310,19 +336,19 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							define('NUSOAP_PATH', dirname(__FILE__) . '/../../nusoap');
 
 							require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
-							$dolibarr_main_url_root='http://asso.dolibarr.org/dolibarr/';
+							$dolibarr_webservices_url = Configuration::get('BLOCKMYSALES_WEBSERVICES_URL');
 							$authentication=array(
-									'dolibarrkey'=>$wsdolibarrkey,
-									'sourceapplication'=>'DOLISTORE',
-									'login'=>$wslogin,
-									'password'=>$wspass,
-									'entity'=>'');
+									'dolibarrkey' => Configuration::get('BLOCKMYSALES_WEBSERVICES_SECUREKEY'),
+									'sourceapplication' => 'DOLISTORE',
+									'login' => Configuration::get('BLOCKMYSALES_WEBSERVICES_LOGIN'),
+									'password' => Configuration::get('BLOCKMYSALES_WEBSERVICES_PASSWORD'),
+									'entity' => '');
 
 							$socid=0;
 							$foundthirdparty=false;
 
 							// Call the WebService method to find third party id from name or company name.
-							$WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_thirdparty.php';
+							$WS_DOL_URL = $dolibarr_webservices_url . '/server_thirdparty.php';
 							//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
 							$soapclient = new soapclient_nusoap($WS_DOL_URL);
 							if ($soapclient)
@@ -384,7 +410,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							if ($socid > 0 || $socid == 'all')
 							{
 								// Define $dolistoreinvoices
-								$WS_DOL_URL = $dolibarr_main_url_root.'/webservices/server_supplier_invoice.php';
+								$WS_DOL_URL = $dolibarr_webservices_url . '/server_supplier_invoice.php';
 								$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
 								//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
 								$soapclient = new soapclient_nusoap($WS_DOL_URL);
@@ -687,6 +713,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							exit;
 						}
 					}
+
+					$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
+					foreach ($descriptions as $key => $value)
+					{
+						$default_descriptions[$key] = str_replace('{$publisher}', $publisher, $value);
+						$default_descriptions[$key] = str_replace('{$product_file_name}', (!empty($product_file_name)?$product_file_name:'fichiermodule.zip'), $default_descriptions[$key]);
+						if (!empty($newproduct['description']))
+							$newproduct['description'][$key] = str_replace('fichiermodule.zip', (!empty($product_file_name)?$product_file_name:'fichiermodule.zip'), $newproduct['description'][$key]);
+					}
+					$this->context->smarty->assign('default_descriptions', $default_descriptions);
 
 					$this->context->smarty->assign('create_flag', $create_flag);
 					$this->context->smarty->assign('languages', $languageTAB);

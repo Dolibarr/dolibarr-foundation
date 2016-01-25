@@ -288,8 +288,6 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 						$tinymce=false;
 						if (BlockMySales::checkProductOwner($customer_id, $product_id))
 						{
-							require_once dirname(__FILE__) . '/../../config.inc.php';
-
 							$owner=true;
 							$product=array();
 							$file=array('product_file_path' => null, 'upload' => 1, 'errormsg' => null);
@@ -299,6 +297,18 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$update_flag=false;
 							$addimage_flag=false;
 							$tinymce=BlockMySales::getTinyMce($this->context);
+
+							$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
+
+							$vatrate = Configuration::get('BLOCKMYSALES_VATRATE');
+							$this->context->smarty->assign('vatrate', $vatrate);
+							$this->context->smarty->assign('vatratepercent', $vatrate.'%');
+
+							$commissioncee = Configuration::get('BLOCKMYSALES_COMMISSIONCEE');
+							$this->context->smarty->assign('commissioncee', $commissioncee.'%');
+
+							$taxrulegroupid = Configuration::get('BLOCKMYSALES_TAXRULEGROUPID');
+							$this->context->smarty->assign('taxrulegroupid', $taxrulegroupid);
 
 							$this->context->smarty->assign('taxes', Tax::getTaxes($id_lang));
 
