@@ -100,8 +100,8 @@
 					</form>
 				</div>
 				<div>{l s='Number of paid sells:' mod='blockmysales'} <b>{$totalnbsellpaid}</b></div>
-				<div>{l s='Total of sells done:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucher_ht}({/if}{$totalamount}{if $totalvoucher_ht} - {$totalvoucher_ht}**){/if} = {$mytotalamount}{l s='€ incl tax' mod='blockmysales'}</b></div>
-				<div>{l s='Total validated sells:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucherclaimable_ht}({/if}{$totalamountclaimable}{if $totalvoucherclaimable_ht} - {$totalvoucherclaimable_ht}**){/if} = {$mytotalamountclaimable}{l s='€ incl tax' mod='blockmysales'}</b></div>
+				<div>{l s='Total of sells done:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucher_ht}({/if}{$totalamount}{if $totalvoucher_ht} - {$totalvoucher_ht}**){/if} = {$mytotalamount}{l s='€ excl tax' mod='blockmysales'}</b></div>
+				<div>{l s='Total validated sells:' mod='blockmysales'} <b>{$foundationfeerate*100}% x {if $totalvoucherclaimable_ht}({/if}{$totalamountclaimable}{if $totalvoucherclaimable_ht} - {$totalvoucherclaimable_ht}**){/if} = {$mytotalamountclaimable}{l s='€ excl tax' mod='blockmysales'}</b></div>
 				<div>{l s='* any sell is validated after a %s month delay' sprintf=$mindelaymonth mod='blockmysales'}</div>
 				{if $totalvoucherclaimable_ht || $totalvoucher_ht}
 					<div>{l s='** Total amount of vouchers offered excl tax' mod='blockmysales'}</div>
