@@ -8,6 +8,8 @@ if (!defined('_CAN_LOAD_FILES_'))
 
 class BlockMySales extends Module
 {
+	public $resume_errors = array();
+
 	private $_html = '';
 	private $post_errors = array();
 
@@ -788,10 +790,15 @@ class BlockMySales extends Module
 	public function addProduct($customer, $languageTAB)
 	{
 		$flagError = 0;
+		$limit = 400;
+
 		$id_shop = (int)Shop::getContextShopID();
-		$id_langue_en_cours = (int)$this->context->language->id;
+		$id_lang = (int)$this->context->language->id;
+		$languages = Language::getLanguages();
+
 		$status = (Tools::isSubmit('active') ? Tools::getValue('active') : 0);
 		if (!$customer['admin']) $status = 0;
+
 		$product_file_name = Tools::getValue('product_file_name');
 		$product_file_path = Tools::getValue('product_file_path');
 
@@ -805,41 +812,57 @@ class BlockMySales extends Module
 		if ($flagError == 0)
 		{
 			//prise des libelles
-			for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
-
+			foreach ($languages as $language)
+			{
 				$product_name = $resume = $keywords = $description = "";
-				$product_name = trim(Tools::getValue('product_name_l'.$languageTAB[$x]['id_lang']));
-				$resume = Tools::getValue('resume_'.$languageTAB[$x]['id_lang']);
-				$keywords = trim(Tools::getValue('keywords_'.$languageTAB[$x]['id_lang']));
-				$description = Tools::getValue('description_'.$languageTAB[$x]['id_lang']);
+				$product_name = trim(Tools::getValue('product_name_l'.$language['id_lang']));
+				$resume = Tools::getValue('resume_'.$language['id_lang']);
+				$keywords = trim(Tools::getValue('keywords_'.$language['id_lang']));
+				$description = Tools::getValue('description_'.$language['id_lang']);
 
-				if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {
+				if ($language['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == ""))
+				{
 					$flagError = -1;
-				} else {
-
-					if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
+					break;
+				}
+				else
+				{
+					if ($language['iso_code'] != "en" && $product_name == "") {
 						$product_name = $product_nameTAB[0];
 					}
-					if ($languageTAB[$x]['iso_code'] != "en" && $resume == "") {
+					if ($language['iso_code'] != "en" && $resume == "") {
 						$resume = $resumeTAB[0];
 					}
-					if ($languageTAB[$x]['iso_code'] != "en" && $description == "") {
+					if ($language['iso_code'] != "en" && $description == "") {
 						$description = $descriptionTAB[0];
 					}
-					if ($languageTAB[$x]['iso_code'] != "en" && $keywords == "") {
+					if ($language['iso_code'] != "en" && $keywords == "") {
 						$keywords = $keywordsTAB[0];
 					}
-				}
 
-				$product_nameTAB[$x] = $product_name;
-				$resumeTAB[$x] = $resume;
-				$keywordsTAB[$x] = $keywords;
-				$descriptionTAB[$x] = $description;
+					$product_nameTAB[] = $product_name;
+					$resumeTAB[] = $resume;
+					$keywordsTAB[] = $keywords;
+					$descriptionTAB[] = $description;
+
+					$resumeLength = Tools::strlen(strip_tags($resume)) - 5;
+					if ($resumeLength > $limit) {
+						$this->resume_errors[] = sprintf(
+								'This description short field (%1$s) is too long: %2$d chars max (current count %3$d).',
+								$language['name'],
+								$limit,
+								$resumeLength
+								);
+
+						$flagError = -4;
+						break;
+					}
+				}
 			}
 
 			//recuperation de la categorie par defaut
 			$id_categorie_default="";
-			$categories = Category::getSimpleCategories($id_langue_en_cours);
+			$categories = Category::getSimpleCategories($id_lang);
 			foreach ($categories AS $categorie) {
 				$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
 				if (! empty($categories_checkbox) && $categories_checkbox == 1) {
@@ -1047,8 +1070,12 @@ class BlockMySales extends Module
 	public function updateProduct($id_product, $customer, $languageTAB)
 	{
 		$flagError = 0;
+		$limit = 400;
+
 		$id_shop = (int)Shop::getContextShopID();
-		$id_langue_en_cours = (int)$this->context->language->id;
+		$id_lang = (int)$this->context->language->id;
+		$languages = Language::getLanguages();
+
 		$status = (Tools::isSubmit('active') ? Tools::getValue('active') : -1);
 		if (!$customer['admin']) $status = -1;
 		$product_file_name = Tools::getValue('product_file_name');
@@ -1087,41 +1114,57 @@ class BlockMySales extends Module
 		//prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 		//prise des libelles
-		for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
+		foreach ($languages as $language) {
 
 			$product_name = $resume = $keywords = $description = "";
-			$product_name = trim(Tools::getValue('product_name_l'.$languageTAB[$x]['id_lang']));
-			$resume = Tools::getValue('resume_'.$languageTAB[$x]['id_lang']);
-			$keywords = trim(Tools::getValue('keywords_'.$languageTAB[$x]['id_lang']));
-			$description = Tools::getValue('description_'.$languageTAB[$x]['id_lang']);
+			$product_name = trim(Tools::getValue('product_name_l' . $language['id_lang']));
+			$resume = Tools::getValue('resume_' . $language['id_lang']);
+			$keywords = trim(Tools::getValue('keywords_' . $language['id_lang']));
+			$description = Tools::getValue('description_' . $language['id_lang']);
 
-			if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {
-				$flagError = 1;
-			} else {
-
-				if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
+			if ($language['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == ""))
+			{
+				$flagError = -1;
+				break;
+			}
+			else
+			{
+				if ($language['iso_code'] != "en" && $product_name == "") {
 					$product_name = $product_nameTAB[0];
 				}
-				if ($languageTAB[$x]['iso_code'] != "en" && $resume == "") {
+				if ($language['iso_code'] != "en" && $resume == "") {
 					$resume = $resumeTAB[0];
 				}
-				if ($languageTAB[$x]['iso_code'] != "en" && $description == "") {
+				if ($language['iso_code'] != "en" && $description == "") {
 					$description = $descriptionTAB[0];
 				}
-				if ($languageTAB[$x]['iso_code'] != "en" && $keywords == "") {
+				if ($language['iso_code'] != "en" && $keywords == "") {
 					$keywords = $keywordsTAB[0];
 				}
-			}
 
-			$product_nameTAB[$x] = $product_name;
-			$resumeTAB[$x] = $resume;
-			$keywordsTAB[$x] = $keywords;
-			$descriptionTAB[$x] = $description;
+				$product_nameTAB[] = $product_name;
+				$resumeTAB[] = $resume;
+				$keywordsTAB[] = $keywords;
+				$descriptionTAB[] = $description;
+
+				$resumeLength = Tools::strlen(strip_tags($resume)) - 5;
+				if ($resumeLength > $limit) {
+					$this->resume_errors[] = sprintf(
+							'This description short field (%1$s) is too long: %2$d chars max (current count %3$d).',
+							$language['name'],
+							$limit,
+							$resumeLength
+							);
+
+					$flagError = -4;
+					break;
+				}
+			}
 		}
 
 		//recuperation de la categorie par defaut
 		$id_categorie_default="";
-		$categories = Category::getSimpleCategories($id_langue_en_cours);
+		$categories = Category::getSimpleCategories($id_lang);
 		foreach ($categories AS $categorie) {
 			$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
 			if (! empty($categories_checkbox) && $categories_checkbox == 1) {
@@ -1129,7 +1172,7 @@ class BlockMySales extends Module
 				break;
 			}
 		}
-		if ($id_categorie_default == "") $flagError = 3;
+		if ($id_categorie_default == "") $flagError = -3;
 
 		//si pas derreur de saisis, traitement en base
 		if ($flagError == 0)
@@ -1810,23 +1853,40 @@ class BlockMySales extends Module
 		return $imgThumbName;
 	}
 
-	public static function getTinyMce($context)
+	public static function getTinyMce($context, $module)
 	{
 		$iso = $context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$lang_url = _PS_JS_DIR_.'tiny_mce/langs/'.$isoTinyMCE.'.js';
 		$ad = dirname($_SERVER['PHP_SELF']);
 
-		$tiny_mce_code = '
-			<script type="text/javascript">
-				var iso = "'.$isoTinyMCE.'";
-				var ad = "'.$ad.'";
-				var lang_url = "'.$lang_url.'";
+		$tiny_mce_code = "
+			<script>
+				var iso = '".$isoTinyMCE."';
+				var ad = '".$ad."';
+				var lang_url = '".$lang_url."';
 				$(document).ready(function(){
-						tinySetup();
+					tinySetup({
+						setup : function(ed) {
+							ed.on('keydown', function(ed, e) {
+								tinyMCE.triggerSave();
+								textarea = $('#'+tinymce.activeEditor.id);
+								var max = textarea.parent('div').find('span.counter').data('max');
+								if (max != 'none')
+								{
+									count = tinyMCE.activeEditor.getBody().textContent.length;
+									rest = max - count;
+									if (rest < 0)
+										textarea.parent('div').find('span.counter').html('<span style=\"color:red;\">".$module->l('Maximum', 'blockmysales')." '+ max +' ".$module->l('characters', 'blockmysales')." : '+rest+'</span>');
+									else
+										textarea.parent('div').find('span.counter').html(' ');
+								}
+							});
+						}
+					});
 				});
 			</script>
-			';
+			";
 
 		return $tiny_mce_code;
 	}
@@ -1850,9 +1910,9 @@ class BlockMySales extends Module
 		$views = 'views/templates/';
 		if (@filemtime(dirname(__FILE__).'/'.$views.'hook/'.$name))
 			return $this->display(__FILE__, $views.'hook/'.$name);
-			elseif (@filemtime(dirname(__FILE__).'/'.$views.'front/'.$name))
+		elseif (@filemtime(dirname(__FILE__).'/'.$views.'front/'.$name))
 			return $this->display(__FILE__, $views.'front/'.$name);
-			elseif (@filemtime(dirname(__FILE__).'/'.$views.'admin/'.$name))
+		elseif (@filemtime(dirname(__FILE__).'/'.$views.'admin/'.$name))
 			return $this->display(__FILE__, $views.'admin/'.$name);
 	}
 

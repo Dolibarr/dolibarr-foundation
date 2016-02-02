@@ -215,6 +215,10 @@
 					<div class="alert alert-danger">{l s='You have to upload a product.' mod='blockmysales'}</div>
 				{else if $create_flag == -3}
 					<div class="alert alert-danger">{l s='You have to choose a category.' mod='blockmysales'}</div>
+				{else if $create_flag == -4}
+					{foreach from=$resume_errors item=resume_error}
+						<div class="alert alert-danger">{$resume_error}</div>
+					{/foreach}
 				{else if $create_flag > 0}
 					<div class="alert alert-success">{l s='Changes recorded..' mod='blockmysales'}</div>
 				{/if}

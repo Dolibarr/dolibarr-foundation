@@ -712,6 +712,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							header('Location: '.$url.'?id_p='.$create_flag.'&tab=modify');
 							exit;
 						}
+
+						$this->context->smarty->assign('resume_errors', $blockmysales->resume_errors);
+						$this->context->smarty->assign('create_flag', $create_flag);
 					}
 
 					$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
@@ -724,9 +727,8 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					}
 					$this->context->smarty->assign('default_descriptions', $default_descriptions);
 
-					$this->context->smarty->assign('create_flag', $create_flag);
 					$this->context->smarty->assign('languages', $languageTAB);
-					$this->context->smarty->assign('tinymce',BlockMySales::getTinyMce($this->context));
+					$this->context->smarty->assign('tinymce',BlockMySales::getTinyMce($this->context, $this->module));
 					$this->context->smarty->assign('product', $newproduct);
 					$this->context->smarty->assign('categories', $categories);
 					$this->context->smarty->assign('file', $file);

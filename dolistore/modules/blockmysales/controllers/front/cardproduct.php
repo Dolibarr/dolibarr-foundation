@@ -296,7 +296,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$virtual_product_file=null;
 							$update_flag=false;
 							$addimage_flag=false;
-							$tinymce=BlockMySales::getTinyMce($this->context);
+							$tinymce=BlockMySales::getTinyMce($this->context,$this->module);
 
 							$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
 
@@ -342,6 +342,9 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							{
 								$blockmysales = new BlockMySales();
 								$update_flag = $blockmysales->updateProduct($product_id, $customer, $languageTAB);
+
+								$this->context->smarty->assign('update_flag', $update_flag);
+								$this->context->smarty->assign('resume_errors', $blockmysales->resume_errors);
 							}
 							else if ($action == "addimage")
 							{
@@ -444,7 +447,6 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$this->context->smarty->assign('file', $file);
 							$this->context->smarty->assign('product_file_name', $product_file_name);
 							$this->context->smarty->assign('virtual_product_file', $virtual_product_file);
-							$this->context->smarty->assign('update_flag', $update_flag);
 							$this->context->smarty->assign('addimage_flag', $addimage_flag);
 						}
 

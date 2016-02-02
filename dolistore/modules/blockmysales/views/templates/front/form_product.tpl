@@ -94,19 +94,13 @@
 								<!-- Summary -->
 								{foreach from=$languages key=id item=language}
 								<tr>
-									<td colspan="2" nowrap="nowrap" valign="top">
-										{l s='Short description' mod='blockmysales'}
-										(<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
-										<input type="text" id="resumeLength_{$language.id_lang}" value="400" size="2" width="3" style="border:0; font-size:10px; color:#333333;" /> {l s='characters left' mod='blockmysales'}.
-									</td>
-								</tr>
-								<tr>
 									<td colspan="2" nowrap="nowrap">
-										<textarea class="rte" id="resume_{$language.id_lang}" name="resume_{$language.id_lang}"
-											onkeyup="javascript:resumeLength_{$language.id_lang}.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-											onkeydown="javascript:resumeLength_{$language.id_lang}.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-											onchange="javascript:resumeLength_{$language.id_lang}.value=parseInt(400-this.value.length); if(this.value.length>=400)this.value=this.value.substr(0,399);"
-											style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+										<div class="short-description">
+											{l s='Short description' mod='blockmysales'}
+											(<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+											<span class="counter" data-max="400"></span><br><br>
+											<textarea class="rte" id="resume_{$language.id_lang}" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+										</div>
 									</td>
 								</tr>
 								{/foreach}
