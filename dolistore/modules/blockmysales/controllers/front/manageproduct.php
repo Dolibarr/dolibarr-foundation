@@ -705,15 +705,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					else if ($action == "create" && !$cancel)
 					{
 						$blockmysales = new BlockMySales();
-						$create_flag = $blockmysales->addProduct($customer, $languageTAB);
+						$create_flag = $blockmysales->addProduct($customer);
 						if ($create_flag > 0)
 						{
 							$url = $this->context->link->getModuleLink('blockmysales', 'cardproduct');
 							header('Location: '.$url.'?id_p='.$create_flag.'&tab=modify');
 							exit;
 						}
+						else
+							$this->context->smarty->assign('create_errors', $this->module->displayError($blockmysales->create_errors));
 
-						$this->context->smarty->assign('resume_errors', $blockmysales->resume_errors);
 						$this->context->smarty->assign('create_flag', $create_flag);
 					}
 

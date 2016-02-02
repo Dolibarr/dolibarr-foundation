@@ -68,14 +68,8 @@
 				<!-- Modify product tab -->
 				<div id="productcard_tabs-2">
 					{if $action == 'update' && !$cancel}
-						{if $update_flag == -1}
-							<div class="alert alert-danger">{l s='All English fields are required.' mod='blockmysales'}</div>
-						{else if $update_flag == -3}
-							<div class="alert alert-danger">{l s='You have to choose a category.' mod='blockmysales'}</div>
-						{else if $update_flag == -4}
-							{foreach from=$resume_errors item=resume_error}
-								<div class="alert alert-danger">{$resume_error}</div>
-							{/foreach}
+						{if $update_flag < 0}
+							<div class="alert alert-danger">{$update_errors}</div>
 						{else}
 							<div class="alert alert-success">{l s='Changes recorded..' mod='blockmysales'}</div>
 						{/if}

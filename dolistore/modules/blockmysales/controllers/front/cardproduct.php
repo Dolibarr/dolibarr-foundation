@@ -341,15 +341,15 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							else if ($action == "update" && !$cancel)
 							{
 								$blockmysales = new BlockMySales();
-								$update_flag = $blockmysales->updateProduct($product_id, $customer, $languageTAB);
+								$update_flag = $blockmysales->updateProduct($product_id, $customer);
 
 								$this->context->smarty->assign('update_flag', $update_flag);
-								$this->context->smarty->assign('resume_errors', $blockmysales->resume_errors);
+								$this->context->smarty->assign('update_errors', $this->module->displayError($blockmysales->update_errors));
 							}
 							else if ($action == "addimage")
 							{
 								$blockmysales = new BlockMySales();
-								$addimage_flag = $blockmysales->addImages($product_id, $customer_id, $languageTAB);
+								$addimage_flag = $blockmysales->addImages($product_id, $customer_id);
 							}
 							else if ($action == "deleteimage")
 							{
