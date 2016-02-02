@@ -69,7 +69,7 @@
 				<div id="productcard_tabs-2">
 					{if $action == 'update' && !$cancel}
 						{if $update_flag < 0}
-							<div class="alert alert-danger">{$update_errors}</div>
+							{$update_errors}
 						{else}
 							<div class="alert alert-success">{l s='Changes recorded..' mod='blockmysales'}</div>
 						{/if}
