@@ -374,7 +374,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row)
 							{
-								$product['price'] 			= round($row['price'], 2);
+								$product['price'] 			= round((Tools::isSubmit('price') ? Tools::getValue('price') : $row['price']), 2);
 								$product['wholesale_price'] = $row['wholesale_price'];
 								$product['active'] 			= $row['active'];
 								$product['reference'] 		= $row['reference'];
@@ -388,14 +388,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row) {
 
-								$product['product_name'][$row['id_lang']] 	= $row['name'];
-								$product['resume'][$row['id_lang']]			= $row['description_short'];
-								$product['keywords'][$row['id_lang']] 		= $row['meta_keywords'];
-								$product['description'][$row['id_lang']] 	= $row['description'];
+								$product['product_name'][$row['id_lang']] 	= (Tools::isSubmit('product_name_l' . $row['id_lang']) ? trim(Tools::getValue('product_name_l' . $row['id_lang'])) : $row['name']);
+								$product['resume'][$row['id_lang']]			= (Tools::isSubmit('resume_' . $row['id_lang']) ? Tools::getValue('resume_' . $row['id_lang']) : $row['description_short']);
+								$product['keywords'][$row['id_lang']] 		= (Tools::isSubmit('keywords_' . $row['id_lang']) ? trim(Tools::getValue('keywords_' . $row['id_lang'])) : $row['meta_keywords']);
+								$product['description'][$row['id_lang']] 	= (Tools::isSubmit('description_' . $row['id_lang']) ? Tools::getValue('description_' . $row['id_lang']) : $row['description']);
 								$product['link_rewrite'][$row['id_lang']] 	= $row['link_rewrite'];
 
 							}
-
 
 							$query = 'SELECT `id_category`, `position`
 									FROM `'._DB_PREFIX_.'category_product`
@@ -428,6 +427,16 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 									if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 									if (!$result)
 										unset($categories[$key]);
+								}
+
+								if ($action == "update")
+								{
+									foreach ($categories AS $categorie) {
+										$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
+										if (! empty($categories_checkbox) && $categories_checkbox == 1 && $categorie['id_category'] != 1) {
+											$product['categories_checkbox'][$categorie['id_category']] = true;
+										}
+									}
 								}
 							}
 
