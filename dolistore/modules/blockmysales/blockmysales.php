@@ -790,7 +790,7 @@ class BlockMySales extends Module
 	public function addProduct($customer)
 	{
 		$flagError = 0;
-		$limit = 400;
+		$limit = (Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
 
 		$id_shop = (int)Shop::getContextShopID();
 		$id_lang = (int)$this->context->language->id;
@@ -1072,7 +1072,7 @@ class BlockMySales extends Module
 	public function updateProduct($id_product, $customer)
 	{
 		$flagError = 0;
-		$limit = 400;
+		$limit = (Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
 		$productlang = array();
 
 		$id_shop = (int)Shop::getContextShopID();

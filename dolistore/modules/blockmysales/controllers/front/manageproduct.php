@@ -611,6 +611,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$create_flag=false;
 
 					$this->context->smarty->assign('product_id', false);
+					$this->context->smarty->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
 
 					$action=false;
 					if (Tools::isSubmit('action'))	$action = Tools::getValue('action');

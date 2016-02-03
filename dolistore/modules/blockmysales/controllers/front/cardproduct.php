@@ -312,6 +312,8 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 							$this->context->smarty->assign('taxes', Tax::getTaxes($id_lang));
 
+							$this->context->smarty->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
+
 							$languages = Language::getLanguages();
 
 							foreach ($languages as $key => $language) {

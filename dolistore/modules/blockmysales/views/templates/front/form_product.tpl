@@ -98,7 +98,7 @@
 										<div class="short-description">
 											{l s='Short description' mod='blockmysales'}
 											(<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
-											<span class="counter" data-max="400"></span><br><br>
+											<span class="counter" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span><br><br>
 											<textarea class="rte" id="resume_{$language.id_lang}" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
 										</div>
 									</td>
