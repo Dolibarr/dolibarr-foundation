@@ -48,6 +48,15 @@
 										<input type="hidden" name="product_file_path" id="product_file_path" value="{$file.product_file_path}" />
 									</td>
 								</tr>
+								<tr id="nbdaysaccessible" {if !$product.price} style="display:none;"{/if}>
+									<td nowrap="nowrap" valign="top">{l s='Number of days:' mod='blockmysales'}</td>
+									<td>
+										<input required="required" size="9" maxlength="7" name="nb_days_accessible" id="nb_days_accessible" value="{$product.nb_days_accessible}" type="text" />
+										{l s='day (s)' mod='blockmysales'}
+										<br>
+										{l s='Number of days the file will be accessed by clients (enter 0 for unlimited access).' mod='blockmysales'}
+									</td>
+								</tr>
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>

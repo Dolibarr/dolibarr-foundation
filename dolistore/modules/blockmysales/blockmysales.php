@@ -1002,9 +1002,10 @@ class BlockMySales extends Module
 
 			//mise en base du lien avec le produit telechargeable
 			$product_file_newname = basename($product_file_path);
+			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : 3650);
 
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
-					'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, 1
+					'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", "'.$nb_days_accessible.'", 0, 1
 			)';
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
@@ -1082,8 +1083,6 @@ class BlockMySales extends Module
 
 		$status = (Tools::isSubmit('active') ? Tools::getValue('active') : -1);
 		if (!$customer['admin']) $status = -1;
-		$product_file_name = Tools::getValue('product_file_name');
-		$product_file_path = Tools::getValue('product_file_path');
 
 		// repair stock_available table
 		/*
@@ -1306,7 +1305,11 @@ class BlockMySales extends Module
 				}
 			}
 
-			$newfile = ($product_file_path?1:0);
+			$product_file_name = Tools::getValue('product_file_name');
+			$product_file_path = Tools::getValue('product_file_path');
+			$newfile = ($product_file_path ? 1 : 0);
+
+			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : 3650);
 
 			//mise en base du lien avec le produit telechargeable
 			if ($newfile)
@@ -1317,13 +1320,17 @@ class BlockMySales extends Module
 				$result1 = Db::getInstance()->Execute($query);
 
 				$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
-						'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, 1)';
+						'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", "'.$nb_days_accessible.'", 0, 1)';
 				//prestalog("A new file is asked: We add it into product_download query=".$query);
 				$result = Db::getInstance()->Execute($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 			}
 			else
 			{
+				// update number of days accessible
+				$query = 'UPDATE `'._DB_PREFIX_.'product_download` SET `nb_days_accessible` = "'.$nb_days_accessible.'" WHERE `id_product` = '.$id_product;
+				$result = Db::getInstance()->Execute($query);
+
 				//recup des infos fichier
 				$query = 'SELECT `display_filename`, `filename` FROM `'._DB_PREFIX_.'product_download`
 						  WHERE `id_product` = '.$id_product.' ';
@@ -1888,6 +1895,12 @@ class BlockMySales extends Module
 								}
 							});
 						}
+					});
+					$('#price').on('change keyup paste', function() {
+						if ($(this).val() > 0)
+							$('#nbdaysaccessible').show();
+						else
+							$('#nbdaysaccessible').hide();
 					});
 				});
 			</script>

@@ -408,12 +408,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$product['categories_checkbox'][$row['id_category']] = 1;
 							}
 
-							$query = 'SELECT `display_filename`, `filename` FROM `'._DB_PREFIX_.'product_download`
+							$query = 'SELECT `display_filename`, `filename`, `nb_days_accessible` FROM `'._DB_PREFIX_.'product_download`
 									WHERE `id_product` = '.$product_id.' ';
 							$result = Db::getInstance()->ExecuteS($query);
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row) {
 								$product['file_name'] =  $row['display_filename'];
+								$product['nb_days_accessible'] =  $row['nb_days_accessible'];
 							}
 
 							$categories = Category::getSimpleCategories($id_lang);
