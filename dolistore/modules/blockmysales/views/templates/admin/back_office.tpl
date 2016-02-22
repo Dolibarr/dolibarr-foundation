@@ -111,6 +111,11 @@
         </div>
 	</fieldset>
 	<fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/img/logo_petit.png" alt="" />{l s='Product card' mod='blockmysales'}</legend>
+		<label>{l s='Number of days' mod='blockmysales'} : </label>
+        <div class="margin-form">
+			<input type="text" size="5" name="nbdaysaccessible" value="{if isset($nbdaysaccessible)}{$nbdaysaccessible|escape:'htmlall':'UTF-8'}{/if}" />
+            <p>{l s='Default of number of days the file will be accessed by clients' mod='blockmysales'}</p>
+        </div>
 		<label>{l s='Default long description' mod='blockmysales'} : </label>
 		<div class="margin-form">
 			{foreach from=$languages item=language}

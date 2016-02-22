@@ -591,11 +591,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					 * New product
 					 */
 
+					$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
+
 					$newproduct=array(
 							'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
 							'active' => 0,
 							'file_name' => Tools::getValue('product_file_name'),
-							'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : 3650),
+							'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
 							'product_name' => array(),
 							'resume' => array(),
 							'keywords' => array(),

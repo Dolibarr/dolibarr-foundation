@@ -73,8 +73,10 @@ class BlockMySales extends Module
 				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTCEE') ||
 				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONNOTCEE') ||
 				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTNOTCEE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_TAX_RULE_GROUP_ID') ||
-				!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH')
+				!Configuration::deleteByName('BLOCKMYSALES_TAXRULEGROUPID') ||
+				!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH') ||
+				!Configuration::deleteByName('BLOCKMYSALES_NBDAYSACCESSIBLE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_DESCRIPTIONS')
 		)
 			return false;
 
@@ -157,6 +159,7 @@ class BlockMySales extends Module
 
 		$displayFlags = $this->displayFlags($languages, $defaultLanguage, 'html_rte', 'html_rte', true);
 
+		$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
 		$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
 
 		$this->context->smarty->assign(array(
@@ -165,6 +168,7 @@ class BlockMySales extends Module
 				'languages' => $languages,
 				'tiny_mce_code' => $tiny_mce_code,
 				'displayFlags' => $displayFlags,
+				'nbdaysaccessible' => $nbdaysaccessible,
 				'descriptions' => $descriptions,
 				'webservices_url' => $webservices_url,
 				'webservices_login' => $webservices_login,
@@ -231,6 +235,7 @@ class BlockMySales extends Module
 				&& Configuration::updateValue('BLOCKMYSALES_MINAMOUNTNOTCEE', Tools::getValue('minamountnotcee'))
 				&& Configuration::updateValue('BLOCKMYSALES_TAXRULEGROUPID', Tools::getValue('taxrulegroupid'))
 				&& Configuration::updateValue('BLOCKMYSALES_MINDELAYMONTH', Tools::getValue('mindelaymonth'))
+				&& Configuration::updateValue('BLOCKMYSALES_NBDAYSACCESSIBLE', Tools::getValue('nbdaysaccessible'))
 				&& Configuration::updateValue('BLOCKMYSALES_DESCRIPTIONS', json_encode($descriptions))
 			)
 		{
@@ -1002,7 +1007,8 @@ class BlockMySales extends Module
 
 			//mise en base du lien avec le produit telechargeable
 			$product_file_newname = basename($product_file_path);
-			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : 3650);
+			$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
+			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365));
 
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
 					'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", "'.$nb_days_accessible.'", 0, 1
@@ -1309,7 +1315,8 @@ class BlockMySales extends Module
 			$product_file_path = Tools::getValue('product_file_path');
 			$newfile = ($product_file_path ? 1 : 0);
 
-			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : 3650);
+			$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
+			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365));
 
 			//mise en base du lien avec le produit telechargeable
 			if ($newfile)
