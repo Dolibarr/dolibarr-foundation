@@ -591,10 +591,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					 * New product
 					 */
 
+					$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
+
 					$newproduct=array(
 							'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
 							'active' => 0,
 							'file_name' => Tools::getValue('product_file_name'),
+							'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
 							'product_name' => array(),
 							'resume' => array(),
 							'keywords' => array(),
@@ -611,6 +614,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$create_flag=false;
 
 					$this->context->smarty->assign('product_id', false);
+					$this->context->smarty->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
 
 					$action=false;
 					if (Tools::isSubmit('action'))	$action = Tools::getValue('action');
@@ -684,14 +688,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						}
 					}
 
-					$blockmysales = new BlockMySales();
-
 					/*
 					 * Action
 					 */
 
 					if ($action == "uploadfile")
 					{
+						$blockmysales = new BlockMySales();
 						$file = $blockmysales->checkZipFile();
 
 						if (Tools::isSubmit('product_file_name'))
@@ -705,13 +708,18 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					}
 					else if ($action == "create" && !$cancel)
 					{
-						$create_flag = $blockmysales->addProduct($customer, $languageTAB);
+						$blockmysales = new BlockMySales();
+						$create_flag = $blockmysales->addProduct($customer);
 						if ($create_flag > 0)
 						{
 							$url = $this->context->link->getModuleLink('blockmysales', 'cardproduct');
 							header('Location: '.$url.'?id_p='.$create_flag.'&tab=modify');
 							exit;
 						}
+						else
+							$this->context->smarty->assign('create_errors', $this->module->displayError($blockmysales->create_errors));
+
+						$this->context->smarty->assign('create_flag', $create_flag);
 					}
 
 					$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
@@ -724,9 +732,8 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					}
 					$this->context->smarty->assign('default_descriptions', $default_descriptions);
 
-					$this->context->smarty->assign('create_flag', $create_flag);
 					$this->context->smarty->assign('languages', $languageTAB);
-					$this->context->smarty->assign('tinymce',BlockMySales::getTinyMce($this->context));
+					$this->context->smarty->assign('tinymce',BlockMySales::getTinyMce($this->context, $this->module));
 					$this->context->smarty->assign('product', $newproduct);
 					$this->context->smarty->assign('categories', $categories);
 					$this->context->smarty->assign('file', $file);

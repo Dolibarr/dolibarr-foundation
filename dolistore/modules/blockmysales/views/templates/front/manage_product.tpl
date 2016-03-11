@@ -209,12 +209,8 @@
 		<!-- Submit new product tab -->
 		<div id="manageproduct_tabs-3">
 			{if $action == 'create' && !$cancel}
-				{if $create_flag == -1}
-					<div class="alert alert-danger">{l s='All English fields are required.' mod='blockmysales'}</div>
-				{else if $create_flag == -2}
-					<div class="alert alert-danger">{l s='You have to upload a product.' mod='blockmysales'}</div>
-				{else if $create_flag == -3}
-					<div class="alert alert-danger">{l s='You have to choose a category.' mod='blockmysales'}</div>
+				{if $create_flag < 0}
+					{$create_errors}
 				{else if $create_flag > 0}
 					<div class="alert alert-success">{l s='Changes recorded..' mod='blockmysales'}</div>
 				{/if}

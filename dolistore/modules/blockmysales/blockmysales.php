@@ -8,6 +8,9 @@ if (!defined('_CAN_LOAD_FILES_'))
 
 class BlockMySales extends Module
 {
+	public $create_errors = array();
+	public $update_errors = array();
+
 	private $_html = '';
 	private $post_errors = array();
 
@@ -70,8 +73,10 @@ class BlockMySales extends Module
 				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTCEE') ||
 				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONNOTCEE') ||
 				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTNOTCEE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_TAX_RULE_GROUP_ID') ||
-				!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH')
+				!Configuration::deleteByName('BLOCKMYSALES_TAXRULEGROUPID') ||
+				!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH') ||
+				!Configuration::deleteByName('BLOCKMYSALES_NBDAYSACCESSIBLE') ||
+				!Configuration::deleteByName('BLOCKMYSALES_DESCRIPTIONS')
 		)
 			return false;
 
@@ -154,6 +159,7 @@ class BlockMySales extends Module
 
 		$displayFlags = $this->displayFlags($languages, $defaultLanguage, 'html_rte', 'html_rte', true);
 
+		$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
 		$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
 
 		$this->context->smarty->assign(array(
@@ -162,6 +168,7 @@ class BlockMySales extends Module
 				'languages' => $languages,
 				'tiny_mce_code' => $tiny_mce_code,
 				'displayFlags' => $displayFlags,
+				'nbdaysaccessible' => $nbdaysaccessible,
 				'descriptions' => $descriptions,
 				'webservices_url' => $webservices_url,
 				'webservices_login' => $webservices_login,
@@ -228,6 +235,7 @@ class BlockMySales extends Module
 				&& Configuration::updateValue('BLOCKMYSALES_MINAMOUNTNOTCEE', Tools::getValue('minamountnotcee'))
 				&& Configuration::updateValue('BLOCKMYSALES_TAXRULEGROUPID', Tools::getValue('taxrulegroupid'))
 				&& Configuration::updateValue('BLOCKMYSALES_MINDELAYMONTH', Tools::getValue('mindelaymonth'))
+				&& Configuration::updateValue('BLOCKMYSALES_NBDAYSACCESSIBLE', Tools::getValue('nbdaysaccessible'))
 				&& Configuration::updateValue('BLOCKMYSALES_DESCRIPTIONS', json_encode($descriptions))
 			)
 		{
@@ -783,15 +791,19 @@ class BlockMySales extends Module
 	/**
 	 *
 	 * @param unknown $customer
-	 * @param unknown $languageTAB
 	 */
-	public function addProduct($customer, $languageTAB)
+	public function addProduct($customer)
 	{
 		$flagError = 0;
+		$limit = (Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
+
 		$id_shop = (int)Shop::getContextShopID();
-		$id_langue_en_cours = (int)$this->context->language->id;
+		$id_lang = (int)$this->context->language->id;
+		$languages = Language::getLanguages();
+
 		$status = (Tools::isSubmit('active') ? Tools::getValue('active') : 0);
 		if (!$customer['admin']) $status = 0;
+
 		$product_file_name = Tools::getValue('product_file_name');
 		$product_file_path = Tools::getValue('product_file_path');
 
@@ -799,47 +811,66 @@ class BlockMySales extends Module
 
 		if (empty($product_file_path) || (empty($product_file_name) && empty($_FILES['virtual_product_file']['name'])))
 		{
-			$flagError = -2;
+			$this->create_errors[] = $this->l('You have to upload a product.');
+			$flagError--;
 		}
 
 		if ($flagError == 0)
 		{
+			$productlang = array();
+			$mandatory_id_lang = Language::getIdByIso('en');
+
 			//prise des libelles
-			for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
-
+			foreach ($languages as $language)
+			{
 				$product_name = $resume = $keywords = $description = "";
-				$product_name = trim(Tools::getValue('product_name_l'.$languageTAB[$x]['id_lang']));
-				$resume = Tools::getValue('resume_'.$languageTAB[$x]['id_lang']);
-				$keywords = trim(Tools::getValue('keywords_'.$languageTAB[$x]['id_lang']));
-				$description = Tools::getValue('description_'.$languageTAB[$x]['id_lang']);
+				$product_name = trim(Tools::getValue('product_name_l'.$language['id_lang']));
+				$resume = Tools::getValue('resume_'.$language['id_lang']);
+				$keywords = trim(Tools::getValue('keywords_'.$language['id_lang']));
+				$description = Tools::getValue('description_'.$language['id_lang']);
 
-				if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {
-					$flagError = -1;
-				} else {
+				if ($language['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == ""))
+				{
+					$this->create_errors[] = $this->l('All English fields are required.');
+					$flagError--;
+				}
+				else
+				{
+					if ($language['iso_code'] != "en" && $product_name == "") {
+						$product_name = (isset($productlang[$mandatory_id_lang]['name'])?$productlang[$mandatory_id_lang]['name']:'');
+					}
+					if ($language['iso_code'] != "en" && $resume == "") {
+						$resume = (isset($productlang[$mandatory_id_lang]['resume'])?$productlang[$mandatory_id_lang]['resume']:'');
+					}
+					if ($language['iso_code'] != "en" && $description == "") {
+						$description = (isset($productlang[$mandatory_id_lang]['description'])?$productlang[$mandatory_id_lang]['description']:'');
+					}
+					if ($language['iso_code'] != "en" && $keywords == "") {
+						$keywords = (isset($productlang[$mandatory_id_lang]['keywords'])?$productlang[$mandatory_id_lang]['keywords']:'');
+					}
 
-					if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
-						$product_name = $product_nameTAB[0];
-					}
-					if ($languageTAB[$x]['iso_code'] != "en" && $resume == "") {
-						$resume = $resumeTAB[0];
-					}
-					if ($languageTAB[$x]['iso_code'] != "en" && $description == "") {
-						$description = $descriptionTAB[0];
-					}
-					if ($languageTAB[$x]['iso_code'] != "en" && $keywords == "") {
-						$keywords = $keywordsTAB[0];
+					$productlang[$language['id_lang']]['name'] = $product_name;
+					$productlang[$language['id_lang']]['resume'] = $resume;
+					$productlang[$language['id_lang']]['keywords'] = $keywords;
+					$productlang[$language['id_lang']]['description'] = $description;
+
+					$resumeLength = Tools::strlen(strip_tags($resume)) - 5;
+					if ($resumeLength > $limit) {
+						$this->create_errors[] = sprintf(
+								$this->l('This description short field (%1$s) is too long: %2$d chars max (current count %3$d).'),
+								$language['name'],
+								$limit,
+								$resumeLength
+								);
+
+						$flagError--;
 					}
 				}
-
-				$product_nameTAB[$x] = $product_name;
-				$resumeTAB[$x] = $resume;
-				$keywordsTAB[$x] = $keywords;
-				$descriptionTAB[$x] = $description;
 			}
 
 			//recuperation de la categorie par defaut
 			$id_categorie_default="";
-			$categories = Category::getSimpleCategories($id_langue_en_cours);
+			$categories = Category::getSimpleCategories($id_lang);
 			foreach ($categories AS $categorie) {
 				$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
 				if (! empty($categories_checkbox) && $categories_checkbox == 1) {
@@ -847,7 +878,11 @@ class BlockMySales extends Module
 					break;
 				}
 			}
-			if ($id_categorie_default == "") $flagError = -3;
+			if ($id_categorie_default == "")
+			{
+				$this->create_errors[] = $this->l('You have to choose a category.');
+				$flagError--;
+			}
 		}
 
 		//si pas derreur de saisis, traitement en base
@@ -920,25 +955,21 @@ class BlockMySales extends Module
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
-			// Add language description of product
-			for ($x = 0; $product_nameTAB[$x]; $x++)
+			foreach ($productlang as $id_lang => $product)
 			{
-				$link_rewrite = preg_replace('/[^a-zA-Z0-9-]/','-', $product_nameTAB[$x]);
+				// Add language description of product
+				$link_rewrite = preg_replace('/[^a-zA-Z0-9-]/','-', $product['name']);
 
 				$query = 'INSERT INTO `'._DB_PREFIX_.'product_lang` (
 						`id_product`, `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later`
 						) VALUES (
-						'.$id_product.", ".$languageTAB[$x]['id_lang'].", '".addslashes($descriptionTAB[$x])."', '".addslashes($resumeTAB[$x])."', '".addslashes($link_rewrite)."', '".addslashes($product_nameTAB[$x])."',
-						'".addslashes($keywordsTAB[$x])."', '".addslashes($product_nameTAB[$x])."', '".addslashes($product_nameTAB[$x])."', '".$this->l('Available')."', '".$this->l('In build')."')";
+						'.$id_product.", ".$id_lang.", '".addslashes($product['description'])."', '".addslashes($product['resume'])."', '".addslashes($link_rewrite)."', '".addslashes($product['name'])."',
+						'".addslashes($product['keywords'])."', '".addslashes($product['name'])."', '".addslashes($product['name'])."', '".$this->l('Available')."', '".$this->l('In build')."')";
 				$result = Db::getInstance()->Execute($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
-			}
 
-			// Add tag description of product
-			for ($x = 0; $product_nameTAB[$x]; $x++)
-			{
-				$id_lang=$languageTAB[$x]['id_lang'];
-				$tags=preg_split('/[\s,]+/',$keywordsTAB[$x]);
+				// Add tag description of product
+				$tags=preg_split('/[\s,]+/', $product['keywords']);
 				foreach($tags as $tag)
 				{
 					$id_tag=0;
@@ -976,9 +1007,11 @@ class BlockMySales extends Module
 
 			//mise en base du lien avec le produit telechargeable
 			$product_file_newname = basename($product_file_path);
+			$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
+			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365));
 
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
-					'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, 1
+					'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", "'.$nb_days_accessible.'", 0, 1
 			)';
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
@@ -999,8 +1032,8 @@ class BlockMySales extends Module
 					$id_attachment = $row['id_attachment'];
 
 				//set des nom du fichier en toute les langues
-				for ($x = 0; $languageTAB[$x]; $x++ ) {
-					$id_lang = $languageTAB[$x]['id_lang'];
+				foreach ($languages as $language) {
+					$id_lang = $language['id_lang'];
 					$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
 					$result = Db::getInstance()->Execute($query);
 				}
@@ -1041,18 +1074,21 @@ class BlockMySales extends Module
 	 *
 	 * @param unknown $id_product
 	 * @param unknown $customer
-	 * @param unknown $languageTAB
 	 * @return number
 	 */
-	public function updateProduct($id_product, $customer, $languageTAB)
+	public function updateProduct($id_product, $customer)
 	{
 		$flagError = 0;
+		$limit = (Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
+		$productlang = array();
+
 		$id_shop = (int)Shop::getContextShopID();
-		$id_langue_en_cours = (int)$this->context->language->id;
+		$id_lang = (int)$this->context->language->id;
+		$languages = Language::getLanguages();
+		$mandatory_id_lang = Language::getIdByIso('en');
+
 		$status = (Tools::isSubmit('active') ? Tools::getValue('active') : -1);
 		if (!$customer['admin']) $status = -1;
-		$product_file_name = Tools::getValue('product_file_name');
-		$product_file_path = Tools::getValue('product_file_path');
 
 		// repair stock_available table
 		/*
@@ -1087,41 +1123,56 @@ class BlockMySales extends Module
 		//prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 		//prise des libelles
-		for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
-
+		foreach ($languages as $language)
+		{
 			$product_name = $resume = $keywords = $description = "";
-			$product_name = trim(Tools::getValue('product_name_l'.$languageTAB[$x]['id_lang']));
-			$resume = Tools::getValue('resume_'.$languageTAB[$x]['id_lang']);
-			$keywords = trim(Tools::getValue('keywords_'.$languageTAB[$x]['id_lang']));
-			$description = Tools::getValue('description_'.$languageTAB[$x]['id_lang']);
+			$product_name = trim(Tools::getValue('product_name_l'.$language['id_lang']));
+			$resume = Tools::getValue('resume_'.$language['id_lang']);
+			$keywords = trim(Tools::getValue('keywords_'.$language['id_lang']));
+			$description = Tools::getValue('description_'.$language['id_lang']);
 
-			if ($languageTAB[$x]['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == "")) {
-				$flagError = 1;
-			} else {
+			if ($language['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == ""))
+			{
+				$this->update_errors[] = $this->l('All English fields are required.');
+				$flagError--;
+			}
+			else
+			{
+				if ($language['iso_code'] != "en" && $product_name == "") {
+					$product_name = (isset($productlang[$mandatory_id_lang]['name'])?$productlang[$mandatory_id_lang]['name']:'');
+				}
+				if ($language['iso_code'] != "en" && $resume == "") {
+					$resume = (isset($productlang[$mandatory_id_lang]['resume'])?$productlang[$mandatory_id_lang]['resume']:'');
+				}
+				if ($language['iso_code'] != "en" && $description == "") {
+					$description = (isset($productlang[$mandatory_id_lang]['description'])?$productlang[$mandatory_id_lang]['description']:'');
+				}
+				if ($language['iso_code'] != "en" && $keywords == "") {
+					$keywords = (isset($productlang[$mandatory_id_lang]['keywords'])?$productlang[$mandatory_id_lang]['keywords']:'');
+				}
 
-				if ($languageTAB[$x]['iso_code'] != "en" && $product_name == "") {
-					$product_name = $product_nameTAB[0];
-				}
-				if ($languageTAB[$x]['iso_code'] != "en" && $resume == "") {
-					$resume = $resumeTAB[0];
-				}
-				if ($languageTAB[$x]['iso_code'] != "en" && $description == "") {
-					$description = $descriptionTAB[0];
-				}
-				if ($languageTAB[$x]['iso_code'] != "en" && $keywords == "") {
-					$keywords = $keywordsTAB[0];
+				$productlang[$language['id_lang']]['name'] = $product_name;
+				$productlang[$language['id_lang']]['resume'] = $resume;
+				$productlang[$language['id_lang']]['keywords'] = $keywords;
+				$productlang[$language['id_lang']]['description'] = $description;
+
+				$resumeLength = Tools::strlen(strip_tags($resume)) - 5;
+				if ($resumeLength > $limit) {
+					$this->update_errors[] = sprintf(
+							$this->l('This description short field (%1$s) is too long: %2$d chars max (current count %3$d).'),
+							$language['name'],
+							$limit,
+							$resumeLength
+							);
+
+					$flagError--;
 				}
 			}
-
-			$product_nameTAB[$x] = $product_name;
-			$resumeTAB[$x] = $resume;
-			$keywordsTAB[$x] = $keywords;
-			$descriptionTAB[$x] = $description;
 		}
 
 		//recuperation de la categorie par defaut
 		$id_categorie_default="";
-		$categories = Category::getSimpleCategories($id_langue_en_cours);
+		$categories = Category::getSimpleCategories($id_lang);
 		foreach ($categories AS $categorie) {
 			$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
 			if (! empty($categories_checkbox) && $categories_checkbox == 1) {
@@ -1129,7 +1180,11 @@ class BlockMySales extends Module
 				break;
 			}
 		}
-		if ($id_categorie_default == "") $flagError = 3;
+		if ($id_categorie_default == "")
+		{
+			$this->update_errors[] = $this->l('You have to choose a category.');
+			$flagError--;
+		}
 
 		//si pas derreur de saisis, traitement en base
 		if ($flagError == 0)
@@ -1193,41 +1248,34 @@ class BlockMySales extends Module
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
-
-			//mise en base des libelle anglais et fr et autre s'il y a
-			for ($x = 0; ! empty($product_nameTAB[$x]); $x++)
-			{
-				$link_rewrite = preg_replace('/[^a-zA-Z0-9-]/','-', $product_nameTAB[$x]);
-
-				$query = "UPDATE `"._DB_PREFIX_."product_lang` SET
-						`description`		= '".addslashes($descriptionTAB[$x])."',
-						`description_short`	= '".addslashes($resumeTAB[$x])."',
-						`link_rewrite`		= '".addslashes($link_rewrite)."',
-						`meta_description`	= '".addslashes($product_nameTAB[$x])."',
-						`meta_keywords`		= '".addslashes($keywordsTAB[$x])."',
-						`meta_title`		= '".addslashes($product_nameTAB[$x])."',
-						`name`				= '".addslashes($product_nameTAB[$x])."',
-						`available_now`		= '".$this->l('Available')."',
-						`available_later`	= '".$this->l('In build')."'
-						WHERE `id_lang`	= ".$languageTAB[$x]['id_lang']."
-						AND `id_product` = ".$id_product;
-
-				$result = Db::getInstance()->Execute($query);
-				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
-			}
-
-			$newfile = ($product_file_path?1:0);
-
 			// Delete tag description of product
 			$query = "DELETE FROM "._DB_PREFIX_."product_tag WHERE id_product = ".$id_product;
 			$result = Db::getInstance()->Execute($query);
 			//prestalog("We delete all links to tags for id_product ".$id_product);
 
-			// Add tag description of product
-			for ($x = 0; ! empty($product_nameTAB[$x]); $x++)
+			foreach ($productlang as $id_lang => $product)
 			{
-				$id_lang=$languageTAB[$x]['id_lang'];
-				$tags=preg_split('/[\s,]+/',$keywordsTAB[$x]);
+				//mise en base des libelle anglais et fr et autre s'il y a
+				$link_rewrite = preg_replace('/[^a-zA-Z0-9-]/','-', $product['name']);
+
+				$query = "UPDATE `"._DB_PREFIX_."product_lang` SET
+						`description`		= '".addslashes($product['description'])."',
+						`description_short`	= '".addslashes($product['resume'])."',
+						`link_rewrite`		= '".addslashes($link_rewrite)."',
+						`meta_description`	= '".addslashes($product['name'])."',
+						`meta_keywords`		= '".addslashes($product['keywords'])."',
+						`meta_title`		= '".addslashes($product['name'])."',
+						`name`				= '".addslashes($product['name'])."',
+						`available_now`		= '".$this->l('Available')."',
+						`available_later`	= '".$this->l('In build')."'
+						WHERE `id_lang`	= ".$id_lang."
+						AND `id_product` = ".$id_product;
+
+				$result = Db::getInstance()->Execute($query);
+				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
+
+				// Add tag description of product
+				$tags=preg_split('/[\s,]+/', $product['keywords']);
 				foreach($tags as $tag)
 				{
 					$id_tag=0;
@@ -1263,6 +1311,13 @@ class BlockMySales extends Module
 				}
 			}
 
+			$product_file_name = Tools::getValue('product_file_name');
+			$product_file_path = Tools::getValue('product_file_path');
+			$newfile = ($product_file_path ? 1 : 0);
+
+			$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
+			$nb_days_accessible = (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365));
+
 			//mise en base du lien avec le produit telechargeable
 			if ($newfile)
 			{
@@ -1272,13 +1327,17 @@ class BlockMySales extends Module
 				$result1 = Db::getInstance()->Execute($query);
 
 				$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
-						'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", 3650, 0, 1)';
+						'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", "'.$nb_days_accessible.'", 0, 1)';
 				//prestalog("A new file is asked: We add it into product_download query=".$query);
 				$result = Db::getInstance()->Execute($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 			}
 			else
 			{
+				// update number of days accessible
+				$query = 'UPDATE `'._DB_PREFIX_.'product_download` SET `nb_days_accessible` = "'.$nb_days_accessible.'" WHERE `id_product` = '.$id_product;
+				$result = Db::getInstance()->Execute($query);
+
 				//recup des infos fichier
 				$query = 'SELECT `display_filename`, `filename` FROM `'._DB_PREFIX_.'product_download`
 						  WHERE `id_product` = '.$id_product.' ';
@@ -1339,8 +1398,9 @@ class BlockMySales extends Module
 						$id_attachment = $row['id_attachment'];
 						//prestalog("Add attachment for num ".$id_attachment);
 
-						for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
-							$id_lang = $languageTAB[$x]['id_lang'];
+						foreach ($languages as $language)
+						{
+							$id_lang = $language['id_lang'];
 							$query = 'INSERT INTO `'._DB_PREFIX_.'attachment_lang` (`id_attachment`, `id_lang`, `name`, `description`) VALUES ('.$id_attachment.', '.$id_lang.', "'.$product_file_name.'", "")';
 							$result = Db::getInstance()->Execute($query);
 						}
@@ -1387,9 +1447,11 @@ class BlockMySales extends Module
 	/**
 	 *
 	 */
-	public function addImages($id_product, $customer_id, $languageTAB)
+	public function addImages($id_product, $customer_id)
 	{
 		$flagError = false;
+
+		$languages = Language::getLanguages();
 
 		if ($_FILES['image_product']['error'])
 		{
@@ -1422,10 +1484,10 @@ class BlockMySales extends Module
 			if (!$flagError)
 			{
 				//check du remplissage des champs
-				for ($x = 0; ! empty($languageTAB[$x]); $x++ ) {
-
+				foreach ($languages as $language)
+				{
 					$image_description = "";
-					$image_description = isset($_POST["legende_image_".$languageTAB[$x]['id_lang']])?$_POST["legende_image_".$languageTAB[$x]['id_lang']]:'';
+					$image_description = isset($_POST["legende_image_".$language['id_lang']])?$_POST["legende_image_".$language['id_lang']]:'';
 
 					/*if ($image_description[$x] == "") {
 					 echo "<div style='color:#FF0000'>"; echo aff("Tous les champs sont obligatoires.", "All fields are required.", $iso_langue_en_cours); echo " </div>";
@@ -1476,16 +1538,16 @@ class BlockMySales extends Module
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
 
-					for ($x = 0; ! empty($languageTAB[$x]); $x++ )
+					foreach ($languages as $language)
 					{
 						$image_description = "";
-						if (Tools::isSubmit('legende_image_'.$languageTAB[$x]['id_lang']))
+						if (Tools::isSubmit('legende_image_'.$language['id_lang']))
 						{
 							$image_description = Tools::getValue('product_file_name');
 							$image_description = addslashes(strip_tags($image_description));
 						}
 
-						$query = 'INSERT INTO `'._DB_PREFIX_.'image_lang` (`id_image`, `id_lang`, `legend`) VALUES ('.$id_image.', '.$languageTAB[$x]['id_lang'].', "'.$image_description.'")';
+						$query = 'INSERT INTO `'._DB_PREFIX_.'image_lang` (`id_image`, `id_lang`, `legend`) VALUES ('.$id_image.', '.$language['id_lang'].', "'.$image_description.'")';
 						$result = Db::getInstance()->Execute($query);
 						if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 					}
@@ -1810,23 +1872,46 @@ class BlockMySales extends Module
 		return $imgThumbName;
 	}
 
-	public static function getTinyMce($context)
+	public static function getTinyMce($context, $module)
 	{
 		$iso = $context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$lang_url = _PS_JS_DIR_.'tiny_mce/langs/'.$isoTinyMCE.'.js';
 		$ad = dirname($_SERVER['PHP_SELF']);
 
-		$tiny_mce_code = '
-			<script type="text/javascript">
-				var iso = "'.$isoTinyMCE.'";
-				var ad = "'.$ad.'";
-				var lang_url = "'.$lang_url.'";
+		$tiny_mce_code = "
+			<script>
+				var iso = '".$isoTinyMCE."';
+				var ad = '".$ad."';
+				var lang_url = '".$lang_url."';
 				$(document).ready(function(){
-						tinySetup();
+					tinySetup({
+						setup : function(ed) {
+							ed.on('keydown', function(ed, e) {
+								tinyMCE.triggerSave();
+								textarea = $('#'+tinymce.activeEditor.id);
+								var max = textarea.parent('div').find('span.counter').data('max');
+								if (max != 'none')
+								{
+									count = tinyMCE.activeEditor.getBody().textContent.length;
+									rest = max - count;
+									if (rest < 0)
+										textarea.parent('div').find('span.counter').html('<span style=\"color:red;\">".$module->l('Maximum', 'blockmysales')." '+ max +' ".$module->l('characters', 'blockmysales')." : '+rest+'</span>');
+									else
+										textarea.parent('div').find('span.counter').html(' ');
+								}
+							});
+						}
+					});
+					$('#price').on('change keyup paste', function() {
+						if ($(this).val() > 0)
+							$('#nbdaysaccessible').show();
+						else
+							$('#nbdaysaccessible').hide();
+					});
 				});
 			</script>
-			';
+			";
 
 		return $tiny_mce_code;
 	}
@@ -1850,9 +1935,9 @@ class BlockMySales extends Module
 		$views = 'views/templates/';
 		if (@filemtime(dirname(__FILE__).'/'.$views.'hook/'.$name))
 			return $this->display(__FILE__, $views.'hook/'.$name);
-			elseif (@filemtime(dirname(__FILE__).'/'.$views.'front/'.$name))
+		elseif (@filemtime(dirname(__FILE__).'/'.$views.'front/'.$name))
 			return $this->display(__FILE__, $views.'front/'.$name);
-			elseif (@filemtime(dirname(__FILE__).'/'.$views.'admin/'.$name))
+		elseif (@filemtime(dirname(__FILE__).'/'.$views.'admin/'.$name))
 			return $this->display(__FILE__, $views.'admin/'.$name);
 	}
 

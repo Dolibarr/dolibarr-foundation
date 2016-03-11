@@ -296,7 +296,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$virtual_product_file=null;
 							$update_flag=false;
 							$addimage_flag=false;
-							$tinymce=BlockMySales::getTinyMce($this->context);
+							$tinymce=BlockMySales::getTinyMce($this->context,$this->module);
 
 							$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
 
@@ -312,6 +312,8 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 							$this->context->smarty->assign('taxes', Tax::getTaxes($id_lang));
 
+							$this->context->smarty->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
+
 							$languages = Language::getLanguages();
 
 							foreach ($languages as $key => $language) {
@@ -321,14 +323,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$languageTAB[$key]['img'] = _THEME_LANG_DIR_.$language['id_lang'].'.jpg';
 							}
 
-							$blockmysales = new BlockMySales();
-
 							/*
 							 * Action
 							 */
 
 							if ($action == "uploadfile")
 							{
+								$blockmysales = new BlockMySales();
 								$file = $blockmysales->checkZipFile();
 
 								if (Tools::isSubmit('product_file_name'))	$product_file_name = Tools::getValue('product_file_name');
@@ -341,11 +342,16 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							}
 							else if ($action == "update" && !$cancel)
 							{
-								$update_flag = $blockmysales->updateProduct($product_id, $customer, $languageTAB);
+								$blockmysales = new BlockMySales();
+								$update_flag = $blockmysales->updateProduct($product_id, $customer);
+
+								$this->context->smarty->assign('update_flag', $update_flag);
+								$this->context->smarty->assign('update_errors', $this->module->displayError($blockmysales->update_errors));
 							}
 							else if ($action == "addimage")
 							{
-								$addimage_flag = $blockmysales->addImages($product_id, $customer_id, $languageTAB);
+								$blockmysales = new BlockMySales();
+								$addimage_flag = $blockmysales->addImages($product_id, $customer_id);
 							}
 							else if ($action == "deleteimage")
 							{
@@ -370,7 +376,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row)
 							{
-								$product['price'] 			= round($row['price'], 2);
+								$product['price'] 			= round((Tools::isSubmit('price') ? Tools::getValue('price') : $row['price']), 2);
 								$product['wholesale_price'] = $row['wholesale_price'];
 								$product['active'] 			= $row['active'];
 								$product['reference'] 		= $row['reference'];
@@ -384,14 +390,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row) {
 
-								$product['product_name'][$row['id_lang']] 	= $row['name'];
-								$product['resume'][$row['id_lang']]			= $row['description_short'];
-								$product['keywords'][$row['id_lang']] 		= $row['meta_keywords'];
-								$product['description'][$row['id_lang']] 	= $row['description'];
+								$product['product_name'][$row['id_lang']] 	= (Tools::isSubmit('product_name_l' . $row['id_lang']) ? trim(Tools::getValue('product_name_l' . $row['id_lang'])) : $row['name']);
+								$product['resume'][$row['id_lang']]			= (Tools::isSubmit('resume_' . $row['id_lang']) ? Tools::getValue('resume_' . $row['id_lang']) : $row['description_short']);
+								$product['keywords'][$row['id_lang']] 		= (Tools::isSubmit('keywords_' . $row['id_lang']) ? trim(Tools::getValue('keywords_' . $row['id_lang'])) : $row['meta_keywords']);
+								$product['description'][$row['id_lang']] 	= (Tools::isSubmit('description_' . $row['id_lang']) ? Tools::getValue('description_' . $row['id_lang']) : $row['description']);
 								$product['link_rewrite'][$row['id_lang']] 	= $row['link_rewrite'];
 
 							}
-
 
 							$query = 'SELECT `id_category`, `position`
 									FROM `'._DB_PREFIX_.'category_product`
@@ -403,12 +408,13 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$product['categories_checkbox'][$row['id_category']] = 1;
 							}
 
-							$query = 'SELECT `display_filename`, `filename` FROM `'._DB_PREFIX_.'product_download`
+							$query = 'SELECT `display_filename`, `filename`, `nb_days_accessible` FROM `'._DB_PREFIX_.'product_download`
 									WHERE `id_product` = '.$product_id.' ';
 							$result = Db::getInstance()->ExecuteS($query);
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row) {
 								$product['file_name'] =  $row['display_filename'];
+								$product['nb_days_accessible'] =  $row['nb_days_accessible'];
 							}
 
 							$categories = Category::getSimpleCategories($id_lang);
@@ -424,6 +430,16 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 									if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 									if (!$result)
 										unset($categories[$key]);
+								}
+
+								if ($action == "update")
+								{
+									foreach ($categories AS $categorie) {
+										$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
+										if (! empty($categories_checkbox) && $categories_checkbox == 1 && $categorie['id_category'] != 1) {
+											$product['categories_checkbox'][$categorie['id_category']] = true;
+										}
+									}
 								}
 							}
 
@@ -443,7 +459,6 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$this->context->smarty->assign('file', $file);
 							$this->context->smarty->assign('product_file_name', $product_file_name);
 							$this->context->smarty->assign('virtual_product_file', $virtual_product_file);
-							$this->context->smarty->assign('update_flag', $update_flag);
 							$this->context->smarty->assign('addimage_flag', $addimage_flag);
 						}
 
