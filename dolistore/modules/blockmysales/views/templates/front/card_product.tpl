@@ -40,7 +40,7 @@
 							<tr bgcolor="{$sale.colorTab}">
 								<td>{$sale.sale_number}</td>
 								<td>
-									<b>{$sale.lastname} {$sale.firstname}</b>
+									<b>{$sale.lastname} {$sale.firstname} {if $sale.customer_country}({$sale.customer_country}){else}{l s='Unknown' mod='blockmysales'}{/if}</b>
 									<br>({$sale.email})
 									<br>{l s='Registered on:' mod='blockmysales'} {dateFormat date=$sale.cust_date_add full=1}
 								</td>

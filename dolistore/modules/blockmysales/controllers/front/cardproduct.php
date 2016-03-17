@@ -161,6 +161,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$csvlines.= $this->module->l('Customer', 'blockmysales').';';
 							$csvlines.= $this->module->l('Customer date creation', 'blockmysales').';';
 							$csvlines.= $this->module->l('Customer email', 'blockmysales').';';
+							$csvlines.= $this->module->l('Customer country', 'blockmysales').';';
 							$csvlines.= $this->module->l('Date sell', 'blockmysales').';';
 							$csvlines.= $this->module->l('Product id', 'blockmysales').';';
 							$csvlines.= $this->module->l('Product label', 'blockmysales').';';
@@ -180,6 +181,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$csvlines.= '"'.$subrow['lastname'].' '.$subrow['firstname'].'";';
 								$csvlines.= $subrow['cust_date_add'].";";
 								$csvlines.= $subrow['email'].";";
+								$csvlines.= BlockMySales::getCustomerCountry($id_lang, $subrow['id_customer']).";";
 								$csvlines.= $subrow['date_add'].";";
 								$csvlines.= '"'.$subrow['product_id'].'";';
 								$csvlines.= '"'.$arraylistofproducts[$subrow['product_id']]['name'].'";';
@@ -229,6 +231,8 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$i+=$subrow['product_quantity'];
 
 								$sales[$i] = $subrow;
+
+								$sales[$i] = array_merge($sales[$i], array('customer_country' => BlockMySales::getCustomerCountry($id_lang, $subrow['id_customer'])));
 
 								if ($colorTabNbr%2)
 									$sales[$i] = array_merge($sales[$i], array('colorTab' => "#ffffff"));
