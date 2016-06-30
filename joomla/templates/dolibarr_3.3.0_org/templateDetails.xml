@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
+<extension version="3.0" type="template" client="site" method="upgrade">
+	<name>dolibarr</name>
+	<version>2.0</version>
+	<creationDate>2014-02</creationDate>
+	<author>Dolibarr template for Joomla 3.2</author>
+	<authorEmail>contact@dolibarr.org</authorEmail>
+	<copyright>Copyright (C) 2014</copyright>
+	<description>TPL_DOLIBARR_XML_DESCRIPTION</description>
+	<files>
+		<filename>favicon.ico</filename>
+		<filename>index.html</filename>
+		<filename>index.php</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_preview.png</filename>
+		<folder>images</folder>
+		<folder>css</folder>
+		<folder>html</folder>
+	</files>
+	<positions>
+		<position>position-0</position>
+		<position>position-1</position>
+		<position>position-2</position>
+		<position>position-3</position>
+		<position>position-4</position>
+		<position>position-5</position>
+		<position>position-6</position>
+		<position>position-7</position>
+		<position>position-8</position>
+		<position>position-9</position>
+		<position>position-10</position>
+		<position>position-11</position>
+		<position>position-12</position>
+		<position>position-13</position>
+		<position>position-14</position>
+		<position>position-15</position>
+		<position>position-16</position>
+		<position>position-17</position>
+		<position>position-18</position>
+		<position>position-19</position>
+	</positions>
+	<languages folder="language">
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_dolibarr.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.tpl_dolibarr.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="advanced">
+				<field 
+					name="templateBackgroundColor" 
+					type="color" 
+					default="#F4F6F7"
+					label="TPL_DOLIBARR_BACKGROUND_COLOR_LABEL"
+					description="TPL_DOLIBARR_BACKGROUND_COLOR_DESC" />                    
+			</fieldset>
+		</fields>
+	</config>
+</extension>
