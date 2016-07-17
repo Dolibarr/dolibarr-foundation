@@ -538,6 +538,29 @@ class BlockMySales extends Module
 			return null;
 	}
 
+	public static function getCustomerCountry($id_lang, $id_customer)
+	{
+		$country_name = false;
+
+		// Get customer country
+		$query = "SELECT a.id_country
+				FROM "._DB_PREFIX_."address as a
+				WHERE a.id_customer = " . $id_customer;
+
+		$cresult = Db::getInstance()->ExecuteS($query);
+
+		if (count($cresult))
+		{
+			foreach ($cresult as $country)
+			{
+				$country_name = Country::getNameById($id_lang, $country['id_country']);
+				break; // only the first
+			}
+		}
+
+		return $country_name;
+	}
+
 	/**
 	 *
 	 * @param unknown $customer_id
