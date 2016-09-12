@@ -159,8 +159,21 @@
 									<td colspan="2">
 										<div>
 											<input type="checkbox" id="agreewithtermofuse" name="agreewithtermofuse" />
-											<label for="agreewithtermofuse" id="agreewithtermofuselabel">{l s='I\'ve read and I agree with terms and conditions of use available on page' mod='blockmysales'}
+											<label for="agreewithtermofuse" id="agreewithtermofuselabel">
+												{l s='I\'ve read and I agree with terms and conditions of use available on page' mod='blockmysales'}
 												<a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>
+											</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div>
+											<input type="checkbox" id="agreetoaddwikipage" name="agreetoaddwikipage" />
+											<label for="agreetoaddwikipage" id="agreetoaddwikipagelabel">
+												{l s='I am aware that dolibarr foundation recommand me to add a page dedicated to my module on the wiki.dolibarr.org visible on' mod='blockmysales'}
+												<a href="http://wiki.dolibarr.org/index.php/Category:Complementary_modules" target="_blank">http://wiki.dolibarr.org/index.php/Category:Complementary_modules</a>,
+												{l s='This increase visibility of my module and may increase sell if it is a payed module' mod='blockmysales'}
 											</label>
 										</div>
 									</td>

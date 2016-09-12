@@ -291,13 +291,22 @@ $(document).ready(function() {
 			dateFormat: 'yy-mm-dd'
 		});
 	});
-	$('#agreewithtermofuse').attr('checked', false);
+	$('#upd').css('opacity', '0.5');
+	$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
 	$('#agreewithtermofuse').change(function () {
-		if ($(this).is(':checked')) {
-			$('#sub').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false);
+		if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked')) {
+			$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
 		}   
 		else {
-			$('#sub').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled');
+			$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
+		}
+	});
+	$('#agreetoaddwikipage').change(function () {
+		if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked')) {
+			$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
+		}   
+		else {
+			$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
 		}
 	});
 });
