@@ -24,7 +24,7 @@ class BlockMySales extends Module
 		$this->name = 'blockmysales';
 		$this->author = 'DolibarrDev';
 		$this->tab = 'front_office_features';
-		$this->version = '2.1';
+		$this->version = '2.2';
 
 		//$this->bootstrap = true;
 		parent::__construct();
@@ -48,35 +48,44 @@ class BlockMySales extends Module
 				!Configuration::updateValue('BLOCKMYSALES_VERSION', $this->version) ||
 				!$this->registerHook('displayCustomerAccount') ||
 				!$this->registerHook('displayMyAccountBlock') ||
-				!$this->registerHook('actionValidateOrder')
+				!$this->registerHook('actionValidateOrder') ||
+				!$this->installSql()
 		)
 			return false;
 
 		return true;
 	}
 
+	public function installSql()
+	{
+		$dolibarr_min = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min` varchar(6)');
+		$dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
+
+		return ($dolibarr_min & $dolibarr_max);
+	}
+
 	public function uninstall()
 	{
-		if (!parent::uninstall() ||
+		if (!parent::uninstall() //||
 				//!$this->unregisterHook('displayCustomerAccount') ||
 				//!$this->unregisterHook('displayMyAccountBlock') ||
 				//!$this->unregisterHook('actionValidateOrder') ||
-				!Configuration::deleteByName('BLOCKMYSALES_VERSION') ||
-				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_URL') ||
-				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_LOGIN') ||
-				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_PASSWORD') ||
-				!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_SECUREKEY') ||
-				!Configuration::deleteByName('BLOCKMYSALES_CEEZONEID') ||
-				!Configuration::deleteByName('BLOCKMYSALES_VATRATE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_VATNUMBER') ||
-				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONCEE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTCEE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONNOTCEE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTNOTCEE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_TAXRULEGROUPID') ||
-				!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH') ||
-				!Configuration::deleteByName('BLOCKMYSALES_NBDAYSACCESSIBLE') ||
-				!Configuration::deleteByName('BLOCKMYSALES_DESCRIPTIONS')
+				//!Configuration::deleteByName('BLOCKMYSALES_VERSION') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_URL') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_LOGIN') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_PASSWORD') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_SECUREKEY') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_CEEZONEID') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_VATRATE') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_VATNUMBER') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONCEE') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTCEE') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_COMMISSIONNOTCEE') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_MINAMOUNTNOTCEE') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_TAXRULEGROUPID') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_MINDELAYMONTH') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_NBDAYSACCESSIBLE') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_DESCRIPTIONS')
 		)
 			return false;
 
