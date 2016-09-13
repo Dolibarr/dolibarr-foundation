@@ -34,6 +34,16 @@
 		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
 		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
+	{*define product name*}
+	{if $product->dolibarr_max && $product->dolibarr_max_status == 1}
+		{if $product->dolibarr_min && $product->dolibarr_min_status == 1}
+			{assign var='productName' value="{$product->name} {$product->dolibarr_min} - {$product->dolibarr_max}"}
+		{else}
+			{assign var='productName' value="{$product->name} {$product->dolibarr_max}"}
+		{/if}
+	{else}
+		{assign var='productName' value=$product->name}
+	{/if}
 <div itemscope itemtype="http://schema.org/Product">
 	<div class="primary_block row">
 		{if !$content_only}
@@ -75,11 +85,11 @@
 				{if $have_image}
 					<span id="view_full_size">
 						{if $jqZoomEnabled && $have_image && !$content_only}
-							<a class="jqzoom" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" rel="gal1" href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}" itemprop="url">
-								<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"/>
+							<a class="jqzoom" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$productName|escape:'html':'UTF-8'}{/if}" rel="gal1" href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}" itemprop="url">
+								<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$productName|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$productName|escape:'html':'UTF-8'}{/if}"/>
 							</a>
 						{else}
-							<img id="bigpic" itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" width="{$largeSize.width}" height="{$largeSize.height}"/>
+							<img id="bigpic" itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$productName|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$productName|escape:'html':'UTF-8'}{/if}" width="{$largeSize.width}" height="{$largeSize.height}"/>
 							{if !$content_only}
 								<span class="span_link no-print">{l s='View larger'}</span>
 							{/if}
@@ -87,7 +97,7 @@
 					</span>
 				{else}
 					<span id="view_full_size">
-						<img itemprop="image" src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'html':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}"/>
+						<img itemprop="image" src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$productName|escape:'html':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}"/>
 						{if !$content_only}
 							<span class="span_link">
 								{l s='View larger'}
@@ -114,7 +124,7 @@
 								{if !empty($image.legend)}
 									{assign var=imageTitle value=$image.legend|escape:'html':'UTF-8'}
 								{else}
-									{assign var=imageTitle value=$product->name|escape:'html':'UTF-8'}
+									{assign var=imageTitle value=$productName|escape:'html':'UTF-8'}
 								{/if}
 								<li id="thumbnail_{$image.id_image}"{if $smarty.foreach.thumbnails.last} class="last"{/if}>
 									<a{if $jqZoomEnabled && $have_image && !$content_only} href="javascript:void(0);" rel="{literal}{{/literal}gallery: 'gal1', smallimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')|escape:'html':'UTF-8'}',largeimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}'{literal}}{/literal}"{else} href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}"	data-fancybox-group="other-views" class="fancybox{if $image.id_image == $cover.id_image} shown{/if}"{/if} title="{$imageTitle}">
@@ -150,7 +160,7 @@
 			{if $product->online_only}
 				<p class="online_only">{l s='Online only'}</p>
 			{/if}
-			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
+			<h1 itemprop="name">{$productName|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
 				<span class="editable" itemprop="sku">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
@@ -757,3 +767,21 @@
 {addJsDefL name='product_fileButtonHtml'}{l s='Choose File' js=1}{/addJsDefL}
 {/strip}
 {/if}
+<script>
+{literal}
+$(document).ready(function() {
+	{/literal}{if $product->module_version}{literal}
+		var module_version = '{/literal}{$product->module_version}{literal}'
+		$('.module_version_desc').html(module_version);
+	{/literal}{/if}{literal}
+	{/literal}{if $product->dolibarr_max}{literal}
+		var dolibarr_max = '{/literal}{$product->dolibarr_max}{literal}'
+		$('.dolibarr_max_desc').html(dolibarr_max);
+	{/literal}{/if}{literal}
+	{/literal}{if $product->dolibarr_min}{literal}
+		var dolibarr_min = '{/literal}{$product->dolibarr_min}{literal}'
+		$('.dolibarr_min_desc').html(dolibarr_min);
+	{/literal}{/if}{literal}
+});
+{/literal}
+</script>

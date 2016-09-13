@@ -58,10 +58,13 @@ class BlockMySales extends Module
 
 	public function installSql()
 	{
-		$dolibarr_min = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min` varchar(6)');
-		$dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
+		$module_version = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `module_version` varchar(7)');
+		$dolibarr_min = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min` varchar(5)');
+		$dolibarr_min_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min_status` tinyint(1) DEFAULT 0');
+		$dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(5)');
+		$dolibarr_max_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max_status` tinyint(1) DEFAULT 0');
 
-		return ($dolibarr_min & $dolibarr_max);
+		return ($module_version & $dolibarr_min & $dolibarr_min_status & $dolibarr_max & $dolibarr_max_status);
 	}
 
 	public function uninstall()
@@ -941,13 +944,24 @@ class BlockMySales extends Module
 				$qty=0;
 			}
 
+			// Module version
+			$module_version = (Tools::isSubmit('module_version') ? Tools::getValue('module_version') : null);
+
+			// Dolibarr min/max compatibility
+			$dolibarr_min = (Tools::isSubmit('dolibarr_min') ? Tools::getValue('dolibarr_min') : null);
+			$dolibarr_min_status = (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0);
+			$dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
+			$dolibarr_max_status = (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0);
+
 			//insertion du produit en base
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product` (
 					`id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
 					`quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
-					`quantity_discount`, `customizable`, `uploadable_files`, `text_fields`,	`active`, `indexed`, `date_add`, `date_upd`
+					`quantity_discount`, `customizable`, `uploadable_files`, `text_fields`,	`active`, `indexed`, `date_add`, `date_upd`,
+					`module_version`, `dolibarr_min`, `dolibarr_min_status`, `dolibarr_max`, `dolibarr_max_status`
 					) VALUES (
-		            0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0, '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\'
+		            0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
+		            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.$module_version.'\', \''.$dolibarr_min.'\', '.$dolibarr_min_status.', \''.$dolibarr_max.'\', '.$dolibarr_max_status.'
 			)';
 
 			$result = Db::getInstance()->Execute($query);
@@ -1246,6 +1260,15 @@ class BlockMySales extends Module
 				$qty=0;
 			}
 
+			// Module version
+			$module_version = (Tools::isSubmit('module_version') ? Tools::getValue('module_version') : null);
+
+			// Dolibarr min/max compatibility
+			$dolibarr_min = (Tools::isSubmit('dolibarr_min') ? Tools::getValue('dolibarr_min') : null);
+			$dolibarr_min_status = (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0);
+			$dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
+			$dolibarr_max_status = (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0);
+
 			//Mise a jour du produit en base
 			$query = 'UPDATE `'._DB_PREFIX_.'product` SET
 					`id_category_default` 	= '.$id_categorie_default.',
@@ -1253,7 +1276,12 @@ class BlockMySales extends Module
 					`price` 				= '.$prix_ht.',
 					`wholesale_price` 		= '.$prix_ht.',
 					`id_tax_rules_group`	= '.$taxe_id.',
-					`reference` 			= \''.$reference.'\',';
+					`reference` 			= \''.$reference.'\',
+					`module_version` 		= \''.$module_version.'\',
+					`dolibarr_min` 			= \''.$dolibarr_min.'\',
+					`dolibarr_min_status` 	= '.$dolibarr_min_status.',
+					`dolibarr_max` 			= \''.$dolibarr_max.'\',
+					`dolibarr_max_status` 	= '.$dolibarr_max_status.',';
 			if ($status >= 0) $query.= ' `active` = '.$status.',';		// We don't change if status is -1
 			if ($oldPrice == 0 && $newPrice > 0) {
 				$query.= ' `available_for_order` = 1, `show_price` = 1, `cache_has_attachments` = 0,';

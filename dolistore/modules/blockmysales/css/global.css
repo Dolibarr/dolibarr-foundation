@@ -3,6 +3,14 @@
 	padding-top: 10px;
 }
 
+div.checker {
+	float: left;
+}
+
+#agreetoaddwikipagelabel, #agreewithtermofuselabel {
+	display: inherit;
+}
+
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
     color: #555!important;
 }

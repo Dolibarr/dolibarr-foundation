@@ -31,11 +31,21 @@
         {if $new_products !== false}
             <ul class="products">
                 {foreach from=$new_products item=newproduct name=myLoop}
+                {*define product name*}
+				{if $newproduct.dolibarr_max && $newproduct.dolibarr_max_status == 1}
+					{if $newproduct.dolibarr_min && $newproduct.dolibarr_min_status == 1}
+						{assign var='newproductName' value="{$newproduct.name} {$newproduct.dolibarr_min} - {$newproduct.dolibarr_max}"}
+					{else}
+						{assign var='newproductName' value="{$newproduct.name} {$newproduct.dolibarr_max}"}
+					{/if}
+				{else}
+					{assign var='newproductName' value=$newproduct.name}
+				{/if}
                     <li class="clearfix">
-                        <a class="products-block-image" href="{$newproduct.link|escape:'html'}" title="{$newproduct.legend|escape:html:'UTF-8'}"><img class="replace-2x img-responsive" src="{$link->getImageLink($newproduct.link_rewrite, $newproduct.id_image, 'small_default')|escape:'html'}" alt="{$newproduct.name|escape:html:'UTF-8'}" /></a>
+                        <a class="products-block-image" href="{$newproduct.link|escape:'html'}" title="{$newproduct.legend|escape:html:'UTF-8'}"><img class="replace-2x img-responsive" src="{$link->getImageLink($newproduct.link_rewrite, $newproduct.id_image, 'small_default')|escape:'html'}" alt="{$newproductName|escape:html:'UTF-8'}" /></a>
                         <div class="product-content">
                         	<h5>
-                            	<a class="product-name" href="{$newproduct.link|escape:'html'}" title="{$newproduct.name|escape:html:'UTF-8'}">{$newproduct.name|strip_tags|escape:html:'UTF-8'}</a>
+                            	<a class="product-name" href="{$newproduct.link|escape:'html'}" title="{$newproductName|escape:html:'UTF-8'}">{$newproductName|strip_tags|escape:html:'UTF-8'}</a>
                             </h5>
                         	<p class="product-description">{$newproduct.description_short|strip_tags:'UTF-8'|truncate:75:'...'}</p>
                             {if (!$PS_CATALOG_MODE AND ((isset($newproduct.show_price) && $newproduct.show_price) || (isset($newproduct.available_for_order) && $newproduct.available_for_order)))}

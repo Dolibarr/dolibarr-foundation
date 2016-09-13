@@ -5,9 +5,63 @@
 									<td nowrap="nowrap" valign="top">{l s='Module/product name:' mod='blockmysales'}</td>
 									<td>
 									{foreach from=$languages key=id item=language}
-										<input name="product_name_l{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.product_name[$language.id_lang]}" />
+										<input name="product_name_l{$language.id_lang}" id="product_name_l{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.product_name[$language.id_lang]}" />
 										<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}<br />
 									{/foreach}
+									</td>
+								</tr>
+								<tr id="module_name_example">
+									<td nowrap="nowrap" valign="top">{l s='Module name example:' mod='blockmysales'}</td>
+									<td>
+										<div id="module_name_div"></div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><hr></td>
+								</tr>
+								<!-- Module version -->
+								<tr>
+									<td nowrap="nowrap" valign="top">{l s='Module version:' mod='blockmysales'}</td>
+									<td>
+										<input required="required" size="9" maxlength="7" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
+										<br>
+										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
+										<br>
+										<strong>{l s='<span class="module_version_desc">auto</span>' mod='blockmysales'}</strong>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><hr></td>
+								</tr>
+								<!-- Dolibarr min -->
+								<tr>
+									<td nowrap="nowrap" valign="top">{l s='Dolibarr min:' mod='blockmysales'}</td>
+									<td>
+										<input required="required" size="9" maxlength="5" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}3.1.x{/if}" type="text" />
+										<br>
+										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
+										<br>
+										<strong>{l s='<span class="dolibarr_min_desc">auto</span>' mod='blockmysales'}</strong>
+										<br><br>
+										<input name="dolibarr_min_status" id="dolibarr_min_status" value="1"{if $product.dolibarr_min_status == 1 && $product.dolibarr_max_status == 1} checked="checked"{/if} type="checkbox"{if $product.dolibarr_max_status != 1} disabled="disabled"{/if} />
+										{l s='Add this value in the module name' mod='blockmysales'}
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><hr></td>
+								</tr>
+								<!-- Dolibarr max -->
+								<tr>
+									<td nowrap="nowrap" valign="top">{l s='Dolibarr max:' mod='blockmysales'}</td>
+									<td>
+										<input required="required" size="9" maxlength="5" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}4.0.0{/if}" type="text" />
+										<br>
+										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
+										<br>
+										<strong>{l s='<span class="dolibarr_max_desc">auto</span>' mod='blockmysales'}</strong>
+										<br><br>
+										<input name="dolibarr_max_status" id="dolibarr_max_status" value="1"{if $product.dolibarr_max_status == 1} checked="checked"{/if} type="checkbox" />
+										{l s='Add this value in the module name' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
@@ -80,6 +134,7 @@
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>
+								<!-- Categories -->
 								<tr>
 									<td width="14%" valign="top">
 										{l s='Mark all checkbox(es) of categories in which product is to appear:' mod='blockmysales'}
@@ -132,7 +187,6 @@
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>
-								
 								{foreach from=$languages key=id item=language}
 								<tr>
 									<td colspan="2">

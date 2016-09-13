@@ -212,24 +212,6 @@
 			{/if}
 		{/if}
 	});
-	$('#upd').css('opacity', '0.5');
-	$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
-	$('#agreewithtermofuse').change(function () {
-		if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked')) {
-			$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
-		}   
-		else {
-			$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
-		}
-	});
-	$('#agreetoaddwikipage').change(function () {
-		if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked')) {
-			$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
-		}   
-		else {
-			$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
-		}
-	});
 	{literal}
 	$(document).ready(function() {
 		{/literal}
@@ -263,7 +245,6 @@
 				}
 			}
 		});
-		
 		$('.covered').die().live('click', function(e) {
 			e.preventDefault();
 			id = $(this).parent().parent().parent().attr('id');
@@ -284,9 +265,57 @@
 				"ajax" : 1 }
 			);
 		});
-		
-		function updateImagePosition(json)
-		{
+		$('#module_name_example').hide();
+		$('#dolibarr_min, #dolibarr_max').on('keyup', function() {
+			if ($('#dolibarr_max_status').is(':checked')) {
+				getModuleName();
+			}
+		});
+		if ($('#dolibarr_max_status').is(':checked')) {
+			getModuleName();
+		}
+		$('#dolibarr_min_status').change(function () {
+			getModuleName();
+		});
+		$('#dolibarr_max_status').change(function () {
+			if (this.checked) {
+				$('#dolibarr_min_status').attr('disabled', false);
+				getModuleName();
+			} else {
+				$('#module_name_example').hide();
+				$('#dolibarr_min_status').attr('checked', false).attr('disabled', 'disabled');
+			}
+			$.uniform.update('#dolibarr_min_status');
+		});
+		$('#upd').css('opacity', '0.5');
+		$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
+		$('#agreewithtermofuse').change(function () {
+			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked')) {
+				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
+			}   
+			else {
+				$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
+			}
+		});
+		$('#agreetoaddwikipage').change(function () {
+			if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked')) {
+				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
+			}   
+			else {
+				$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
+			}
+		});
+		function getModuleName() {
+			var name = $('#product_name_l1').val();
+			var dolibarr_min = $('#dolibarr_min').val();
+			var dolibarr_max = $('#dolibarr_max').val();
+			var version = ((dolibarr_min && $('#dolibarr_min_status').is(':checked')) ? dolibarr_min + ' - ' : '') + dolibarr_max;
+			if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
+				$('#module_name_div').html(name + ' ' + version);
+				$('#module_name_example').show();
+			}
+		}
+		function updateImagePosition(json) {
 			doAdminAjax(
 			{
 				"action":"updateImagePosition",
