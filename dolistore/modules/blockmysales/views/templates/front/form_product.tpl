@@ -5,9 +5,20 @@
 									<td nowrap="nowrap" valign="top">{l s='Module/product name:' mod='blockmysales'}</td>
 									<td>
 									{foreach from=$languages key=id item=language}
-										<input name="product_name_l{$language.id_lang}" id="product_name_l{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.product_name[$language.id_lang]}" />
-										<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}<br />
+										<div id="product_name_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
+											<input name="product_name_l{$language.id_lang}" id="product_name_l{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.product_name[$language.id_lang]}" />
+										</div>
 									{/foreach}
+									<div class="displayed_flag">
+										<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_product_name" onclick="toggleLanguageFlags(this);" alt="" />
+									</div>
+									<br />
+									<div id="languages_product_name" class="language_flags">
+										{l s='Choose language:' mod='blockmysales'}
+										{foreach from=$languages key=id item=language}
+											<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('product_name', 'product_name', {$language.id_lang}, '{$language.iso_code}', false);" />
+										{/foreach}
+									</div>
 									</td>
 								</tr>
 								<tr id="module_name_example">
@@ -156,59 +167,86 @@
 									<td colspan="2"><hr></td>
 								</tr>
 								<!-- Summary -->
-								{foreach from=$languages key=id item=language}
 								<tr>
-									<td colspan="2" nowrap="nowrap">
-										<div class="short-description">
-											{l s='Short description' mod='blockmysales'}
-											(<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
-											<span class="counter" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span><br><br>
-											<textarea class="rte" id="resume_{$language.id_lang}" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+									<td colspan="2">
+										<div id="languages_resume" class="language_flags">
+											{l s='Choose language:' mod='blockmysales'}
+											{foreach from=$languages key=id item=language}
+												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('resume', 'resume', {$language.id_lang}, '{$language.iso_code}', false);" />
+											{/foreach}
 										</div>
-									</td>
-								</tr>
-								{/foreach}
-								<tr>
-									<td colspan="2"><hr></td>
-								</tr>
-								<!-- Keywords -->
-								<tr>
-									<td colspan="2" nowrap="nowrap" valign="top">{l s='Keywords:' mod='blockmysales'}</td>
-								</tr>
-								<tr>
-									<td colspan="2" nowrap="nowrap">
-									{foreach from=$languages key=id item=language}
-										<input name="keywords_{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.keywords[$language.id_lang]}" />
-										<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}
 										<br />
+										<div class="displayed_flag">
+											{l s='Short description' mod='blockmysales'}
+											(<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_resume" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+										</div>
+										<span class="counter" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span><br>
+									{foreach from=$languages key=id item=language}
+										<div id="resume_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
+											<textarea class="rte" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+										</div>
 									{/foreach}
 									</td>
 								</tr>
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>
-								{foreach from=$languages key=id item=language}
+								<!-- Keywords -->
 								<tr>
-									<td colspan="2">
-										{l s='Large description:' mod='blockmysales'}
-										(<img src="{$language.img}" alt="{$language.iso_code}"> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+									<td colspan="2" nowrap="nowrap" valign="top">
+										{l s='Keywords:' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2">
-										<textarea class="rte" cols="100" rows="10" id="description_{$language.id_lang}" name="description_{$language.id_lang}">
-										{if $product.description[$language.id_lang]}
-											{$product.description[$language.id_lang]}
-										{else}
-											{$default_descriptions[$language.id_lang]}
-										{/if}
-										</textarea>
+									<td colspan="2" nowrap="nowrap">
+									{foreach from=$languages key=id item=language}
+										<div id="keywords_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
+											<input name="keywords_{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.keywords[$language.id_lang]}" />
+										</div>
+									{/foreach}
+									<div class="displayed_flag">
+										<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_keywords" onclick="toggleLanguageFlags(this);" alt="" />
+									</div>
+									<br />
+									<div id="languages_keywords" class="language_flags">
+										{l s='Choose language:' mod='blockmysales'}
+										{foreach from=$languages key=id item=language}
+											<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('keywords', 'keywords', {$language.id_lang}, '{$language.iso_code}', false);" />
+										{/foreach}
+									</div>
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2"><br></td>
+									<td colspan="2"><hr></td>
 								</tr>
-								{/foreach}
+								<!-- Long description -->
+								<tr>
+									<td colspan="2">
+										<div id="languages_description" class="language_flags">
+											{l s='Choose language:' mod='blockmysales'}
+											{foreach from=$languages key=id item=language}
+												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('description', 'description', {$language.id_lang}, '{$language.iso_code}', false);" />
+											{/foreach}
+										</div>
+										<br />
+										<div class="displayed_flag">
+											{l s='Large description ' mod='blockmysales'}
+											(<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_description" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+											<br><br>
+										</div>
+									{foreach from=$languages key=id item=language}
+										<div id="description_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
+											<textarea class="rte" cols="100" rows="10" name="description_{$language.id_lang}">
+											{if $product.description[$language.id_lang]}
+												{$product.description[$language.id_lang]}
+											{else}
+												{$default_descriptions[$language.id_lang]}
+											{/if}
+											</textarea>
+										</div>
+									{/foreach}
+									</td>
+								</tr>
 								<tr>
 									<td colspan="2">
 										<div>

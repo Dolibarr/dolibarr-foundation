@@ -57,6 +57,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$this->context->smarty->assign('cardproduct', $this->context->link->getModuleLink('blockmysales', 'cardproduct'));
 					$this->context->smarty->assign('ps_bms_templates_dir', _PS_MODULE_DIR_.'blockmysales/views/templates/front');
 
+					$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+					$this->context->smarty->assign('defaultLanguage', $defaultLanguage);
+
 					$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
 
 					$publisher=trim($customer['firstname'].' '.$customer['lastname']);

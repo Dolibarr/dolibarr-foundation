@@ -64,6 +64,9 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 		if (!empty($customer_id))
 		{
+			$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+			$this->context->smarty->assign('defaultLanguage', $defaultLanguage);
+
 			$product_id = Tools::getValue('id_p');
 			$this->context->smarty->assign('product_id', $product_id);
 
