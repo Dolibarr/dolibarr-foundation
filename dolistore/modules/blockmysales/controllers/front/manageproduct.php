@@ -128,7 +128,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$dolistoreinvoices=array();
 
 					// Get list of products
-					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, pl.name, pl.description_short, pl.link_rewrite';
+					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, pl.name, pl.description_short, pl.link_rewrite';
 					$query.= ' FROM '._DB_PREFIX_.'product as p';
 					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
 					$query.= ' WHERE 1 = 1';
@@ -146,6 +146,18 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						foreach ($result as $id => $values)	// For each product
 						{
 							$products[$id] = $values;
+
+							if (!empty($products[$id]['dolibarr_max']) && $products[$id]['dolibarr_max_status'] == 1)
+							{
+								if (!empty($products[$id]['dolibarr_min']) && $products[$id]['dolibarr_min_status'] == 1)
+								{
+									$products[$id]['name'] = $products[$id]['name'] . ' ' . $products[$id]['dolibarr_min'] . ' - ' . $products[$id]['dolibarr_max'];
+								}
+								else
+								{
+									$products[$id]['name'] = $products[$id]['name'] . ' ' . $products[$id]['dolibarr_max'];
+								}
+							}
 
 							$id_product = $values['id_product'];
 							$products[$id]['productcardlink'] = $this->context->link->getModuleLink('blockmysales', 'cardproduct') . '?id_p=' . $id_product; // product card link
