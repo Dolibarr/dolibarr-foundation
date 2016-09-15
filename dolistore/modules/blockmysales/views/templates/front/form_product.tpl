@@ -78,6 +78,7 @@
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>
+								<!-- Active status -->
 								<tr>
 									<td valign="top">{l s='Status:' mod='blockmysales'}</td>
 									<td>
@@ -91,6 +92,27 @@
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>
+								<tr>
+									<td colspan="2">
+										<div>
+											<input type="checkbox" value="1" id="dolibarr_core_include" name="dolibarr_core_include"{if $product.dolibarr_core_include == 1} checked="checked"{/if} />
+											<label for="dolibarr_core_include" id="dolibarr_core_include_label">
+												{l s='I would like to have my module included in dolibarr core as soon as possible' mod='blockmysales'}
+												{capture name='helpText'}
+												{l s='Because a dolibarr module is a derivative work of dolibarr, a module must be licensed under a license compatible with dolibarr gpl v3 license.' mod='blockmysales'}
+												{l s='This means your source code could be reused to enhance dolibarr itself. However, "could" does not mean "will".' mod='blockmysales'}
+												{l s='So if you really want this to happen, just check this box so core team will be informed. This will not guarantee it will be done but increase seriously probability.' mod='blockmysales'}
+												{l s='If this is done, this will mean the module will then be maintained by dolibarr developer community, and module will be disabled from dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
+												{/capture}
+												<img src="{$base_dir_ssl}img/admin/help.png" title="{$smarty.capture.helpText}" style="padding: 0px 5px;" data-toggle="tooltip" data-placement="bottom">
+											</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><hr></td>
+								</tr>
+								<!-- File -->
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Distributed package (.zip file for a module or theme)' mod='blockmysales'}</td>
 									<td>

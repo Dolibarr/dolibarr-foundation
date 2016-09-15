@@ -351,6 +351,27 @@ $(document).ready(function() {
 			$('#sub').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
 		}
 	});
+	$(".tooltip").tooltip({
+		placement : 'top',
+		animation: true,
+	});
+	$(".tooltip-top").tooltip({
+		placement : 'top',
+		animation: true,
+	});
+	$(".tooltip-left").tooltip({
+		placement : 'left',
+		animation: true,
+	});
+	$(".tooltip-bottom").tooltip({
+		placement : 'bottom',
+		animation: true,
+	});
+	$(".tooltip-right").tooltip({
+		placement : 'top',
+		animation: true,
+	});
+	$(function () { $("[data-toggle='tooltip']").tooltip(); });
 	function getModuleName() {
 		var name = $('#product_name_l1').val();
 		var dolibarr_min = $('#dolibarr_min').val();

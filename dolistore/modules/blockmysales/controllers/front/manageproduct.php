@@ -605,6 +605,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							'dolibarr_min_status' => (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0),
 							'dolibarr_max' => Tools::getValue('dolibarr_max'),
 							'dolibarr_max_status' => (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0),
+							'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
 							'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
 							'product_name' => array(),
 							'resume' => array(),
@@ -656,7 +657,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					if (Tools::isSubmit('id_p') && is_numeric(Tools::getValue('id_p')))
 					{
 						// Get product id
-						$query = 'SELECT p.id_product, p.price, p.module_version, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
+						$query = 'SELECT p.id_product, p.price, p.module_version, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, p.dolibarr_core_include, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
 						$query.= ' FROM '._DB_PREFIX_.'product as p, '._DB_PREFIX_.'product_lang as pl, '._DB_PREFIX_.'lang as l WHERE l.id_lang = pl.id_lang AND p.id_product = pl.id_product AND p.id_product = '.((int) Tools::getValue('id_p'));
 						$result = Db::getInstance()->ExecuteS($query);
 						if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -673,6 +674,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							$newproduct['dolibarr_min_status'] 				= $row['dolibarr_min_status'];
 							$newproduct['dolibarr_max'] 					= $row['dolibarr_max'];
 							$newproduct['dolibarr_max_status'] 				= $row['dolibarr_max_status'];
+							$newproduct['dolibarr_core_include'] 			= $row['dolibarr_core_include'];
 						}
 					}
 
