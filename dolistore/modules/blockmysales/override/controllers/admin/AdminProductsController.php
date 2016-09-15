@@ -19,7 +19,7 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->fields_list['dolibarr_core_include'] = array(
 				'title' => $this->l('Request include core'),
 				'align' => 'text-center',
-				'active' => 'status',
+				'active' => '',
 				'class' => 'fixed-width-sm',
 				'type' => 'bool',
 				'orderby' => false
