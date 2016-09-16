@@ -199,15 +199,19 @@
 										</div>
 										<br />
 										<div class="displayed_flag">
-											{l s='Short description' mod='blockmysales'}
-											(<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_resume" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+										{foreach from=$languages key=id item=language}
+											<div class="language_current_resume_{$language.id_lang}" style="display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};">
+												{l s='Short description' mod='blockmysales'}
+												(<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" id="language_current_resume" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+											</div>
+										{/foreach}
 										</div>
-										<span class="counter" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span><br>
-									{foreach from=$languages key=id item=language}
+										{foreach from=$languages key=id item=language}
+										<span class="counter_{$language.id_lang}" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span>
 										<div id="resume_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
-											<textarea class="rte" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+											<textarea class="rte" id="id_resume_{$language.id_lang}" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
 										</div>
-									{/foreach}
+										{/foreach}
 									</td>
 								</tr>
 								<tr>
@@ -252,11 +256,15 @@
 										</div>
 										<br />
 										<div class="displayed_flag">
-											{l s='Large description ' mod='blockmysales'}
-											(<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_description" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
-											<br><br>
+										{foreach from=$languages key=id item=language}
+											<div class="language_current_description_{$language.id_lang}" style="display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};">
+												{l s='Large description ' mod='blockmysales'}
+												(<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+												<br><br>
+											</div>
+										{/foreach}
 										</div>
-									{foreach from=$languages key=id item=language}
+										{foreach from=$languages key=id item=language}
 										<div id="description_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
 											<textarea class="rte" cols="100" rows="10" name="description_{$language.id_lang}">
 											{if $product.description[$language.id_lang]}
@@ -266,7 +274,7 @@
 											{/if}
 											</textarea>
 										</div>
-									{/foreach}
+										{/foreach}
 									</td>
 								</tr>
 								<tr>

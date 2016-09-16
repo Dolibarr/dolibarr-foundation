@@ -1958,15 +1958,17 @@ class BlockMySales extends Module
 							ed.on('keydown', function(ed, e) {
 								tinyMCE.triggerSave();
 								textarea = $('#'+tinymce.activeEditor.id);
-								var max = textarea.parent('div').find('span.counter').data('max');
+								var currId = textarea.parent('div').attr('id');
+								var id = parseInt(currId.match(/([0-9]+)$/g));
+								var max = $('.counter_' + id).data('max');
 								if (max != 'none')
 								{
 									count = tinyMCE.activeEditor.getBody().textContent.length;
 									rest = max - count;
 									if (rest < 0)
-										textarea.parent('div').find('span.counter').html('<span style=\"color:red;\">".$module->l('Maximum', 'blockmysales')." '+ max +' ".$module->l('characters', 'blockmysales')." : '+rest+'</span>');
+										$('.counter_' + id).html('<span style=\"color:red;\">".$module->l('Maximum', 'blockmysales')." '+ max +' ".$module->l('characters', 'blockmysales')." : '+rest+'</span>');
 									else
-										textarea.parent('div').find('span.counter').html(' ');
+										$('.counter_' + id).html(' ');
 								}
 							});
 						}

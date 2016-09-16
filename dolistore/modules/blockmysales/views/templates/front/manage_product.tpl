@@ -262,13 +262,16 @@ function toggleLanguageFlags(elt)
 function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelanguages = true)
 {
     $('div[id^='+field+'_]').hide();
+    $('span[class^=counter_]').hide();
+    $('div[class^=language_current_'+field+']').hide();
 	var fields = fieldsString.split('¤');
 	var base_dir_ssl = '{/literal}{$base_dir_ssl}{literal}'
 	for (var i = 0; i < fields.length; ++i)
 	{
 		$('div[id^='+fields[i]+'_]').hide();
+		$('span[class^=counter_'+id_language_new+']').show();
 		$('#'+fields[i]+'_'+id_language_new).show();
-		$('#'+'language_current_'+fields[i]).attr('src', base_dir_ssl + 'img/l/' + id_language_new + '.jpg');
+		$('.'+'language_current_'+fields[i]+'_'+id_language_new).show();
 	}
 	if (hidelanguages) {
 		$('#languages_' + field).hide();
