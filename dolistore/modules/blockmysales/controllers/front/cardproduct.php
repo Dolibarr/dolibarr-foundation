@@ -64,6 +64,9 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 		if (!empty($customer_id))
 		{
+			$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+			$this->context->smarty->assign('defaultLanguage', $defaultLanguage);
+
 			$product_id = Tools::getValue('id_p');
 			$this->context->smarty->assign('product_id', $product_id);
 
@@ -372,7 +375,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 							//recupération des informations
 							$query = 'SELECT
-									`id_supplier`, `id_manufacturer`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`,
+									`id_supplier`, `id_manufacturer`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `module_version`, `dolibarr_min`, `dolibarr_min_status`, `dolibarr_max`, `dolibarr_max_status`, `dolibarr_core_include`,
 									`reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`
 									FROM `'._DB_PREFIX_.'product`
 									WHERE `id_product` = '.$product_id.' ';
@@ -380,10 +383,16 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 							foreach ($result AS $row)
 							{
-								$product['price'] 			= round((Tools::isSubmit('price') ? Tools::getValue('price') : $row['price']), 2);
-								$product['wholesale_price'] = $row['wholesale_price'];
-								$product['active'] 			= $row['active'];
-								$product['reference'] 		= $row['reference'];
+								$product['price'] 					= round((Tools::isSubmit('price') ? Tools::getValue('price') : $row['price']), 2);
+								$product['wholesale_price'] 		= $row['wholesale_price'];
+								$product['active'] 					= $row['active'];
+								$product['reference'] 				= $row['reference'];
+								$product['module_version'] 			= $row['module_version'];
+								$product['dolibarr_min'] 			= $row['dolibarr_min'];
+								$product['dolibarr_min_status']		= $row['dolibarr_min_status'];
+								$product['dolibarr_max'] 			= $row['dolibarr_max'];
+								$product['dolibarr_max_status']		= $row['dolibarr_max_status'];
+								$product['dolibarr_core_include']	= $row['dolibarr_core_include'];
 							}
 
 

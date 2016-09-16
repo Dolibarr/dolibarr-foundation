@@ -32,6 +32,16 @@
     </p>
 	<div class="block_content products-block">
     {if $special}
+    	{*define product name*}
+		{if $special.dolibarr_max && $special.dolibarr_max_status == 1}
+			{if $special.dolibarr_min && $special.dolibarr_min_status == 1}
+				{assign var='specialName' value="{$special.name} {$special.dolibarr_min} - {$special.dolibarr_max}"}
+			{else}
+				{assign var='specialName' value="{$special.name} {$special.dolibarr_max}"}
+			{/if}
+		{else}
+			{assign var='specialName' value=$special.name}
+		{/if}
 		<ul>
         	<li class="clearfix">
             	<a class="products-block-image" href="{$special.link|escape:'html':'UTF-8'}">
@@ -39,12 +49,12 @@
                     class="replace-2x img-responsive" 
                     src="{$link->getImageLink($special.link_rewrite, $special.id_image, 'small_default')|escape:'html':'UTF-8'}" 
                     alt="{$special.legend|escape:'html':'UTF-8'}" 
-                    title="{$special.name|escape:'html':'UTF-8'}" />
+                    title="{$specialName|escape:'html':'UTF-8'}" />
                 </a>
                 <div class="product-content">
                 	<h5>
-                        <a class="product-name" href="{$special.link|escape:'html':'UTF-8'}" title="{$special.name|escape:'html':'UTF-8'}">
-                            {$special.name|escape:'html':'UTF-8'}
+                        <a class="product-name" href="{$special.link|escape:'html':'UTF-8'}" title="{$specialName|escape:'html':'UTF-8'}">
+                            {$specialName|escape:'html':'UTF-8'}
                         </a>
                     </h5>
                     {if isset($special.description_short) && $special.description_short}
