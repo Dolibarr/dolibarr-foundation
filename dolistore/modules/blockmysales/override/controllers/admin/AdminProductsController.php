@@ -5,7 +5,13 @@ class AdminProductsController extends AdminProductsControllerCore
 	{
 		parent::__construct();
 
-		$this->_select .= ', a.date_add as dateadd';
+		$this->_select .= ', a.date_add as dateadd, a.dolibarr_min, a.dolibarr_min_status, a.dolibarr_max, a.dolibarr_max_status';
+
+		$this->fields_list['name'] = array(
+				'title' => $this->l('Name'),
+				'filter_key' => 'b!name',
+				'callback' => 'getDolVersions'
+		);
 
 		$this->fields_list['dateadd'] = array(
 				'title' => $this->l('Date add'),
@@ -30,6 +36,23 @@ class AdminProductsController extends AdminProductsControllerCore
 	{
 		parent::processFilter();
 		$this->_filter = str_replace('`dateadd`', 'a.date_add', $this->_filter);
+	}
+
+	public function getDolVersions($name, $product)
+	{
+		if (!empty($product['dolibarr_max']) && $product['dolibarr_max_status'] == 1)
+		{
+			if (!empty($product['dolibarr_min']) && $product['dolibarr_min_status'] == 1)
+			{
+				return $name . ' ' . $product['dolibarr_min'] . ' - ' . $product['dolibarr_max'];
+			}
+			else
+			{
+				return $name . ' ' . $product['dolibarr_max'];
+			}
+		}
+		else
+			return $name;
 	}
 
 	public function newProductAdd($dateadd, $product)
