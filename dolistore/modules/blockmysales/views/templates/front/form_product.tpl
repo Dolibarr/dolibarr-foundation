@@ -103,10 +103,10 @@
 											<label for="dolibarr_core_include" id="dolibarr_core_include_label">
 												{l s='I would like to have my module included in Dolibarr core as soon as possible' mod='blockmysales'}
 												{capture name='helpText'}
-												{l s='Because a dolibarr module is a derivative work of dolibarr, a module must be licensed under a license compatible with dolibarr gpl v3 license.' mod='blockmysales'}
+												{l s='Because a Dolibarr module is a derivative work of Dolibarr, a module must be licensed under a license compatible with Dolibarr gpl v3 license.' mod='blockmysales'}
 												{l s='This means your source code may be reused to enhance Dolibarr itself. However, "may" does not mean "will".' mod='blockmysales'}
 												{l s='So if you really want this to happen, just check this box so core team will be informed. This will not guarantee it will be done but increase seriously probability.' mod='blockmysales'}
-												{l s='If this is done, this will mean the module will then be maintained by dolibarr developer community, and module will be disabled from dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
+												{l s='If this is done, this will mean the module will then be maintained by Dolibarr developer community, and module will be disabled from Dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
 												{/capture}
 												<img src="{$base_dir_ssl}img/admin/help.png" title="{$smarty.capture.helpText}" style="padding: 0px 5px;" data-toggle="tooltip" data-placement="bottom">
 											</label>
