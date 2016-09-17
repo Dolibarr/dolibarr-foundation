@@ -75,6 +75,7 @@ class BlockMySales extends Module
 				//!$this->unregisterHook('displayMyAccountBlock') ||
 				//!$this->unregisterHook('actionValidateOrder') ||
 				//!Configuration::deleteByName('BLOCKMYSALES_VERSION') ||
+				//!Configuration::deleteByName('BLOCKMYSALES_FILELOG_PATH') ||
 				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_URL') ||
 				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_LOGIN') ||
 				//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_PASSWORD') ||
@@ -103,14 +104,16 @@ class BlockMySales extends Module
 			$this->postValidation();
 			if (!count($this->post_errors))
 				$this->postProcess();
-				else
-					foreach ($this->post_errors as $err)
-						$this->_html .= $this->displayError($err);
+			else
+				foreach ($this->post_errors as $err)
+					$this->_html .= $this->displayError($err);
 		}
 
 		/* var to report */
 		$module_dir = _MODULE_DIR_.$this->name;
 		$id_shop = (int)Context::getContext()->shop->id;
+
+		$filelog = Configuration::get('BLOCKMYSALES_FILELOG_PATH');
 
 		$webservices_url = Configuration::get('BLOCKMYSALES_WEBSERVICES_URL');
 		$webservices_login = Configuration::get('BLOCKMYSALES_WEBSERVICES_LOGIN');
@@ -176,28 +179,29 @@ class BlockMySales extends Module
 		$descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
 
 		$this->context->smarty->assign(array(
-				'moduleDir' => $module_dir,
-				'defaultLanguage' => $defaultLanguage,
-				'languages' => $languages,
-				'tiny_mce_code' => $tiny_mce_code,
-				'displayFlags' => $displayFlags,
-				'nbdaysaccessible' => $nbdaysaccessible,
-				'descriptions' => $descriptions,
-				'webservices_url' => $webservices_url,
-				'webservices_login' => $webservices_login,
-				'webservices_password' => $webservices_password,
-				'webservices_securekey' => $webservices_securekey,
-				'zones' => $zones,
-				'ceezoneid' => $ceezoneid,
-				'vatrate' => $vatrate,
-				'vatnumber' => $vatnumber,
-				'commissioncee' => $commissioncee,
-				'minamountcee' => $minamountcee,
-				'commissionnotcee' => $commissionnotcee,
-				'minamountnotcee' => $minamountnotcee,
-				'taxrulegroupid' => $taxrulegroupid,
-				'taxrulesgroups' => $taxrulesgroups,
-				'mindelaymonth' => $mindelaymonth
+				'moduleDir'				=> $module_dir,
+				'filelog'				=> $filelog,
+				'defaultLanguage'		=> $defaultLanguage,
+				'languages'				=> $languages,
+				'tiny_mce_code'			=> $tiny_mce_code,
+				'displayFlags'			=> $displayFlags,
+				'nbdaysaccessible'		=> $nbdaysaccessible,
+				'descriptions'			=> $descriptions,
+				'webservices_url'		=> $webservices_url,
+				'webservices_login'		=> $webservices_login,
+				'webservices_password'	=> $webservices_password,
+				'webservices_securekey'	=> $webservices_securekey,
+				'zones'					=> $zones,
+				'ceezoneid'				=> $ceezoneid,
+				'vatrate'				=> $vatrate,
+				'vatnumber'				=> $vatnumber,
+				'commissioncee'			=> $commissioncee,
+				'minamountcee'			=> $minamountcee,
+				'commissionnotcee'		=> $commissionnotcee,
+				'minamountnotcee'		=> $minamountnotcee,
+				'taxrulegroupid'		=> $taxrulegroupid,
+				'taxrulesgroups'		=> $taxrulesgroups,
+				'mindelaymonth'			=> $mindelaymonth
 		));
 
 		return $this->_html .= $this->fetchTemplate('back_office.tpl');
@@ -220,6 +224,21 @@ class BlockMySales extends Module
 			if (!Validate::isCleanHtml($value))
 				$this->post_errors[] = $this->l('Invalid HTML field, javascript is forbidden');
 		}
+
+		$filelog = Tools::getValue('filelog');
+		if (!empty($filelog))
+		{
+			$file=@fopen($filelog,"a+");
+			if (!$file)
+			{
+				$this->post_errors[] = $this->l('The log file can be created or is not writable');
+			}
+			else
+			{
+				@fwrite($file,'');
+				@fclose($file);
+			}
+		}
 	}
 
 	/**
@@ -239,6 +258,7 @@ class BlockMySales extends Module
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_LOGIN', Tools::getValue('webservices_login'))
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_PASSWORD', Tools::getValue('webservices_password'))
 				&& Configuration::updateValue('BLOCKMYSALES_WEBSERVICES_SECUREKEY', Tools::getValue('webservices_securekey'))
+				&& Configuration::updateValue('BLOCKMYSALES_FILELOG_PATH', Tools::getValue('filelog'))
 				&& Configuration::updateValue('BLOCKMYSALES_CEEZONEID', Tools::getValue('ceezoneid'))
 				&& Configuration::updateValue('BLOCKMYSALES_VATRATE', Tools::getValue('vatrate'))
 				&& Configuration::updateValue('BLOCKMYSALES_VATNUMBER', Tools::getValue('vatnumber'))
@@ -608,9 +628,10 @@ class BlockMySales extends Module
 				'errormsg' => null
 		);
 
-		//prestalog("Upload or reupload file ".$_FILES['virtual_product_file']['tmp_name']);
-
 		$originalfilename=$_FILES['virtual_product_file']['name'];
+
+		self::prestalog("Upload or reupload file " . $originalfilename);
+
 		if ($_FILES['virtual_product_file']['error'])
 		{
 			switch ($_FILES['virtual_product_file']['error'])
@@ -687,7 +708,7 @@ class BlockMySales extends Module
 			$newfilename = ProductDownload::getNewFilename(); // Return Sha1 file name
 			$chemin_destination = _PS_DOWNLOAD_DIR_.$newfilename;
 
-			//prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
+			self::prestalog("Move file ".$_FILES['virtual_product_file']['tmp_name']." to ".$chemin_destination);
 
 			if (move_uploaded_file($_FILES['virtual_product_file']['tmp_name'], $chemin_destination) != true)
 			{
@@ -714,7 +735,7 @@ class BlockMySales extends Module
 				'upload' => 0
 		);
 
-		//prestalog("Validate zip file ".$zipfile);
+		self::prestalog("Validate zip file " . $originalfilename);
 		$subdir=basename($zipfile);
 		//$dir='/home/dolibarr/dolistore.com/tmp/'.$subdir;
 		$dir=sys_get_temp_dir().'/'.$subdir;
@@ -729,10 +750,10 @@ class BlockMySales extends Module
 			while (($file = readdir($dh)) !== false)
 			{
 				if ($file == '.' || $file == '..') continue;
-				//prestalog("We check if dir ".$dir.'/'.$file.'/htdocs exits');
+				self::prestalog("We check if dir ".$dir.'/'.$file.'/htdocs exists');
 				if (is_dir($dir.'/'.$file.'/htdocs'))
 				{
-					//prestalog('Dir '.$dir.'/'.$file.'/htdocs exist. So we use dir='.$dir.'/'.$file.' as root for package to analyse.');
+					self::prestalog('Dir '.$dir.'/'.$file.'/htdocs exists. So we use dir='.$dir.'/'.$file.' as root for package to analyse.');
 					$dir=$dir.'/'.$file;
 					break;
 				}
@@ -754,7 +775,7 @@ class BlockMySales extends Module
 		if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename,$reg)) $istheme=$reg[1];
 		if ($ismodule || $istheme)
 		{
-			//prestalog("file ismodule=".$ismodule." istheme=".$istheme);
+			self::prestalog("file ismodule=".$ismodule." istheme=".$istheme);
 			// It's a module or theme file
 			if (! $error && ($ismodule || $istheme) && $dh = opendir($dir))
 			{
@@ -762,7 +783,7 @@ class BlockMySales extends Module
 				while (($file = readdir($dh)) !== false)
 				{
 					if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt') continue;
-					//prestalog("subdirs found for package:".$file);
+					self::prestalog("subdirs found for package:".$file);
 					$nbofsubdirs++;
 					$alloweddirs=array('htdocs','docs','scripts','test','build',($ismodule?$ismodule:($istheme?$istheme:'')));
 					if (! in_array($file,$alloweddirs))
@@ -787,14 +808,14 @@ class BlockMySales extends Module
 			// It's a module or theme file (check htdocs directory)
 			if (! $error && $ismodule && is_dir($dir.'/htdocs') && $dh = opendir($dir.'/htdocs'))
 			{
-				//prestalog("we scan ".$dir."/htdocs to be sure there is only one directory (with name of your module) into htdocs");
+				self::prestalog("we scan ".$dir."/htdocs to be sure there is only one directory (with name of your module) into htdocs");
 				$nbofsubdir=0;
-				//prestalog("check there is only one dir into htdocs");
+				self::prestalog("check there is only one dir into htdocs");
 				while (($file = readdir($dh)) !== false)
 				{
 					if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt') continue;
 					if ($file == 'includes') continue;		// For old dolibarr version compatibility
-					//prestalog("we found ".$file);
+					self::prestalog("we found ".$file);
 					$nbofsubdir++;
 				}
 				closedir($dh);
@@ -807,6 +828,8 @@ class BlockMySales extends Module
 				}
 			}
 		}
+		else
+			self::prestalog("file ".$originalfilename." is not a module and not a theme!!!", LOG_WARNING);
 
 		if (! $validation)
 		{
@@ -843,7 +866,7 @@ class BlockMySales extends Module
 		$product_file_name = Tools::getValue('product_file_name');
 		$product_file_path = Tools::getValue('product_file_path');
 
-		//prestalog("We click on 'Submit this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
+		//self::prestalog("We click on 'Submit this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 		if (empty($product_file_path) || (empty($product_file_name) && empty($_FILES['virtual_product_file']['name'])))
 		{
@@ -1031,7 +1054,7 @@ class BlockMySales extends Module
 					foreach ($result AS $row)
 					{
 						$id_tag = $row['id_tag'];
-						//prestalog("tag id for id_lang ".$id_lang.", name ".$tag." is ".$id_tag);
+						//self::prestalog("tag id for id_lang ".$id_lang.", name ".$tag." is ".$id_tag);
 					}
 
 					if (empty($id_tag))
@@ -1041,7 +1064,7 @@ class BlockMySales extends Module
 						//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 
 						$id_tag = Db::getInstance()->Insert_ID();
-						//prestalog("We created tag for id_lang ".$id_lang.", name ".$tag.", id is ".$id_tag);
+						//self::prestalog("We created tag for id_lang ".$id_lang.", name ".$tag.", id is ".$id_tag);
 					}
 
 					if (! empty($id_tag) && $id_tag > 0)
@@ -1050,7 +1073,7 @@ class BlockMySales extends Module
 						$query = 'INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`) VALUES (\''.$id_product.'\', \''.$id_tag.'\')';
 						$result = Db::getInstance()->Execute($query);
 
-						//prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
+						//self::prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
 					}
 				}
 			}
@@ -1102,7 +1125,7 @@ class BlockMySales extends Module
 			}
 			else
 			{
-				//prestalog("price is ".$prix_ttc.", so not null, so we do not add file to download tabs");
+				//self::prestalog("price is ".$prix_ttc.", so not null, so we do not add file to download tabs");
 			}
 
 			//inscription du produit dans ttes les categories choisis
@@ -1110,7 +1133,7 @@ class BlockMySales extends Module
 				$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
 				if (! empty($categories_checkbox) && $categories_checkbox == 1 && $categorie['id_category'] != 1) {
 					$query = 'INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`) VALUES ('.$categorie['id_category'].', '.$id_product.', 1);';
-					//prestalog("Add category of product sql=".$query);
+					//self::prestalog("Add category of product sql=".$query);
 					$result = Db::getInstance()->Execute($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 				}
@@ -1170,7 +1193,7 @@ class BlockMySales extends Module
 			}
 		}
 		*/
-		//prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
+		//self::prestalog("We click on 'Update this product' button: product_file_name=".$product_file_name." - product_file_path=".$product_file_path." - upload=".$upload);
 
 		//prise des libelles
 		foreach ($languages as $language)
@@ -1319,7 +1342,7 @@ class BlockMySales extends Module
 			// Delete tag description of product
 			$query = "DELETE FROM "._DB_PREFIX_."product_tag WHERE id_product = ".$id_product;
 			$result = Db::getInstance()->Execute($query);
-			//prestalog("We delete all links to tags for id_product ".$id_product);
+			//self::prestalog("We delete all links to tags for id_product ".$id_product);
 
 			foreach ($productlang as $id_lang => $product)
 			{
@@ -1355,7 +1378,7 @@ class BlockMySales extends Module
 					foreach ($result AS $row)
 					{
 						$id_tag = $row['id_tag'];
-						//prestalog("tag id for id_lang ".$id_lang.", name ".$tag." is ".$id_tag);
+						//self::prestalog("tag id for id_lang ".$id_lang.", name ".$tag." is ".$id_tag);
 					}
 
 					if (empty($id_tag))
@@ -1365,7 +1388,7 @@ class BlockMySales extends Module
 						//if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 
 						$id_tag = Db::getInstance()->Insert_ID();
-						//prestalog("We created tag for id_lang ".$id_lang.", name ".$tag.", id is ".$id_tag);
+						//self::prestalog("We created tag for id_lang ".$id_lang.", name ".$tag.", id is ".$id_tag);
 					}
 
 					if (! empty($id_tag) && $id_tag > 0)
@@ -1374,7 +1397,7 @@ class BlockMySales extends Module
 						$query = "INSERT INTO `"._DB_PREFIX_."product_tag` (`id_product`, `id_tag`) VALUES ('".$id_product."', '".$id_tag."')";
 						$result = Db::getInstance()->Execute($query);
 
-						//prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
+						//self::prestalog("We insert link id_product ".$id_product.", id_tag ".$id_tag);
 					}
 				}
 			}
@@ -1396,7 +1419,7 @@ class BlockMySales extends Module
 
 				$query = 'INSERT INTO `'._DB_PREFIX_.'product_download` (`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`) VALUES (
 						'.$id_product.', "'.$product_file_name.'", "'.$product_file_newname.'", "'.$dateNow.'", "0000-00-00 00:00:00", "'.$nb_days_accessible.'", 0, 1)';
-				//prestalog("A new file is asked: We add it into product_download query=".$query);
+				//self::prestalog("A new file is asked: We add it into product_download query=".$query);
 				$result = Db::getInstance()->Execute($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 			}
@@ -1409,7 +1432,7 @@ class BlockMySales extends Module
 				//recup des infos fichier
 				$query = 'SELECT `display_filename`, `filename` FROM `'._DB_PREFIX_.'product_download`
 						  WHERE `id_product` = '.$id_product.' ';
-				//prestalog("No new file, we search old value query=".$query);
+				//self::prestalog("No new file, we search old value query=".$query);
 				$result = Db::getInstance()->ExecuteS($query);
 				if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 				foreach ($result AS $row)
@@ -1427,13 +1450,13 @@ class BlockMySales extends Module
 					//delete des attachments
 					$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment`
 						WHERE `id_product` = '.$id_product.' ';
-					//prestalog("Search list of attachment to delete sql=".$query);
+					//self::prestalog("Search list of attachment to delete sql=".$query);
 					$result = Db::getInstance()->ExecuteS($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 					foreach ($result AS $row)
 					{
 						$id_attachment =  $row['id_attachment'];
-						//prestalog("Delete attachment num ".$id_attachment);
+						//self::prestalog("Delete attachment num ".$id_attachment);
 
 						if ($id_attachment > 0)
 						{
@@ -1454,7 +1477,7 @@ class BlockMySales extends Module
 
 					//creation dun attachement
 					$query = 'INSERT INTO `'._DB_PREFIX_.'attachment` (`file`, `file_name`, `mime`) VALUES ("'.$product_file_newname.'", "'.$product_file_name.'", "binary/octet-stream");';
-					//prestalog("Add attachment sql=".$query);
+					//self::prestalog("Add attachment sql=".$query);
 					$result = Db::getInstance()->Execute($query);
 
 					$query = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'attachment`
@@ -1464,7 +1487,7 @@ class BlockMySales extends Module
 					foreach ($result AS $row)
 					{
 						$id_attachment = $row['id_attachment'];
-						//prestalog("Add attachment for num ".$id_attachment);
+						//self::prestalog("Add attachment for num ".$id_attachment);
 
 						foreach ($languages as $language)
 						{
@@ -1490,7 +1513,7 @@ class BlockMySales extends Module
 			//inscription du produit dans ttes les categories choisis
 			$query = 'DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.$id_product;
 			$query.= " AND `id_category` <> 1";	// If product was on home, we keep it on home.
-			//prestalog("Delete category of product sql=".$query);
+			//self::prestalog("Delete category of product sql=".$query);
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 
@@ -1498,7 +1521,7 @@ class BlockMySales extends Module
 				$categories_checkbox = Tools::getValue('categories_checkbox_'.$categorie['id_category']);
 				if (! empty($categories_checkbox) && $categories_checkbox == 1 && $categorie['id_category'] != 1) {
 					$query = 'INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`) VALUES ('.$categorie['id_category'].', '.$id_product.', 1);';
-					//prestalog("Add category of product sql=".$query);
+					//self::prestalog("Add category of product sql=".$query);
 					$result = Db::getInstance()->Execute($query);
 					if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query! : '.$query));
 				}
@@ -2011,6 +2034,37 @@ class BlockMySales extends Module
 			return $this->display(__FILE__, $views.'admin/'.$name);
 	}
 
+	/**
+	 *
+	 */
+	public static function prestalog($message, $level=LOG_INFO)
+	{
+		$filelog = Configuration::get('BLOCKMYSALES_FILELOG_PATH');
+
+		if (!empty($filelog))
+		{
+			$file=fopen($filelog,"a+");
+			if ($file)
+			{
+				$ip='???';  // $ip contains information to identify computer that run the code
+				if (! empty($_SERVER["REMOTE_ADDR"])) $ip=$_SERVER["REMOTE_ADDR"];          // In most cases.
+				else if (! empty($_SERVER['SERVER_ADDR'])) $ip=$_SERVER['SERVER_ADDR'];     // This is when PHP session is ran inside a web server but not inside a client request (example: init code of apache)
+				else if (! empty($_SERVER['COMPUTERNAME'])) $ip=$_SERVER['COMPUTERNAME'].(empty($_SERVER['USERNAME'])?'':'@'.$_SERVER['USERNAME']); // This is when PHP session is ran outside a web server, like from Windows command line (Not always defined, but usefull if OS defined it).
+				else if (! empty($_SERVER['LOGNAME'])) $ip='???@'.$_SERVER['LOGNAME'];  // This is when PHP session is ran outside a web server, like from Linux command line (Not always defined, but usefull if OS defined it).
+
+				$liblevelarray=array(LOG_ERR=>'ERROR',LOG_WARNING=>'WARN',LOG_INFO=>'INFO',LOG_DEBUG=>'DEBUG');
+				$liblevel=$liblevelarray[$level];
+				if (! $liblevel) $liblevel='UNDEF';
+
+				$message=strftime("%Y-%m-%d %H:%M:%S", time())." ".sprintf("%-5s",$liblevel)." ".sprintf("%-15s",$ip)." ".$message;
+
+				fwrite($file,$message."\n");
+				fclose($file);
+				// This is for log file, we do not change permissions
+			}
+		}
+	}
+
 	public static function formatSizeUnits($bytes, $decimal = 0)
 	{
 		if ($bytes >= 1073741824)
@@ -2042,5 +2096,3 @@ class BlockMySales extends Module
 	}
 
 }
-
-?>
