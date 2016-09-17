@@ -259,11 +259,13 @@ function toggleLanguageFlags(elt)
 {
 	$(elt).parents('.displayed_flag').siblings('.language_flags').toggle();
 }
-function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelanguages = true, textarea = false)
+function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelanguages = true, textarea = false, counter = false)
 {
     $('div[id^='+field+'_]').hide();
     if (textarea) {
-    	$('span[class^=counter_]').hide();
+    	if (counter) {
+    		$('span[class^=counter_]').hide();
+    	}
         $('div[class^=language_current_'+field+']').hide();
     }
 	var fields = fieldsString.split('¤');
@@ -273,7 +275,9 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelang
 		$('div[id^='+fields[i]+'_]').hide();
 		$('#'+fields[i]+'_'+id_language_new).show();
 		if (textarea) {
-			$('span[class^=counter_'+id_language_new+']').show();
+			if (counter) {
+				$('span[class^=counter_'+id_language_new+']').show();
+			}
 			$('.'+'language_current_'+fields[i]+'_'+id_language_new).show();
 		} else {
 			$('#'+'language_current_'+fields[i]).attr('src', base_dir_ssl + 'img/l/' + id_language_new + '.jpg');

@@ -198,7 +198,7 @@
 										<div id="languages_resume" class="language_flags">
 											{l s='Choose language:' mod='blockmysales'}
 											{foreach from=$languages key=id item=language}
-												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('resume', 'resume', {$language.id_lang}, '{$language.iso_code}', false, true);" />
+												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('resume', 'resume', {$language.id_lang}, '{$language.iso_code}', false, true, true);" />
 											{/foreach}
 										</div>
 										<br />
