@@ -672,7 +672,7 @@ class BlockMySales extends Module
 		if (! $error && preg_match('/(\.zip)$/i',$originalfilename))
 		{
 			//if (! preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
-			if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename)
+			if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
 					&& ! preg_match('/^theme([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename))
 			{
 				$return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
@@ -768,14 +768,14 @@ class BlockMySales extends Module
 		$ismodule=$istheme=0;
 		if (is_dir($dir.'/scripts')) $ismodule='module';
 		if (is_dir($dir.'/htdocs/themes')) $istheme='theme';
-		//if (preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename,$reg))
-		if (preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename,$reg))
+		//if (preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename,$reg))
+		if (preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename,$reg))
 		{
 			$ismodule=$reg[2];
 			$extmoduleornot=$reg[1];
 			if ($extmoduleornot) $ismodule=0;
 		}
-		if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip|\.tgz)$/i',$originalfilename,$reg)) $istheme=$reg[1];
+		if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename,$reg)) $istheme=$reg[1];
 		if (! empty($ismodule) || ! empty($istheme))
 		{
 			self::prestalog("file ismodule=".$ismodule." istheme=".$istheme);
