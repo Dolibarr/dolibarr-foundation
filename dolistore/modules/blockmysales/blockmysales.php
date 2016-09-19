@@ -928,7 +928,7 @@ class BlockMySales extends Module
 
 						if (in_array($ext, $pattern['types']))
 						{
-							echo $ext.'<br>';
+							//echo $ext.'<br>';
 							if (!empty($pattern['multiple']))
 							{
 								preg_match_all('/' . $pattern['pattern'] . '/', $content, $regs);
@@ -1002,7 +1002,7 @@ class BlockMySales extends Module
 								}
 							}
 
-							var_dump($regs);
+							//var_dump($regs);
 						}
 					}
 				}
