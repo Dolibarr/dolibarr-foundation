@@ -841,14 +841,14 @@ class BlockMySales extends Module
 						),
 						1 => array(
 								'name'		=> 'dol_include_once',
-								'types'		=> array('php', 'class.php', 'lib.php'),
-								'pattern'	=> 'dol\_include\_once\([\"\']\/([^\/]*)\/',
+								'types'		=> array('php', 'class.php', 'lib.php', 'modules.php'),
+								'pattern'	=> 'dol\_include\_once\([\"\']\/([^\/]*)\/.*;',
 								'contain'	=> array($ismodule)
 						),
 						2 => array(
 								'name'			=> 'dol_document_root',
-								'types'			=> array('php', 'class.php', 'lib.php'),
-								'pattern'		=> '(require|include)(_once)?(.*)[\"\']+;',
+								'types'			=> array('php', 'class.php', 'lib.php', 'modules.php'),
+								'pattern'		=> '(require|include)(_once)?\(?(.*)[\"\']+\)?;',
 								'id'			=> 3,		// eg. Use $regs[3] for test instead $regs[1]
 								'contain'		=> array('DOL_DOCUMENT_ROOT'),
 								'notcontain'	=> array($ismodule),
@@ -863,21 +863,21 @@ class BlockMySales extends Module
 					{
 						if ($result['testname'] == 'main')
 						{
-							$return['errormsg'].= sprintf($this->l('The call of main.inc.php or master.inc.php in the file %s is not compatible with the custom directory.'), $result['filename']).'<br><br>';
+							$return['errormsg'].= sprintf($this->l('The call of main.inc.php or master.inc.php in the file "%s" is not compatible with the custom directory.'), $result['filename']).'<br><br>';
 						}
 						else if ($result['testname'] == 'dol_include_once')
 						{
-							$return['errormsg'].= sprintf($this->l('The call of dol_include_once of the file %s is wrong, we must correct the line below:'), $result['filename']).'<br>';
+							$return['errormsg'].= sprintf($this->l('The call of dol_include_once of the file "%s" is wrong, we must correct the line below:'), $result['filename']).'<br>';
 							$return['errormsg'].= $result['line'].'<br><br>';
 						}
 						else if ($result['testname'] == 'dol_document_root')
 						{
-							$return['errormsg'].= sprintf($this->l('The call of your module class should not be done with DOL_DOCUMENT_ROOT, the file %s is wrong, we must correct the line below:'), $result['filename']).'<br>';
+							$return['errormsg'].= sprintf($this->l('The call of your module class should not be done with DOL_DOCUMENT_ROOT, the file "%s" is wrong, we must correct the line below with "dol_include_once":'), $result['filename']).'<br>';
 							$return['errormsg'].= $result['line'].'<br><br>';
 						}
 					}
 
-					self::prestalog("file ".$originalfilename." is not compatible with custom directory!", LOG_ERROR);
+					self::prestalog("file ".$originalfilename." is not compatible with custom directory!", LOG_ERR);
 
 					$error++;
 				}
@@ -928,6 +928,7 @@ class BlockMySales extends Module
 
 						if (in_array($ext, $pattern['types']))
 						{
+							echo $ext.'<br>';
 							if (!empty($pattern['multiple']))
 							{
 								preg_match_all('/' . $pattern['pattern'] . '/', $content, $regs);
@@ -944,59 +945,64 @@ class BlockMySales extends Module
 							else
 							{
 								$id = (!empty($pattern['id']) ? $pattern['id'] : 1);
-								preg_match('/' . $pattern['pattern'] . '/', $content, $regs);
+								preg_match_all('/' . $pattern['pattern'] . '/', $content, $regs);
 								if (!empty($regs) && !empty($regs[$id]))
 								{
-									if (!empty($pattern['contain']) && is_array($pattern['contain']))
+									foreach($regs[$id] as $i => $string)
 									{
-										foreach ($pattern['contain'] as $contain)
+										if (!empty($pattern['contain']) && is_array($pattern['contain']))
 										{
-											// Mode strict true : doit contenir && ne pas contenir
-											if (!empty($pattern['notcontain']) && !empty($pattern['strict']) && is_array($pattern['notcontain']))
+											foreach ($pattern['contain'] as $contain)
 											{
-												foreach ($pattern['notcontain'] as $notcontain)
+												// Mode strict true : doit contenir && ne pas contenir
+												if (!empty($pattern['notcontain']) && !empty($pattern['strict']) && is_array($pattern['notcontain']))
 												{
-													if (strstr($regs[$id], $contain) && strstr($regs[$id], $notcontain))
+													foreach ($pattern['notcontain'] as $notcontain)
 													{
-														$results[] = array(
-																'testname'	=> $pattern['name'],
-																'filename'	=> $fileName,
-																'line'		=> $regs[0]
-														);
-														$count++;
+														if (strstr($string, $contain) && strstr($string, $notcontain))
+														{
+															$results[] = array(
+																	'testname'	=> $pattern['name'],
+																	'filename'	=> $fileName,
+																	'line'		=> $regs[0][$i]
+															);
+															$count++;
+														}
 													}
 												}
-											}
-											// Mode strict false : doit contenir
-											else if (!strstr($regs[$id], $contain))
-											{
-												$results[] = array(
-														'testname'	=> $pattern['name'],
-														'filename'	=> $fileName,
-														'line'		=> $regs[0]
-												);
-												$count++;
+												// Mode strict false : doit contenir
+												else if (!strstr($string, $contain))
+												{
+													$results[] = array(
+															'testname'	=> $pattern['name'],
+															'filename'	=> $fileName,
+															'line'		=> $regs[0][$i]
+													);
+													$count++;
+												}
 											}
 										}
-									}
-									// Ou ne doit pas contenir
-									if (empty($count) && !empty($pattern['notcontain']) && empty($pattern['strict']) && is_array($pattern['notcontain']))
-									{
-										foreach ($pattern['notcontain'] as $notcontain)
+										// Ou ne doit pas contenir
+										if (empty($count) && !empty($pattern['notcontain']) && empty($pattern['strict']) && is_array($pattern['notcontain']))
 										{
-											if (strstr($regs[$id], $notcontain))
+											foreach ($pattern['notcontain'] as $notcontain)
 											{
-												$results[] = array(
-														'testname'	=> $pattern['name'],
-														'filename'	=> $fileName,
-														'line'		=> $regs[0]
-												);
-												$count++;
+												if (strstr($string, $notcontain))
+												{
+													$results[] = array(
+															'testname'	=> $pattern['name'],
+															'filename'	=> $fileName,
+															'line'		=> $regs[0][$i]
+													);
+													$count++;
+												}
 											}
 										}
 									}
 								}
 							}
+
+							var_dump($regs);
 						}
 					}
 				}
