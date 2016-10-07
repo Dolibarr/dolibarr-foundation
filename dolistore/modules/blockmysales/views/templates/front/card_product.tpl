@@ -217,16 +217,29 @@
 	{
 		$(elt).parents('.displayed_flag').siblings('.language_flags').toggle();
 	}
-	function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelanguages = true)
+	function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelanguages = true, textarea = false, counter = false)
 	{
 	    $('div[id^='+field+'_]').hide();
+	    if (textarea) {
+	    	if (counter) {
+	    		$('span[class^=counter_]').hide();
+	    	}
+	        $('div[class^=language_current_'+field+']').hide();
+	    }
 		var fields = fieldsString.split('¤');
 		var base_dir_ssl = '{/literal}{$base_dir_ssl}{literal}'
 		for (var i = 0; i < fields.length; ++i)
 		{
 			$('div[id^='+fields[i]+'_]').hide();
 			$('#'+fields[i]+'_'+id_language_new).show();
-			$('#'+'language_current_'+fields[i]).attr('src', base_dir_ssl + 'img/l/' + id_language_new + '.jpg');
+			if (textarea) {
+				if (counter) {
+					$('span[class^=counter_'+id_language_new+']').show();
+				}
+				$('.'+'language_current_'+fields[i]+'_'+id_language_new).show();
+			} else {
+				$('#'+'language_current_'+fields[i]).attr('src', base_dir_ssl + 'img/l/' + id_language_new + '.jpg');
+			}
 		}
 		if (hidelanguages) {
 			$('#languages_' + field).hide();

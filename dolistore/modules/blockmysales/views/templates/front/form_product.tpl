@@ -95,14 +95,18 @@
 								<tr>
 									<td colspan="2">
 										<div>
-											<input type="checkbox" value="1" id="dolibarr_core_include" name="dolibarr_core_include"{if $product.dolibarr_core_include == 1} checked="checked"{/if} />
+											{l s='According to Dolibarr license and terms of use of Dolistore, your module is licensed on an OpenSource license.' mod='blockmysales'}
+											{l s='This means your work may be modified and reuse by anybody, including by Dolibarr core team to include it into official version.' mod='blockmysales'}
+											{l s='You can however help project to grow faster by accelerating this process by checking the following box.' mod='blockmysales'}
+										<br><br>
+										<input type="checkbox" value="1" id="dolibarr_core_include" name="dolibarr_core_include"{if $product.dolibarr_core_include == 1} checked="checked"{/if} />
 											<label for="dolibarr_core_include" id="dolibarr_core_include_label">
-												{l s='I would like to have my module included in dolibarr core as soon as possible' mod='blockmysales'}
+												{l s='I would like to have my module included in Dolibarr core as soon as possible' mod='blockmysales'}
 												{capture name='helpText'}
-												{l s='Because a dolibarr module is a derivative work of dolibarr, a module must be licensed under a license compatible with dolibarr gpl v3 license.' mod='blockmysales'}
-												{l s='This means your source code could be reused to enhance dolibarr itself. However, "could" does not mean "will".' mod='blockmysales'}
+												{l s='Because a Dolibarr module is a derivative work of Dolibarr, a module must be licensed under a license compatible with Dolibarr gpl v3 license.' mod='blockmysales'}
+												{l s='This means your source code may be reused to enhance Dolibarr itself. However, "may" does not mean "will".' mod='blockmysales'}
 												{l s='So if you really want this to happen, just check this box so core team will be informed. This will not guarantee it will be done but increase seriously probability.' mod='blockmysales'}
-												{l s='If this is done, this will mean the module will then be maintained by dolibarr developer community, and module will be disabled from dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
+												{l s='If this is done, this will mean the module will then be maintained by Dolibarr developer community, and module will be disabled from Dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
 												{/capture}
 												<img src="{$base_dir_ssl}img/admin/help.png" title="{$smarty.capture.helpText}" style="padding: 0px 5px;" data-toggle="tooltip" data-placement="bottom">
 											</label>
@@ -194,20 +198,24 @@
 										<div id="languages_resume" class="language_flags">
 											{l s='Choose language:' mod='blockmysales'}
 											{foreach from=$languages key=id item=language}
-												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('resume', 'resume', {$language.id_lang}, '{$language.iso_code}', false);" />
+												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('resume', 'resume', {$language.id_lang}, '{$language.iso_code}', false, true, true);" />
 											{/foreach}
 										</div>
 										<br />
 										<div class="displayed_flag">
-											{l s='Short description' mod='blockmysales'}
-											(<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_resume" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+										{foreach from=$languages key=id item=language}
+											<div class="language_current_resume_{$language.id_lang}" style="display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};">
+												{l s='Short description' mod='blockmysales'}
+												(<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" id="language_current_resume" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+											</div>
+										{/foreach}
 										</div>
-										<span class="counter" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span><br>
-									{foreach from=$languages key=id item=language}
+										{foreach from=$languages key=id item=language}
+										<span class="counter_{$language.id_lang}" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span>
 										<div id="resume_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
-											<textarea class="rte" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+											<textarea class="rte" id="id_resume_{$language.id_lang}" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
 										</div>
-									{/foreach}
+										{/foreach}
 									</td>
 								</tr>
 								<tr>
@@ -247,16 +255,20 @@
 										<div id="languages_description" class="language_flags">
 											{l s='Choose language:' mod='blockmysales'}
 											{foreach from=$languages key=id item=language}
-												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('description', 'description', {$language.id_lang}, '{$language.iso_code}', false);" />
+												<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" alt="{$language.name}" title="{$language.name}" onclick="changeLanguage('description', 'description', {$language.id_lang}, '{$language.iso_code}', false, true);" />
 											{/foreach}
 										</div>
 										<br />
 										<div class="displayed_flag">
-											{l s='Large description ' mod='blockmysales'}
-											(<img src="{$base_dir_ssl}img/l/{$defaultLanguage}.jpg" class="pointer" id="language_current_description" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
-											<br><br>
+										{foreach from=$languages key=id item=language}
+											<div class="language_current_description_{$language.id_lang}" style="display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};">
+												{l s='Large description ' mod='blockmysales'}
+												(<img src="{$base_dir_ssl}img/l/{$language.id_lang}.jpg" class="pointer" onclick="toggleLanguageFlags(this);" alt="" /> {$language.iso_code}, {if $language.iso_code == 'en'}{l s='mandatory' mod='blockmysales'}{else}{l s='optionnal' mod='blockmysales'}{/if}):
+												<br><br>
+											</div>
+										{/foreach}
 										</div>
-									{foreach from=$languages key=id item=language}
+										{foreach from=$languages key=id item=language}
 										<div id="description_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
 											<textarea class="rte" cols="100" rows="10" name="description_{$language.id_lang}">
 											{if $product.description[$language.id_lang]}
@@ -266,16 +278,16 @@
 											{/if}
 											</textarea>
 										</div>
-									{/foreach}
+										{/foreach}
 									</td>
 								</tr>
 								<tr>
 									<td colspan="2">
-										<div>
+										<div><br>
 											<input type="checkbox" id="agreewithtermofuse" name="agreewithtermofuse" />
 											<label for="agreewithtermofuse" id="agreewithtermofuselabel">
 												{l s='I\'ve read and I agree with terms and conditions of use available on page' mod='blockmysales'}
-												<a href="http://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">http://www.dolistore.com/content/3-terms-and-conditions-of-use</a>
+												<a href="https://www.dolistore.com/content/3-terms-and-conditions-of-use" target="_blank">https://www.dolistore.com/content/3-terms-and-conditions-of-use</a>
 											</label>
 										</div>
 									</td>
@@ -286,7 +298,7 @@
 											<input type="checkbox" id="agreetoaddwikipage" name="agreetoaddwikipage" />
 											<label for="agreetoaddwikipage" id="agreetoaddwikipagelabel">
 												{l s='I am aware that dolibarr foundation recommand me to add a page dedicated to my module on the wiki.dolibarr.org visible on' mod='blockmysales'}
-												<a href="http://wiki.dolibarr.org/index.php/Category:Complementary_modules" target="_blank">http://wiki.dolibarr.org/index.php/Category:Complementary_modules</a>,
+												<a href="https://wiki.dolibarr.org/index.php/Category:Complementary_modules" target="_blank">https://wiki.dolibarr.org/index.php/Category:Complementary_modules</a>,
 												{l s='This increase visibility of my module and may increase sell if it is a payed module' mod='blockmysales'}
 											</label>
 										</div>

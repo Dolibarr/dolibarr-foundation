@@ -138,6 +138,11 @@ label {
 	transform: translate(5px, 10px)
 }
 
+.alert {
+	font-weight: inherit!important;
+	padding: 5px!important;
+}
+
 #growls {
 	z-index: 50000;
 	position: fixed

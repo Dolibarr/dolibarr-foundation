@@ -24,6 +24,14 @@
 *}
 
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall'}" method="post" class="form">
+	<fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/img/logo_petit.png" alt="" />{l s='Parameters' mod='blockmysales'}</legend>
+		<label>{l s='Logs file path' mod='blockmysales'} : </label>
+		<div class="margin-form">
+			<input type="text" size="45" name="filelog" value="{if isset($filelog)}{$filelog|escape:'htmlall':'UTF-8'}{/if}" />
+            <p>{l s='Plain path of your file logs. eg /home/dolibarr/dolistore/logs/myfilelog.log' mod='blockmysales'}</p>
+        </div>
+	</fieldset>
+	<div class="clear">&nbsp;</div>
 	<fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/img/logo_petit.png" alt="" />{l s='Dolibarr Webservices' mod='blockmysales'}</legend>
 		<label>{l s='Webservices URL' mod='blockmysales'} : </label>
 		<div class="margin-form">
