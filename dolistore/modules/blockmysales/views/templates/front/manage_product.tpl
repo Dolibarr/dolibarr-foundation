@@ -198,7 +198,7 @@
 			{else}
 				<font color="#AA0000">
 				{foreach from=$badvoucherlist key=id item=voucher}
-					<div>{l s='Error, a bad voucher %1$s name was found into database and applied to order %2$s.' sprintf=[$voucher.vouchername,$voucher.idorder] mod='blockmysales'}</div>
+					<div>{l s='Error, a bad voucher %1$s name was found into database and applied to order %2$s. A voucher name must end with C[idseller]' sprintf=[$voucher.vouchername,$voucher.idorder] mod='blockmysales'}</div>
 				{/foreach}
 				<div>{l s='Please come back later when problem is fixed' mod='blockmysales'}</div>
 				</font>
