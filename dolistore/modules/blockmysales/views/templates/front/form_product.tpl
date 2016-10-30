@@ -96,7 +96,7 @@
 									<td colspan="2">
 										<div>
 											{l s='According to Dolibarr license and terms of use of Dolistore, your module is licensed on an OpenSource license.' mod='blockmysales'}
-											{l s='This means your work may be modified and reuse by anybody, including by Dolibarr core team to include it into official version.' mod='blockmysales'}
+											{l s='This means your work may be modified, reuse and redistribut by anybody, including by Dolibarr core team to include it into official version.' mod='blockmysales'}
 											{l s='You can however help project to grow faster by accelerating this process by checking the following box.' mod='blockmysales'}
 										<br><br>
 										<input type="checkbox" value="1" id="dolibarr_core_include" name="dolibarr_core_include"{if $product.dolibarr_core_include == 1} checked="checked"{/if} />
@@ -104,9 +104,9 @@
 												{l s='I would like to have my module included in Dolibarr core as soon as possible' mod='blockmysales'}
 												{capture name='helpText'}
 												{l s='Because a Dolibarr module is a derivative work of Dolibarr, a module must be licensed under a license compatible with Dolibarr gpl v3 license.' mod='blockmysales'}
-												{l s='This means your source code may be reused to enhance Dolibarr itself. However, "may" does not mean "will".' mod='blockmysales'}
-												{l s='So if you really want this to happen, just check this box so core team will be informed. This will not guarantee it will be done but increase seriously probability.' mod='blockmysales'}
-												{l s='If this is done, this will mean the module will then be maintained by Dolibarr developer community, and module will be disabled from Dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
+												{l s='This means your source code may be included into Dolibarr official version to enhance Dolibarr itself. However, "may" does not say "when".' mod='blockmysales'}
+												{l s='So if you really want this to happen as soon as possible, just check this box so core team will be informed. This will not guarantee it will be done but increase seriously probability and reduce delay time.' mod='blockmysales'}
+												{l s='If your module is included in core, it means the module will then be maintained by Dolibarr developer community, and module will be disabled from Dolistore as soon as dolibarr version including it is publicaly available' mod='blockmysales'}
 												{/capture}
 												<img src="{$base_dir_ssl}img/admin/help.png" title="{$smarty.capture.helpText}" style="padding: 0px 5px;" data-toggle="tooltip" data-placement="bottom">
 											</label>
@@ -174,7 +174,7 @@
 								<!-- Categories -->
 								<tr>
 									<td width="14%" valign="top">
-										{l s='Mark all checkbox(es) of categories in which product is to appear:' mod='blockmysales'}
+										{l s='Select categories related to your product (max 3):' mod='blockmysales'}
 									</td>
 									<td>
 										<table border="0" cellspacing="5" cellpadding="0">
@@ -212,8 +212,8 @@
 										</div>
 										{foreach from=$languages key=id item=language}
 										<span class="counter_{$language.id_lang}" data-max="{$PS_PRODUCT_SHORT_DESC_LIMIT}"></span>
-										<div id="resume_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
-											<textarea class="rte" id="id_resume_{$language.id_lang}" name="resume_{$language.id_lang}"	style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
+										<div id="resume_{$language.id_lang}" style="width: 90%; padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
+											<textarea class="rtenockeditor" id="id_resume_{$language.id_lang}" name="resume_{$language.id_lang}" style="width: 100%;" rows="5">{$product.resume[$language.id_lang]}</textarea>
 										</div>
 										{/foreach}
 									</td>
