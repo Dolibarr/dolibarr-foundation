@@ -3,9 +3,9 @@
 	<header>
 	</header>
 	<body>
-		<title_1>DoliStore.com, the market place for &lt;a href=&quot;http://www.dolibarr.org&quot; target=&quot;_blank&quot;&gt;Dolibarr ERP/CRM&lt;/a&gt; addons</title_1>
-		<title_2>DoliStore, la place de marché des extensions pour &lt;a href=&quot;http://www.dolibarr.fr&quot; target=&quot;_blank&quot;&gt;Dolibarr ERP/CRM&lt;/a&gt;</title_2>
-		<title_3>DoliStore.com, el mercado de complementos de &lt;a href=&quot;http://www.dolibarr.org&quot; target=&quot;_blank&quot;&gt;Dolibarr ERP/CRM&lt;/a&gt;</title_3>
+		<title_1>DoliStore.com, the market place for &lt;a href=&quot;https://www.dolibarr.org&quot; target=&quot;_blank&quot;&gt;Dolibarr ERP/CRM&lt;/a&gt; addons</title_1>
+		<title_2>DoliStore, la place de marché des extensions pour &lt;a href=&quot;https://www.dolibarr.fr&quot; target=&quot;_blank&quot;&gt;Dolibarr ERP/CRM&lt;/a&gt;</title_2>
+		<title_3>DoliStore.com, el mercado de complementos de &lt;a href=&quot;https://www.dolibarr.org&quot; target=&quot;_blank&quot;&gt;Dolibarr ERP/CRM&lt;/a&gt;</title_3>
 		<subheading_1>Welcome</subheading_1>
 		<subheading_2>Bienvenue</subheading_2>
 		<subheading_3>Bienvenido</subheading_3>
@@ -14,7 +14,7 @@
 &lt;li&gt;&lt;span style=&quot;color: #bf6c00;&quot;&gt;&lt;strong&gt;If you  are a Dolibarr user&lt;/strong&gt;&lt;/span&gt; :&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;You can search new features and find modules or miscellaneous addons.  Browse into categories to find your plugin or use the search form at  the top...&lt;/p&gt;
-&lt;p&gt;Most plugins/addons are free, some need fees (Members of the  &lt;a title=&quot;Dolibarr foundation&quot; href=&quot;http://asso.dolibarr.org/index.php/Dolibarr_foundation&quot; target=&quot;_blank&quot;&gt;Dolibarr foundation&lt;/a&gt; can have a 20% discount if asked to the foundation once the DoliStore account  has been created and BEFORE buying anything).&lt;/p&gt;
+&lt;p&gt;Most plugins/addons are free, some need fees (Members of the  &lt;a title=&quot;Dolibarr foundation&quot; href=&quot;https://asso.dolibarr.org/index.php/Dolibarr_foundation&quot; target=&quot;_blank&quot;&gt;Dolibarr foundation&lt;/a&gt; can have a 20% discount if asked to the foundation once the DoliStore account  has been created and BEFORE buying anything).&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;&lt;span style=&quot;color:  #bf6c00;&quot;&gt;If you are a developer :&lt;/span&gt;&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -24,7 +24,7 @@
 &lt;li&gt;&lt;span style=&quot;color: #bf6c00;&quot;&gt;&lt;strong&gt;Si vous  &amp;ecirc;tes utilisateur de Dolibarr&lt;/strong&gt;&lt;/span&gt; :&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Vous pouvez rechercher des fonctionnalit&amp;eacute;s suppl&amp;eacute;mentaires et trouver  des modules ou extensions diverses. Naviguer dans les categories pour  trouver votre extension ou utiliser le formulaire de recherche en haut  de la page...&lt;/p&gt;
-&lt;p&gt;La plupart des extensions/modules sont gratuits, certains sont payants (Les adh&amp;eacute;rents &amp;agrave; l'&lt;a title=&quot;Dolibarr foundation&quot; href=&quot;http://asso.dolibarr.org&quot; target=&quot;_blank&quot;&gt;association Dolibarr&lt;/a&gt; peuvent b&amp;eacute;n&amp;eacute;ficer de 20%  de r&amp;eacute;duction si la demande est faite &amp;agrave; l'association une fois le compte DoliStore cr&amp;eacute;&amp;eacute; et avant l'achat)&lt;/p&gt;
+&lt;p&gt;La plupart des extensions/modules sont gratuits, certains sont payants (Les adh&amp;eacute;rents &amp;agrave; l'&lt;a title=&quot;Dolibarr foundation&quot; href=&quot;https://asso.dolibarr.org&quot; target=&quot;_blank&quot;&gt;association Dolibarr&lt;/a&gt; peuvent b&amp;eacute;n&amp;eacute;ficer de 20%  de r&amp;eacute;duction si la demande est faite &amp;agrave; l'association une fois le compte DoliStore cr&amp;eacute;&amp;eacute; et avant l'achat)&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;&lt;span style=&quot;color:  #bf6c00;&quot;&gt;Si vous &amp;ecirc;tes d&amp;eacute;veloppeur :&lt;/span&gt;&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -38,6 +38,6 @@
 &lt;li&gt;&lt;span style=&quot;color: #bf6c00;&quot;&gt;&lt;strong&gt;Si usted es desarrollador&lt;/strong&gt;:&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Puede enviar sus m&amp;oacute;dulos con el precio de venta de su elecci&amp;oacute;n (o gratuitos). Para ello, basta con crear una cuenta y enviar el m&amp;oacute;dulo.&lt;/p&gt;</paragraph_3>
-		<home_logo_link>http://www.dolibarr.org</home_logo_link>
+		<home_logo_link>https://www.dolibarr.org</home_logo_link>
 	</body>
 </editorial>

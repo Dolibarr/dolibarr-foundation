@@ -231,7 +231,7 @@ class BlockMySales extends Module
 			$file=@fopen($filelog,"a+");
 			if (!$file)
 			{
-				$this->post_errors[] = $this->l('The log file can be created or is not writable');
+				$this->post_errors[] = $this->l('The log file cant be created or is not writable');
 			}
 			else
 			{
@@ -629,6 +629,12 @@ class BlockMySales extends Module
 		);
 
 		$originalfilename=$_FILES['virtual_product_file']['name'];
+
+		if (strlen($originalfilename) > 32)
+		{
+			$error++;
+			$return['errormsg'] = $this->l('Name of file must not be longer than 32 characters,  including the "module_" prefix, the version suffix and the extension (".zip" for example) !');
+		}
 
 		self::prestalog("Upload or reupload file " . $originalfilename);
 
