@@ -198,7 +198,7 @@
 			{else}
 				<font color="#AA0000">
 				{foreach from=$badvoucherlist key=id item=voucher}
-					<div>{l s='Error, a bad voucher %1$s name was found into database and applied to order %2$s.' sprintf=[$voucher.vouchername,$voucher.idorder] mod='blockmysales'}</div>
+					<div>{l s='Error, a bad voucher %1$s name was found into database and applied to order %2$s. A voucher name must end with C[idseller]' sprintf=[$voucher.vouchername,$voucher.idorder] mod='blockmysales'}</div>
 				{/foreach}
 				<div>{l s='Please come back later when problem is fixed' mod='blockmysales'}</div>
 				</font>
@@ -255,6 +255,39 @@
 
 <script>
 {literal}
+function toggleLanguageFlags(elt)
+{
+	$(elt).parents('.displayed_flag').siblings('.language_flags').toggle();
+}
+function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelanguages = true, textarea = false, counter = false)
+{
+    $('div[id^='+field+'_]').hide();
+    if (textarea) {
+    	if (counter) {
+    		$('span[class^=counter_]').hide();
+    	}
+        $('div[class^=language_current_'+field+']').hide();
+    }
+	var fields = fieldsString.split('¤');
+	var base_dir_ssl = '{/literal}{$base_dir_ssl}{literal}'
+	for (var i = 0; i < fields.length; ++i)
+	{
+		$('div[id^='+fields[i]+'_]').hide();
+		$('#'+fields[i]+'_'+id_language_new).show();
+		if (textarea) {
+			if (counter) {
+				$('span[class^=counter_'+id_language_new+']').show();
+			}
+			$('.'+'language_current_'+fields[i]+'_'+id_language_new).show();
+		} else {
+			$('#'+'language_current_'+fields[i]).attr('src', base_dir_ssl + 'img/l/' + id_language_new + '.jpg');
+		}
+	}
+	if (hidelanguages) {
+		$('#languages_' + field).hide();
+	}
+	id_language = id_language_new;
+}
 $(document).ready(function() {
 	{/literal}{if !$products}{literal}
 		$( "#sales_list_link" ).hide();
@@ -291,15 +324,77 @@ $(document).ready(function() {
 			dateFormat: 'yy-mm-dd'
 		});
 	});
-	$('#agreewithtermofuse').attr('checked', false);
-	$('#agreewithtermofuse').change(function () {
-		if ($(this).is(':checked')) {
-			$('#sub').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false);
-		}   
-		else {
-			$('#sub').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled');
+	$('#module_name_example').hide();
+	$('#dolibarr_min, #dolibarr_max').on('keyup', function() {
+		if ($('#dolibarr_max_status').is(':checked')) {
+			getModuleName();
 		}
 	});
+	if ($('#dolibarr_max_status').is(':checked')) {
+		getModuleName();
+	}
+	$('#dolibarr_min_status').change(function() {
+		getModuleName();
+	});
+	$('#dolibarr_max_status').change(function() {
+		if (this.checked) {
+			$('#dolibarr_min_status').attr('disabled', false);
+			getModuleName();
+		} else {
+			$('#module_name_example').hide();
+			$('#dolibarr_min_status').attr('checked', false).attr('disabled', 'disabled');
+		}
+		$.uniform.update('#dolibarr_min_status');
+	});
+	$('#sub').css('opacity', '0.5');
+	$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
+	$('#agreewithtermofuse').change(function() {
+		if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked')) {
+			$('#sub').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
+		}   
+		else {
+			$('#sub').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
+		}
+	});
+	$('#agreetoaddwikipage').change(function() {
+		if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked')) {
+			$('#sub').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
+		}   
+		else {
+			$('#sub').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
+		}
+	});
+	$(".tooltip").tooltip({
+		placement : 'top',
+		animation: true,
+	});
+	$(".tooltip-top").tooltip({
+		placement : 'top',
+		animation: true,
+	});
+	$(".tooltip-left").tooltip({
+		placement : 'left',
+		animation: true,
+	});
+	$(".tooltip-bottom").tooltip({
+		placement : 'bottom',
+		animation: true,
+	});
+	$(".tooltip-right").tooltip({
+		placement : 'top',
+		animation: true,
+	});
+	$(function () { $("[data-toggle='tooltip']").tooltip(); });
+	function getModuleName() {
+		var name = $('#product_name_l1').val();
+		var dolibarr_min = $('#dolibarr_min').val();
+		var dolibarr_max = $('#dolibarr_max').val();
+		var version = ((dolibarr_min && $('#dolibarr_min_status').is(':checked')) ? dolibarr_min + ' - ' : '') + dolibarr_max;
+		if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
+			$('#module_name_div').html(name + ' ' + version);
+			$('#module_name_example').show();
+		}
+	}
 });
 </script>
 {/literal}

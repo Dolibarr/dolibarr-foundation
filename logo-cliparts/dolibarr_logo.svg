@@ -14,9 +14,9 @@
    height="175"
    id="svg3450"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="dolibarr_logo.svg"
-   inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo.png"
+   inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/dolibarr_logo.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <title
@@ -28,7 +28,7 @@
        xlink:href="#linearGradient3734"
        id="linearGradient5510"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.50554677,0,0,0.50554685,-258.60586,-109.39779)"
+       gradientTransform="matrix(0.50554677,0,0,0.50554685,-259.22357,-105.04914)"
        x1="1223.7272"
        y1="1026.5248"
        x2="1221.0221"
@@ -36,23 +36,14 @@
     <linearGradient
        id="linearGradient3734">
       <stop
-         style="stop-color:#094276;stop-opacity:1;"
+         style="stop-color:#073761;stop-opacity:1;"
          offset="0"
          id="stop3736" />
       <stop
-         style="stop-color:#468dc9;stop-opacity:1;"
+         style="stop-color:#2f6ca0;stop-opacity:1;"
          offset="1"
          id="stop3738" />
     </linearGradient>
-    <filter
-       inkscape:collect="always"
-       id="filter3775"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="11.473048"
-         id="feGaussianBlur3777" />
-    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -61,9 +52,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="-90.476516"
-     inkscape:cy="152.65216"
+     inkscape:zoom="2.0131004"
+     inkscape:cx="343.5"
+     inkscape:cy="87.5"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -122,40 +113,31 @@
      transform="translate(0,-425)">
     <text
        xml:space="preserve"
-       style="font-size:886.12506104px;font-style:normal;font-weight:normal;opacity:0.17204303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3775);font-family:Bitstream Vera Sans"
-       x="537.1402"
-       y="887.85065"
-       id="text2828-6"
-       transform="matrix(0.35661275,0,0,0.39656343,-184.72516,239.25393)"><tspan
-         sodipodi:role="line"
-         id="tspan2830-9"
-         x="537.1402"
-         y="887.85065"
-         style="font-size:518.16009521px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:333.234375px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bitstream Vera Sans"
-       x="-1.8109621"
-       y="552.91998"
+       style="font-size:333.234375px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93 Bold"
+       x="-2.42869"
+       y="557.26868"
        id="text2828"
-       transform="scale(0.948292,1.0545275)"><tspan
+       transform="scale(0.948292,1.0545275)"
+       inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/dolibarr_logo.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan2830"
-         x="-1.8109621"
-         y="552.91998"
-         style="font-size:194.85823059px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+         x="-2.42869"
+         y="557.26868"
+         style="font-size:194.85823059px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93 Bold">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:42.95219803px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="569.83191"
-       y="411.31918"
+       x="567.57288"
+       y="416.63116"
        id="text5484"
        transform="scale(0.88533213,1.1295196)"
        sodipodi:linespacing="100%"><tspan
          style="font-size:42.95219803px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
          sodipodi:role="line"
          id="tspan5486"
-         x="569.83191"
-         y="411.31918">ERP/CRM</tspan></text>
+         x="567.57288"
+         y="416.63116">ERP/CRM</tspan></text>
   </g>
 </svg>

@@ -57,6 +57,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$this->context->smarty->assign('cardproduct', $this->context->link->getModuleLink('blockmysales', 'cardproduct'));
 					$this->context->smarty->assign('ps_bms_templates_dir', _PS_MODULE_DIR_.'blockmysales/views/templates/front');
 
+					$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+					$this->context->smarty->assign('defaultLanguage', $defaultLanguage);
+
 					$this->context->smarty->assign('upload_max_filesize', BlockMySales::formatSizeUnits(Tools::getMaxUploadSize()));
 
 					$publisher=trim($customer['firstname'].' '.$customer['lastname']);
@@ -125,7 +128,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$dolistoreinvoices=array();
 
 					// Get list of products
-					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, pl.name, pl.description_short, pl.link_rewrite';
+					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, pl.name, pl.description_short, pl.link_rewrite';
 					$query.= ' FROM '._DB_PREFIX_.'product as p';
 					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
 					$query.= ' WHERE 1 = 1';
@@ -143,6 +146,18 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						foreach ($result as $id => $values)	// For each product
 						{
 							$products[$id] = $values;
+
+							if (!empty($products[$id]['dolibarr_max']) && $products[$id]['dolibarr_max_status'] == 1)
+							{
+								if (!empty($products[$id]['dolibarr_min']) && $products[$id]['dolibarr_min_status'] == 1)
+								{
+									$products[$id]['name'] = $products[$id]['name'] . ' ' . $products[$id]['dolibarr_min'] . ' - ' . $products[$id]['dolibarr_max'];
+								}
+								else
+								{
+									$products[$id]['name'] = $products[$id]['name'] . ' ' . $products[$id]['dolibarr_max'];
+								}
+							}
 
 							$id_product = $values['id_product'];
 							$products[$id]['productcardlink'] = $this->context->link->getModuleLink('blockmysales', 'cardproduct') . '?id_p=' . $id_product; // product card link
@@ -597,6 +612,12 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
 							'active' => 0,
 							'file_name' => Tools::getValue('product_file_name'),
+							'module_version' => Tools::getValue('dolibarr_min'),
+							'dolibarr_min' => Tools::getValue('dolibarr_min'),
+							'dolibarr_min_status' => (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0),
+							'dolibarr_max' => Tools::getValue('dolibarr_max'),
+							'dolibarr_max_status' => (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0),
+							'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
 							'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
 							'product_name' => array(),
 							'resume' => array(),
@@ -648,7 +669,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					if (Tools::isSubmit('id_p') && is_numeric(Tools::getValue('id_p')))
 					{
 						// Get product id
-						$query = 'SELECT p.id_product, p.price, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
+						$query = 'SELECT p.id_product, p.price, p.module_version, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, p.dolibarr_core_include, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
 						$query.= ' FROM '._DB_PREFIX_.'product as p, '._DB_PREFIX_.'product_lang as pl, '._DB_PREFIX_.'lang as l WHERE l.id_lang = pl.id_lang AND p.id_product = pl.id_product AND p.id_product = '.((int) Tools::getValue('id_p'));
 						$result = Db::getInstance()->ExecuteS($query);
 						if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -660,6 +681,12 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							$newproduct['resume'][$row['id_lang']] 			= $row['description_short'];
 							$newproduct['description'][$row['id_lang']] 	= $row['description'];
 							$newproduct['price'] 							= round($row['price'], 2);
+							$newproduct['module_version'] 					= $row['module_version'];
+							$newproduct['dolibarr_min'] 					= $row['dolibarr_min'];
+							$newproduct['dolibarr_min_status'] 				= $row['dolibarr_min_status'];
+							$newproduct['dolibarr_max'] 					= $row['dolibarr_max'];
+							$newproduct['dolibarr_max_status'] 				= $row['dolibarr_max_status'];
+							$newproduct['dolibarr_core_include'] 			= $row['dolibarr_core_include'];
 						}
 					}
 
