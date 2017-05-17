@@ -374,20 +374,20 @@ class BlockMySales extends Module
                         }
 
                         $items_table .=
-                        '<tr style="background-color:'.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-                                        <td style="padding:0.6em 0.4em;">'.$product['product_reference'].'</td>
+                        '<tr style="background-color:'.($key % 2 ? '#DDE2E6' : '#EBECEE').';" class="item_data">
+                                        <td style="padding:0.6em 0.4em;"><span class="item_reference">'.$product['product_reference'].'</span></td>
                                         <td style="padding:0.6em 0.4em;">
-                                                <strong>'
-                                                                .$product['product_name']
+                                                <strong><span class="item_name">'
+                                                                .$product['product_name'].'</span>'
                                                                 .(isset($product['attributes_small']) ? ' '.$product['attributes_small'] : '')
                                                                 .(!empty($customization_text) ? '<br />'.$customization_text : '')
                                                                 .'</strong>
                                         </td>
-                                        <td style="padding:0.6em 0.4em; text-align:right;">'.Tools::displayPrice($unit_price, $currency, false).'</td>
-                                        <td style="padding:0.6em 0.4em; text-align:center;">'.(int)$product['product_quantity'].'</td>
-                                        <td style="padding:0.6em 0.4em; text-align:right;">'
+                                        <td style="padding:0.6em 0.4em; text-align:right;"><span class="item_price">'.Tools::displayPrice($unit_price, $currency, false).'</span></td>
+                                        <td style="padding:0.6em 0.4em; text-align:center;"><span class="item_quantity">'.(int)$product['product_quantity'].'</span></td>
+                                        <td style="padding:0.6em 0.4em; text-align:right;"><span class="item_price_total">'
                                                                 .Tools::displayPrice(($unit_price * $product['product_quantity']), $currency, false)
-                                                                .'</td>
+                                                                .'</span></td>
                                 </tr>';
                 }
                 foreach ($params['order']->getCartRules() as $discount)
