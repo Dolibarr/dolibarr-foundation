@@ -308,8 +308,6 @@ class BlockMySales extends Module
                 if (!$this->merchant_order || empty($this->merchant_mails))
                         return;
 
-                include_once(dirname(__FILE__).'/../mailalerts/MailAlert.php');
-
                 // Getting differents vars
                 $context = Context::getContext();
                 $id_lang = (int)$context->language->id;
@@ -413,15 +411,15 @@ class BlockMySales extends Module
                                 '{firstname}' => $customer->firstname,
                                 '{lastname}' => $customer->lastname,
                                 '{email}' => $customer->email,
-                                '{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
-                                '{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
-                                '{delivery_block_html}' => MailAlert::getFormatedAddress(
+                                '{delivery_block_txt}' => self::getFormatedAddress($delivery, "\n"),
+                                '{invoice_block_txt}' => self::getFormatedAddress($invoice, "\n"),
+                                '{delivery_block_html}' => self::getFormatedAddress(
                                                 $delivery, '<br />', array(
                                                                 'firstname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>',
                                                                 'lastname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>'
                                                 )
                                 ),
-                                '{invoice_block_html}' => MailAlert::getFormatedAddress(
+                                '{invoice_block_html}' => self::getFormatedAddress(
                                                 $invoice, '<br />', array(
                                                                 'firstname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>',
                                                                 'lastname' => '<span style="color:'.$configuration['PS_MAIL_COLOR'].'; font-weight:bold;">%s</span>'
@@ -595,6 +593,14 @@ class BlockMySales extends Module
 
                 return $country_name;
         }
+
+		/*
+		 * Generate correctly the address for an email
+		 */
+		public static function getFormatedAddress(Address $address, $line_sep, $fields_style = array())
+		{
+			return AddressFormat::generateAddress($address, array('avoid' => array()), $line_sep, ' ', $fields_style);
+		}
 
         /**
          *
