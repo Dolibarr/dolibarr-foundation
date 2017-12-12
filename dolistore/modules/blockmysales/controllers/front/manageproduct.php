@@ -24,17 +24,17 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 		$this->context->controller->addCSS(__PS_BASE_URI__.'modules/blockmysales/css/global.css');
 	}
 
-    /**
-     * @see FrontController::initContent()
-     */
-    public function initContent()
-    {
-        parent::initContent();
+	/**
+	 * @see FrontController::initContent()
+	 */
+	public function initContent()
+	{
+		parent::initContent();
 
-        $this->displayContent();
-    }
+		$this->displayContent();
+	}
 
-    public function displayContent()
+	public function displayContent()
 	{
 		// Get env variables
 		$active = '';
@@ -114,7 +114,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$totalamount=0;
 					$totalamountclaimable=0;
 
-					 // Define dateafter and datebefore
+					// Define dateafter and datebefore
 					$dateafter=null;
 					$datebefore=null;
 
@@ -183,7 +183,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							else
 								$image_url = _THEME_PROD_DIR_.'en-default-small.jpg';
 
-								$products[$id] = array_merge($products[$id], array('image_url' => $image_url));
+							$products[$id] = array_merge($products[$id], array('image_url' => $image_url));
 
 							if ($colorTabNbr%2)
 								$products[$id] = array_merge($products[$id], array('colorTab' => "#ffffff"));
@@ -353,11 +353,11 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							require_once(NUSOAP_PATH.'/nusoap.php');        // Include SOAP
 							$dolibarr_webservices_url = Configuration::get('BLOCKMYSALES_WEBSERVICES_URL');
 							$authentication=array(
-									'dolibarrkey' => Configuration::get('BLOCKMYSALES_WEBSERVICES_SECUREKEY'),
-									'sourceapplication' => 'DOLISTORE',
-									'login' => Configuration::get('BLOCKMYSALES_WEBSERVICES_LOGIN'),
-									'password' => Configuration::get('BLOCKMYSALES_WEBSERVICES_PASSWORD'),
-									'entity' => '');
+							'dolibarrkey' => Configuration::get('BLOCKMYSALES_WEBSERVICES_SECUREKEY'),
+							'sourceapplication' => 'DOLISTORE',
+							'login' => Configuration::get('BLOCKMYSALES_WEBSERVICES_LOGIN'),
+							'password' => Configuration::get('BLOCKMYSALES_WEBSERVICES_PASSWORD'),
+							'entity' => '');
 
 							$socid=0;
 							$foundthirdparty=false;
@@ -453,50 +453,50 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 											// Rule to detect invoice found is for dolistore payment back
 											// More info into logs/prestalog.log
 											$isfordolistore=0;
-											if (preg_match('/dolistore/i',$invoice['note_private'])
-													&& ! preg_match('/agios/i',$invoice['ref_supplier'])
-													&& ! preg_match('/frais/i',$invoice['ref_supplier'])
-													&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
-											) $isfordolistore=1;
+											if ((preg_match('/dolistore/i',$invoice['note_private']) || preg_match('/dolistore/i',$invoice['label']))
+												&& ! preg_match('/agios/i',$invoice['ref_supplier'])
+												&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+												&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
+												) $isfordolistore=1;
 
-											if (! $isfordolistore)
-											{
-												if (count($invoice['lines']) < 1)
+												if (! $isfordolistore)
 												{
-													// TODO à traiter
-													//print 'Error during call of web service '.$WS_METHOD.'. Result='.$result['result']['result_code'].'. No lines for invoice found.';
-													$errorcallws++;
-													break;
-												}
+													if (count($invoice['lines']) < 1)
+													{
+														// TODO à traiter
+														//print 'Error during call of web service '.$WS_METHOD.'. Result='.$result['result']['result_code'].'. No lines for invoice found.';
+														$errorcallws++;
+														break;
+													}
 
-												foreach($invoice['lines'] as $line)
-												{
-													if (preg_match('/dolistore/i',$line['desc'])
+													foreach($invoice['lines'] as $line)
+													{
+														if (preg_match('/dolistore/i',$line['desc'])
 															&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
 															&& ! preg_match('/agios/i',$invoice['ref_supplier'])
 															&& ! preg_match('/frais/i',$invoice['ref_supplier'])
 															&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
-													)
-													{
-														$isfordolistore++;
+															)
+														{
+															$isfordolistore++;
+														}
 													}
 												}
-											}
 
-											if ($isfordolistore)
-											{
-												$dolistoreinvoices[]=array(
-														'id'=>$invoice['id'],
-														'ref'=>$invoice['ref'],
-														'ref_supplier'=>$invoice['ref_supplier'],
-														'status'=>$invoice['status'],
-														'date'=>$invoice['date_invoice'],
-														'amount_ht'=>$invoice['total_net'],
-														'amount_vat'=>$invoice['total_vat'],
-														'amount_ttc'=>$invoice['total'],
-														'fk_thirdparty'=>$invoice['fk_thirdparty']
-												);
-											}
+												if ($isfordolistore)
+												{
+													$dolistoreinvoices[]=array(
+													'id'=>$invoice['id'],
+													'ref'=>$invoice['ref'],
+													'ref_supplier'=>$invoice['ref_supplier'],
+													'status'=>$invoice['status'],
+													'date'=>$invoice['date_invoice'],
+													'amount_ht'=>$invoice['total_net'],
+													'amount_vat'=>$invoice['total_vat'],
+													'amount_ttc'=>$invoice['total'],
+													'fk_thirdparty'=>$invoice['fk_thirdparty']
+													);
+												}
 										}
 									}
 									else
@@ -609,26 +609,26 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
 
 					$newproduct=array(
-							'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
-							'active' => 0,
-							'file_name' => Tools::getValue('product_file_name'),
-							'module_version' => Tools::getValue('dolibarr_min'),
-							'dolibarr_min' => Tools::getValue('dolibarr_min'),
-							'dolibarr_min_status' => (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0),
-							'dolibarr_max' => Tools::getValue('dolibarr_max'),
-							'dolibarr_max_status' => (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0),
-							'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
-							'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
-							'product_name' => array(),
-							'resume' => array(),
-							'keywords' => array(),
-							'description' => array()
+					'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
+					'active' => 0,
+					'file_name' => Tools::getValue('product_file_name'),
+					'module_version' => Tools::getValue('dolibarr_min'),
+					'dolibarr_min' => Tools::getValue('dolibarr_min'),
+					'dolibarr_min_status' => (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0),
+					'dolibarr_max' => Tools::getValue('dolibarr_max'),
+					'dolibarr_max_status' => (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0),
+					'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
+					'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
+					'product_name' => array(),
+					'resume' => array(),
+					'keywords' => array(),
+					'description' => array()
 					);
 					$languageTAB=array();
 					$file=array(
-							'product_file_path' => Tools::getValue('product_file_path'),
-							'upload' => 1,
-							'errormsg' => null
+					'product_file_path' => Tools::getValue('product_file_path'),
+					'upload' => 1,
+					'errormsg' => null
 					);
 					$product_file_name=Tools::getValue('product_file_name');
 					$virtual_product_file=null;
@@ -725,8 +725,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						$file = $blockmysales->checkZipFile();
 
 						if (Tools::isSubmit('product_file_name'))
+						{
 							$product_file_name = Tools::getValue('product_file_name');
-
+						}
+						
 						if (! empty($_FILES['virtual_product_file']['name']))
 						{
 							$product_file_name = $_FILES['virtual_product_file']['name'];
@@ -744,8 +746,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							exit;
 						}
 						else
+						{
 							$this->context->smarty->assign('create_errors', $this->module->displayError($blockmysales->create_errors));
-
+						}
+						
 						$this->context->smarty->assign('create_flag', $create_flag);
 					}
 
