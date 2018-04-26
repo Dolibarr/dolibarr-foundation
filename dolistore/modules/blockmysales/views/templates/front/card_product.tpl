@@ -27,18 +27,20 @@
 			<div id="productcard_tabs-1">
 				<table width="100%" border="0" cellspacing="2" cellpadding="0">
 					<tr bgcolor="#CCCCCC">
-						<td nowrap="nowrap"><b>{l s='Nb' mod='blockmysales'}</b></td>
+						<td nowrap="nowrap"><b>{l s='#' mod='blockmysales'}</b></td>
+						<td nowrap="nowrap"><b>{l s='ID Order' mod='blockmysales'}</b></td>
 						<td nowrap="nowrap"><b>{l s='Name' mod='blockmysales'}</b></td>
 						<td nowrap="nowrap" align="center"><b>{l s='Date' mod='blockmysales'}</b></td>
 						{if $product_id == 'all'}
 							<td nowrap="nowrap"><b>{l s='Product' mod='blockmysales'}</b></td>
 						{/if}
-						<td nowrap="nowrap"><b>{l s='Amount (excl tax)' mod='blockmysales'}</b></td>
+						<td nowrap="nowrap"><b>{l s='Amount excl tax' mod='blockmysales'}<br>{l s='(in parenthesis, amount without discount)' mod='blockmysales'}</b></td>
 					</tr>
 					{if $sales}
 						{foreach from=$sales key=id item=sale}
 							<tr bgcolor="{$sale.colorTab}">
 								<td>{$sale.sale_number}</td>
+								<td>{$sale.id_order}</td>
 								<td>
 									<b>{$sale.lastname} {$sale.firstname} {if $sale.customer_country}({$sale.customer_country}){else}{l s='Unknown' mod='blockmysales'}{/if}</b>
 									<br>({$sale.email})
@@ -48,7 +50,7 @@
 								{if $product_id == 'all'}
 									<td>{$sale.sale_product_name}</td>
 								{/if}
-								<td align="right">
+								<td align="right"><!-- amount for this product/sell -->
 									{if !$sale.sale_refunded}
 										{$sale.sale_amountearnedunit}&#8364; {if $sale.sale_amount_ht}({$sale.sale_amount_ht}&#8364;){/if}
 									{else}
@@ -58,7 +60,7 @@
 							</tr>
 						{/foreach}
 						<tr bgcolor="{$colorTab}">
-							<td colspan="{if $product_id == 'all'}4{else}3{/if}">{l s='Total excl taxes' mod='blockmysales'}</td>
+							<td colspan="{if $product_id == 'all'}5{else}4{/if}">{l s='Total excl taxes' mod='blockmysales'}</td>
 							<td align="right">{$totalamountearned}&#8364;</td>
 						</tr>
 					{/if}

@@ -435,7 +435,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									$soapclient->decodeUTF8(false);
 								}
 								$parameters = array('authentication'=>$authentication,'id'=>$socid,'ref'=>'');
-								//prestalog("Call method ".$WS_METHOD." for socid=".$socid);
+								BlockMySales::prestalog("Call method ".$WS_METHOD." for socid=".$socid);
 								$result = $soapclient->call($WS_METHOD,$parameters);
 								if (! $result)
 								{

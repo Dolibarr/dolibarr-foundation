@@ -139,7 +139,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							ROUND(od.product_price, 5) as amount_ht,
 							ROUND(od.product_price * (100 + od.tax_rate) / 100, 2) as amount_ttc,
 							od.reduction_percent, od.reduction_amount, od.product_quantity, od.product_quantity_refunded,
-							o.date_add, o.valid
+							o.id_order, o.date_add, o.valid
 							FROM "._DB_PREFIX_."customer as c, "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 							WHERE o.id_order = od.id_order AND c.id_customer = o.id_customer";
 					if ($product_id == 'all' || $product_id == 'download') $query.=" AND od.product_id IN (".$id_product_list.")";
@@ -204,7 +204,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								}
 								else
 								{
-									$csvlines.= $this->module->l('Refunded', 'blockmysales').";";
+									$csvlines.= $this->module->l('RefundedOrCancelled', 'blockmysales').";";
 								}
 								if (!$usebr)
 									$csvlines.= "\r\n";
@@ -236,6 +236,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$sales[$i] = $subrow;
 
 								$sales[$i] = array_merge($sales[$i], array('customer_country' => BlockMySales::getCustomerCountry($id_lang, $subrow['id_customer'])));
+								$sales[$i] = array_merge($sales[$i], array('id_order' => $subrow['id_order']));
 
 								if ($colorTabNbr%2)
 									$sales[$i] = array_merge($sales[$i], array('colorTab' => "#ffffff"));
@@ -250,19 +251,23 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$refunded=false;
 								if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 								{
+									$qtyvalidated = ($subrow['product_quantity'] - $subrow['product_quantity_refunded']);
+
 									$amountearnedunit=(float) ($subrow['amount_ht']-$subrow['reduction_amount']+0);
 									if ($subrow['reduction_percent'] > 0) $amountearnedunit=round($amountearnedunit*(100-$subrow['reduction_percent'])/100,5);
-									$amountearned=$amountearnedunit*$subrow['product_quantity'];
+									//$amountearned=$amountearnedunit*($subrow['product_quantity']);
+									$amountearned=$amountearnedunit*$qtyvalidated;
+									//if ($subrow['id_customer'] == 9824) var_dump($amountearned);
 
 									$totalamountearned+=$amountearned;
 
-									$sales[$i] = array_merge($sales[$i], array('product_quantity' => $subrow['product_quantity']));
-									$totalamountearnedunit = ($subrow['product_quantity'] > 1 ? $amountearnedunit * $subrow['product_quantity'] : $amountearnedunit);
+									$sales[$i] = array_merge($sales[$i], array('product_quantity' => $qtyvalidated));
+									$totalamountearnedunit = ($qtyvalidated > 1 ? $amountearnedunit * $qtyvalidated : $amountearnedunit);
 									$sales[$i] = array_merge($sales[$i], array('sale_amountearnedunit' => round($totalamountearnedunit,5)));
 
 									if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0)
 									{
-										$totalamountunit = ($subrow['product_quantity'] > 1 ? $subrow['amount_ht'] * $subrow['product_quantity'] : $subrow['amount_ht']);
+										$totalamountunit = ($qtyvalidated > 1 ? $subrow['amount_ht'] * $qtyvalidated : $subrow['amount_ht']);
 										$sales[$i] = array_merge($sales[$i], array('sale_amount_ht' => ($totalamountunit+0)));
 									}
 									else
