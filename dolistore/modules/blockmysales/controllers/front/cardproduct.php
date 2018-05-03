@@ -180,6 +180,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							foreach ($subresult AS $subrow)
 							{
 								$i+=$subrow['product_quantity'];
+
 								$csvlines.= ($subrow['product_quantity']>1?($i+1-$subrow['product_quantity']).'-':'').$i.";";
 								$csvlines.= '"'.$subrow['lastname'].' '.$subrow['firstname'].'";';
 								$csvlines.= $subrow['cust_date_add'].";";
@@ -191,16 +192,25 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$csvlines.= '"'.$arraylistofproducts[$subrow['product_id']]['reference'].'";';
 								if (($subrow['product_quantity'] - $subrow['product_quantity_refunded']) > 0 && $subrow["valid"] == 1)
 								{
+									$qtyvalidated = ($subrow['product_quantity'] - $subrow['product_quantity_refunded']);
+
 									$amountearnedunit=(float) ($subrow['amount_ht']-$subrow['reduction_amount']+0);
 									if ($subrow['reduction_percent'] > 0) $amountearnedunit=round($amountearnedunit*(100-$subrow['reduction_percent'])/100,5);
-									$amountearned=$amountearnedunit*$subrow['product_quantity'];
+									//$amountearned=$amountearnedunit*$subrow['product_quantity'];
+									$amountearned=$amountearnedunit*$qtyvalidated;
+									//if ($subrow['id_customer'] == 9824) var_dump($amountearned);
 
 									$totalamountearned+=$amountearned;
 
 									$csvlines.= $amountearned.";";
 
-									if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0) $csvlines.= round($amountearnedunit,5).' ('.($subrow['amount_ht']+0).')';
-									else $csvlines.= round($amountearnedunit,5).($subrow['product_quantity']>1?' x'.$subrow['product_quantity']:'');
+									if ($subrow['reduction_amount'] > 0 || $subrow['reduction_percent'] > 0)
+									{
+										$totalamountunit = ($qtyvalidated > 1 ? $subrow['amount_ht'] * $qtyvalidated : $subrow['amount_ht']);
+										$csvlines.= round($amountearnedunit,5).' ('.($totalamountunit+0).')';
+									}
+									else
+										$csvlines.= round($amountearnedunit,5);
 								}
 								else
 								{
@@ -217,7 +227,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 
 							// To report result as a new csv page:
 							header("Content-type: text/csv");
-							header("Content-Disposition: attachment; filename=list_of_sells_cid_".$customer_id.".csv");
+							header("Content-Disposition: attachment; filename=list_of_sales_cid_".$customer_id."-".strftime(time(), '%F').".csv");
 							header("Pragma: no-cache");
 							header("Expires: 0");
 
