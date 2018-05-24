@@ -1,3 +1,4 @@
+								<!-- form_product.tpl -->
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>

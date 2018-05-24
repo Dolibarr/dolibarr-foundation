@@ -84,9 +84,12 @@
 								</tr>
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Ref module/product:' mod='blockmysales'}</td>
-									<td>{$product.reference}</td>
+									<td>{$product.reference}
+									<input name="ref_p" type="hidden" value="{$product.reference}">
+									</td>
 								</tr>
 								{include file="$ps_bms_templates_dir/form_product.tpl"}
+								<!-- Last line with hidden vars -->
 								<tr>
 									<td>
 										<table width="100%" border="0" cellspacing="10" cellpadding="0">
