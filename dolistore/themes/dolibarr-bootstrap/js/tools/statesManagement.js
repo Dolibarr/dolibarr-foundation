@@ -25,6 +25,7 @@
 //global variables
 var countriesNeedIDNumber = [];
 var countriesNeedZipCode = [];
+var countriesPS = [];
 
 $(document).ready(function(){
 	setCountries();
@@ -39,9 +40,9 @@ $(document).ready(function(){
 
 function setCountries()
 {
+	console.log("setCountries");
 	if (typeof countries !== 'undefined' && countries)
 	{
-		var countriesPS = [];
 	    for (var i in countries)
 		{
 			var id_country = countries[i]['id_country'];
@@ -54,10 +55,19 @@ function setCountries()
 			if (typeof countries[i]['need_identification_number'] !== 'undefined' && parseInt(countries[i]['need_identification_number']) > 0)
 				countriesNeedIDNumber.push(parseInt(countries[i]['id_country']));
 			if (typeof countries[i]['need_zip_code'] !== 'undefined' && parseInt(countries[i]['need_zip_code']) > 0)
+			{
 				countriesNeedZipCode[parseInt(countries[i]['id_country'])] = countries[i]['zip_code_format'];
+			}
 		}
 	}
-	countries =  countriesPS;
+	// @CHANGE LDR Comment this to avoid to overwrite the js countries array
+	//countries =  countriesPS;
+	//console.log("countries");
+	//console.log(countries);
+	//console.log("countriesPS");
+	//console.log(countriesPS);
+	//console.log("countriesNeedZipCode");
+	//console.log(countriesNeedZipCode);
 }
 
 function bindCheckbox()
@@ -122,8 +132,8 @@ function bindStateInputAndUpdate()
 function updateState(suffix)
 {
 	$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')+' option:not(:first-child)').remove();
-	if (typeof countries !== 'undefined')
-		var states = countries[parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val())];
+	if (typeof countriesPS !== 'undefined')
+		var states = countriesPS[parseInt($('#id_country' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).val())];
 	if (typeof states !== 'undefined')
 	{
 		$(states).each(function(key, item){
