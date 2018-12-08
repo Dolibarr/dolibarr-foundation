@@ -635,7 +635,7 @@ class BlockMySales extends Module
                 if (strlen($originalfilename) > 32)
                 {
                         $error++;
-                        $return['errormsg'] = $this->l('Name of file must not be longer than 32 characters,  including the "module_" prefix, the version suffix and the extension (".zip" for example) !');
+                        $return['errormsg'] = $this->l('Name of file must not be longer than 32 characters,  including the prefix ("module_", "theme_" or "website_"), the version suffix and the extension (".zip" for example) !');
                 }
 
                 self::prestalog("Upload or reupload file " . $originalfilename);
