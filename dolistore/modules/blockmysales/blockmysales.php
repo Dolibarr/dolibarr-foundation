@@ -681,11 +681,13 @@ class BlockMySales extends Module
                 {
                         //if (! preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
                         if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
-                                        && ! preg_match('/^theme([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename))
+                            && ! preg_match('/^theme([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
+                        	&& ! preg_match('/^website([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
+                        	)
                         {
                                 $return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
-                                $return['errormsg'].= $this->l('Package file name must match module_mypackage-x.y(.z).zip').'<br>';
-                                $return['errormsg'].= $this->l('Try to build your package with a recent Dolibarr official tool (\'htdocs/build/makepack-dolibarrmodule.pl\' or \'htdocs/build/makepack-dolibarrtheme.pl\' for themes)');
+                                $return['errormsg'].= $this->l('Package file name must match (module|theme|website)_mypackagename-x.y(.z).zip').'<br>';
+                                $return['errormsg'].= $this->l('Try to build your package with a recent Dolibarr official tool (\'htdocs/build/makepack-dolibarrmodule.pl\', or \'htdocs/build/makepack-dolibarrtheme.pl\' for themes, or use the "Export website" button for a website template)');
                                 $return['upload'] = -1;
                                 $error++;
                         }
