@@ -14,7 +14,7 @@
    height="300"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="like_counter.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/like_counter_33333.png"
    inkscape:export-xdpi="90"
@@ -160,7 +160,7 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -172,7 +172,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -202,15 +202,15 @@
        width="261.806" />
     <text
        xml:space="preserve"
-       style="font-size:91.90211487px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="38.128429"
        y="817.00366"
        id="text3009"
-       sodipodi:linespacing="125%"
        transform="scale(0.91809854,1.0892077)"><tspan
          sodipodi:role="line"
          id="tspan3011"
          x="38.128429"
-         y="817.00366">33333+</tspan></text>
+         y="817.00366"
+         style="font-size:91.90211487px;line-height:1.25;font-family:sans-serif">33333+</tspan></text>
   </g>
 </svg>

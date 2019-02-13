@@ -14,8 +14,8 @@
    height="480px"
    id="svg2997"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="splash.png">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="dolibarr_livecd_splash.svg">
   <defs
      id="defs2999">
     <linearGradient
@@ -94,10 +94,10 @@
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
-     inkscape:window-y="24"
+     inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata3002">
@@ -107,7 +107,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -130,9 +130,9 @@
          id="text2828"
          y="120.68716"
          x="78.46476"
-         style="font-size:176.4541626px;font-style:normal;font-weight:normal;fill:url(#linearGradient3076);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:0.90389007;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882353;stroke-dasharray:none;display:inline;font-family:Bitstream Vera Sans"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';display:inline;fill:url(#linearGradient3076);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:0.90389007;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.25882353"
          xml:space="preserve"><tspan
-           style="font-size:103.18126678px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient3076);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:0.90389007;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882353;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:103.18126678px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient3076);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:0.90389007;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.25882353"
            y="120.68716"
            x="78.46476"
            id="tspan2830"

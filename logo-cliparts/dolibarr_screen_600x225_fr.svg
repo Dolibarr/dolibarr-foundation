@@ -14,7 +14,7 @@
    height="225"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="dolibarr_screen_600x225_fr.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/dolibarr_screen_600x225_fr.png"
    inkscape:export-xdpi="90"
@@ -105,19 +105,6 @@
        id="linearGradient4518"
        xlink:href="#linearGradient4436-8"
        inkscape:collect="always" />
-    <filter
-       inkscape:collect="always"
-       id="filter4635"
-       x="-0.053780679"
-       width="1.1075613"
-       y="-0.12355941"
-       height="1.2471188"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="8.2169115"
-         id="feGaussianBlur4637" />
-    </filter>
     <linearGradient
        y2="282.62598"
        x2="501.03568"
@@ -172,19 +159,6 @@
        inkscape:collect="always" />
     <filter
        inkscape:collect="always"
-       id="filter4727"
-       x="-0.063393176"
-       width="1.1267864"
-       y="-0.14564382"
-       height="1.2912875"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="9.6855625"
-         id="feGaussianBlur4729" />
-    </filter>
-    <filter
-       inkscape:collect="always"
        id="filter4781"
        x="-0.072237663"
        width="1.1444753"
@@ -195,19 +169,6 @@
          inkscape:collect="always"
          stdDeviation="11.098135"
          id="feGaussianBlur4783" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter4838"
-       x="-0.052549697"
-       width="1.1050994"
-       y="-0.12073127"
-       height="1.2414625"
-       color-interpolation-filters="sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="8.0288354"
-         id="feGaussianBlur4840" />
     </filter>
     <linearGradient
        inkscape:collect="always"
@@ -596,7 +557,7 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -608,7 +569,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -635,43 +596,40 @@
        transform="matrix(0,-1,-1,0,0,0)" />
     <text
        xml:space="preserve"
-       style="font-size:31.98643875px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="24.974392"
        y="687.84991"
        id="text4750"
-       sodipodi:linespacing="125%"
        transform="scale(0.78880726,1.2677368)"><tspan
          sodipodi:role="line"
          id="tspan4752"
          x="24.974392"
          y="687.84991"
-         style="stroke:none">Dolibarr ERP-CRM, gestionnaire d'entreprise</tspan></text>
+         style="font-size:31.98643875px;line-height:1.25;font-family:sans-serif;stroke:none">Dolibarr ERP-CRM, gestionnaire d'entreprise</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:31.98643875px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.2724014;fill:#000000;fill-opacity:0.43529412;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:0.2724014;fill:#000000;fill-opacity:0.43529412;stroke:none"
        x="26.838272"
        y="689.75293"
        id="text4750-3"
-       sodipodi:linespacing="125%"
        transform="scale(0.78880726,1.2677368)"><tspan
          sodipodi:role="line"
          id="tspan4752-6"
          x="26.838272"
          y="689.75293"
-         style="fill:#000000;fill-opacity:0.43529412;stroke:none">Dolibarr ERP-CRM, gestionnaire d'entreprise</tspan></text>
+         style="font-size:31.98643875px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:0.43529412;stroke:none">Dolibarr ERP-CRM, gestionnaire d'entreprise</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:21.06674576px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3824);fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3824);fill-opacity:1;stroke:none"
        x="64.659088"
        y="1143.8983"
        id="text3045"
-       sodipodi:linespacing="125%"
        transform="scale(1.1015757,0.90779054)"><tspan
          sodipodi:role="line"
          id="tspan3047"
          x="64.659088"
          y="1143.8983"
-         style="fill:url(#linearGradient3824);fill-opacity:1">La solution simple de gestion en ligne</tspan></text>
+         style="font-size:21.06674576px;line-height:1.25;font-family:sans-serif;fill:url(#linearGradient3824);fill-opacity:1">La solution simple de gestion en ligne</tspan></text>
     <rect
        style="fill:url(#linearGradient3255);fill-opacity:1;fill-rule:nonzero;stroke-width:1.29999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect4434-9-8"

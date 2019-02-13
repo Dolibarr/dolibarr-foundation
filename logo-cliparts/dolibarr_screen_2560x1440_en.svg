@@ -14,7 +14,7 @@
    height="1440"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="dolibarr_screen_2560x1440_en.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/dolibarr_screen_2560x1440_en.png"
    inkscape:export-xdpi="90"
@@ -213,7 +213,7 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -225,7 +225,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -318,29 +318,27 @@
        transform="matrix(0,-1,-1,0,0,0)" />
     <text
        xml:space="preserve"
-       style="font-size:86.42285919px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="163.8286"
        y="-160.43587"
        id="text4750"
-       sodipodi:linespacing="125%"
        transform="scale(0.78922226,1.2670702)"><tspan
          sodipodi:role="line"
          id="tspan4752"
          x="163.8286"
          y="-160.43587"
-         style="stroke:none">OpenSource software for business</tspan></text>
+         style="font-size:86.42285919px;line-height:1.25;font-family:sans-serif;stroke:none">OpenSource software for business</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:86.42285919px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.2724014;fill:#000000;fill-opacity:0.43529412;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:0.2724014;fill:#000000;fill-opacity:0.43529412;stroke:none"
        x="166.81067"
        y="-152.82077"
        id="text4750-3"
-       sodipodi:linespacing="125%"
        transform="scale(0.78922226,1.2670702)"><tspan
          sodipodi:role="line"
          id="tspan4752-6"
          x="166.81067"
          y="-152.82077"
-         style="fill:#000000;fill-opacity:0.43529412;stroke:none">OpenSource software for business...</tspan></text>
+         style="font-size:86.42285919px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:0.43529412;stroke:none">OpenSource software for business...</tspan></text>
   </g>
 </svg>

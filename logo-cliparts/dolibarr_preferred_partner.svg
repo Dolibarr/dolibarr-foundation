@@ -18,7 +18,7 @@
    viewBox="0 0 1052.3622 744.09445"
    enable-background="new 0 0 841.89 595.28"
    xml:space="preserve"
-   inkscape:version="0.48.1 r9760"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="dolibarr_preferred_partner.svg"
    inkscape:export-filename="/media/DATA/Mes Developpements/dolibarrasso/logo/dolibarr_preferred_partner.png"
    inkscape:export-xdpi="90"
@@ -42,8 +42,8 @@
    guidetolerance="10"
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
-   inkscape:window-width="1276"
-   inkscape:window-height="976"
+   inkscape:window-width="1920"
+   inkscape:window-height="1023"
    id="namedview3179"
    showgrid="false"
    inkscape:zoom="0.70710678"
@@ -300,16 +300,17 @@
      inkscape:connector-curvature="0"
      style="fill:#656464" /></g><text
    xml:space="preserve"
-   style="font-size:72.53908539px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#828287;fill-opacity:1;stroke:none;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#828287;fill-opacity:1;stroke:none"
    x="450.16837"
    y="125.93504"
    id="text3987-9"
-   sodipodi:linespacing="125%"
    transform="scale(0.95907144,1.0426752)"><tspan
      sodipodi:role="line"
      id="tspan3989-3"
      x="450.16837"
-     y="125.93504">Dolibarr</tspan></text>
+     y="125.93504"
+     style="font-size:72.53908539px;line-height:1.25">Dolibarr</tspan></text>
+
 
 
 </g>

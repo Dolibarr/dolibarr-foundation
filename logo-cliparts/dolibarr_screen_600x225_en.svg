@@ -14,8 +14,8 @@
    height="225"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="dolibarr_screen_600x225.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="dolibarr_screen_600x225_en.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/dolibarr_screen_600x225.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -356,7 +356,7 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -368,7 +368,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -410,43 +410,40 @@
        transform="matrix(0,-1,-1,0,0,0)" />
     <text
        xml:space="preserve"
-       style="font-size:27.13662529px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="34.388462"
        y="649.21118"
        id="text4750"
-       sodipodi:linespacing="125%"
        transform="scale(0.74734321,1.3380733)"><tspan
          sodipodi:role="line"
          id="tspan4752"
          x="34.388462"
          y="649.21118"
-         style="stroke:none">Dolibarr ERP-CRM, OpenSource software for business</tspan></text>
+         style="font-size:27.13662529px;line-height:1.25;font-family:sans-serif;stroke:none">Dolibarr ERP-CRM, OpenSource software for business</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:27.13662529px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.2724014;fill:#000000;fill-opacity:0.43529412;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:0.2724014;fill:#000000;fill-opacity:0.43529412;stroke:none"
        x="37.511581"
        y="649.31226"
        id="text4750-3"
-       sodipodi:linespacing="125%"
        transform="scale(0.74734321,1.3380733)"><tspan
          sodipodi:role="line"
          id="tspan4752-6"
          x="37.511581"
          y="649.31226"
-         style="fill:#000000;fill-opacity:0.43529412;stroke:none">Dolibarr ERP-CRM, OpenSource software for business...</tspan></text>
+         style="font-size:27.13662529px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:0.43529412;stroke:none">Dolibarr ERP-CRM, OpenSource software for business...</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:21.06674576px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3824);fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3824);fill-opacity:1;stroke:none"
        x="64.659088"
        y="1146.1014"
        id="text3045"
-       sodipodi:linespacing="125%"
        transform="scale(1.1015757,0.90779054)"><tspan
          sodipodi:role="line"
          id="tspan3047"
          x="64.659088"
          y="1146.1014"
-         style="fill:url(#linearGradient3824);fill-opacity:1">Easy to install, easy to use ERP &amp; CRM</tspan></text>
+         style="font-size:21.06674576px;line-height:1.25;font-family:sans-serif;fill:url(#linearGradient3824);fill-opacity:1">Easy to install, easy to use ERP &amp; CRM</tspan></text>
     <rect
        style="opacity:0.6;fill:#000000;fill-opacity:0.42460315;fill-rule:nonzero;stroke-width:1.29999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;display:inline;filter:url(#filter4838-7)"
        id="rect4478-4"

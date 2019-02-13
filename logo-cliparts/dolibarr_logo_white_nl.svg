@@ -14,7 +14,7 @@
    height="600px"
    id="svg3450"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="dolibarr_logo_white_nl.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo/dolibarr_logo_white_nl.png"
    inkscape:export-xdpi="41.850452"
@@ -72,7 +72,7 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -121,7 +121,7 @@
      style="display:inline">
     <text
        xml:space="preserve"
-       style="font-size:886.12506104px;font-style:normal;font-weight:normal;opacity:0.16296297;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter8715);font-family:Bitstream Vera Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';opacity:0.16296297;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter8715)"
        x="537.1402"
        y="887.85065"
        id="text2828-6"
@@ -130,10 +130,10 @@
          id="tspan2830-9"
          x="537.1402"
          y="887.85065"
-         style="font-size:518.16009521px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:518.16009521px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:338.03680420000000595px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160051999999998;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882354;stroke-dasharray:none;font-family:Bitstream Vera Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160052;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.25882353"
        x="42.971191"
        y="357.85651"
        id="text2828"
@@ -142,27 +142,25 @@
          id="tspan2830"
          x="42.971191"
          y="357.85651"
-         style="font-size:197.66644286999999736px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160051999999998;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882354;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:197.66644287px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.73160052;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.25882353">Dolibarr</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:47.99960709px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.25853133;stroke-opacity:0.19607843;font-family:Arial;-inkscape-font-specification:Arial"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.25853133;stroke-opacity:0.19607843"
        x="672.18494"
        y="210.52312"
        id="text5484"
-       transform="scale(0.83111204,1.2032072)"
-       sodipodi:linespacing="100%"><tspan
-         style="font-size:47.99960709px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.25853133;stroke-opacity:0.19607843;font-family:Arial;-inkscape-font-specification:Arial"
+       transform="scale(0.83111204,1.2032072)"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:47.99960709px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.25853133;stroke-opacity:0.19607843"
          sodipodi:role="line"
          id="tspan5486"
          x="672.18494"
          y="210.52312">ERP/CRM</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:55.1278801px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.37819695;stroke-opacity:0.39607843;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.37819695;stroke-opacity:0.39607843"
        x="156.40431"
        y="592.19281"
        id="text2999"
-       sodipodi:linespacing="125%"
        transform="scale(1.3959571,0.7163544)"
        inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_logo_white_pt.png"
        inkscape:export-xdpi="41"
@@ -171,6 +169,6 @@
          id="tspan3001"
          x="156.40431"
          y="592.19281"
-         style="stroke-width:1.37819695">Nederland</tspan></text>
+         style="font-size:55.1278801px;line-height:1.25;font-family:sans-serif;stroke-width:1.37819695">Nederland</tspan></text>
   </g>
 </svg>

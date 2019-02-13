@@ -11,10 +11,10 @@
    id="svg2717"
    viewBox="0 0 733.25 530.22"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    width="100%"
    height="100%"
-   sodipodi:docname="teacher-male.svg">
+   sodipodi:docname="formation.svg">
   <defs
      id="defs8">
     <linearGradient
@@ -80,7 +80,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      id="namedview6"
      showgrid="false"
      inkscape:zoom="0.44509826"
@@ -108,7 +108,7 @@
             <dc:title>Openclipart</dc:title>
           </cc:Agent>
         </dc:publisher>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:date>2013-10-19T21:04:51</dc:date>
         <dc:description>teaching, teacher male pictogram</dc:description>
         <dc:source>https://openclipart.org/detail/185205/teaching-male-by-ousia-185205</dc:source>
@@ -137,7 +137,7 @@
   </metadata>
   <text
      xml:space="preserve"
-     style="font-size:231.12361145px;font-style:normal;font-weight:normal;fill:url(#linearGradient3023);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.18393552;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882353;stroke-dasharray:none;display:inline;font-family:Bitstream Vera Sans"
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';display:inline;fill:url(#linearGradient3023);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.18393552;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.25882353"
      x="279.62494"
      y="160.80649"
      id="text2828"
@@ -146,16 +146,15 @@
        id="tspan2830"
        x="279.62494"
        y="160.80649"
-       style="font-size:135.1491394px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient3023);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.18393552;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.25882353;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:135.1491394px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient3023);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:1.18393552;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.25882353">Dolibarr</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:32.81844711px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.8604871;stroke-opacity:0.19607843;display:inline;font-family:Arial;-inkscape-font-specification:Arial"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.8604871;stroke-opacity:0.19607843"
      x="749.23022"
      y="71.479042"
      id="text5484"
-     transform="scale(0.76708594,1.3036349)"
-     sodipodi:linespacing="100%"><tspan
-       style="font-size:32.81844711px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.8604871;stroke-opacity:0.19607843;font-family:Arial;-inkscape-font-specification:Arial"
+     transform="scale(0.76708594,1.3036349)"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32.81844711px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.8604871;stroke-opacity:0.19607843"
        sodipodi:role="line"
        id="tspan5486"
        x="749.23022"

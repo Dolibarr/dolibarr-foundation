@@ -14,8 +14,8 @@
    height="297mm"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="dolibarr_124x124.svg">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="dolibarr_124x124_all.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -49,7 +49,7 @@
        x2="330.96988"
        y2="289.19193"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-129.5163,-666.48391)" />
+       gradientTransform="translate(-115.54164,-631.54725)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3767-1"
@@ -364,7 +364,7 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1023"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
@@ -376,7 +376,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -389,25 +389,24 @@
        id="rect3765"
        width="124.24876"
        height="124.24876"
-       x="76.554825"
-       y="-439.41635"
-       transform="matrix(0,1,-1,0,0,0)"
+       x="90.529488"
+       y="-404.47971"
+       transform="rotate(90)"
        inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_124x124.png"
        inkscape:export-xdpi="90.544151"
        inkscape:export-ydpi="90.544151" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-       x="330.19846"
-       y="179.6626"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
+       x="295.51547"
+       y="193.73947"
        id="text3775"
-       sodipodi:linespacing="125%"
-       transform="scale(1.0073139,0.99273916)"><tspan
+       transform="scale(1.0073139,0.99273918)"><tspan
          sodipodi:role="line"
          id="tspan3777"
-         x="330.19846"
-         y="179.6626"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         x="295.51547"
+         y="193.73947"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <rect
        style="fill:url(#linearGradient3837);fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="rect3765-7"
@@ -421,17 +420,16 @@
        inkscape:export-ydpi="89.819794" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="107.39321"
        y="363.25"
        id="text3775-8"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"><tspan
          sodipodi:role="line"
          id="tspan3777-1"
          x="107.39321"
          y="363.25"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <rect
        style="fill:url(#linearGradient3877);fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="rect3765-7-9"
@@ -445,17 +443,16 @@
        inkscape:export-ydpi="90.544151" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="298.14093"
        y="363.96951"
        id="text3775-8-7"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"><tspan
          sodipodi:role="line"
          id="tspan3777-1-8"
          x="298.14093"
          y="363.96951"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <rect
        style="fill:url(#linearGradient3917);fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="rect3765-7-9-1"
@@ -469,17 +466,16 @@
        inkscape:export-ydpi="90.544151" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="486.76135"
        y="362.53049"
        id="text3775-8-7-1"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"><tspan
          sodipodi:role="line"
          id="tspan3777-1-8-6"
          x="486.76135"
          y="362.53049"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <image
        y="359.71933"
        x="182.71428"
@@ -514,17 +510,16 @@
        inkscape:export-ydpi="90.544151" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="108.1023"
        y="507.15198"
        id="text3775-8-8"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"><tspan
          sodipodi:role="line"
          id="tspan3777-1-6"
          x="108.1023"
          y="507.15198"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <rect
        style="fill:url(#linearGradient4034);fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="rect3765-7-6-6"
@@ -538,17 +533,16 @@
        inkscape:export-ydpi="90.544151" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="299.55917"
        y="508.59097"
        id="text3775-8-8-5"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"><tspan
          sodipodi:role="line"
          id="tspan3777-1-6-7"
          x="299.55917"
          y="508.59097"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <rect
        style="fill:url(#linearGradient4077);fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="rect3765-7-6-6-5"
@@ -562,17 +556,16 @@
        inkscape:export-ydpi="90.544151" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="489.59781"
        y="510.74948"
        id="text3775-8-8-5-3"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"><tspan
          sodipodi:role="line"
          id="tspan3777-1-6-7-6"
          x="489.59781"
          y="510.74948"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <image
        y="501.86218"
        x="184.14287"
@@ -607,11 +600,10 @@
        inkscape:export-ydpi="89.819817" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="108.10232"
        y="652.49298"
        id="text3775-8-8-5-3-1"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"
        inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_124x124_gr.png"
        inkscape:export-xdpi="89.819817"
@@ -620,7 +612,7 @@
          id="tspan3777-1-6-7-6-0"
          x="108.10232"
          y="652.49298"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <rect
        style="fill:#0d5eaf"
        y="645.7179"
@@ -652,11 +644,10 @@
        inkscape:export-ydpi="185.42999" />
     <text
        xml:space="preserve"
-       style="font-size:119.92250824px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="298.66068"
        y="653.43939"
        id="text3775-8-8-5-3-1-0"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073139,0.9927392)"
        inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo/dolibarr_256x256_ch.png"
        inkscape:export-xdpi="185.42999"
@@ -665,7 +656,7 @@
          id="tspan3777-1-6-7-6-0-4"
          x="298.66068"
          y="653.43939"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <image
        y="646.58429"
        x="375.30954"
@@ -689,11 +680,10 @@
        inkscape:export-ydpi="189.10001" />
     <text
        xml:space="preserve"
-       style="font-size:117.60074615px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
        x="487.15442"
        y="657.94434"
        id="text3775-8-8-5-2"
-       sodipodi:linespacing="125%"
        transform="scale(1.0073138,0.9927393)"
        inkscape:export-filename="/home/ldestailleur/git/foundation/logo/dolibarr_256x256_ma.png"
        inkscape:export-xdpi="189.10001"
@@ -702,7 +692,7 @@
          id="tspan3777-1-6-7-2"
          x="487.15442"
          y="657.94434"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:Bauhaus 93;-inkscape-font-specification:'Bauhaus 93,'">D</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:117.60074615px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1">D</tspan></text>
     <image
        y="648.89276"
        x="566.3515"
