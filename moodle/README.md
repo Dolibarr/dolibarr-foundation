@@ -1,1 +1,1 @@
-Files used for the DoliMOOC service.
+Files used for the Dolibarr Academy MOOC.
