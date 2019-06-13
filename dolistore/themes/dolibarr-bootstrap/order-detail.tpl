@@ -442,6 +442,7 @@
 		{l s='Message successfully sent'}
 	</p>
 	{/if}
+	<!--
 	<form action="{$link->getPageLink('order-detail', true)|escape:'html':'UTF-8'}" method="post" class="std" id="sendOrderMessage">
 		<h3 class="page-heading bottom-indent">{l s='Add a message'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
@@ -463,6 +464,7 @@
 			<button type="submit" name="submitMessage" class="button btn btn-default button-medium"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>
 		</div>
 	</form>
+	-->
 {else}
 <p class="alert alert-info"><i class="icon-info-sign"></i>{l s='You cannot return merchandise with a guest account'}</p>
 {/if}

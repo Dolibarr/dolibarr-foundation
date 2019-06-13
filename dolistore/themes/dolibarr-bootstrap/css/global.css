@@ -237,7 +237,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   line-height: 1.42857;
-  color: #777777;
+  color: #111111;
   background-color: white; }
 
 input,
@@ -5250,7 +5250,7 @@ body {
   height: 100%;
   line-height: 18px;
   font-size: 13px;
-  color: #777777; }
+  color: #111111; }
   body.content_only {
     background: none; }
 
@@ -6209,7 +6209,7 @@ h3.page-product-heading {
   margin: 0 0 20px;
   position: relative;
   border: 1px solid #d6d4d4;
-  border-bottom: none;
+  /*border-bottom: none;*/
   background: #fbfbfb; }
 
 ul.footer_links {
