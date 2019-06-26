@@ -192,9 +192,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							// Calculate totalamount for this product
 							$query = "SELECT SUM( od.product_quantity ) as nbra,
-									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid, 2) ) as amount_ht,
-									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid * (100 + od.tax_rate) / 100, 2) ) as amount_ttc,
-									sum( (od.product_quantity - od.product_quantity_refunded) * o.valid) as qtysold,
+									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * GREATEST(0, (CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED))) * o.valid, 2) ) as amount_ht,
+									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * GREATEST(0, (CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED))) * o.valid * (100 + od.tax_rate) / 100, 2) ) as amount_ttc,
+									sum( GREATEST(0, (CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED))) * o.valid) as qtysold,
 									min( o.date_add ) as min_date";
 							$query.= "	FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o
 									WHERE od.product_id = ".$id_product."
@@ -742,7 +742,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						if ($create_flag > 0)
 						{
 							$url = $this->context->link->getModuleLink('blockmysales', 'cardproduct');
-							header('Location: '.$url.'?id_p='.$create_flag.'&tab=modify');
+							header('Location: '.$url.'?id_customer='.$customer_id.'&id_p='.$create_flag.'&tab=modify');
 							exit;
 						}
 						else
