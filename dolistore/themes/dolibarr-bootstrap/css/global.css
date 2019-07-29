@@ -8065,3 +8065,8 @@ p.payment_module.paypal a {
 	display: none;
 }
 
+.page-product-box img {
+    max-width: 100%;
+    height: auto;
+}
+
