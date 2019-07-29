@@ -6664,6 +6664,7 @@ div.star a:hover {
   background: none repeat scroll 0 0 lightyellow; }
 
 #page .rte {
+  padding: 0 !important;
   background: transparent none repeat scroll 0 0; }
 
 .listcomment {
@@ -8065,8 +8066,12 @@ p.payment_module.paypal a {
 	display: none;
 }
 
+.page-product-box > div > table {
+    width: 100% !important;
+}
 .page-product-box img {
     max-width: 100%;
     height: auto;
 }
+
 
