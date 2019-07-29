@@ -58,10 +58,10 @@ class BlockMySales extends Module
 
         public function installSql()
         {
-                $module_version = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `module_version` varchar(7)');
-                $dolibarr_min = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min` varchar(5)');
+                $module_version = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `module_version` varchar(15)');
+                $dolibarr_min = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min` varchar(6)');
                 $dolibarr_min_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min_status` tinyint(1) DEFAULT 0');
-                $dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(5)');
+                $dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
                 $dolibarr_max_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max_status` tinyint(1) DEFAULT 0');
                 $dolibarr_core_include = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_core_include` tinyint(1) DEFAULT 0');
 
