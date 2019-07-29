@@ -35,7 +35,7 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Module version:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="7" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
+										<input required="required" size="9" maxlength="15" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
@@ -49,7 +49,7 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Dolibarr min:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="5" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}3.1.x{/if}" type="text" />
+										<input required="required" size="9" maxlength="6" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}3.1.x{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
@@ -66,7 +66,7 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Dolibarr max:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="5" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}4.0.0{/if}" type="text" />
+										<input required="required" size="9" maxlength="6" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}4.0.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
