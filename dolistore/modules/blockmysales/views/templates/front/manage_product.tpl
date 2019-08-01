@@ -148,11 +148,13 @@
 					</p>
 					<p>
 						<div>
-						{if $remaintoreceive > 0 && $showremaintoreceive}
+						{if $showremaintoreceive}
 							<p>
 								<div>{l s='Minimum amount to claim payments for your country' mod='blockmysales'} (<strong>{$country}</strong>): <strong>{$minamount}</strong>&#8364;</div>
 								<div>{l s='Charge for change for your currency' mod='blockmysales'} (<strong>{$country}</strong>): <strong>{if $iscee}{l s='Free' mod='blockmysales'}{else}{l s='depends on your bank' mod='blockmysales'}{/if}</strong></div>
 							</p>
+						{/if}
+						{if $remaintoreceive > 0 && $showremaintoreceive}
 							<p>
 								{if $customer_id != 'all'}
 									<div>{l s='You can claim remained amount to pay by sending an invoice to' mod='blockmysales'} <b>Association Dolibarr, France</b>,</div>
