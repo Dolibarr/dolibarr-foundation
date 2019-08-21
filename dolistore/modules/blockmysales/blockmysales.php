@@ -597,6 +597,7 @@ class BlockMySales extends Module
         }
 
         /**
+         * checkProductOwner
          *
          * @param unknown $customer_id
          * @param unknown $product_id
@@ -619,7 +620,9 @@ class BlockMySales extends Module
         }
 
         /**
+         * Check the validity of a module (rules must match the one in htdocs/admin/modules
          *
+         * @return  array   Array of results
          */
         public function checkZipFile()
         {
@@ -672,21 +675,42 @@ class BlockMySales extends Module
                 if (! $error && preg_match('/(\.txt)$/i',$originalfilename) && ! preg_match('/(README)\.txt$/i',$originalfilename))
                 {
                         $return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
-                        $return['errormsg'].= $this->l('A .txt file must be named README.txt');
+                        $return['errormsg'].= $this->l('If submitted package is just a .txt file, it must be named README.txt');
                         $return['upload'] = -1;
                         $error++;
                 }
 
                 if (! $error && preg_match('/(\.zip)$/i',$originalfilename))
                 {
-                        //if (! preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
-                        if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
-                            && ! preg_match('/^theme([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
-                        	&& ! preg_match('/^website([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename)
+                        if (! preg_match('/^(module[a-zA-Z0-9]*|theme|website)_/', $originalfilename))
+                        {
+                            $return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
+                            $return['errormsg'].= $this->l('Package file name must start with "module_" for a Dolibarr Module, "moduleXxx_" for a module for software Xxx, "theme_" for a theme, or "website_" for a website.').'<br>';
+                            $return['errormsg'].= $this->l('Try to build your package with a recent Dolibarr official tool (\'htdocs/build/makepack-dolibarrmodule.pl\', or \'htdocs/build/makepack-dolibarrtheme.pl\' for themes, or use the "Export website" button for a website template)');
+                            $return['upload'] = -1;
+                            $error++;
+                        }
+
+                        if (! preg_match('/\-([0-9][0-9\.]*)\.zip$/i',$originalfilename))
+                        {
+                            $return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
+                            $return['errormsg'].= $this->l('Package file name must end with a version after a "-". For example -x.y.zip').'<br>';
+                            $return['errormsg'].= $this->l('Try to build your package with a recent Dolibarr official tool (\'htdocs/build/makepack-dolibarrmodule.pl\', or \'htdocs/build/makepack-dolibarrtheme.pl\' for themes, or use the "Export website" button for a website template)');
+                            $return['upload'] = -1;
+                            $error++;
+                        }
+
+                        // Example of allowed values:
+                        // module_mymodule-x.y.zip, moduleprestashop_mymodule-x.y.zip
+                        // theme_mytheme-x.y.zip
+                        // website_mytemplate-123456.zip
+                        if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
+                            && ! preg_match('/^theme_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
+                        	&& ! preg_match('/^website_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
                         	)
                         {
                                 $return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
-                                $return['errormsg'].= $this->l('Package file name must match (module|theme|website)_mypackagename-x.y(.z).zip').'<br>';
+                                $return['errormsg'].= $this->l('Package file name must match (module|moduleXxx|theme|website)_mypackagename-x.y(.z).zip').'<br>';
                                 $return['errormsg'].= $this->l('Try to build your package with a recent Dolibarr official tool (\'htdocs/build/makepack-dolibarrmodule.pl\', or \'htdocs/build/makepack-dolibarrtheme.pl\' for themes, or use the "Export website" button for a website template)');
                                 $return['upload'] = -1;
                                 $error++;
@@ -708,7 +732,7 @@ class BlockMySales extends Module
                         else
                         {
                                 $return['errormsg'] = $this->l('File can\'t be analyzed. Is it a true zip file ?').'<br>';
-                                $return['errormsg'].= $this->l('If you think this is an error, send your package by email at contact@dolibarr.org');
+                                $return['errormsg'].= $this->l('If you think this is an error, send your package by email at dolistore@dolibarr.org');
                                 $return['upload'] = -1;
                                 $error++;
                         }
@@ -751,12 +775,14 @@ class BlockMySales extends Module
                 self::prestalog("Validate zip file " . $originalfilename);
                 $subdir=basename($zipfile);
                 //$dir='/home/dolibarr/dolistore.com/tmp/'.$subdir;
-                $dir=sys_get_temp_dir().'/'.$subdir;
-                mkdir($dir);
+                $dir=sys_get_temp_dir().'/unzip-dir-'.$subdir;
+                mkdir($dir, 0777, true);
                 $zip->extractTo($dir.'/');
                 $zip->close();
 
-                // First we check if we need to change $dir (for zip that are module/htdocs/module instead of htdocs/module)
+                // Zip content of a module should be ./mymodule or ./htdocs/mymodule
+
+                // But we first we check if we need to change $dir (for zip that are ./module/htdocs/module instead of ./htdocs/module)
                 if (! $error && $dh = opendir($dir))
                 {
                         $nbofsubdirs=0;
@@ -774,18 +800,26 @@ class BlockMySales extends Module
                         closedir($dh);
                 }
 
+                // Now $dir contains root of zip, so mymodule or htdocs/mymodule
                 // Analyze files
                 $ismodule=$istheme=0;
-                if (is_dir($dir.'/scripts')) $ismodule='module';
-                if (is_dir($dir.'/htdocs/themes')) $istheme='theme';
-                //if (preg_match('/^module([_a-zA-Z0-9]*)_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename,$reg))
-                if (preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)([_a-zA-Z0-9]*)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename,$reg))
+
+                if (preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename,$reg))
                 {
                         $ismodule=$reg[2];
                         $extmoduleornot=$reg[1];
                         if ($extmoduleornot) $ismodule=0;
                 }
-                if (preg_match('/^theme_([_a-zA-Z0-9]+)\-([0-9]+)\.([0-9\.]+)(\.zip)$/i',$originalfilename,$reg)) $istheme=$reg[1];
+                if (preg_match('/^theme_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename,$reg)) $istheme=$reg[1];
+
+
+                self::prestalog("Now dir is the directory with root of the zip = ".$dir, LOG_DEBUG);
+
+                $dirmoduletheme = $dir.'/'.($ismodule?$ismodule:($istheme?$istheme:''));
+                if (is_dir($dir.'/htdocs')) $dirmoduletheme = $dir.'/htdocs/'.($ismodule?$ismodule:($istheme?$istheme:''));
+                $dirmodulethemeroot = dirname($dirmoduletheme);
+                self::prestalog("Now dirmodulethemeroot = dir where is the module dir = ".$dirmodulethemeroot." and dirmoduletheme = dir with name of the module = ".$dirmoduletheme, LOG_DEBUG);
+
                 if (! empty($ismodule) || ! empty($istheme))
                 {
                         self::prestalog("file ismodule=".$ismodule." istheme=".$istheme);
@@ -795,10 +829,10 @@ class BlockMySales extends Module
                                 $nbofsubdirs=0; $direrror='';
                                 while (($file = readdir($dh)) !== false)
                                 {
-                                        if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt') continue;
+                                        if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt' || $file == 'README.md') continue;
                                         self::prestalog("subdirs found for package:".$file);
                                         $nbofsubdirs++;
-                                        $alloweddirs=array('htdocs','docs','scripts','test','build',($ismodule?$ismodule:($istheme?$istheme:'')));
+                                        $alloweddirs=array('htdocs', 'docs', 'scripts', 'test', 'build', ($ismodule?$ismodule:($istheme?$istheme:'')));
                                         if (! in_array($file,$alloweddirs))
                                         {
                                                 $error++;
@@ -810,35 +844,42 @@ class BlockMySales extends Module
                                 {
                                         $return['errormsg'].= $this->l('Validation of zip file fails.').'<br>';
                                         $return['errormsg'].= $this->l('Sorry, a module file can only contains, into zip root:').'<br>';
-                                        $return['errormsg'].= $this->l('- only 1 directory matching your module or theme name,').'<br>';
+                                        $return['errormsg'].= $this->l('- only 1 directory matching your module or theme name (recommanded),').'<br>';
                                         $return['errormsg'].= $this->l('- or several directories matching following names: ./htdocs/yourmodulename, ./docs, ./scripts, ./test or ./build.').'<br>';
                                         $return['errormsg'].= $this->l('But we found a directory or file with name:').' '.$direrror.'<br><br>'."\n";
                                 }
                                 closedir($dh);
                         }
+
                         // It's a module or theme file (check htdocs directory)
-                        if (! $error && ! empty($ismodule) && is_dir($dir.'/htdocs') && $dh = opendir($dir.'/htdocs'))
+                        if (! $error && ! empty($ismodule) && is_dir($dirmodulethemeroot) && $dh = opendir($dirmodulethemeroot))
                         {
-                                self::prestalog("we scan ".$dir."/htdocs to be sure there is only one directory (with name of your module) into htdocs");
-                                $nbofsubdir=0;
-                                self::prestalog("check there is only one dir into htdocs");
+                                self::prestalog("we scan module dir ".$dirmodulethemeroot." to be sure there is only one directory (with name of your module) into root");
+                                $nbofsubdir=0; $lastdirfound='';
+                                self::prestalog("check there is only one dir into root");
                                 while (($file = readdir($dh)) !== false)
                                 {
-                                        if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt') continue;
-                                        if ($file == 'includes') continue;              // For old dolibarr version compatibility
-                                        self::prestalog("we found ".$file);
+                                        if ($file == '.' || $file == '..' || $file == 'README' || $file == 'README.txt' || $file == 'README.md') continue;
+                                        $lastdirfound = $file;
+                                        self::prestalog("we found file or dir ".$file);
                                         $nbofsubdir++;
                                 }
                                 closedir($dh);
                                 if ($nbofsubdir >= 2)
                                 {
-                                        $return['errormsg'].= $this->l('Warning, starting with Dolibarr 3.3 version, a module file can contains only one dir with name of module (into root of zip or into the htdocs directory)').'<br><br>';
+                                        $return['errormsg'].= $this->l('Warning, a module file can contains only 1 root directory with same name than the module (into root of zip or into the htdocs directory). We found '.$nbofsubdir.' files into the root of module.').'<br><br>';
                                         $error++;
+                                }
+                                if ($ismodule != $lastdirfound)
+                                {
+                                    $return['errormsg'].= $this->l('Warning, the module file contains a directory in root called "'.$lastdirfound.'" but this does not match the name of module used as file name that is "'.$ismodule.'".').'<br><br>';
+                                    $error++;
                                 }
                         }
                         // Check "custom" compatibility
                         if (! $error && ! empty($ismodule))
                         {
+                                self::prestalog("check the good practice of code");
                                 $count = 0;
                                 $results = array();
 
@@ -847,13 +888,13 @@ class BlockMySales extends Module
                                                                 'name'          => 'main',
                                                                 'types'         => array('php'),
                                                                 'pattern'       => '(require|include).*(main|master)\.inc\.php',
-                                                                'multiple'      => true
+                                                                'multiple'      => true     // Means we must find 0 or several times the pattern. Error if found 1 occurrence.
                                                 ),
                                                 1 => array(
                                                                 'name'          => 'dol_include_once',
                                                                 'types'         => array('php', 'class.php', 'lib.php', 'modules.php'),
                                                                 'pattern'       => 'dol\_include\_once\([\"\']\/([^\/]*)\/.*;',
-                                                                'contain'       => array($ismodule)
+                                                                'contain'       => array($ismodule)     // error if it contains
                                                 ),
                                                 2 => array(
                                                                 'name'                  => 'dol_document_root',
@@ -861,28 +902,30 @@ class BlockMySales extends Module
                                                                 'pattern'               => '(require|include)(_once)?\(?(.*)[\"\']+\)?;',
                                                                 'id'                    => 3,           // eg. Use $regs[3] for test instead $regs[1]
                                                                 'contain'               => array('DOL_DOCUMENT_ROOT'),
-                                                                'notcontain'    => array($ismodule),
+                                                                'notcontain'            => array($ismodule),
                                                                 'strict'                => true         // if true ('contain' && 'notcontain'), if false or not use ('contain' || 'notcontain')
                                                 )
                                 );
-                                $this->getDirContents($dir, $search);
+                                $this->getDirContents($dir, $search, $results);     // This include a global $count
 
-                                if (!empty($count))
+                                self::prestalog("count of errors = ".$count);
+
+                                if (!empty($count)) // count of errors is not null
                                 {
                                         foreach($results as $result)
                                         {
                                                 if ($result['testname'] == 'main')
                                                 {
-                                                        $return['errormsg'].= sprintf($this->l('The call of main.inc.php or master.inc.php in the file "%s" is not compatible with the custom directory.'), $result['filename']).'<br><br>';
+                                                        $return['errormsg'].= sprintf($this->l('The call of main.inc.php or master.inc.php in the file "%s" does not follow good practices. Take a look at file modulebuilder/template/mymoduleindex.php for an example of sequence to load the main.inc.php or master.inc.php.'), $result['filename']).'<br><br>';
                                                 }
                                                 else if ($result['testname'] == 'dol_include_once')
                                                 {
-                                                        $return['errormsg'].= sprintf($this->l('The call of dol_include_once of the file "%s" is wrong, we must correct the line below:'), $result['filename']).'<br>';
+                                                        $return['errormsg'].= sprintf($this->l('The call of dol_include_once of the file "%s" is wrong, you must correct the line below:'), $result['filename']).'<br>';
                                                         $return['errormsg'].= $result['line'].'<br><br>';
                                                 }
                                                 else if ($result['testname'] == 'dol_document_root')
                                                 {
-                                                        $return['errormsg'].= sprintf($this->l('The call of your module class should not be done with DOL_DOCUMENT_ROOT, the file "%s" is wrong, we must correct the line below with "dol_include_once":'), $result['filename']).'<br>';
+                                                        $return['errormsg'].= sprintf($this->l('The call of your module class should not be done with DOL_DOCUMENT_ROOT, the file "%s" is wrong, you must correct the line below with "dol_include_once":'), $result['filename']).'<br>';
                                                         $return['errormsg'].= $result['line'].'<br><br>';
                                                 }
                                         }
@@ -894,10 +937,14 @@ class BlockMySales extends Module
                         }
                 }
                 else
-                        self::prestalog("file ".$originalfilename." is not a module and not a theme!", LOG_WARNING);
+                {
+                        self::prestalog("file ".$originalfilename." is not a module and not a theme!", LOG_WARNING);    // It can be a doc, android app, ...
+                }
 
                 if (!empty($error))
                 {
+                    self::prestalog("validateZipFile Error");
+
                         $link = '<a target="_blank" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>';
                         $return['errormsg'].= $this->l('Your zip file does not look to match Dolibarr package rules.').'<br>';
                         $return['errormsg'].= sprintf($this->l('See %s:'), $link).'<br>';
@@ -905,6 +952,10 @@ class BlockMySales extends Module
                         $return['errormsg'].= $this->l('If you think this is an error or don\'t undertand this message, send your package by email at contact@dolibarr.org');
                         $return['upload'] = -1;
                         $error++;
+                }
+                else
+                {
+                    self::prestalog("validateZipFile OK");
                 }
 
                 $return['error'] = $error;
@@ -914,7 +965,7 @@ class BlockMySales extends Module
 
         private function getDirContents($dir, $search = array(), &$results = array())
         {
-                global $count, $results;
+                global $count;
 
                 $files = scandir($dir);
 
@@ -983,9 +1034,10 @@ class BlockMySales extends Module
                                                                                                                 }
                                                                                                         }
                                                                                                 }
-                                                                                                // Mode strict false : doit contenir
+                                                                                                // Mode strict false : doit contenir. Note strstr return false if not found
                                                                                                 else if (!strstr($string, $contain))
                                                                                                 {
+                                                                                                        // We found $contain into $string
                                                                                                         $results[] = array(
                                                                                                                         'testname'      => $pattern['name'],
                                                                                                                         'filename'      => $fileName,
