@@ -890,13 +890,13 @@ class BlockMySales extends Module
                                                                 'pattern'       => '(require|include).*(main|master)\.inc\.php',
                                                                 'multiple'      => true     // Means we must find 0 or several times the pattern. Error if found 1 occurrence.
                                                 ),
-                                                1 => array(
+                                                /*2 => array(
                                                                 'name'          => 'dol_include_once',
                                                                 'types'         => array('php', 'class.php', 'lib.php', 'modules.php'),
                                                                 'pattern'       => 'dol\_include\_once\([\"\']\/([^\/]*)\/.*;',
                                                                 'contain'       => array($ismodule)     // error if it contains
-                                                ),
-                                                2 => array(
+                                                ),*/
+                                                1 => array(
                                                                 'name'                  => 'dol_document_root',
                                                                 'types'                 => array('php', 'class.php', 'lib.php', 'modules.php'),
                                                                 'pattern'               => '(require|include)(_once)?\(?(.*)[\"\']+\)?;',
@@ -916,16 +916,16 @@ class BlockMySales extends Module
                                         {
                                                 if ($result['testname'] == 'main')
                                                 {
-                                                        $return['errormsg'].= sprintf($this->l('The call of main.inc.php or master.inc.php in the file "%s" does not follow good practices. Take a look at file modulebuilder/template/mymoduleindex.php for an example of sequence to load the main.inc.php or master.inc.php.'), $result['filename']).'<br><br>';
+                                                    $return['errormsg'].= sprintf($this->l('The call of main.inc.php or master.inc.php in the file "%s" in module "%s" does not follow good practices. Take a look at file modulebuilder/template/mymoduleindex.php for an example of sequence to load the main.inc.php or master.inc.php.'), $result['filename'], $ismodule).'<br><br>';
                                                 }
                                                 else if ($result['testname'] == 'dol_include_once')
                                                 {
-                                                        $return['errormsg'].= sprintf($this->l('The call of dol_include_once of the file "%s" is wrong, you must correct the line below:'), $result['filename']).'<br>';
+                                                        $return['errormsg'].= sprintf($this->l('The call of dol_include_once of the file "%s" in module "%s" is wrong, you must correct the line below:'), $result['filename'], $ismodule).'<br>';
                                                         $return['errormsg'].= $result['line'].'<br><br>';
                                                 }
                                                 else if ($result['testname'] == 'dol_document_root')
                                                 {
-                                                        $return['errormsg'].= sprintf($this->l('The call of your module class should not be done with DOL_DOCUMENT_ROOT, the file "%s" is wrong, you must correct the line below with "dol_include_once":'), $result['filename']).'<br>';
+                                                        $return['errormsg'].= sprintf($this->l('The call of your module class should not be done with DOL_DOCUMENT_ROOT, the file "%s" of module "%s" is wrong, you must correct the line below with "dol_include_once":'), $result['filename'], $ismodule).'<br>';
                                                         $return['errormsg'].= $result['line'].'<br><br>';
                                                 }
                                         }
@@ -945,13 +945,13 @@ class BlockMySales extends Module
                 {
                     self::prestalog("validateZipFile Error");
 
-                        $link = '<a target="_blank" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>';
-                        $return['errormsg'].= $this->l('Your zip file does not look to match Dolibarr package rules.').'<br>';
-                        $return['errormsg'].= sprintf($this->l('See %s:'), $link).'<br>';
-                        $return['errormsg'].= $this->l('Remind: A module can not provide directories/files found into Dolibarr standard distribution.')."<br>\n";
-                        $return['errormsg'].= $this->l('If you think this is an error or don\'t undertand this message, send your package by email at contact@dolibarr.org');
-                        $return['upload'] = -1;
-                        $error++;
+                    $link = '<a target="_blank" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>';
+                    $return['errormsg'].= $this->l('Your zip file does not look to match Dolibarr package rules.').'<br>';
+                    $return['errormsg'].= sprintf($this->l('See %s:'), $link).'<br>';
+                    $return['errormsg'].= $this->l('Remind: A module can not provide directories/files found into Dolibarr standard distribution.')."<br>\n";
+                    $return['errormsg'].= $this->l('If you think this is an error or don\'t undertand this message, send your package by email at dolistore@dolibarr.org');
+                    $return['upload'] = -1;
+                    $error++;
                 }
                 else
                 {
@@ -1035,7 +1035,7 @@ class BlockMySales extends Module
                                                                                                         }
                                                                                                 }
                                                                                                 // Mode strict false : doit contenir. Note strstr return false if not found
-                                                                                                else if (!strstr($string, $contain))
+                                                                                                else if (!strstr($string, $contain))        // If found
                                                                                                 {
                                                                                                         // We found $contain into $string
                                                                                                         $results[] = array(
