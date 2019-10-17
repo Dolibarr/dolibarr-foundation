@@ -946,7 +946,7 @@ if (!defined('_PS_VERSION_'))
                 {
                     self::prestalog("validateZipFile Error");
 
-                    $link = '<a target="_blank" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>';
+                    $link = '<a target="_blank" class="linktowiki" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>';
                     $return['errormsg'].= $this->l('Your zip file does not look to match Dolibarr package rules.').'<br>';
                     $return['errormsg'].= sprintf($this->l('See %s:'), $link).'<br>';
                     $return['errormsg'].= "<br>\n";
