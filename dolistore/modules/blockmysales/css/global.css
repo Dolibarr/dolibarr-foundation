@@ -317,3 +317,8 @@ label {
     width:0;
     height:0
 }
+
+a.linktowiki {
+	color: #128 !important;
+	text-shadow: none;
+}
