@@ -1,0 +1,1 @@
+alter table ps_attachment_lang modify column name varchar(128);
