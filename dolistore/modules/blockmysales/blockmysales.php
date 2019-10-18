@@ -635,10 +635,10 @@ if (!defined('_PS_VERSION_'))
 
                 $originalfilename=$_FILES['virtual_product_file']['name'];
 
-                if (strlen($originalfilename) > 32)
+                if (strlen($originalfilename) > 48)
                 {
                     $error++;
-                    $return['errormsg'] = $this->l('Name of file must not be longer than 32 characters,  including the prefix ("module_", "theme_" or "website_"), the version suffix and the extension (".zip" for example) !');
+                    $return['errormsg'] = $this->l('Name of file must not be longer than 48 characters,  including the prefix ("module_", "theme_" or "website_"), the version suffix and the extension (".zip" for example) !');
                 }
 
                 self::prestalog("Upload or reupload file " . $originalfilename);

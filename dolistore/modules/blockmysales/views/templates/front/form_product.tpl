@@ -143,7 +143,7 @@
 								<tr id="nbdaysaccessible" {if !$product.price} style="display:none;"{/if}>
 									<td nowrap="nowrap" valign="top">{l s='Number of days:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="7" name="nb_days_accessible" id="nb_days_accessible" value="{$product.nb_days_accessible}" type="text" />
+										<input required="required" size="9" maxlength="7" name="nb_days_accessible" id="nb_days_accessible" value="{if $product.nb_days_accessible}{$product.nb_days_accessible}{else}0{/if}" type="text" />
 										{l s='day (s)' mod='blockmysales'}
 										<br>
 										{l s='Number of days the file will be accessed by clients (enter 0 for unlimited access).' mod='blockmysales'}
