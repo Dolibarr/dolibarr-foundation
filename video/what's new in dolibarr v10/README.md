@@ -1,7 +1,7 @@
 = How to build a video Dolibarr what's new in vX =
 
 1) Install Blender.
-Do not install with *apt install blender*. Version seems bugged. Use instead *snap install blender*
+Do not install with *apt install blender*. Version seems bugged and crash. Use instead *snap install blender*
 
 2) Open the *.blend* project file with blender.
 
