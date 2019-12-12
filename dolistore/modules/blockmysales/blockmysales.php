@@ -865,15 +865,27 @@ if (!defined('_PS_VERSION_'))
                             $nbofsubdir++;
                         }
                         closedir($dh);
-                        if ($nbofsubdir >= 2)
+                        if ($nbofsubdir >= 2 && ! is_file($dirmoduletheme.'/metapackage.conf'))
                         {
-                            $return['errormsg'].= $this->l('Warning, a module file can contains only 1 root directory with same name than the module (into root of zip or into the htdocs directory). We found '.$nbofsubdir.' files into the root of module.').'<br><br>';
+                            $return['errormsg'].= $this->l('Warning, a module file can contains only 1 root directory with the same name than the module (into the root of zip or into the htdocs directory). We found '.$nbofsubdir.' files/directories into the root of module. If this module is a meta-package (a module embedding several other modules), you must include a file metapackage.conf with list of all embedded module names in directory "'.basename($dirmoduletheme).'".').'<br><br>';
                             $error++;
                         }
+                        /*
+                         if ($nbofsubdir >= 2)
+                         {
+                         $return['errormsg'].= $this->l('Warning, a module file can contains only 1 root directory with same name than the module (into root of zip or into the htdocs directory). We found '.$nbofsubdir.' files into the root of module.').'<br><br>';
+                         $error++;
+                         } */
                         if ($ismodule != $lastdirfound)
                         {
-                            $return['errormsg'].= $this->l('Warning, the module file contains a directory in root called "'.$lastdirfound.'" but this does not match the name of module used as file name that is "'.$ismodule.'".').'<br><br>';
-                            $error++;
+                            if (is_file($dirmoduletheme.'/metapackage.conf'))
+                            {
+                                // TODO Check each dir found is inside list of modules
+
+                            } else {
+                                $return['errormsg'].= $this->l('Warning, the module file contains a directory in root called "'.$lastdirfound.'" but this does not match the name of module used as file name that is "'.$ismodule.'".').'<br><br>';
+                                $error++;
+                            }
                         }
                     }
                     // Check "custom" compatibility
@@ -946,7 +958,7 @@ if (!defined('_PS_VERSION_'))
                 {
                     self::prestalog("validateZipFile Error");
 
-                    $link = '<a target="_blank" class="linktowiki" href="http://wiki.dolibarr.org/index.php/Module_development#Tree_of_path_for_new_module_files_.28required.29">Dolibarr wiki developer documentation for allowed tree</a>';
+                    $link = '<a target="_blank" class="linktowiki" href="https://wiki.dolibarr.org/index.php/Modules - Packaging rules and Dolistore validation rules">Dolibarr wiki developer documentation</a>';
                     $return['errormsg'].= $this->l('Your zip file does not look to match Dolibarr package rules.').'<br>';
                     $return['errormsg'].= sprintf($this->l('See %s'), $link).'<br>';
                     $return['errormsg'].= "<br>\n";
@@ -995,6 +1007,8 @@ if (!defined('_PS_VERSION_'))
                                     //echo $path.'<br>';
                                     //echo $ext.'<br>';
                                     //echo implode(',', $pattern['types']).'<br>';
+                                    if (strpos($content, '<?php') !== 0) continue;  // We discard files that are not php pages (we discard scripts)
+                                    if (strpos($path, 'htdocs_') > 0) continue;  // We discard files that are files into htdocs_... because it is files for core, so no need to be compatible with custom
 
                                     $regs = array();
                                     if (!empty($pattern['multiple']))
