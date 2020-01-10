@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <version>190219</version>
+    <url>/home/lsteam/Projects/Dolibarr ERP CRM ecosystem/clip_partner.ove</url>
+    <folders/>
+    <media>
+        <footage id="1" folder="0" name="partner_1.png" url="partner_1.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="2" folder="0" name="partner_2.png" url="partner_2.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="3" folder="0" name="partner_3.png" url="partner_3.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="4" folder="0" name="partner_4.png" url="partner_4.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="5" folder="0" name="partner_5.png" url="partner_5.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="6" folder="0" name="partner_6.png" url="partner_6.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="7" folder="0" name="partner_7.png" url="partner_7.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="8" folder="0" name="partner_8.png" url="partner_8.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="9" folder="0" name="partner_9.png" url="partner_9.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="10" folder="0" name="partner_10.png" url="partner_10.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="11" folder="0" name="partner_11.png" url="partner_11.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="12" folder="0" name="partner_12.png" url="partner_12.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="13" folder="0" name="partner_13.png" url="partner_13.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="14" folder="0" name="partner_14.png" url="partner_14.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="15" folder="0" name="partner_15.png" url="partner_15.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="16" folder="0" name="partner_16.png" url="partner_16.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="17" folder="0" name="partner_17.png" url="partner_17.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="18" folder="0" name="partner_18.png" url="partner_18.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="19" folder="0" name="partner_19.png" url="partner_19.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+        <footage id="20" folder="0" name="partner_20.png" url="partner_20.png" duration="0" using_inout="0" in="0" out="0" speed="1" alphapremul="0" startnumber="0" proxy="0" proxypath="">
+            <video id="0" width="1920" height="1080" framerate="0.0000000000" infinite="1"/>
+        </footage>
+    </media>
+    <sequences>
+        <sequence id="1" folder="0" name="Sequence 01" width="1920" height="1080" framerate="29.9700000000" afreq="48000" alayout="3" open="1" workarea="1" workareaIn="1" workareaOut="899">
+            <clip id="0" enabled="1" name="partner_1.png" clipin="0" in="0" out="45" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="1" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="1" enabled="1" name="partner_2.png" clipin="0" in="45" out="90" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="2" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="2" enabled="1" name="partner_3.png" clipin="0" in="90" out="135" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="3" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="3" enabled="1" name="partner_4.png" clipin="0" in="135" out="180" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="4" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="4" enabled="1" name="partner_5.png" clipin="0" in="180" out="225" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="5" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="5" enabled="1" name="partner_6.png" clipin="0" in="225" out="270" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="6" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="6" enabled="1" name="partner_7.png" clipin="0" in="270" out="315" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="7" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="7" enabled="1" name="partner_8.png" clipin="0" in="315" out="360" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="8" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="8" enabled="1" name="partner_9.png" clipin="0" in="360" out="405" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="9" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="9" enabled="1" name="partner_10.png" clipin="0" in="405" out="450" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="10" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="10" enabled="1" name="partner_11.png" clipin="0" in="450" out="495" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="11" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="11" enabled="1" name="partner_12.png" clipin="0" in="495" out="540" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="12" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="12" enabled="1" name="partner_13.png" clipin="0" in="540" out="585" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="13" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="13" enabled="1" name="partner_14.png" clipin="0" in="585" out="630" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="14" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="14" enabled="1" name="partner_15.png" clipin="0" in="630" out="675" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="15" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="15" enabled="1" name="partner_16.png" clipin="0" in="675" out="720" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="16" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="16" enabled="1" name="partner_17.png" clipin="0" in="720" out="765" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="17" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="17" enabled="1" name="partner_18.png" clipin="0" in="765" out="810" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="18" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="18" enabled="1" name="partner_19.png" clipin="0" in="810" out="855" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="19" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+            <clip id="19" enabled="1" name="partner_20.png" clipin="0" in="855" out="900" track="-1" r="192" g="160" b="128" autoscale="0" speed="1.0000000000" maintainpitch="0" reverse="0" type="0" media="20" stream="0">
+                <linked/>
+                <effect name="Distort/Transform" enabled="1">
+                    <row>
+                        <field id="posx" value="960"/>
+                        <field id="posy" value="540"/>
+                    </row>
+                    <row>
+                        <field id="scalex" value="100"/>
+                        <field id="scaley" value="100"/>
+                    </row>
+                    <row>
+                        <field id="uniformscale" value="1"/>
+                    </row>
+                    <row>
+                        <field id="rotation" value="0"/>
+                    </row>
+                    <row>
+                        <field id="anchorx" value="0"/>
+                        <field id="anchory" value="0"/>
+                    </row>
+                    <row>
+                        <field id="opacity" value="100"/>
+                    </row>
+                    <row>
+                        <field id="blendmode" value=""/>
+                    </row>
+                </effect>
+            </clip>
+        </sequence>
+    </sequences>
+</project>
