@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="dolibarr_logo.svg"
-   inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/logo-cliparts/dolibarr_logo.png"
+   inkscape:export-filename="/home/ldestailleur/git/dolibarr-foundation/logo-cliparts/dolibarr_logo.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <title
@@ -53,7 +53,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.0131004"
-     inkscape:cx="343.5"
+     inkscape:cx="229.49674"
      inkscape:cy="87.5"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
@@ -76,7 +76,7 @@
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>Logo Dolibarr ERP-CRM</dc:title>
         <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
         <dc:creator>
           <cc:Agent>
             <dc:title>Laurent Destailleur</dc:title>
