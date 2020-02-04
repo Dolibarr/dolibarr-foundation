@@ -1,0 +1,40 @@
+This is a patch to apply to mediawiki (at least 1.33)
+When you use the variable $wgPageLanguageUseDB = true; you can set the language of a page to a given value, for example "fr". When doing this, all the
+content area has then the attribute lang="fr" instead of the default language of Wiki (imagine wiki is "en"). And if you are a spanish user, the section in your language
+like the toolbar is rouded with the attribute lang="es". This is what we got and this is the expected result. 
+ 
+However, without this patch, the attribute lang of the top <html> tag has still the attribute lang of the wiki ("en"). This is not a big problem, because the
+content is correctly rounded by a tag with attribute lang="fr" and user specific sections are correctly rounded by a tag with attribute lang="es"... Except the
+main HTML headers. So, the html tag <title> and <description> are correcly output into the page language (so "fr") but the top <html> tag has still the flag
+lang="en" making it not consistent with the content of the title and description. This may lead to SEO troubles even if ONLY the meta tag title and description 
+are affected by a not correctly reported language code.
+
+With this patch, the top html tag has the same value than the content, so the value is consistent with the real language used for the title and description metatag.
+It has no effect on other part of page that were correctly rounded by correct language code. 
+
+
+/**
+         * Return values for <html> element
+         * @return array Array of associative name-to-value elements for <html> element
+         */
+        public function getHtmlElementAttributes() {
+                $lang = $this->getLanguage();
+
+                // @FIX LANGUAGE OF HTML TAG TO PAGE LANG CODE
+                $htmllang = $lang->getHtmlCode();
+                $htmldir = $lang->getDir();
+                if ($this->getRelevantTitle() && $this->getRelevantTitle()->getPageLanguage()) {
+                        $pagelang = $this->getRelevantTitle()->getPageLanguage();
+                        if ($pagelang) {
+                                $htmllang = $pagelang->getHtmlCode();
+                                $htmldir = $pagelang->getDir();
+                        }
+                        //var_dump('htmllang='.$htmllang);
+                }
+				
+                return [
+                        'lang' => $htmllang,
+                        'dir' => $htmldir,
+                        'class' => 'client-nojs',
+                ];
+        }
