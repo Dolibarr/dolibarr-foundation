@@ -13,7 +13,7 @@ With this patch, the top html tag has the same value than the content, so the va
 It has no effect on other part of page that were correctly rounded by correct language code. 
 
 
-/**
+		/**
          * Return values for <html> element
          * @return array Array of associative name-to-value elements for <html> element
          */
@@ -25,11 +25,8 @@ It has no effect on other part of page that were correctly rounded by correct la
                 $htmldir = $lang->getDir();
                 if ($this->getRelevantTitle() && $this->getRelevantTitle()->getPageLanguage()) {
                         $pagelang = $this->getRelevantTitle()->getPageLanguage();
-                        if ($pagelang) {
-                                $htmllang = $pagelang->getHtmlCode();
-                                $htmldir = $pagelang->getDir();
-                        }
-                        //var_dump('htmllang='.$htmllang);
+                        $htmllang = $pagelang->getHtmlCode();
+                        $htmldir = $pagelang->getDir();
                 }
 				
                 return [
