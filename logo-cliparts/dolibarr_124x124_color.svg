@@ -26,7 +26,7 @@
       <stop
          id="stop854"
          offset="0"
-         style="stop-color:#49496f;stop-opacity:1" />
+         style="stop-color:#49526f;stop-opacity:1" />
       <stop
          id="stop856"
          offset="1"
@@ -268,9 +268,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="42.916295"
-     inkscape:cy="70.745335"
+     inkscape:zoom="3.959798"
+     inkscape:cx="5.8768903"
+     inkscape:cy="40.817338"
      inkscape:document-units="px"
      inkscape:current-layer="g3197"
      showgrid="false"
@@ -320,18 +320,19 @@
          style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
          id="text3775">
         <path
-           d="m 361.99432,122.6877 v 56.9749 h -23.7737 V 99.733777 h 30.97607 q 20.37746,0 31.91298,9.251833 13.70208,11.06707 13.70208,30.03918 0,18.15234 -11.71118,29.6293 -11.71119,11.47695 -30.1563,11.47695 -2.16657,0 -7.08526,-0.23422 V 156.4159 h 3.80613 q 20.78735,0 20.78735,-17.39111 0,-16.33709 -20.43601,-16.33709 z"
+           d="m 361.99432,122.6877 -0.0304,57.43789 H 338.22062 V 99.733777 h 30.97607 c 13.58497,0 24.22263,3.083943 31.91298,9.251833 9.13472,7.37805 13.70208,17.39111 13.70208,30.03918 0,12.10156 -3.90373,21.97799 -11.71118,29.6293 -7.80746,7.6513 -17.85956,11.47695 -30.1563,11.47695 -1.44438,0 -7.08526,-0.0182 -7.08526,-0.0182 V 156.4159 h 3.80613 c 13.85823,0 20.78735,-5.79704 20.78735,-17.39111 0,-10.89139 -6.812,-16.33709 -20.43601,-16.33709 z"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:119.92250824px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93,';fill:#ffffff;fill-opacity:1"
            id="path854"
-           inkscape:connector-curvature="0" />
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccscsssccsssc" />
       </g>
       <ellipse
-         style="display:inline;fill:#007179;fill-opacity:1;stroke:none;stroke-width:0.65291774;stroke-opacity:1"
+         style="display:inline;fill:#60bbc1;fill-opacity:1;stroke:none;stroke-width:0.62043476;stroke-opacity:1"
          id="path957"
-         cx="412.50858"
-         cy="112.0897"
-         rx="11.512888"
-         ry="11.040191" />
+         cx="407.14789"
+         cy="108.85997"
+         rx="10.732866"
+         ry="10.693515" />
     </g>
   </g>
 </svg>
