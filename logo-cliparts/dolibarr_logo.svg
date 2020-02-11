@@ -24,11 +24,22 @@
   <defs
      id="defs3452">
     <linearGradient
+       id="linearGradient888">
+      <stop
+         style="stop-color:#3a3a64;stop-opacity:1"
+         offset="0"
+         id="stop884" />
+      <stop
+         style="stop-color:#45455a;stop-opacity:1"
+         offset="1"
+         id="stop886" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient5378">
       <stop
          id="stop5374"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop5376"
          offset="1"
@@ -39,7 +50,7 @@
       <stop
          id="stop5368"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop5370"
          offset="1"
@@ -50,7 +61,7 @@
       <stop
          id="stop5362"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop5364"
          offset="1"
@@ -61,7 +72,7 @@
       <stop
          id="stop5356"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop5358"
          offset="1"
@@ -72,7 +83,7 @@
       <stop
          id="stop4726"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop4728"
          offset="1"
@@ -83,7 +94,7 @@
       <stop
          id="stop4720"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop4722"
          offset="1"
@@ -94,7 +105,7 @@
       <stop
          id="stop4714"
          offset="0"
-         style="stop-color:#44445a;stop-opacity:1" />
+         style="stop-color:#3a3a64;stop-opacity:1" />
       <stop
          id="stop4716"
          offset="1"
@@ -142,7 +153,7 @@
        y2="310.53391" />
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient4724"
+       xlink:href="#linearGradient888"
        id="linearGradient4650"
        gradientUnits="userSpaceOnUse"
        x1="385.41022"
@@ -289,10 +300,10 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.0000001"
-     inkscape:cx="272.14844"
-     inkscape:cy="36.819617"
-     inkscape:current-layer="layer1"
+     inkscape:zoom="2.0000001"
+     inkscape:cx="309.77815"
+     inkscape:cy="93.323306"
+     inkscape:current-layer="g4592"
      inkscape:document-units="px"
      showgrid="false"
      inkscape:window-width="1920"
@@ -367,7 +378,7 @@
           <path
              sodipodi:nodetypes="cccccscsssccsssc"
              d="m 112.32913,280.38367 v 98.02589 l -36.631688,-0.40123 v 0.40123 -137.35672 h 47.729468 c 20.93239,0 37.32341,5.28424 49.17307,15.85272 14.07523,12.64204 21.11285,29.7991 21.11285,51.47117 0,20.73563 -6.01506,37.65857 -18.04517,50.76884 -12.03011,13.11027 -27.20637,19.35291 -46.1538,19.35291 -2.22557,0 -6.23968,-0.0713 -11.22982,-0.0888 v -40.23379 l 10.08954,-0.0542 c 21.35314,-0.11469 27.8053,-9.87885 27.8053,-29.74492 0,-18.66206 -10.49627,-27.99309 -31.48881,-27.99309 z"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:194.85823059px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4650);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:194.85823059px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4650);fill-opacity:1.0;fill-rule:nonzero;stroke:none;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373"
              id="path8463"
              inkscape:connector-curvature="0" />
           <path
