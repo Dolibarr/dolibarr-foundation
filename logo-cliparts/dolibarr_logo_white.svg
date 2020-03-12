@@ -199,15 +199,6 @@
          offset="1"
          id="stop3738" />
     </linearGradient>
-    <filter
-       inkscape:collect="always"
-       id="filter3775"
-       style="color-interpolation-filters:sRGB">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="11.473048"
-         id="feGaussianBlur3777" />
-    </filter>
     <clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath922">
@@ -301,14 +292,15 @@
        x2="386.59824"
        y2="386.90143" />
     <linearGradient
+       gradientTransform="matrix(1,0,0,0.69627035,52.567619,116.53921)"
        inkscape:collect="always"
-       xlink:href="#linearGradient4724"
-       id="linearGradient5354"
+       xlink:href="#linearGradient5417"
+       id="linearGradient4654-3"
        gradientUnits="userSpaceOnUse"
-       x1="385.16809"
-       y1="202.32678"
-       x2="385.87518"
-       y2="393.24561" />
+       x1="385.41022"
+       y1="210.12474"
+       x2="386.59824"
+       y2="386.90143" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -318,8 +310,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4142136"
-     inkscape:cx="304.49426"
-     inkscape:cy="36.902536"
+     inkscape:cx="312.77177"
+     inkscape:cy="7.6754813"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -338,7 +330,8 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:measure-start="0,0"
-     inkscape:measure-end="0,0">
+     inkscape:measure-end="0,0"
+     inkscape:pagecheckerboard="true">
     <inkscape:grid
        type="xygrid"
        id="grid1458" />
@@ -384,25 +377,13 @@
      inkscape:groupmode="layer"
      style="display:inline"
      transform="translate(-51.413681,-199.60957)">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';opacity:0.06700003;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3775)"
-       x="537.1402"
-       y="887.85065"
-       id="text2828-6"
-       transform="matrix(0.35661275,0,0,0.39656343,-122.25713,32.373157)"><tspan
-         sodipodi:role="line"
-         id="tspan2830-9"
-         x="537.1402"
-         y="887.85065"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:518.16009521px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none">Dolibarr</tspan></text>
     <g
        id="g4592">
       <g
          id="g4604">
         <g
            id="g4626"
-           style="fill-opacity:1;fill:url(#linearGradient4636)">
+           style="fill:url(#linearGradient4636);fill-opacity:1">
           <g
              id="g4648">
             <path
@@ -423,20 +404,13 @@
                d="M 345.47268,241.05287 V 378.40956 H 311.72822 V 241.05287 Z"
                sodipodi:nodetypes="ccccc" />
             <g
-               style="fill-opacity:1;fill:url(#linearGradient4656)"
+               style="fill:url(#linearGradient4656);fill-opacity:1"
                id="g920"
                clip-path="url(#clipPath922)">
               <g
-                 style="fill-opacity:1;fill:url(#linearGradient4636)"
+                 style="fill:url(#linearGradient4636);fill-opacity:1"
                  inkscape:label="Clip"
-                 id="g918">
-                <path
-                   sodipodi:nodetypes="ccccc"
-                   d="m 398.88637,277.97566 v 100.4339 h -33.74446 v -100.4339 z"
-                   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:194.85823059px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5354);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.7072947;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373"
-                   id="path8469"
-                   inkscape:connector-curvature="0" />
-              </g>
+                 id="g918" />
             </g>
             <path
                inkscape:connector-curvature="0"
@@ -468,22 +442,28 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#c1d5d7;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:1;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#c1d5d7;fill-opacity:1;fill-rule:nonzero;stroke:none"
        x="643.31146"
        y="229.77211"
        id="text5484"
        transform="scale(0.88533213,1.1295196)"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.95219803px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#c1d5d7;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.95219803px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#c1d5d7;fill-opacity:1;fill-rule:nonzero;stroke:none"
          sodipodi:role="line"
          id="tspan5486"
          x="643.31146"
          y="229.77211">ERP/CRM</tspan></text>
     <ellipse
-       style="fill:#c1d5d7;fill-opacity:1;stroke:none;stroke-width:1.02999127;stroke-opacity:1;opacity:1"
+       style="opacity:1;fill:#c1d5d7;fill-opacity:1;stroke:none;stroke-width:1.02999127;stroke-opacity:1"
        id="path957"
        cx="381.94193"
        cy="247.58162"
        rx="17.456699"
        ry="18.119612" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path8467-5"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:194.85823059px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:url(#linearGradient4654-3);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.42461479;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373"
+       d="m 398.0403,284.37718 v 95.63739 h -33.74446 v -95.63739 z"
+       sodipodi:nodetypes="ccccc" />
   </g>
 </svg>
