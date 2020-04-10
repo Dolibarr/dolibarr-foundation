@@ -6664,8 +6664,8 @@ div.star a:hover {
   background: none repeat scroll 0 0 lightyellow; }
 
 #page .rte {
-  padding: 0 !important;
-  background: transparent none repeat scroll 0 0; }
+   padding: 0 !important; 
+ background: transparent none repeat scroll 0 0; }
 
 .listcomment {
   list-style-type: none;
@@ -8073,5 +8073,24 @@ p.payment_module.paypal a {
     max-width: 100%;
     height: auto;
 }
+
+div.primary_block div#views_block {
+    float: right;
+	width: 56%;
+}
+@media (max-width: 767px) {
+	div.primary_block div#views_block {
+		margin-top: 25px;
+		float: unset;
+		width: unset;
+	}
+}
+#thumbs_list li a:hover, #thumbs_list li a.shown {
+    border-color: transparent !important;
+}
+ul.product_list.grid > li .product-container .functional-buttons {
+	padding: 0 !important;
+}
+
 
 
