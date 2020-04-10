@@ -24,7 +24,7 @@ if (!defined('_PS_VERSION_'))
                 $this->name = 'blockmysales';
                 $this->author = 'DolibarrDev';
                 $this->tab = 'front_office_features';
-                $this->version = '2.2';
+                $this->version = '2.3';
 
                 //$this->bootstrap = true;
                 parent::__construct();
@@ -46,9 +46,9 @@ if (!defined('_PS_VERSION_'))
             {
                 if (!parent::install() ||
                     !Configuration::updateValue('BLOCKMYSALES_VERSION', $this->version) ||
-                    !$this->registerHook('displayCustomerAccount') ||
-                    !$this->registerHook('displayMyAccountBlock') ||
-                    !$this->registerHook('actionValidateOrder') ||
+                    //!$this->registerHook('displayCustomerAccount') ||
+                    //!$this->registerHook('displayMyAccountBlock') ||
+                    //!$this->registerHook('actionValidateOrder') ||
                     !$this->installSql()
                     )
                     return false;
@@ -64,8 +64,9 @@ if (!defined('_PS_VERSION_'))
                 $dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
                 $dolibarr_max_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max_status` tinyint(1) DEFAULT 0');
                 $dolibarr_core_include = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_core_include` tinyint(1) DEFAULT 0');
+                $dolibarr_disable_info = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_disable_info` varchar(255)');
 
-                return ($module_version & $dolibarr_min & $dolibarr_min_status & $dolibarr_max & $dolibarr_max_status & $dolibarr_core_include);
+                return ($module_version & $dolibarr_min & $dolibarr_min_status & $dolibarr_max & $dolibarr_max_status & $dolibarr_core_include & $dolibarr_disable_info);
             }
 
             public function uninstall()
@@ -179,29 +180,29 @@ if (!defined('_PS_VERSION_'))
                 $descriptions = json_decode(Configuration::get('BLOCKMYSALES_DESCRIPTIONS'), true);
 
                 $this->context->smarty->assign(array(
-                    'moduleDir'                             => $module_dir,
-                    'filelog'                               => $filelog,
-                    'defaultLanguage'               => $defaultLanguage,
-                    'languages'                             => $languages,
-                    'tiny_mce_code'                 => $tiny_mce_code,
-                    'displayFlags'                  => $displayFlags,
-                    'nbdaysaccessible'              => $nbdaysaccessible,
-                    'descriptions'                  => $descriptions,
-                    'webservices_url'               => $webservices_url,
-                    'webservices_login'             => $webservices_login,
-                    'webservices_password'  => $webservices_password,
-                    'webservices_securekey' => $webservices_securekey,
-                    'zones'                                 => $zones,
-                    'ceezoneid'                             => $ceezoneid,
-                    'vatrate'                               => $vatrate,
-                    'vatnumber'                             => $vatnumber,
-                    'commissioncee'                 => $commissioncee,
-                    'minamountcee'                  => $minamountcee,
-                    'commissionnotcee'              => $commissionnotcee,
-                    'minamountnotcee'               => $minamountnotcee,
-                    'taxrulegroupid'                => $taxrulegroupid,
-                    'taxrulesgroups'                => $taxrulesgroups,
-                    'mindelaymonth'                 => $mindelaymonth
+                    'moduleDir'				=> $module_dir,
+                    'filelog'				=> $filelog,
+                    'defaultLanguage'		=> $defaultLanguage,
+                    'languages'				=> $languages,
+                    'tiny_mce_code'			=> $tiny_mce_code,
+                    'displayFlags'			=> $displayFlags,
+                    'nbdaysaccessible'		=> $nbdaysaccessible,
+                    'descriptions'			=> $descriptions,
+                    'webservices_url'		=> $webservices_url,
+                    'webservices_login'		=> $webservices_login,
+                    'webservices_password'	=> $webservices_password,
+                    'webservices_securekey'	=> $webservices_securekey,
+                    'zones'					=> $zones,
+                    'ceezoneid'				=> $ceezoneid,
+                    'vatrate'				=> $vatrate,
+                    'vatnumber'				=> $vatnumber,
+                    'commissioncee'			=> $commissioncee,
+                    'minamountcee'			=> $minamountcee,
+                    'commissionnotcee'		=> $commissionnotcee,
+                    'minamountnotcee'		=> $minamountnotcee,
+                    'taxrulegroupid'		=> $taxrulegroupid,
+                    'taxrulesgroups'		=> $taxrulesgroups,
+                    'mindelaymonth'			=> $mindelaymonth
                 ));
 
                 return $this->_html .= $this->fetchTemplate('back_office.tpl');
@@ -1215,15 +1216,18 @@ if (!defined('_PS_VERSION_'))
                     $dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
                     $dolibarr_max_status = (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0);
 
+                    // Reason for disabling
+                    $dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : null);	// default null when created
+
                     //insertion du produit en base
                     $query = 'INSERT INTO `'._DB_PREFIX_.'product` (
                                         `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
                                         `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
                                         `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
-                                        `module_version`, `dolibarr_min`, `dolibarr_min_status`, `dolibarr_max`, `dolibarr_max_status`, `dolibarr_core_include`
+                                        `module_version`, `dolibarr_min`, `dolibarr_min_status`, `dolibarr_max`, `dolibarr_max_status`, `dolibarr_core_include`, `dolibarr_disable_info`
                                         ) VALUES (
                             0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
-                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.$module_version.'\', \''.$dolibarr_min.'\', '.$dolibarr_min_status.', \''.$dolibarr_max.'\', '.$dolibarr_max_status.', '.$dolibarr_core_include.'
+                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.$module_version.'\', \''.$dolibarr_min.'\', '.$dolibarr_min_status.', \''.$dolibarr_max.'\', '.$dolibarr_max_status.', '.$dolibarr_core_include.', \''.$dolibarr_disable_info.'\'
                         )';
 
                     $result = Db::getInstance()->Execute($query);
@@ -1534,26 +1538,32 @@ if (!defined('_PS_VERSION_'))
                     $dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
                     $dolibarr_max_status = (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0);
 
+                    // Reason for disabling
+                    if ($status > 0) {
+                    	$dolibarr_disable_info = null;
+                    } else {
+                    	$dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : $this->l('The module has been deactivated by the developer'));
+                    }
+
                     //Mise a jour du produit en base
                     $query = 'UPDATE `'._DB_PREFIX_.'product` SET
                                         `id_category_default`   = '.$id_categorie_default.',
-                                        `quantity`                              = '.$qty.',
-                                        `price`                                 = '.$prix_ht.',
-                                        `wholesale_price`               = '.$prix_ht.',
+                                        `quantity`              = '.$qty.',
+                                        `price`                 = '.$prix_ht.',
+                                        `wholesale_price`       = '.$prix_ht.',
                                         `id_tax_rules_group`    = '.$taxe_id.',
-                                        `module_version`                = \''.$module_version.'\',
-                                        `dolibarr_min`                  = \''.$dolibarr_min.'\',
+                                        `module_version`        = \''.$module_version.'\',
+                                        `dolibarr_min`          = \''.$dolibarr_min.'\',
                                         `dolibarr_min_status`   = '.$dolibarr_min_status.',
-                                        `dolibarr_max`                  = \''.$dolibarr_max.'\',
+                                        `dolibarr_max`          = \''.$dolibarr_max.'\',
                                         `dolibarr_max_status`   = '.$dolibarr_max_status.',
-                                        `dolibarr_core_include` = '.$dolibarr_core_include.',';
+                                        `dolibarr_core_include` = '.$dolibarr_core_include.',
+                                        `dolibarr_disable_info` = \''.$dolibarr_disable_info.'\',';
                     if ($status >= 0) $query.= ' `active` = '.$status.',';          // We don't change if status is -1
                     if ($oldPrice == 0 && $newPrice > 0) {
                         $query.= ' `available_for_order` = 1, `show_price` = 1, `cache_has_attachments` = 0,';
                     }
-                    $query.= ' `indexed`                    = 1,
-                                        `date_upd`                              = \''.$dateNow.'\'
-                                        WHERE `id_product` = '.$id_product.' ';
+                    $query.= ' `indexed` = 1, `date_upd` = \''.$dateNow.'\' WHERE `id_product` = '.$id_product.' ';
                     $result = Db::getInstance()->Execute($query);
                     if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -1567,9 +1577,7 @@ if (!defined('_PS_VERSION_'))
                     if ($oldPrice == 0 && $newPrice > 0) {
                         $query.= ' `available_for_order` = 1, `show_price` = 1,';
                     }
-                    $query.= ' `indexed`                    = 1,
-                                        `date_upd`                              = \''.$dateNow.'\'
-                                        WHERE `id_product` = '.$id_product.' ';
+                    $query.= ' `indexed` = 1, `date_upd` = \''.$dateNow.'\' WHERE `id_product` = '.$id_product.' ';
                     $result = Db::getInstance()->Execute($query);
                     if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
 
@@ -1590,7 +1598,7 @@ if (!defined('_PS_VERSION_'))
                                                 `meta_description`      = '".addslashes($product['name'])."',
                                                 `meta_keywords`         = '".addslashes($product['keywords'])."',
                                                 `meta_title`            = '".addslashes($product['name'])."',
-                                                `name`                          = '".addslashes($product['name'])."',
+                                                `name`                  = '".addslashes($product['name'])."',
                                                 `available_now`         = '".$this->l('Available')."',
                                                 `available_later`       = '".$this->l('In build')."'
                                                 WHERE `id_lang` = ".$id_lang."

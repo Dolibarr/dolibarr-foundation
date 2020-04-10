@@ -211,6 +211,9 @@
 		{if $owner}
 			{if $tab == 'modify'}
 				$( "#productcard_tabs" ).tabs("option", "active", $( "#productcard_tabs" ).find("productcard_tabs-2").index()-1 );
+				if ($('#active_off').is(':checked')) {
+					$('#dolibarr_disable_blockinfo').show();
+				}
 			{/if}
 			{if $tab == 'images'}
 				$( "#productcard_tabs" ).tabs("option", "active", $( "#productcard_tabs" ).find("productcard_tabs-3").index() );
@@ -324,6 +327,16 @@
 				$('#dolibarr_min_status').attr('checked', false).attr('disabled', 'disabled');
 			}
 			$.uniform.update('#dolibarr_min_status');
+		});
+		$('#active_off').change(function () {
+			if (this.checked) {
+				$('#dolibarr_disable_blockinfo').show();
+			}
+		});
+		$('#active_on').change(function () {
+			if (this.checked) {
+				$('#dolibarr_disable_blockinfo').hide();
+			}
 		});
 		$('#upd').css('opacity', '0.5');
 		$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);

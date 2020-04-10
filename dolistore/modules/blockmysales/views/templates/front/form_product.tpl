@@ -90,6 +90,23 @@
 										<img src="{$base_dir_ssl}img/os/6.gif" alt="Disabled" title="Disabled" style="padding: 0px 5px;"> {l s='Disabled' mod='blockmysales'}
 									</td>
 								</tr>
+								<!-- Reason for disabling -->
+								{if $product.available_for_order || $product.dolibarr_disable_info}
+								<tr id="dolibarr_disable_blockinfo" style="display:none">
+									<td nowrap="nowrap" valign="top">{l s='Reason for disabling:' mod='blockmysales'}</td>
+									<td>
+										<div class="alert alert-danger">{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{else}{l s='The module has been deactivated by the developer' mod='blockmysales'}{/if}</div>
+										{if $product.dolibarr_disable_info}
+										<input type="hidden" name="dolibarr_disable_info" id="dolibarr_disable_info" value="{$product.dolibarr_disable_info}" />
+										{/if}
+										<!--
+										<input required="required" size="48" maxlength="255" name="dolibarr_disable_info" id="dolibarr_disable_info" value="{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{/if}" type="text" disabled="disabled" />
+										<br>
+										{l s='Used to define the reason for deactivation of the product sheet.' mod='blockmysales'}
+										-->
+									</td>
+								</tr>
+								{/if}
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>

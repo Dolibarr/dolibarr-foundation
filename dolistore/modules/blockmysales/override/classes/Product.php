@@ -7,6 +7,7 @@ class Product extends ProductCore
 	public $dolibarr_max;
 	public $dolibarr_max_status;
 	public $dolibarr_core_include;
+	public $dolibarr_disable_info;
 
 	public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
 	{
@@ -16,6 +17,7 @@ class Product extends ProductCore
 		Product::$definition['fields']['dolibarr_max'] =  array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 6);
 		Product::$definition['fields']['dolibarr_max_status'] =  array('type' => self::TYPE_BOOL, 'validate' => 'isBool');
 		Product::$definition['fields']['dolibarr_core_include'] =  array('type' => self::TYPE_BOOL, 'validate' => 'isBool');
+		Product::$definition['fields']['dolibarr_disable_info'] =  array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255);
 
 		parent::__construct($id_product, $full, $id_lang, $id_shop, $context);
 	}
