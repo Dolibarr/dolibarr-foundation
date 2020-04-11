@@ -5,7 +5,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	{
 		parent::__construct();
 
-		$this->_select .= ', a.date_add as dateadd, a.dolibarr_min, a.dolibarr_min_status, a.dolibarr_max, a.dolibarr_max_status';
+		$this->_select .= ', a.date_add as dateadd, a.dolibarr_min, a.dolibarr_max;
 
 		$this->fields_list['name'] = array(
 				'title' => $this->l('Name'),
@@ -40,9 +40,9 @@ class AdminProductsController extends AdminProductsControllerCore
 
 	public function getDolVersions($name, $product)
 	{
-		if (!empty($product['dolibarr_max']) && $product['dolibarr_max_status'] == 1)
+		if (! empty($product['dolibarr_max']))
 		{
-			if (!empty($product['dolibarr_min']) && $product['dolibarr_min_status'] == 1)
+			if (!empty($product['dolibarr_min']))
 			{
 				return $name . ' ' . $product['dolibarr_min'] . ' - ' . $product['dolibarr_max'];
 			}

@@ -308,25 +308,16 @@
 		});
 		$('#module_name_example').hide();
 		$('#dolibarr_min, #dolibarr_max').on('keyup', function() {
-			if ($('#dolibarr_max_status').is(':checked')) {
-				getModuleName();
-			}
-		});
-		if ($('#dolibarr_max_status').is(':checked')) {
-			getModuleName();
-		}
-		$('#dolibarr_min_status').change(function () {
 			getModuleName();
 		});
-		$('#dolibarr_max_status').change(function () {
-			if (this.checked) {
-				$('#dolibarr_min_status').attr('disabled', false);
+		$('#dolibarr_max').on('keyup', function() {
+			if (this.length > 0) {
+				$('#dolibarr_min').attr('disabled', false);
 				getModuleName();
 			} else {
 				$('#module_name_example').hide();
-				$('#dolibarr_min_status').attr('checked', false).attr('disabled', 'disabled');
+				$('#dolibarr_min').attr('disabled', 'disabled');
 			}
-			$.uniform.update('#dolibarr_min_status');
 		});
 		$('#active_off').change(function () {
 			if (this.checked) {

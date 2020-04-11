@@ -14,7 +14,7 @@ class BlockViewedOverride extends BlockViewed
 
 			$productIds = implode(',', array_map('intval', $productsViewed));
 			$productsImages = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT MAX(image_shop.id_image) id_image, p.id_product, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, il.legend, product_shop.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
+			SELECT MAX(image_shop.id_image) id_image, p.id_product, p.dolibarr_min, p.dolibarr_max, il.legend, product_shop.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
 			FROM '._DB_PREFIX_.'product p
 			'.Shop::addSqlAssociation('product', 'p').'
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').')
@@ -51,9 +51,7 @@ class BlockViewedOverride extends BlockViewed
 					// $obj is not a real product so it cannot be used as argument for getProductLink()
 					$obj->product_link = $this->context->link->getProductLink($obj->id, $obj->link_rewrite, $obj->category_rewrite);
 					$obj->dolibarr_min = $productsImagesArray[$productViewed]['dolibarr_min'];
-					$obj->dolibarr_min_status = $productsImagesArray[$productViewed]['dolibarr_min_status'];
 					$obj->dolibarr_max = $productsImagesArray[$productViewed]['dolibarr_max'];
-					$obj->dolibarr_max_status = $productsImagesArray[$productViewed]['dolibarr_max_status'];
 
 					if (!isset($obj->cover) || !$productsImagesArray[$productViewed]['id_image'])
 					{

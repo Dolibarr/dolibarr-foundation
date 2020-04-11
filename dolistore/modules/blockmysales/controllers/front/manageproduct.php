@@ -128,7 +128,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$dolistoreinvoices=array();
 
 					// Get list of products
-					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, pl.name, pl.description_short, pl.link_rewrite';
+					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, p.dolibarr_min, p.dolibarr_max, pl.name, pl.description_short, pl.link_rewrite';
 					$query.= ' FROM '._DB_PREFIX_.'product as p';
 					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
 					$query.= ' WHERE 1 = 1';
@@ -147,9 +147,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						{
 							$products[$id] = $values;
 
-							if (!empty($products[$id]['dolibarr_max']) && $products[$id]['dolibarr_max_status'] == 1)
+							if (!empty($products[$id]['dolibarr_max']))
 							{
-								if (!empty($products[$id]['dolibarr_min']) && $products[$id]['dolibarr_min_status'] == 1)
+								if (!empty($products[$id]['dolibarr_min']))
 								{
 									$products[$id]['name'] = $products[$id]['name'] . ' ' . $products[$id]['dolibarr_min'] . ' - ' . $products[$id]['dolibarr_max'];
 								}
@@ -614,9 +614,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					'file_name' => Tools::getValue('product_file_name'),
 					'module_version' => Tools::getValue('module_version'),
 					'dolibarr_min' => Tools::getValue('dolibarr_min'),
-					'dolibarr_min_status' => (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0),
 					'dolibarr_max' => Tools::getValue('dolibarr_max'),
-					'dolibarr_max_status' => (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0),
 					'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
 					'dolibarr_disable_info' => Tools::getValue('dolibarr_disable_info'),
 					'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
@@ -670,7 +668,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					if (Tools::isSubmit('id_p') && is_numeric(Tools::getValue('id_p')))
 					{
 						// Get product id
-						$query = 'SELECT p.id_product, p.price, p.dolibarr_disable_info, p.module_version, p.dolibarr_min, p.dolibarr_min_status, p.dolibarr_max, p.dolibarr_max_status, p.dolibarr_core_include, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
+						$query = 'SELECT p.id_product, p.price, p.dolibarr_disable_info, p.module_version, p.dolibarr_min, p.dolibarr_max, p.dolibarr_core_include, pl.description, pl.description_short, pl.meta_description, pl.meta_keywords, pl.meta_title, pl.name, pl.id_lang';
 						$query.= ' FROM '._DB_PREFIX_.'product as p, '._DB_PREFIX_.'product_lang as pl, '._DB_PREFIX_.'lang as l WHERE l.id_lang = pl.id_lang AND p.id_product = pl.id_product AND p.id_product = '.((int) Tools::getValue('id_p'));
 						$result = Db::getInstance()->ExecuteS($query);
 						if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -684,9 +682,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							$newproduct['price'] 							= round($row['price'], 2);
 							$newproduct['module_version'] 					= $row['module_version'];
 							$newproduct['dolibarr_min'] 					= $row['dolibarr_min'];
-							$newproduct['dolibarr_min_status'] 				= $row['dolibarr_min_status'];
 							$newproduct['dolibarr_max'] 					= $row['dolibarr_max'];
-							$newproduct['dolibarr_max_status'] 				= $row['dolibarr_max_status'];
 							$newproduct['dolibarr_core_include'] 			= $row['dolibarr_core_include'];
 							$newproduct['dolibarr_disable_info'] 			= $row['dolibarr_disable_info'];
 						}

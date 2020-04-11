@@ -60,13 +60,11 @@ if (!defined('_PS_VERSION_'))
             {
                 $module_version = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `module_version` varchar(15)');
                 $dolibarr_min = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min` varchar(6)');
-                $dolibarr_min_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_min_status` tinyint(1) DEFAULT 0');
                 $dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
-                $dolibarr_max_status = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max_status` tinyint(1) DEFAULT 0');
                 $dolibarr_core_include = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_core_include` tinyint(1) DEFAULT 0');
                 $dolibarr_disable_info = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_disable_info` varchar(255)');
 
-                return ($module_version & $dolibarr_min & $dolibarr_min_status & $dolibarr_max & $dolibarr_max_status & $dolibarr_core_include & $dolibarr_disable_info);
+                return ($module_version & $dolibarr_min & $dolibarr_max & $dolibarr_core_include & $dolibarr_disable_info);
             }
 
             public function uninstall()
@@ -1226,9 +1224,7 @@ if (!defined('_PS_VERSION_'))
 
                     // Dolibarr min/max compatibility
                     $dolibarr_min = (Tools::isSubmit('dolibarr_min') ? Tools::getValue('dolibarr_min') : null);
-                    $dolibarr_min_status = (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0);
                     $dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
-                    $dolibarr_max_status = (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0);
 
                     // Reason for disabling
                     $dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : null);	// default null when created
@@ -1238,10 +1234,10 @@ if (!defined('_PS_VERSION_'))
                                         `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
                                         `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
                                         `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
-                                        `module_version`, `dolibarr_min`, `dolibarr_min_status`, `dolibarr_max`, `dolibarr_max_status`, `dolibarr_core_include`, `dolibarr_disable_info`
+                                        `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_disable_info`
                                         ) VALUES (
                             0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
-                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.$module_version.'\', \''.$dolibarr_min.'\', '.$dolibarr_min_status.', \''.$dolibarr_max.'\', '.$dolibarr_max_status.', '.$dolibarr_core_include.', \''.$dolibarr_disable_info.'\'
+                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.$module_version.'\', \''.$dolibarr_min.'\', \''.$dolibarr_max.'\', '.$dolibarr_core_include.', \''.$dolibarr_disable_info.'\'
                         )';
 
                     $result = Db::getInstance()->Execute($query);
@@ -1548,9 +1544,7 @@ if (!defined('_PS_VERSION_'))
 
                     // Dolibarr min/max compatibility
                     $dolibarr_min = (Tools::isSubmit('dolibarr_min') ? Tools::getValue('dolibarr_min') : null);
-                    $dolibarr_min_status = (Tools::isSubmit('dolibarr_min_status') ? Tools::getValue('dolibarr_min_status') : 0);
                     $dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
-                    $dolibarr_max_status = (Tools::isSubmit('dolibarr_max_status') ? Tools::getValue('dolibarr_max_status') : 0);
 
                     // Reason for disabling
                     if ($status > 0) {
@@ -1568,9 +1562,7 @@ if (!defined('_PS_VERSION_'))
                                         `id_tax_rules_group`    = '.$taxe_id.',
                                         `module_version`        = \''.$module_version.'\',
                                         `dolibarr_min`          = \''.$dolibarr_min.'\',
-                                        `dolibarr_min_status`   = '.$dolibarr_min_status.',
                                         `dolibarr_max`          = \''.$dolibarr_max.'\',
-                                        `dolibarr_max_status`   = '.$dolibarr_max_status.',
                                         `dolibarr_core_include` = '.$dolibarr_core_include.',
                                         `dolibarr_disable_info` = \''.$dolibarr_disable_info.'\',';
                     if ($status >= 0) $query.= ' `active` = '.$status.',';          // We don't change if status is -1

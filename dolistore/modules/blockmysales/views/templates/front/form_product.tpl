@@ -54,9 +54,6 @@
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="dolibarr_min_desc">auto</span>' mod='blockmysales'}</strong>
-										<br><br>
-										<input name="dolibarr_min_status" id="dolibarr_min_status" value="1"{if $product.dolibarr_min_status == 1 && $product.dolibarr_max_status == 1} checked="checked"{/if} type="checkbox"{if $product.dolibarr_max_status != 1} disabled="disabled"{/if} />
-										{l s='Add this value in the module name' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
@@ -71,9 +68,6 @@
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="dolibarr_max_desc">auto</span>' mod='blockmysales'}</strong>
-										<br><br>
-										<input name="dolibarr_max_status" id="dolibarr_max_status" value="1"{if $product.dolibarr_max_status == 1} checked="checked"{/if} type="checkbox" />
-										{l s='Add this value in the module name' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
