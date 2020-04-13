@@ -85,7 +85,7 @@
 									</td>
 								</tr>
 								<!-- Reason for disabling -->
-								{if $product.available_for_order || $product.dolibarr_disable_info}
+								{if !$product.active}
 								<tr id="dolibarr_disable_blockinfo" style="display:none">
 									<td nowrap="nowrap" valign="top">{l s='Reason for disabling:' mod='blockmysales'}</td>
 									<td>
