@@ -306,18 +306,23 @@
 				"ajax" : 1 }
 			);
 		});
-		$('#module_name_example').hide();
-		$('#dolibarr_min, #dolibarr_max').on('keyup', function() {
+		getModuleName();
+		$('#product_name_l1').on('keyup', function(e) {
 			getModuleName();
 		});
-		$('#dolibarr_max').on('keyup', function() {
-			if (this.length > 0) {
-				$('#dolibarr_min').attr('disabled', false);
-				getModuleName();
-			} else {
-				$('#module_name_example').hide();
-				$('#dolibarr_min').attr('disabled', 'disabled');
-			}
+		$('#module_version').on('keyup', function(e) {
+			var self = $(this);
+			checkVersionFormat(e, self);
+		});
+		$('#dolibarr_min').on('keyup', function(e) {
+			var self = $(this);
+			checkVersionFormat(e, self);
+			getModuleName();
+		});
+		$('#dolibarr_max').on('keyup', function(e) {
+			var self = $(this);
+			checkVersionFormat(e, self);
+			getModuleName();
 		});
 		$('#active_off').change(function () {
 			if (this.checked) {
@@ -347,11 +352,18 @@
 				$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
 			}
 		});
+		function checkVersionFormat(e, self) {
+			self.val(self.val().replace(/[^0-9\.]/g, ''));
+			if ((e.which != 46 || self.val().indexOf('.') != -1) && (e.which < 48 || e.which > 57))
+			{
+				e.preventDefault();
+			}
+		}
 		function getModuleName() {
 			var name = $('#product_name_l1').val();
 			var dolibarr_min = $('#dolibarr_min').val();
 			var dolibarr_max = $('#dolibarr_max').val();
-			var version = ((dolibarr_min && $('#dolibarr_min_status').is(':checked')) ? dolibarr_min + ' - ' : '') + dolibarr_max;
+			var version = (typeof dolibarr_min != 'undefined' && dolibarr_min ? dolibarr_min + ' - ' : '') + dolibarr_max;
 			if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
 				$('#module_name_div').html(name + ' ' + version);
 				$('#module_name_example').show();
