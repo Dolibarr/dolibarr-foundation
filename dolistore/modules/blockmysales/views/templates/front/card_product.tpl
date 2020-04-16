@@ -257,6 +257,9 @@
 	$(document).ready(function() {
 		{/literal}
 		var current_shop_id = {$current_shop_id|intval};
+		var languages = {$languages|@json_encode nofilter};
+		var productactive = {$product.active};
+		var disableinfo = "{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{else}null{/if}";
 		{literal}
 		var originalOrder = false;
 
@@ -318,12 +321,17 @@
 			var self = $(this);
 			checkVersionFormat(e, self);
 			getModuleName();
+			setKeywords();
 		});
 		$('#dolibarr_max').on('keyup', function(e) {
 			var self = $(this);
 			checkVersionFormat(e, self);
 			getModuleName();
+			setKeywords();
 		});
+		if (!productactive && disableinfo) {
+			$('#dolibarr_disable_blockinfo').show();
+		}
 		$('#active_off').change(function () {
 			if (this.checked) {
 				$('#dolibarr_disable_blockinfo').show();
@@ -367,6 +375,27 @@
 			if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
 				$('#module_name_div').html(name + ' ' + version);
 				$('#module_name_example').show();
+			}
+		}
+		function setKeywords() {
+			var dolibarr_min = $('#dolibarr_min').val().split(".");
+			var dolibarr_max = $('#dolibarr_max').val().split(".");
+			if (dolibarr_min[0] && dolibarr_max[0]) {
+				var i;
+				var max = ((dolibarr_max[0] - dolibarr_min[0]) + 1);
+				$.each(languages, function(key, language) {
+					var min = dolibarr_min[0];
+					var keywords = $('#keywords_' + language.id_lang + ' input').val().split(",");
+					keywords = keywords.filter(function(elem) {
+						return $.isNumeric(elem) == false; 
+					});
+					for (i = 0; i < max; i++) {
+						keywords.push(min.toString());
+						min++;
+					}
+					keywords.join(',');
+					$('#keywords_' + language.id_lang + ' input').val(keywords);
+				});
 			}
 		}
 		function updateImagePosition(json) {

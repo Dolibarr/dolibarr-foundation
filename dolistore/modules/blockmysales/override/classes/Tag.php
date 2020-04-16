@@ -18,21 +18,27 @@ class Tag extends TagCore
     {
         $context = Context::getContext();
 
+        // WHERE t.`name` REGEXP \'^[0-9]{1}[0-9]{0,1}\.[0-9]{1}$\'
+
         $datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
                         SELECT DISTINCT t.name as name
                         FROM `'._DB_PREFIX_.'tag` t
-                        WHERE t.`name` REGEXP \'^[0-9]{1}[0-9]{0,1}\.[0-9]{1}$\'
+						WHERE t.`name` REGEXP \'^([0-9]+)$\'
                         ORDER BY name DESC
                         LIMIT '.(int) $nb);
 
         $ret=array();
-        if (!empty($datas)) {
+        if (!empty($datas))
+        {
         	$i=0;
         	foreach($datas as $data)
         	{
-        		$ret[$i]['name'] = $data['name'];
-        		$ret[$i]['times'] = '1';
-        		$i++;
+        		if ($data['name'] > 2)
+        		{
+        			$ret[$i]['name'] = $data['name'];
+        			$ret[$i]['times'] = '1';
+        			$i++;
+        		}
         	}
         	rsort($ret);
         }

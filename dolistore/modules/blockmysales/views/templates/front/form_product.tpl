@@ -49,7 +49,7 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Dolibarr min:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="6" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}3.1.x{/if}" type="text" />
+										<input required="required" size="9" maxlength="6" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}4.0.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
@@ -63,7 +63,7 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Dolibarr max:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="6" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}4.0.0{/if}" type="text" />
+										<input required="required" size="9" maxlength="6" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}11.0.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
@@ -85,7 +85,6 @@
 									</td>
 								</tr>
 								<!-- Reason for disabling -->
-								{if !$product.active}
 								<tr id="dolibarr_disable_blockinfo" style="display:none">
 									<td nowrap="nowrap" valign="top">{l s='Reason for disabling:' mod='blockmysales'}</td>
 									<td>
@@ -100,7 +99,6 @@
 										-->
 									</td>
 								</tr>
-								{/if}
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>

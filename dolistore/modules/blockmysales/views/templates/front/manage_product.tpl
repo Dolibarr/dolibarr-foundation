@@ -291,22 +291,26 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelang
 	id_language = id_language_new;
 }
 $(document).ready(function() {
-	{/literal}{if !$products}{literal}
-		$( "#sales_list_link" ).hide();
-	{/literal}{/if}{literal}
+	{/literal}
+	var current_shop_id = {$current_shop_id|intval};
+	var languages = {$languages|@json_encode nofilter};
+	{if !$products}
+		{literal}$( "#sales_list_link" ).hide();{/literal}
+	{/if}
+	{literal}
 	$(function() {
 		$( "#manageproduct_tabs" ).tabs(
 		{/literal}{if $products}{literal}
-				{
-					beforeActivate: function( event, ui ) {
-						var manageproducttab = ui.newPanel.attr('id');
-						if (manageproducttab == 'manageproduct_tabs-3') {
-							$( "#sales_list_link" ).hide();
-						} else {
-							$( "#sales_list_link" ).show();
-						}
+			{
+				beforeActivate: function( event, ui ) {
+					var manageproducttab = ui.newPanel.attr('id');
+					if (manageproducttab == 'manageproduct_tabs-3') {
+						$( "#sales_list_link" ).hide();
+					} else {
+						$( "#sales_list_link" ).show();
 					}
 				}
+			}
 		{/literal}{/if}{literal}
 		);
 		{/literal}{if $dateafter || $datebefore}{literal}
@@ -338,11 +342,13 @@ $(document).ready(function() {
 		var self = $(this);
 		checkVersionFormat(e, self);
 		getModuleName();
+		setKeywords();
 	});
 	$('#dolibarr_max').on('keyup', function(e) {
 		var self = $(this);
 		checkVersionFormat(e, self);
 		getModuleName();
+		setKeywords();
 	});
 	$('#sub').css('opacity', '0.5');
 	$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
@@ -398,6 +404,27 @@ $(document).ready(function() {
 		if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
 			$('#module_name_div').html(name + ' ' + version);
 			$('#module_name_example').show();
+		}
+	}
+	function setKeywords() {
+		var dolibarr_min = $('#dolibarr_min').val().split(".");
+		var dolibarr_max = $('#dolibarr_max').val().split(".");
+		if (dolibarr_min[0] && dolibarr_max[0]) {
+			var i;
+			var max = ((dolibarr_max[0] - dolibarr_min[0]) + 1);
+			$.each(languages, function(key, language) {
+				var min = dolibarr_min[0];
+				var keywords = $('#keywords_' + language.id_lang + ' input').val().split(",");
+				keywords = keywords.filter(function(elem) {
+					return $.isNumeric(elem) == false; 
+				});
+				for (i = 0; i < max; i++) {
+					keywords.push(min.toString());
+					min++;
+				}
+				keywords.join(',');
+				$('#keywords_' + language.id_lang + ' input').val(keywords);
+			});
 		}
 	}
 });

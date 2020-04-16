@@ -1227,7 +1227,7 @@ if (!defined('_PS_VERSION_'))
                     $dolibarr_max = (Tools::isSubmit('dolibarr_max') ? Tools::getValue('dolibarr_max') : null);
 
                     // Reason for disabling
-                    $dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : null);	// default null when created
+                    $dolibarr_disable_info = null;	// default null when created
 
                     //insertion du produit en base
                     $query = 'INSERT INTO `'._DB_PREFIX_.'product` (

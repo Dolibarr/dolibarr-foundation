@@ -411,7 +411,6 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$product['dolibarr_disable_info']	= $row['dolibarr_disable_info'];
 							}
 
-
 							$query = 'SELECT `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later`
 									FROM `'._DB_PREFIX_.'product_lang`
 									WHERE `id_product` = '.$product_id.' ';
