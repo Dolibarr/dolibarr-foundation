@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="256"
@@ -23,16 +22,6 @@
      id="title3072">Logo Dolibarr ERP-CRM</title>
   <defs
      id="defs3452">
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3734"
-       id="linearGradient5510"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.79663919,0,0,0.7966393,-399.4726,-462.02516)"
-       x1="1223.7272"
-       y1="1026.5248"
-       x2="1221.0221"
-       y2="1317.5959" />
     <linearGradient
        id="linearGradient3734">
       <stop
@@ -61,15 +50,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="66.442838"
-     inkscape:cy="114.54932"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="46.527071"
+     inkscape:cy="33.589837"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1023"
-     inkscape:window-x="0"
+     inkscape:window-height="1051"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:showpageshadow="false"
@@ -126,23 +115,17 @@
        x="537.1402"
        y="887.85065"
        id="text2828-6"
-       transform="matrix(0.60106745,0,0,0.58423418,-307.44242,63.038164)"><tspan
+       transform="matrix(0.59643575,0,0,0.57170095,-305.08827,69.539402)"><tspan
          sodipodi:role="line"
          id="tspan2830-9"
          x="537.1402"
          y="887.85065"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:518.16009521px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none">D</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:2.69035006;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.8627451"
-       x="5.1840639"
-       y="581.6532"
-       id="text2828"
-       transform="scale(1.014304,0.98589773)"><tspan
-         sodipodi:role="line"
-         id="tspan2830"
-         x="5.1840639"
-         y="581.6532"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:307.05703735px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:2.69035006;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.8627451">D</tspan></text>
+    <path
+       sodipodi:nodetypes="cccccscsssccsssc"
+       d="M 96.543352,435.57246 V 568.89982 L 39.280148,568.3541 v 0.54572 -186.82217 h 74.611422 c 32.72183,0 58.34452,7.18722 76.86808,21.56167 22.00261,17.19474 33.00393,40.53047 33.00393,70.00717 0,28.20303 -9.40283,51.22032 -28.20848,69.05192 -18.80565,17.83159 -42.52941,26.32236 -72.14832,26.32236 -3.47904,0 -9.75396,-0.097 -17.55462,-0.12078 v -54.72295 l 15.77212,-0.0737 c 33.37955,-0.15599 43.46566,-13.43646 43.46566,-40.45678 0,-25.38271 -16.40792,-38.07407 -49.22378,-38.07407 z"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:194.85823059px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#a05a2c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.4894712;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373"
+       id="path8463"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
