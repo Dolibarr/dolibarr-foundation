@@ -291,22 +291,26 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code, hidelang
 	id_language = id_language_new;
 }
 $(document).ready(function() {
-	{/literal}{if !$products}{literal}
-		$( "#sales_list_link" ).hide();
-	{/literal}{/if}{literal}
+	{/literal}
+	var current_shop_id = {$current_shop_id|intval};
+	var languages = {$languages|@json_encode nofilter};
+	{if !$products}
+		{literal}$( "#sales_list_link" ).hide();{/literal}
+	{/if}
+	{literal}
 	$(function() {
 		$( "#manageproduct_tabs" ).tabs(
 		{/literal}{if $products}{literal}
-				{
-					beforeActivate: function( event, ui ) {
-						var manageproducttab = ui.newPanel.attr('id');
-						if (manageproducttab == 'manageproduct_tabs-3') {
-							$( "#sales_list_link" ).hide();
-						} else {
-							$( "#sales_list_link" ).show();
-						}
+			{
+				beforeActivate: function( event, ui ) {
+					var manageproducttab = ui.newPanel.attr('id');
+					if (manageproducttab == 'manageproduct_tabs-3') {
+						$( "#sales_list_link" ).hide();
+					} else {
+						$( "#sales_list_link" ).show();
 					}
 				}
+			}
 		{/literal}{/if}{literal}
 		);
 		{/literal}{if $dateafter || $datebefore}{literal}
@@ -326,27 +330,25 @@ $(document).ready(function() {
 			dateFormat: 'yy-mm-dd'
 		});
 	});
-	$('#module_name_example').hide();
-	$('#dolibarr_min, #dolibarr_max').on('keyup', function() {
-		if ($('#dolibarr_max_status').is(':checked')) {
-			getModuleName();
-		}
-	});
-	if ($('#dolibarr_max_status').is(':checked')) {
-		getModuleName();
-	}
-	$('#dolibarr_min_status').change(function() {
+	getModuleName();
+	$('#product_name_l1').on('keyup', function(e) {
 		getModuleName();
 	});
-	$('#dolibarr_max_status').change(function() {
-		if (this.checked) {
-			$('#dolibarr_min_status').attr('disabled', false);
-			getModuleName();
-		} else {
-			$('#module_name_example').hide();
-			$('#dolibarr_min_status').attr('checked', false).attr('disabled', 'disabled');
-		}
-		$.uniform.update('#dolibarr_min_status');
+	$('#module_version').on('keyup', function(e) {
+		var self = $(this);
+		checkVersionFormat(e, self);
+	});
+	$('#dolibarr_min').on('keyup', function(e) {
+		var self = $(this);
+		checkVersionFormat(e, self);
+		getModuleName();
+		setKeywords();
+	});
+	$('#dolibarr_max').on('keyup', function(e) {
+		var self = $(this);
+		checkVersionFormat(e, self);
+		getModuleName();
+		setKeywords();
 	});
 	$('#sub').css('opacity', '0.5');
 	$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
@@ -387,14 +389,42 @@ $(document).ready(function() {
 		animation: true,
 	});
 	$(function () { $("[data-toggle='tooltip']").tooltip(); });
+	function checkVersionFormat(e, self) {
+		self.val(self.val().replace(/[^0-9\.]/g, ''));
+		if ((e.which != 46 || self.val().indexOf('.') != -1) && (e.which < 48 || e.which > 57))
+		{
+			e.preventDefault();
+		}
+	}
 	function getModuleName() {
 		var name = $('#product_name_l1').val();
 		var dolibarr_min = $('#dolibarr_min').val();
 		var dolibarr_max = $('#dolibarr_max').val();
-		var version = ((dolibarr_min && $('#dolibarr_min_status').is(':checked')) ? dolibarr_min + ' - ' : '') + dolibarr_max;
+		var version = (typeof dolibarr_min != 'undefined' && dolibarr_min ? dolibarr_min + ' - ' : '') + dolibarr_max;
 		if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
 			$('#module_name_div').html(name + ' ' + version);
 			$('#module_name_example').show();
+		}
+	}
+	function setKeywords() {
+		var dolibarr_min = $('#dolibarr_min').val().split(".");
+		var dolibarr_max = $('#dolibarr_max').val().split(".");
+		if (dolibarr_min[0] && dolibarr_max[0]) {
+			var i;
+			var max = ((dolibarr_max[0] - dolibarr_min[0]) + 1);
+			$.each(languages, function(key, language) {
+				var min = dolibarr_min[0];
+				var keywords = $('#keywords_' + language.id_lang + ' input').val().split(",");
+				keywords = keywords.filter(function(elem) {
+					return $.isNumeric(elem) == false; 
+				});
+				for (i = 0; i < max; i++) {
+					keywords.push(min.toString());
+					min++;
+				}
+				keywords.join(',');
+				$('#keywords_' + language.id_lang + ' input').val(keywords);
+			});
 		}
 	}
 });

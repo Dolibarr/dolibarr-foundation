@@ -211,6 +211,9 @@
 		{if $owner}
 			{if $tab == 'modify'}
 				$( "#productcard_tabs" ).tabs("option", "active", $( "#productcard_tabs" ).find("productcard_tabs-2").index()-1 );
+				if ($('#active_off').is(':checked')) {
+					$('#dolibarr_disable_blockinfo').show();
+				}
 			{/if}
 			{if $tab == 'images'}
 				$( "#productcard_tabs" ).tabs("option", "active", $( "#productcard_tabs" ).find("productcard_tabs-3").index() );
@@ -254,6 +257,9 @@
 	$(document).ready(function() {
 		{/literal}
 		var current_shop_id = {$current_shop_id|intval};
+		var languages = {$languages|@json_encode nofilter};
+		var productactive = {$product.active};
+		var disableinfo = "{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{else}null{/if}";
 		{literal}
 		var originalOrder = false;
 
@@ -303,27 +309,38 @@
 				"ajax" : 1 }
 			);
 		});
-		$('#module_name_example').hide();
-		$('#dolibarr_min, #dolibarr_max').on('keyup', function() {
-			if ($('#dolibarr_max_status').is(':checked')) {
-				getModuleName();
-			}
-		});
-		if ($('#dolibarr_max_status').is(':checked')) {
+		getModuleName();
+		$('#product_name_l1').on('keyup', function(e) {
 			getModuleName();
+		});
+		$('#module_version').on('keyup', function(e) {
+			var self = $(this);
+			checkVersionFormat(e, self);
+		});
+		$('#dolibarr_min').on('keyup', function(e) {
+			var self = $(this);
+			checkVersionFormat(e, self);
+			getModuleName();
+			setKeywords();
+		});
+		$('#dolibarr_max').on('keyup', function(e) {
+			var self = $(this);
+			checkVersionFormat(e, self);
+			getModuleName();
+			setKeywords();
+		});
+		if (!productactive && disableinfo) {
+			$('#dolibarr_disable_blockinfo').show();
 		}
-		$('#dolibarr_min_status').change(function () {
-			getModuleName();
-		});
-		$('#dolibarr_max_status').change(function () {
+		$('#active_off').change(function () {
 			if (this.checked) {
-				$('#dolibarr_min_status').attr('disabled', false);
-				getModuleName();
-			} else {
-				$('#module_name_example').hide();
-				$('#dolibarr_min_status').attr('checked', false).attr('disabled', 'disabled');
+				$('#dolibarr_disable_blockinfo').show();
 			}
-			$.uniform.update('#dolibarr_min_status');
+		});
+		$('#active_on').change(function () {
+			if (this.checked) {
+				$('#dolibarr_disable_blockinfo').hide();
+			}
 		});
 		$('#upd').css('opacity', '0.5');
 		$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
@@ -343,14 +360,42 @@
 				$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
 			}
 		});
+		function checkVersionFormat(e, self) {
+			self.val(self.val().replace(/[^0-9\.]/g, ''));
+			if ((e.which != 46 || self.val().indexOf('.') != -1) && (e.which < 48 || e.which > 57))
+			{
+				e.preventDefault();
+			}
+		}
 		function getModuleName() {
 			var name = $('#product_name_l1').val();
 			var dolibarr_min = $('#dolibarr_min').val();
 			var dolibarr_max = $('#dolibarr_max').val();
-			var version = ((dolibarr_min && $('#dolibarr_min_status').is(':checked')) ? dolibarr_min + ' - ' : '') + dolibarr_max;
+			var version = (typeof dolibarr_min != 'undefined' && dolibarr_min ? dolibarr_min + ' - ' : '') + dolibarr_max;
 			if (typeof name != 'undefined' && name && typeof version != 'undefined' && version) {
 				$('#module_name_div').html(name + ' ' + version);
 				$('#module_name_example').show();
+			}
+		}
+		function setKeywords() {
+			var dolibarr_min = $('#dolibarr_min').val().split(".");
+			var dolibarr_max = $('#dolibarr_max').val().split(".");
+			if (dolibarr_min[0] && dolibarr_max[0]) {
+				var i;
+				var max = ((dolibarr_max[0] - dolibarr_min[0]) + 1);
+				$.each(languages, function(key, language) {
+					var min = dolibarr_min[0];
+					var keywords = $('#keywords_' + language.id_lang + ' input').val().split(",");
+					keywords = keywords.filter(function(elem) {
+						return $.isNumeric(elem) == false; 
+					});
+					for (i = 0; i < max; i++) {
+						keywords.push(min.toString());
+						min++;
+					}
+					keywords.join(',');
+					$('#keywords_' + language.id_lang + ' input').val(keywords);
+				});
 			}
 		}
 		function updateImagePosition(json) {

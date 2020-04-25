@@ -35,7 +35,7 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Module version:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="15" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
+										<input required="required" size="9" maxlength="4" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
@@ -49,14 +49,11 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Dolibarr min:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="6" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}3.1.x{/if}" type="text" />
+										<input required="required" size="9" maxlength="6" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}4.0.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="dolibarr_min_desc">auto</span>' mod='blockmysales'}</strong>
-										<br><br>
-										<input name="dolibarr_min_status" id="dolibarr_min_status" value="1"{if $product.dolibarr_min_status == 1 && $product.dolibarr_max_status == 1} checked="checked"{/if} type="checkbox"{if $product.dolibarr_max_status != 1} disabled="disabled"{/if} />
-										{l s='Add this value in the module name' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
@@ -66,14 +63,11 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Dolibarr max:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="6" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}4.0.0{/if}" type="text" />
+										<input required="required" size="9" maxlength="6" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}11.0.0{/if}" type="text" />
 										<br>
 										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="dolibarr_max_desc">auto</span>' mod='blockmysales'}</strong>
-										<br><br>
-										<input name="dolibarr_max_status" id="dolibarr_max_status" value="1"{if $product.dolibarr_max_status == 1} checked="checked"{/if} type="checkbox" />
-										{l s='Add this value in the module name' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
@@ -88,6 +82,21 @@
 										<br />
 										<input name="active" id="active_off" value="0"{if $product.active == 0 || $product.active == ""} checked="checked"{/if} type="radio" />
 										<img src="{$base_dir_ssl}img/os/6.gif" alt="Disabled" title="Disabled" style="padding: 0px 5px;"> {l s='Disabled' mod='blockmysales'}
+									</td>
+								</tr>
+								<!-- Reason for disabling -->
+								<tr id="dolibarr_disable_blockinfo" style="display:none">
+									<td nowrap="nowrap" valign="top">{l s='Reason for disabling:' mod='blockmysales'}</td>
+									<td>
+										<div class="alert alert-danger">{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{else}{l s='The module has been deactivated by the developer' mod='blockmysales'}{/if}</div>
+										{if $product.dolibarr_disable_info}
+										<input type="hidden" name="dolibarr_disable_info" id="dolibarr_disable_info" value="{$product.dolibarr_disable_info}" />
+										{/if}
+										<!--
+										<input required="required" size="48" maxlength="255" name="dolibarr_disable_info" id="dolibarr_disable_info" value="{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{/if}" type="text" disabled="disabled" />
+										<br>
+										{l s='Used to define the reason for deactivation of the product sheet.' mod='blockmysales'}
+										-->
 									</td>
 								</tr>
 								<tr>
