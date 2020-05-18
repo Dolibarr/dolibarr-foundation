@@ -1133,7 +1133,9 @@ if (!defined('_PS_VERSION_'))
                         $product_name = $resume = $keywords = $description = "";
                         $product_name = trim(Tools::getValue('product_name_l'.$language['id_lang']));
                         $resume = Tools::getValue('resume_'.$language['id_lang']);
-                        $keywords = trim(Tools::getValue('keywords_'.$language['id_lang']));
+                        $keywords = explode(",", trim(Tools::getValue('keywords_'.$language['id_lang'])));
+                        $dolibarr_tags = explode(",", trim(Tools::getValue('dolibarr_keywords_'.$language['id_lang'])));
+                        $keywords = implode(",", array_merge($keywords, $dolibarr_tags));
                         $description = Tools::getValue('description_'.$language['id_lang']);
 
                         if ($language['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == ""))
@@ -1450,7 +1452,9 @@ if (!defined('_PS_VERSION_'))
                     $product_name = $resume = $keywords = $description = "";
                     $product_name = trim(Tools::getValue('product_name_l'.$language['id_lang']));
                     $resume = Tools::getValue('resume_'.$language['id_lang']);
-                    $keywords = trim(Tools::getValue('keywords_'.$language['id_lang']));
+                    $keywords = explode(",", trim(Tools::getValue('keywords_'.$language['id_lang'])));
+                    $dolibarr_tags = explode(",", trim(Tools::getValue('dolibarr_keywords_'.$language['id_lang'])));
+                    $keywords = implode(",", array_merge($keywords, $dolibarr_tags));
                     $description = Tools::getValue('description_'.$language['id_lang']);
 
                     if ($language['iso_code'] == "en" && ($product_name == "" || $resume == "" || $description == "" || $keywords == ""))

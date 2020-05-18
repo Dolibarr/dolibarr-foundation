@@ -242,6 +242,7 @@
 									{foreach from=$languages key=id item=language}
 										<div id="keywords_{$language.id_lang}" style="padding-left: 10px; display: {if $language.id_lang == $defaultLanguage}block{else}none{/if};float: left;">
 											<input name="keywords_{$language.id_lang}" type="text" size="48" maxlength="100" value="{$product.keywords[$language.id_lang]}" />
+											<input name="dolibarr_keywords_{$language.id_lang}" type="hidden" value="" />
 										</div>
 									{/foreach}
 									<div class="displayed_flag">

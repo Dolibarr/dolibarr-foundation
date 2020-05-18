@@ -331,6 +331,7 @@ $(document).ready(function() {
 		});
 	});
 	getModuleName();
+	splitKeywords();
 	$('#product_name_l1').on('keyup', function(e) {
 		getModuleName();
 	});
@@ -406,6 +407,30 @@ $(document).ready(function() {
 			$('#module_name_example').show();
 		}
 	}
+	function splitKeywords() {
+		var dolibarr_min = $('#dolibarr_min').val().split(".");
+		var dolibarr_max = $('#dolibarr_max').val().split(".");
+		if (dolibarr_min[0] && dolibarr_max[0]) {
+			var i;
+			var max = ((dolibarr_max[0] - dolibarr_min[0]) + 1);
+			$.each(languages, function(key, language) {
+				var min = dolibarr_min[0];
+				var dolibarr_tags = [];
+				var keywords = $("#keywords_" + language.id_lang + " input[name='keywords_" + language.id_lang + "']").val().split(",");
+				keywords = keywords.filter(function(elem) {
+					return $.isNumeric(elem) == false;
+				});
+				for (i = 0; i < max; i++) {
+					dolibarr_tags.push(min.toString());
+					min++;
+				}
+				keywords.join(',');
+				$("#keywords_" + language.id_lang + " input[name='keywords_" + language.id_lang + "']").val(keywords);
+				dolibarr_tags.join(',');
+				$("#keywords_" + language.id_lang + " input[name='dolibarr_keywords_" + language.id_lang + "']").val(dolibarr_tags);
+			});
+		}
+	}
 	function setKeywords() {
 		var dolibarr_min = $('#dolibarr_min').val().split(".");
 		var dolibarr_max = $('#dolibarr_max').val().split(".");
@@ -414,16 +439,13 @@ $(document).ready(function() {
 			var max = ((dolibarr_max[0] - dolibarr_min[0]) + 1);
 			$.each(languages, function(key, language) {
 				var min = dolibarr_min[0];
-				var keywords = $('#keywords_' + language.id_lang + ' input').val().split(",");
-				keywords = keywords.filter(function(elem) {
-					return $.isNumeric(elem) == false; 
-				});
+				var dolibarr_tags = [];
 				for (i = 0; i < max; i++) {
-					keywords.push(min.toString());
+					dolibarr_tags.push(min.toString());
 					min++;
 				}
-				keywords.join(',');
-				$('#keywords_' + language.id_lang + ' input').val(keywords);
+				dolibarr_tags.join(',');
+				$("#keywords_" + language.id_lang + " input[name='dolibarr_keywords_" + language.id_lang + "']").val(dolibarr_tags);
 			});
 		}
 	}
