@@ -15,10 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="dolibarr_124x124_white.svg"
-   inkscape:export-filename="/home/ldestailleur/git/dolibarr-foundation/logo-cliparts/dolibarr_124x124_white.png"
-   inkscape:export-xdpi="93"
-   inkscape:export-ydpi="93">
+   sodipodi:docname="dolibarr_256x256_white.svg"
+   inkscape:export-filename="/home/ldestailleur/git/dolibarr-foundation/logo-cliparts/dolibarr_256x256_white.png"
+   inkscape:export-xdpi="192"
+   inkscape:export-ydpi="192">
   <defs
      id="defs4">
     <linearGradient
@@ -259,7 +259,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6"
-     inkscape:cx="42.916295"
+     inkscape:cx="50.5723"
      inkscape:cy="70.745335"
      inkscape:document-units="px"
      inkscape:current-layer="g3197"
@@ -281,7 +281,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -297,7 +297,7 @@
          inkscape:export-ydpi="90.544151"
          inkscape:export-xdpi="90.544151"
          inkscape:export-filename="/home/ldestail/git/foundation/logo/dolibarr_124x124.png"
-         transform="matrix(0,1,-1,0,0,0)"
+         transform="rotate(90)"
          y="-439.41635"
          x="76.554825"
          height="124.24876"
