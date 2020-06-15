@@ -44,7 +44,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 		if (!empty($customer_id))
 		{
-			if (Tools::isSubmit('id_customer'))	$customer_id = Tools::getValue('id_customer');
+			if (Tools::isSubmit('id_customer'))	$customer_id = (int) Tools::getValue('id_customer');
 			if (Tools::isSubmit('active'))		$active		 = Tools::getValue('active');
 
 			$customer = BlockMySales::getCustomer($this->context->customer, $customer_id);
