@@ -10,8 +10,8 @@ This directory contains source of template and module for PrestaShop, used for D
 
 Setup for a good VAT / intracommunautary management:
 ----------------------------------------------------
-1) Enable the module Numéro de TVA Europeen (in setup keep "Activer la vérification du numéro de TVA via le service web" to off).
-Ce module "Activer la saisie du numéro de TVA intra-communautaire lors de la création de l'adresse. Vous devez remplir le champ de la société pour permettre la saisie du numéro de TVA."
+1) Enable the module "Numéro de TVA Europeen - Activer la saisie du numéro de TVA intra-communautaire lors de la création de l'adresse. Vous devez remplir le champ de la société pour permettre la saisie du numéro de TVA."
+In setup of module, keep "Activer la vérification du numéro de TVA via le service web" to off).
 
 2) In Preferences - Customers. Do not enable the B2B mode. It just add fields SIRET, APE and outstanding limit to customers record.
 
@@ -19,7 +19,11 @@ Ce module "Activer la saisie du numéro de TVA intra-communautaire lors de la cr
 - Activate VAT 5.5 for everybody
 - Activate VAT 20 for everybody
 
-4) Aller dans le menu "Client" - En base de la liste: Définir les champs requis pour cette section. Cochez le champ "Company".
+4) Aller dans le menu "Client - Adresses" - En bas de la liste: Définir les champs requis pour cette section. Cochez le champ "Company".
 -> So company is filled -> So the VAT number is requested and not forgot (even if not mandatory).
 
 
+
+Action after 1click upgrade
+---------------------------
+Edit file /modules/themeconfigurator/css/theme9.css to comment background image in CSS.
