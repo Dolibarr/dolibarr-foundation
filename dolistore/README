@@ -10,6 +10,8 @@ This directory contains source of template and module for PrestaShop, used for D
 
 Setup for a good VAT / intracommunautary management:
 ----------------------------------------------------
+0) Create a vat rule with all countries of Europe and VAT rate of your country (for example 20% in France must set 20% for all countries of Europe). Set all products to use this VAT rule.
+
 1) Enable the module "Numéro de TVA Europeen - Activer la saisie du numéro de TVA intra-communautaire lors de la création de l'adresse. Vous devez remplir le champ de la société pour permettre la saisie du numéro de TVA."
 In setup of module, keep "Activer la vérification du numéro de TVA via le service web" to off).
 
