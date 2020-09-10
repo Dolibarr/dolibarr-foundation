@@ -10,19 +10,22 @@ This directory contains source of template and module for PrestaShop, used for D
 
 Setup for a good VAT / intracommunautary management:
 ----------------------------------------------------
-0) Create a vat rule with all countries of Europe and VAT rate of your country (for example 20% in France must set 20% for all countries of Europe). Set all products to use this VAT rule.
+1) Create a vat rule with all countries of Europe and set the VAT rate of your country as the VAT rate to use for all this european countries (for example 20% in France must set 20% as the VAT Rate for all european countries).
 
-1) Enable the module "Numéro de TVA Europeen - Activer la saisie du numéro de TVA intra-communautaire lors de la création de l'adresse. Vous devez remplir le champ de la société pour permettre la saisie du numéro de TVA."
-In setup of module, keep "Activer la vérification du numéro de TVA via le service web" to off).
+2) Set all products into catalog to use this VAT rule.
 
-2) In Preferences - Customers. Do not enable the B2B mode. It just add fields SIRET, APE and outstanding limit to customers record.
+3) Enable the module "Numéro de TVA Europeen - Activer la saisie du numéro de TVA intra-communautaire lors de la création de l'adresse. Vous devez remplir le champ de la société pour permettre la saisie du numéro de TVA."
+In the setup of the module, keep "Activer la vérification du numéro de TVA via le service web" to "Off").
 
-3) Localisation - Regles de tax: 
-- Activate VAT 5.5 for everybody
-- Activate VAT 20 for everybody
+4) In Preferences - Customers. Do NOT enable the B2B mode. There is no need for this. This just add fields SIRET, APE and Outstanding limit to customers record and we don't need this.
 
-4) Aller dans le menu "Client - Adresses" - En bas de la liste: Définir les champs requis pour cette section. Cochez le champ "Company".
--> So company is filled -> So the VAT number is requested and not forgot (even if not mandatory).
+5) In Localisation - Règles de tax: 
+- Activate "VAT 5.5 for everybody"
+- Activate "VAT 20 for everybody"
+
+6) Aller dans le menu "Client - Adresses" - En bas de la liste: Définir les champs requis pour cette section. Cochez le champ "Company".
+-> So company will always be filled (even if user enter "None", we don't mind) 
+-> Goal of having the company field is to have the VAT number asked and not forgot by user (even if field is not mandatory, it is at least asked).
 
 
 
