@@ -3,15 +3,38 @@ mkdir /home/workadventure
 cd /home/workadventure
 git clone https://github.com/thecodingmachine/workadventure.git app
 
-Edit section ports into:
+To change ports of server, edit section ports into file *docker-compose.yaml*:
    - "81:80"
    - "444:443"
    
+
+To launch workadventure servers:
+
 docker-compose up
 
-vi /etc/hosts to add workadventure.localhost with IP of server
 
-https://play.workadventure.localhost/_/global/eldy.github.io/dolibarr-adventure/map.json
+To access application:
+
+vi /etc/hosts to add
+
+IP.OF.SERVER.WORKADVENTURE workadventure.localhost play.workadventure.localhost api.workadventure.localhost maps.workadventure.localhost
+
+WARNING: The DEBUG_MODE variable is not set. Defaulting to a blank string.
+WARNING: The JITSI_URL variable is not set. Defaulting to a blank string.
+WARNING: The JITSI_PRIVATE_MODE variable is not set. Defaulting to a blank string.
+WARNING: The SECRET_JITSI_KEY variable is not set. Defaulting to a blank string.
+WARNING: The ADMIN_API_TOKEN variable is not set. Defaulting to a blank string.
+WARNING: The JITSI_ISS variable is not set. Defaulting to a blank string.
+
+Then call URL:
+
+http://play.workadventure.localhost
+http://play.workadventure.localhost:8080
+
+and to use your own map. Copy it into a directory */home/workadventure/app/maps/mymap*
+
+http://play.workadventure.localhost/_/global/maps.workadventure.localhost/mymap/map.json
+
 
 
 
