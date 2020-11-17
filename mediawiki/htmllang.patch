@@ -13,6 +13,8 @@ With this patch, the top html tag has the same value than the content, so the va
 It has no effect on other part of page that were correctly rounded by correct language code. 
 
 
+File includes/skins/Skin.php:
+
 		/**
          * Return values for <html> element
          * @return array Array of associative name-to-value elements for <html> element

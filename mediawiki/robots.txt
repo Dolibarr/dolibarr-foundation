@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /index.php?title=Special
+Disallow: /index.php?title=Template
+Disallow: /index.php?*diff=
+Disallow: /index.php?*action=history
+Disallow: /index.php?*oldid=
+
+# Allow the Internet Archiver to index action=raw and thereby store the raw wikitext of pages
+User-agent: ia_archiver
+Allow: /*&action=raw

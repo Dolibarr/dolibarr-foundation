@@ -42,4 +42,7 @@ http://play.workadventure.dolibarr.org/_/global/maps.workadventure.dolibarr.org/
 
 
 
+
+
+
    
