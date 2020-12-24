@@ -142,12 +142,14 @@ class OpaleTranslator
         $resultfilenames = array();
         $this->glob_recur($foldertozip, "Cours.xml");
         $xmlfile = $this->resultfilenames[0];
+        $filename = explode('/',$xmlfile);
+        $filename = $filename[count($filename)-1];
         $dom = new DOMDocument();
         if ( !$dom->load($xmlfile)) {
             $GLOBALS['status'] = array('error' => 'Error on xml File\n');
             return false;
         } else {
-            print "***** Xml oppened successfully *****\n";
+            print "***** ".$filename." oppened successfully *****\n";
         }
         $xml = $dom->documentElement;
         print "***** Translation titles *****\n";
@@ -157,7 +159,7 @@ class OpaleTranslator
         $this->translateCollectionType($xml, 'para');
         print "***** Paragraphs translated *****\n";
         $dom->save($xmlfile);
-        $resultfilenames = array();
+        $this->resultfilenames = array();
         $this->glob_recur($foldertozip, ".quiz");
         foreach ($this->resultfilenames as $filename) {
             
@@ -199,9 +201,8 @@ class OpaleTranslator
         $collection = $xml->getElementsByTagName($collectiontype);
         for ($i = 0; $i < $collection->length; $i++) {
             $stringstotranslate = array($collection->item($i)->nodeValue);
-            /*$translatedstring = $this->translate($stringstotranslate);
-            $collection->item($i)->nodeValue = $translatedstring;*/
-            $collection->item($i)->nodeValue="0";
+            $translatedstring = $this->translate($stringstotranslate);
+            $collection->item($i)->nodeValue = $translatedstring;
 
         }
     }
