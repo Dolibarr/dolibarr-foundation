@@ -77,4 +77,5 @@ if ($translator->outputZipArchive($foldertozip, $zipname, $dest_dir . '/')) {
     $translator->delTmp($foldertozip);
     die();
 }
+$translator->delTmp($foldertozip);
 print "***** Finished *****\n";

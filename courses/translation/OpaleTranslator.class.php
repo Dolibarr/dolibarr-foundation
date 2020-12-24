@@ -7,6 +7,12 @@ class OpaleTranslator
     public $baseUrlApi = "https://translation.googleapis.com/language/translate/v2?key=";
     public $resultfilenames = array();
 
+    /**
+     * Constructor of OpaleTranslator class
+     * @param mixed $codelangfrom The language code of the base archive
+     * @param mixed $codelangto The language code of the archive to create
+     * @param mixed $apicode The apicode for google translate api
+     */
     public function OpaleTranslator($codelangfrom, $codelangto, $apicode)
     {
         $this->codelangfrom = $codelangfrom;
@@ -126,15 +132,19 @@ class OpaleTranslator
         $GLOBALS['status'] = array('success' => "Files zipped successfully \n");
         return true;
     }
-
+    /**
+     * Create edit Cours.xml and quiz files
+     * @param mixed $foldertozip Folder root to zip
+     * @return false if error
+     */
     public function editXML($foldertozip)
     {
         $resultfilenames = array();
         $this->glob_recur($foldertozip, "Cours.xml");
         $xmlfile = $this->resultfilenames[0];
         $dom = new DOMDocument();
-        if ( $dom->load($xmlfile)) {
-            $GLOBALS['status'] = array('error' => 'Error on xml File');
+        if ( !$dom->load($xmlfile)) {
+            $GLOBALS['status'] = array('error' => 'Error on xml File\n');
             return false;
         } else {
             print "***** Xml oppened successfully *****\n";
@@ -149,43 +159,58 @@ class OpaleTranslator
         $dom->save($xmlfile);
         $resultfilenames = array();
         $this->glob_recur($foldertozip, ".quiz");
-
-        foreach ($resultfilenames as $filename) {
-            if(!$this->translateQuiz($filename)){
-                return false;
-            }
+        foreach ($this->resultfilenames as $filename) {
+            
+            $this->translateQuiz($filename);
         }
+        return true;
     }
-
-    public function translateQuiz($xmlpath)
+    /**
+     * Translate Quiz files
+     * @param mixed $quizpath a path to an .quiz file
+     * @return false if error
+     */
+    public function translateQuiz($quizpath)
     {
-        $filename = explode('/',$xmlpath);
+        $filename = explode('/',$quizpath);
         $filename = $filename[count($filename)-1];
         print "***** Translation ".$filename." *****\n";
         $dom = new DOMDocument();
-        if ( $dom->load($xmlpath)) {
-            $GLOBALS['status'] = array('error' => 'Error on quiz'.$filename.' File');
+        if (!$dom->load($quizpath)) {
+            $GLOBALS['status'] = array('error' => 'Error on quiz '.$filename." File\n");
             return false;
         } else {
             print "***** ".$filename." oppened successfully *****\n";
         }
         $xml = $dom->documentElement;
         $this->translateCollectionType($xml,'para');
-        $dom->save($xmlpath);
+        $dom->save($quizpath);
         print "***** ".$filename." translated *****\n";
+        return true;
     }
 
+    /**
+     * Translate a type of an xml file
+     * @param mixed $xml a Node collection of an xml file
+     * @param mixed $collectiontype a type in xml file
+     */
     private function translateCollectionType($xml, $collectiontype)
     {
         $collection = $xml->getElementsByTagName($collectiontype);
         for ($i = 0; $i < $collection->length; $i++) {
             $stringstotranslate = array($collection->item($i)->nodeValue);
-            $translatedstring = $this->translate($stringstotranslate);
-            $collection->item($i)->nodeValue = $translatedstring;
+            /*$translatedstring = $this->translate($stringstotranslate);
+            $collection->item($i)->nodeValue = $translatedstring;*/
+            $collection->item($i)->nodeValue="0";
 
         }
     }
 
+    /**
+     * Translate a string with google traduction api
+     * @param mixed $stringtotranslate the string to translate
+     * @return $translatedstring the strign tranlated
+     */
     public function translate($stringtotranslate)
     {
         $tmp = explode('_', $this->codelangfrom);
@@ -222,20 +247,31 @@ class OpaleTranslator
         return $translatedstring;
     }
 
-    private function glob_recur($folderroot, $file)
+    /**
+     * Find files with $needle patern
+     * @param mixed $folderroot the folder root
+     * @param mixed $needle the patern of the file to find
+     */
+    private function glob_recur($folderroot, $needle)
     {
         $filenames = glob($folderroot . "/*");
         foreach ($filenames as $filename) {
             if (is_dir($filename)) {
-                $this->glob_recur($filename, $file);
+                $this->glob_recur($filename, $needle);
             } else {
-                if ($this->endsWith($filename, $file)) {
+                if ($this->endsWith($filename, $needle)) {
                     $this->resultfilenames[] =  $filename;
                 }
             }
         }
     }
 
+    /**
+     * Verify if $haystack ends with $needle
+     * @param mixed $haystack the string to verfy
+     * @param mixed $needle the needle used to verify
+     * @return true if $haystack ends with $needle false else
+     */
     private function endsWith($haystack, $needle)
     {
         $length = strlen($needle);
@@ -246,6 +282,10 @@ class OpaleTranslator
         return (substr($haystack, -$length) === $needle);
     }
 
+    /**
+     * Delete the temporary file used to do the archive
+     * @param mixed $foldertozip the folder to delete
+     */
     public function delTmp($foldertozip){
         exec('rm -r ' . $foldertozip);
     }
