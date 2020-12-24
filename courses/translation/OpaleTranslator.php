@@ -1,5 +1,5 @@
 <?php
-require_once "./translator.class.php";
+require_once "./OpaleTranslator.class.php";
 
 $sapi_type = php_sapi_name();
 $script_file = basename(__FILE__);

@@ -45,7 +45,7 @@ class OpaleTranslator
         $zip = new ZipArchive;
         if ($zip->open($archive) === TRUE) {
             // Check if destination is writable
-            if (!file_exists($destination)){
+            if (!file_exists($destination)) {
                 mkdir($destination);
             }
             if (is_writeable($destination)) {
@@ -137,68 +137,55 @@ class OpaleTranslator
         } else {
             $GLOBALS['status'] = array('success' => 'Xml oppened successfully');
         }
-        $this->translateCollectionType($xml,'title');
-        $this->translateCollectionType($xml,'para');
+        $this->translateCollectionType($xml, 'title');
+        //$this->translateCollectionType($xml, 'para');
 
         $dom->save($xmlfile);
-
     }
 
-    private function translateCollectionType($xml,$collectiontype){
+    private function translateCollectionType($xml, $collectiontype)
+    {
         $collection = $xml->getElementsByTagName($collectiontype);
-        if($collectiontype == 'para'){
-            for ($i=0; $i < $collection->length; $i++) {
-                $tmp = $collection->item($i)->nodeValue."0";
-                $collection->item($i)->nodeValue = $tmp;
-            }
-        }else{
-            for ($i=0; $i < $collection->length; $i++) {
-                $stringstotranslate[] = urlencode($collection->item($i)->nodeValue);
-            }
+        for ($i = 0; $i < 1; $i++) {
+            $stringstotranslate = array($collection->item($i)->nodeValue);
+            //print $collection->item($i)->nodeValue ;
             $translatedstring = $this->translate($stringstotranslate);
-            if ($translatedstring) {
-                for ($i=0; $i < $collection->length; $i++) {
-                    $collection->item($i)->nodeValue = $stringstotranslate[$i];
-                }
-            }else{
-                for ($i=0; $i < $collection->length; $i++) {
-                    $collection->item($i)->nodeValue = "";
-                }
-            }
+            $collection->item($i)->nodeValue = $translatedstring;
         }
     }
+
     public function translate($stringtotranslate)
     {
-        $url = $this->baseUrlApi.$this->apicode;
-        foreach($stringtotranslate as $string){
-            $url.="&q=".$string;
-        }
-        $url.="&source=".urlencode($this->codelangfrom)."&target=".urlencode($this->codelangto);
-        //print $url;
-        if (! function_exists("curl_init"))
-		{
-		      print "Error, your PHP does not support curl functions.\n";
-		      die();
+        $tmp = explode('_', $this->codelangfrom);
+        if (!empty($tmp[1])) $this->codelangfrom = $tmp[0];
+        $tmp = explode('_', $this->codelangto);
+        if (!empty($tmp[1])) $this->codelangto = $tmp[0];
+
+        $src_text_to_translate = preg_replace('/%s/', 'SSSSS', implode('', $stringtotranslate));
+        $src_text_to_translate = preg_replace('/' . preg_quote('\n\n') . '/', ' NNNNN ', $src_text_to_translate);
+
+        $url = $this->baseUrlApi . $this->apicode;
+        $url .= "&q=" . urlencode($src_text_to_translate);
+        $url .= "&source=" . $this->codelangfrom . "&target=" . $this->codelangto;
+
+        if (!function_exists("curl_init")) {
+            print "Error, your PHP does not support curl functions.\n";
+            die();
         }
         $ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_REFERER, "Mozilla");
-		$body = curl_exec($ch);
-		curl_close($ch);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_REFERER, "Mozilla");
+        $body = curl_exec($ch);
+        curl_close($ch);
         $json = json_decode($body, true);
-        $translatedstring="";
-        print var_dump($json);
-        if (!empty($json['error']))
-		{
-		    print "Error: ".$json['error']['code']." ".$url."\n";
-			$translatedstring = "";
-        }else{
-            $translations = $json['data']['translations'];
-            $stringtotranslate = array();
-            foreach ($translations as $translation) {
-                $translatedstring[] = $translation['translatedText'];
-            }
+        $translatedstring = "";
+
+        if (!empty($json['error'])) {
+            print "Error: " . $json['error']['code'] . " " . $url . "\n";
+            $translatedstring = "";
+        } else {
+            $translatedstring = $json['data']['translations'][0]['translatedText'];
         }
         return $translatedstring;
     }
