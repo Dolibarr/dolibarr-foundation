@@ -5,6 +5,7 @@ class OpaleTranslator
     public $codelangto;
     public $apicode;
     public $baseUrlApi = "https://translation.googleapis.com/language/translate/v2?key=";
+    public $resultfilenames = array();
 
     public function OpaleTranslator($codelangfrom, $codelangto, $apicode)
     {
@@ -76,13 +77,13 @@ class OpaleTranslator
     {
         $oldfile = $folderroot . '/' . $oldname;
         $newfile = $folderroot . '/' . $newname;
-        if (!rename($oldfile, $newfile)) {
+        if (!is_dir($oldfile)||!rename($oldfile, $newfile)) {
             $GLOBALS['status'] = array('error' => "Error on renaming folder" . $oldfile . "\n");
             return false;
         }
         $oldfile = $folderroot . '/' . $newname . '/' . $oldname;
         $newfile = $folderroot . '/' . $newname . '/' . $newname;
-        if (!rename($oldfile, $newfile)) {
+        if (!is_dir($oldfile)||!rename($oldfile, $newfile)) {
             $GLOBALS['status'] = array('error' => "Error on renaming folder" . $oldfile . "\n");
             return false;
         }
@@ -122,35 +123,66 @@ class OpaleTranslator
             $GLOBALS['status'] = array('error' => "Files impossible to zip \n");
             return true;
         }
-        exec('rm -r ' . $foldertozip);
         $GLOBALS['status'] = array('success' => "Files zipped successfully \n");
         return true;
     }
 
-    public function editXML($xmlfile)
+    public function editXML($foldertozip)
     {
+        $resultfilenames = array();
+        $this->glob_recur($foldertozip, "Cours.xml");
+        $xmlfile = $this->resultfilenames[0];
         $dom = new DOMDocument();
-        $dom->load($xmlfile);
-        $xml = $dom->documentElement;
-        if (!$xml) {
+        if ( $dom->load($xmlfile)) {
             $GLOBALS['status'] = array('error' => 'Error on xml File');
+            return false;
         } else {
-            $GLOBALS['status'] = array('success' => 'Xml oppened successfully');
+            print "***** Xml oppened successfully *****\n";
         }
+        $xml = $dom->documentElement;
+        print "***** Translation titles *****\n";
         $this->translateCollectionType($xml, 'title');
-        //$this->translateCollectionType($xml, 'para');
-
+        print "***** Titles translated *****\n";
+        print "***** Translation paragraphes *****\n";
+        $this->translateCollectionType($xml, 'para');
+        print "***** Paragraphs translated *****\n";
         $dom->save($xmlfile);
+        $resultfilenames = array();
+        $this->glob_recur($foldertozip, ".quiz");
+
+        foreach ($resultfilenames as $filename) {
+            if(!$this->translateQuiz($filename)){
+                return false;
+            }
+        }
+    }
+
+    public function translateQuiz($xmlpath)
+    {
+        $filename = explode('/',$xmlpath);
+        $filename = $filename[count($filename)-1];
+        print "***** Translation ".$filename." *****\n";
+        $dom = new DOMDocument();
+        if ( $dom->load($xmlpath)) {
+            $GLOBALS['status'] = array('error' => 'Error on quiz'.$filename.' File');
+            return false;
+        } else {
+            print "***** ".$filename." oppened successfully *****\n";
+        }
+        $xml = $dom->documentElement;
+        $this->translateCollectionType($xml,'para');
+        $dom->save($xmlpath);
+        print "***** ".$filename." translated *****\n";
     }
 
     private function translateCollectionType($xml, $collectiontype)
     {
         $collection = $xml->getElementsByTagName($collectiontype);
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0; $i < $collection->length; $i++) {
             $stringstotranslate = array($collection->item($i)->nodeValue);
-            //print $collection->item($i)->nodeValue ;
             $translatedstring = $this->translate($stringstotranslate);
             $collection->item($i)->nodeValue = $translatedstring;
+
         }
     }
 
@@ -188,5 +220,33 @@ class OpaleTranslator
             $translatedstring = $json['data']['translations'][0]['translatedText'];
         }
         return $translatedstring;
+    }
+
+    private function glob_recur($folderroot, $file)
+    {
+        $filenames = glob($folderroot . "/*");
+        foreach ($filenames as $filename) {
+            if (is_dir($filename)) {
+                $this->glob_recur($filename, $file);
+            } else {
+                if ($this->endsWith($filename, $file)) {
+                    $this->resultfilenames[] =  $filename;
+                }
+            }
+        }
+    }
+
+    private function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }
+
+    public function delTmp($foldertozip){
+        exec('rm -r ' . $foldertozip);
     }
 }

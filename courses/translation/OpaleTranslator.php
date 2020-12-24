@@ -22,14 +22,12 @@ if (!isset($argv[5])) {
 }
 
 print "***** " . $script_file . " (" . $version . ") *****\n";
-print 'Argument 1='.$argv[1]."\n";
-print 'Argument 2='.$argv[2]."\n";
-print 'Argument 3='.$argv[3]."\n";
-print 'Argument 4='.$argv[4]."\n";
-if (isset($argv[5]))
-{
-	$api=$argv[5];
-	print 'Argument 5='.$argv[5]."\n";
+print 'Argument 1=' . $argv[1] . "\n";
+print 'Argument 2=' . $argv[2] . "\n";
+print 'Argument 3=' . $argv[3] . "\n";
+print 'Argument 4=' . $argv[4] . "\n";
+if (isset($argv[5])) {
+    $api = $argv[5];
 }
 
 $zip_file = $argv[1];
@@ -37,17 +35,20 @@ $dest_dir = $argv[2];
 $codeoldlang = $argv[3];
 $codenewlang = $argv[4];
 $langnewzip = strtoupper(explode('_', $codenewlang)[0]);
-if(file_exists($dest_dir.$foldertmp)){
+if (file_exists($dest_dir . $foldertmp)) {
     echo "Please choose another folder, folder tmp_tmp already exists\n";
     die();
 }
 
-$translator = new OpaleTranslator($codeoldlang,$codenewlang,$api);
+$translator = new OpaleTranslator($codeoldlang, $codenewlang, $api);
 $extract = $translator->extract($zip_file, $dest_dir . $foldertmp);
 if ($extract) {
     echo $GLOBALS['status']['success'];
 } else {
     echo $GLOBALS['status']['error'];
+    if (is_dir($foldertozip)) {
+        $translator->delTmp($foldertozip);
+    }
     die();
 }
 $extract = str_replace('.scar', '', $extract);
@@ -55,19 +56,25 @@ $foldertozip = $dest_dir . $foldertmp;
 $zipname = explode('-', $extract);
 $zipname = $zipname[0] . '-' . $langnewzip;
 
-if ($translator->renameFolders($foldertozip,$extract,$zipname)) {
+if ($translator->renameFolders($foldertozip, $extract, $zipname)) {
     echo $GLOBALS['status']['success'];
 } else {
     echo $GLOBALS['status']['error'];
+    $translator->delTmp($foldertozip);
     die();
 }
-$xmlpath = $foldertozip.'/'. $zipname.'/'. $zipname.'/Cours/Cours.xml';
-$translator->editXML($xmlpath,$codeoldlang,$codenewlang);
+
+if (!$translator->editXML($foldertozip)) {
+    echo $GLOBALS['status']['error'];
+    $translator->delTmp($foldertozip);
+    die();
+}
 
 if ($translator->outputZipArchive($foldertozip, $zipname, $dest_dir . '/')) {
     echo $GLOBALS['status']['success'];
 } else {
     echo $GLOBALS['status']['error'];
+    $translator->delTmp($foldertozip);
     die();
 }
 print "***** Finished *****\n";
