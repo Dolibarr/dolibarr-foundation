@@ -5,7 +5,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	{
 		parent::__construct();
 
-		$this->_select .= ', a.date_add as dateadd, a.dolibarr_min, a.dolibarr_max;
+		$this->_select .= ', a.date_add as dateadd, a.dolibarr_min, a.dolibarr_max';
 
 		$this->fields_list['name'] = array(
 				'title' => $this->l('Name'),
