@@ -33,14 +33,15 @@ class Tag extends TagCore
         	$i=0;
         	foreach($datas as $data)
         	{
-        		if ($data['name'] > 2)
+        		if (preg_match('/^v\d\d?$/i', $data['name']))
         		{
-        			$ret[$i]['name'] = $data['name'];
-        			$ret[$i]['times'] = '1';
+        			$key = $data['name'];
+        			$ret[$key]['name'] = $data['name'];
+        			$ret[$key]['times'] = '1';
         			$i++;
         		}
         	}
-        	rsort($ret);
+        	krsort($ret, SORT_NATURAL);
         }
 
         // original
