@@ -391,7 +391,7 @@ $(document).ready(function() {
 	});
 	$(function () { $("[data-toggle='tooltip']").tooltip(); });
 	function checkVersionFormat(e, self) {
-		self.val(self.val().replace(/[^0-9\.]/g, ''));
+		self.val(self.val().replace(/[^0-9\.\*x]/g, ''));
 		if ((e.which != 46 || self.val().indexOf('.') != -1) && (e.which < 48 || e.which > 57))
 		{
 			e.preventDefault();
