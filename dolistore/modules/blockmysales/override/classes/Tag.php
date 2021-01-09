@@ -33,7 +33,7 @@ class Tag extends TagCore
         	$i=0;
         	foreach($datas as $data)
         	{
-        		if (preg_match('/^v\d\d?$/i', $data['name']))
+        		if (preg_match('/^v\d\d?$/i', $data['name']) && (((int) str_replace('v', '', $data['name'])) >= 4))
         		{
         			$key = $data['name'];
         			$ret[$key]['name'] = $data['name'];
