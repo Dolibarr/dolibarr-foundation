@@ -362,7 +362,7 @@
 			}
 		});
 		function checkVersionFormat(e, self) {
-			self.val(self.val().replace(/[^0-9\.]/g, ''));
+			self.val(self.val().replace(/[^0-9\.\*x]/g, ''));
 			if ((e.which != 46 || self.val().indexOf('.') != -1) && (e.which < 48 || e.which > 57))
 			{
 				e.preventDefault();
@@ -396,7 +396,8 @@
 						$("#keywords_" + language.id_lang + " input[name='keywords_" + language.id_lang + "']").val(keywords);
 					}
 					for (i = 0; i < max; i++) {
-						dolibarr_tags.push(min.toString());
+						console.log("v"+min.toString());
+						dolibarr_tags.push("v"+min.toString());
 						min++;
 					}
 					dolibarr_tags.join(',');

@@ -35,9 +35,9 @@
 								<tr>
 									<td nowrap="nowrap" valign="top">{l s='Module version:' mod='blockmysales'}</td>
 									<td>
-										<input required="required" size="9" maxlength="4" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
+										<input required="required" size="9" maxlength="12" name="module_version" id="module_version" value="{if $product.module_version}{$product.module_version}{else}1.0{/if}" type="text" />
 										<br>
-										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
+										{l s='Note: you can add this tag in your large description code to use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="module_version_desc">auto</span>' mod='blockmysales'}</strong>
 									</td>
@@ -51,7 +51,7 @@
 									<td>
 										<input required="required" size="9" maxlength="6" name="dolibarr_min" id="dolibarr_min" value="{if $product.dolibarr_min}{$product.dolibarr_min}{else}4.0.0{/if}" type="text" />
 										<br>
-										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
+										{l s='Note: You can add this tag in your large description code to use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="dolibarr_min_desc">auto</span>' mod='blockmysales'}</strong>
 									</td>
@@ -65,7 +65,7 @@
 									<td>
 										<input required="required" size="9" maxlength="6" name="dolibarr_max" id="dolibarr_max" value="{if $product.dolibarr_max}{$product.dolibarr_max}{else}11.0.0{/if}" type="text" />
 										<br>
-										{l s='Add this tag in your large description code for use this value:' mod='blockmysales'}
+										{l s='Note: You can add this tag in your large description code to use this value:' mod='blockmysales'}
 										<br>
 										<strong>{l s='<span class="dolibarr_max_desc">auto</span>' mod='blockmysales'}</strong>
 									</td>

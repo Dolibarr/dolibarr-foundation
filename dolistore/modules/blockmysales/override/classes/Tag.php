@@ -23,7 +23,7 @@ class Tag extends TagCore
         $datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
                         SELECT DISTINCT t.name as name
                         FROM `'._DB_PREFIX_.'tag` t
-						WHERE t.`name` REGEXP \'^([0-9]+)$\'
+						WHERE t.`name` REGEXP \'^(v[0-9][0-9]?)$\'
                         ORDER BY name DESC
                         LIMIT '.(int) $nb);
 
@@ -33,14 +33,15 @@ class Tag extends TagCore
         	$i=0;
         	foreach($datas as $data)
         	{
-        		if ($data['name'] > 2)
+        		if (preg_match('/^v\d\d?$/i', $data['name']) && (((int) str_replace('v', '', $data['name'])) >= 4))
         		{
-        			$ret[$i]['name'] = $data['name'];
-        			$ret[$i]['times'] = '1';
+        			$key = $data['name'];
+        			$ret[$key]['name'] = $data['name'];
+        			$ret[$key]['times'] = '1';
         			$i++;
         		}
         	}
-        	rsort($ret);
+        	krsort($ret, SORT_NATURAL);
         }
 
         // original
@@ -52,7 +53,7 @@ class Tag extends TagCore
 				         ORDER BY times DESC
 				         LIMIT '.(int)$nb);*/
 
-        return $data;
+        return $ret;
     }
 
 }
