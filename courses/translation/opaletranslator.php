@@ -1,8 +1,9 @@
 <?php
-require_once "./OpaleTranslator.class.php";
 
 $sapi_type = php_sapi_name();
 $script_file = basename(__FILE__);
+$path = dirname(__FILE__) . '/';
+require_once $path . "OpaleTranslator.class.php";
 
 $version = '1.14';
 $error = 0;
