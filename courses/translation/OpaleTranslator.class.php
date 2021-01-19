@@ -83,13 +83,13 @@ class OpaleTranslator
     {
         $oldfile = $folderroot . '/' . $oldname;
         $newfile = $folderroot . '/' . $newname;
-        if (!is_dir($oldfile)||!rename($oldfile, $newfile)) {
+        if (!is_dir($oldfile) || !rename($oldfile, $newfile)) {
             $GLOBALS['status'] = array('error' => "Error on renaming folder" . $oldfile . "\n");
             return false;
         }
         $oldfile = $folderroot . '/' . $newname . '/' . $oldname;
         $newfile = $folderroot . '/' . $newname . '/' . $newname;
-        if (!is_dir($oldfile)||!rename($oldfile, $newfile)) {
+        if (!is_dir($oldfile) || !rename($oldfile, $newfile)) {
             $GLOBALS['status'] = array('error' => "Error on renaming folder" . $oldfile . "\n");
             return false;
         }
@@ -142,14 +142,14 @@ class OpaleTranslator
         $resultfilenames = array();
         $this->glob_recur($foldertozip, "Cours.xml");
         $xmlfile = $this->resultfilenames[0];
-        $filename = explode('/',$xmlfile);
-        $filename = $filename[count($filename)-1];
+        $filename = explode('/', $xmlfile);
+        $filename = $filename[count($filename) - 1];
         $dom = new DOMDocument();
-        if ( !$dom->load($xmlfile)) {
+        if (!$dom->load($xmlfile)) {
             $GLOBALS['status'] = array('error' => 'Error on xml File\n');
             return false;
         } else {
-            print "***** ".$filename." oppened successfully *****\n";
+            print "***** " . $filename . " oppened successfully *****\n";
         }
         $xml = $dom->documentElement;
         print "***** Translation titles *****\n";
@@ -162,7 +162,7 @@ class OpaleTranslator
         $this->resultfilenames = array();
         $this->glob_recur($foldertozip, ".quiz");
         foreach ($this->resultfilenames as $filename) {
-            
+
             $this->translateQuiz($filename);
         }
         return true;
@@ -174,20 +174,20 @@ class OpaleTranslator
      */
     public function translateQuiz($quizpath)
     {
-        $filename = explode('/',$quizpath);
-        $filename = $filename[count($filename)-1];
-        print "***** Translation ".$filename." *****\n";
+        $filename = explode('/', $quizpath);
+        $filename = $filename[count($filename) - 1];
+        print "***** Translation " . $filename . " *****\n";
         $dom = new DOMDocument();
         if (!$dom->load($quizpath)) {
-            $GLOBALS['status'] = array('error' => 'Error on quiz '.$filename." File\n");
+            $GLOBALS['status'] = array('error' => 'Error on quiz ' . $filename . " File\n");
             return false;
         } else {
-            print "***** ".$filename." oppened successfully *****\n";
+            print "***** " . $filename . " oppened successfully *****\n";
         }
         $xml = $dom->documentElement;
-        $this->translateCollectionType($xml,'para');
+        $this->translateCollectionType($xml, 'para');
         $dom->save($quizpath);
-        print "***** ".$filename." translated *****\n";
+        print "***** " . $filename . " translated *****\n";
         return true;
     }
 
@@ -199,11 +199,33 @@ class OpaleTranslator
     private function translateCollectionType($xml, $collectiontype)
     {
         $collection = $xml->getElementsByTagName($collectiontype);
-        for ($i = 0; $i < $collection->length; $i++) {
-            $stringstotranslate = array($collection->item($i)->nodeValue);
-            $translatedstring = $this->translate($stringstotranslate);
-            $collection->item($i)->nodeValue = $translatedstring;
+        $i = 0;
+        do {
+            $node = $collection->item($i);
+            $this->translate_rec($node);
+            $i++;
+        } while ($collection->item($i));
+    }
 
+    /**
+     * Translate a Node and all his childNodes
+     * @param mixed $node The node to translate
+     */
+    private function  translate_rec($node)
+    {
+        $childnodes = $node->childNodes;
+        if (!$childnodes) {
+            if (!$this->startsWith($node->nodeValue, "https://") && !$this->startsWith($node->nodeValue, "http://") && !$this->startsWith($node->nodeName, "sp:title")) {
+                $stringtoprint = $node->nodeValue;
+                $translatedstring = $this->translate(array($node->nodeValue));
+                $node->nodeValue = $translatedstring." ";
+                $stringtoprint .= " => ".$node->nodeValue;
+                print $stringtoprint."\n";
+            }
+        } else {
+            foreach ($childnodes as $childnode) {
+                $this->translate_rec($childnode);
+            }
         }
     }
 
@@ -284,10 +306,23 @@ class OpaleTranslator
     }
 
     /**
+     * Verify if $haystack starts with $needle
+     * @param mixed $haystack the string to verfy
+     * @param mixed $needle the needle used to verify
+     * @return true if $haystack starts with $needle false else
+     */
+    function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return substr($haystack, 0, $length) === $needle;
+    }
+
+    /**
      * Delete the temporary file used to do the archive
      * @param mixed $foldertozip the folder to delete
      */
-    public function delTmp($foldertozip){
+    public function delTmp($foldertozip)
+    {
         exec('rm -r ' . $foldertozip);
     }
 }
