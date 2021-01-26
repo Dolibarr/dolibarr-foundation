@@ -14,7 +14,7 @@ class Tag extends TagCore
      *
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
-    public static function getMainTags($idLang, $nb = 10)
+    public static function getMainTags($idLang, $nb = 50)
     {
         $context = Context::getContext();
 
@@ -25,7 +25,7 @@ class Tag extends TagCore
                         FROM `'._DB_PREFIX_.'tag` t
 						WHERE t.`name` REGEXP \'^(v[0-9][0-9]?)$\'
                         ORDER BY name DESC
-                        LIMIT '.(int) $nb);
+                        LIMIT '.max(50, (int) $nb));
 
         $ret=array();
         if (!empty($datas))
