@@ -1238,8 +1238,8 @@ if (!defined('_PS_VERSION_'))
                                         `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
                                         `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_disable_info`
                                         ) VALUES (
-                            0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.$reference.'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
-                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.$module_version.'\', \''.$dolibarr_min.'\', \''.$dolibarr_max.'\', '.$dolibarr_core_include.', \''.$dolibarr_disable_info.'\'
+                            0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.addslashes($reference).'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
+                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.addslashes($module_version).'\', \''.addslashes($dolibarr_min).'\', \''.addslashes($dolibarr_max).'\', '.addslashes($dolibarr_core_include).', \''.addslashes($dolibarr_disable_info).'\'
                         )';
 
                     $result = Db::getInstance()->Execute($query);
@@ -1247,7 +1247,7 @@ if (!defined('_PS_VERSION_'))
 
                     // Get product id
                     $query = 'SELECT `id_product` FROM `'._DB_PREFIX_.'product`
-                                        WHERE `reference` = \''.$reference.'\'
+                                        WHERE `reference` = \''.addslashes($reference).'\'
                                         AND `date_add` = \''.$dateNow.'\' ';
                     $result = Db::getInstance()->ExecuteS($query);
                     if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -1564,11 +1564,11 @@ if (!defined('_PS_VERSION_'))
                                         `price`                 = '.$prix_ht.',
                                         `wholesale_price`       = '.$prix_ht.',
                                         `id_tax_rules_group`    = '.$taxe_id.',
-                                        `module_version`        = \''.$module_version.'\',
-                                        `dolibarr_min`          = \''.$dolibarr_min.'\',
-                                        `dolibarr_max`          = \''.$dolibarr_max.'\',
+                                        `module_version`        = \''.addslashes($module_version).'\',
+                                        `dolibarr_min`          = \''.addslashes($dolibarr_min).'\',
+                                        `dolibarr_max`          = \''.addslashes($dolibarr_max).'\',
                                         `dolibarr_core_include` = '.$dolibarr_core_include.',
-                                        `dolibarr_disable_info` = \''.$dolibarr_disable_info.'\',';
+                                        `dolibarr_disable_info` = \''.addslashes($dolibarr_disable_info).'\',';
                     if ($status >= 0) $query.= ' `active` = '.$status.',';          // We don't change if status is -1
                     if ($oldPrice == 0 && $newPrice > 0) {
                         $query.= ' `available_for_order` = 1, `show_price` = 1, `cache_has_attachments` = 0,';
