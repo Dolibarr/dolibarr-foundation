@@ -133,14 +133,62 @@ class OpaleTranslator
         return true;
     }
     /**
-     * Create edit Cours.xml and quiz files
+     * Edit xml files and quiz files
      * @param mixed $foldertozip Folder root to zip
      * @return false if error
      */
     public function editXML($foldertozip)
     {
-        $resultfilenames = array();
-        $this->glob_recur($foldertozip, "Cours.xml");
+        $this->resultfilenames = array();
+        $this->glob_recur($foldertozip,"Cours.xml");
+        if(!$this->translateXML()){
+            return false;
+        }
+        $this->resultfilenames = array();
+        $this->glob_recur($foldertozip,"AccesExterne.xml");
+        $this->translateXML();
+
+        $this->resultfilenames = array();
+        $this->glob_recur($foldertozip,"GrainSécurité.xml");
+        $this->translateXML();
+
+        $this->resultfilenames = array();
+        $this->glob_recur($foldertozip, ".quiz");
+        foreach ($this->resultfilenames as $filename) {
+            $this->translateQuiz($filename);
+        }
+        return true;
+    }
+    /**
+     * Translate Quiz files
+     * @param mixed $quizpath a path to an .quiz file
+     * @return false if error true else
+     */
+    public function translateQuiz($quizpath)
+    {
+        $filename = explode('/', $quizpath);
+        $filename = $filename[count($filename) - 1];
+        print "***** Translation " . $filename . " *****\n";
+        $dom = new DOMDocument();
+        if (!$dom->load($quizpath)) {
+            $GLOBALS['status'] = array('error' => 'Error on quiz ' . $filename . " File\n");
+            return false;
+        } else {
+            print "***** " . $filename . " oppened successfully *****\n";
+        }
+        $xml = $dom->documentElement;
+        $this->translateCollectionType($xml, 'para');
+        $dom->save($quizpath);
+        print "***** " . $filename . " translated *****\n";
+        return true;
+    }
+
+    /**
+     * Translate Xml files
+     * @return false if error true else
+     */
+    public function translateXML()
+    {
         $xmlfile = $this->resultfilenames[0];
         $filename = explode('/', $xmlfile);
         $filename = $filename[count($filename) - 1];
@@ -159,35 +207,6 @@ class OpaleTranslator
         $this->translateCollectionType($xml, 'para');
         print "***** Paragraphs translated *****\n";
         $dom->save($xmlfile);
-        $this->resultfilenames = array();
-        $this->glob_recur($foldertozip, ".quiz");
-        foreach ($this->resultfilenames as $filename) {
-
-            $this->translateQuiz($filename);
-        }
-        return true;
-    }
-    /**
-     * Translate Quiz files
-     * @param mixed $quizpath a path to an .quiz file
-     * @return false if error
-     */
-    public function translateQuiz($quizpath)
-    {
-        $filename = explode('/', $quizpath);
-        $filename = $filename[count($filename) - 1];
-        print "***** Translation " . $filename . " *****\n";
-        $dom = new DOMDocument();
-        if (!$dom->load($quizpath)) {
-            $GLOBALS['status'] = array('error' => 'Error on quiz ' . $filename . " File\n");
-            return false;
-        } else {
-            print "***** " . $filename . " oppened successfully *****\n";
-        }
-        $xml = $dom->documentElement;
-        $this->translateCollectionType($xml, 'para');
-        $dom->save($quizpath);
-        print "***** " . $filename . " translated *****\n";
         return true;
     }
 
@@ -218,7 +237,7 @@ class OpaleTranslator
             if (!$this->startsWith($node->nodeValue, "https://") && !$this->startsWith($node->nodeValue, "http://") && !$this->startsWith($node->nodeName, "sp:title")) {
                 $stringtoprint = $node->nodeValue;
                 $translatedstring = $this->translate(array($node->nodeValue));
-                $node->nodeValue = $translatedstring." ";
+                $node->nodeValue = html_entity_decode($translatedstring)." ";
                 $stringtoprint .= " => ".$node->nodeValue;
                 print $stringtoprint."\n";
             }
