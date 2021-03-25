@@ -445,14 +445,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								{
 									$soapclient_error=$soapclient->error_str;
 									$errorcallws++;
+									BlockMySales::prestalog("Call method ".$WS_METHOD." error ".$soapclient_error);
 								}
 								else
 								{
 									if ($result['result']['result_code'] == 'OK')
 									{
+										BlockMySales::prestalog("Call method ".$WS_METHOD." OK");
 										foreach($result['invoices'] as $invoice)
 										{
-											$dateinvoice=substr($invoice['date_invoice'],0,10);
+											$dateinvoice=substr($invoice['date_invoice'], 0, 10);
 
 											// Rule to detect invoice found is for dolistore payment back
 											// More info into logs/prestalog.log
