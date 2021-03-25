@@ -2296,7 +2296,7 @@ class BlockMySales extends Module
 	 */
 	public static function prestalog($message, $level=LOG_INFO)
 	{
-		$filelog = Configuration::get('BLOCKMYSALES_FILELOG_PATH');
+		$filelog = Configuration::get('BLOCKMYSALES_FILELOG_PATH');		// Example: /home/dolibarr/dolistore.com/httpdocs/log/prestalog.log
 
 		if (!empty($filelog))
 		{
