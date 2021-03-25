@@ -540,6 +540,13 @@ class BlockMySales extends Module
 								}
 	}
 
+	/**
+	 * getCustomer
+	 *
+	 * @param Object				$context_customer		Current prestashop user
+	 * @param int 					$request_customer_id	The id of customer we want to load
+	 * @return boolean|mixed|NULL							Return null if customer not found
+	 */
 	public static function getCustomer($context_customer, $request_customer_id)
 	{
 		$context_customer_id = (int)$context_customer->id;
@@ -555,24 +562,26 @@ class BlockMySales extends Module
 			if ($context_customer_id != $request_customer_id)
 				return false;
 		}
-		else
+		else {
 			$admin = true;
+		}
 
-			// Get publisher, company and country
-			$query = "SELECT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company, a.city, a.id_country, co.iso_code";
-			$query.= " FROM "._DB_PREFIX_."customer as c";
-			$query.= " LEFT JOIN "._DB_PREFIX_."address as a ON a.id_customer = c.id_customer AND a.deleted = 0";
-			$query.= " LEFT JOIN "._DB_PREFIX_."country as co ON a.id_country = co.id_country";
-			if ($request_customer_id != 'all') $query.= " WHERE c.id_customer = " . $request_customer_id;
-			$subresult = Db::getInstance()->ExecuteS($query);
+		// Get publisher, company and country
+		$query = "SELECT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company, a.city, a.id_country, co.iso_code";
+		$query.= " FROM "._DB_PREFIX_."customer as c";
+		$query.= " LEFT JOIN "._DB_PREFIX_."address as a ON a.id_customer = c.id_customer AND a.deleted = 0";
+		$query.= " LEFT JOIN "._DB_PREFIX_."country as co ON a.id_country = co.id_country";
+		if ($request_customer_id != 'all') $query.= " WHERE c.id_customer = " . $request_customer_id;
+		$subresult = Db::getInstance()->ExecuteS($query);
 
-			if (! empty($subresult[0]['active']))
-			{
-				$subresult[0] = array_merge($subresult[0], array('admin' => $admin));
-				return $subresult[0];
-			}
-			else
-				return null;
+		if (! empty($subresult[0]['active']))
+		{
+			$subresult[0] = array_merge($subresult[0], array('admin' => $admin));
+			return $subresult[0];
+		}
+		else {
+			return null;
+		}
 	}
 
 	public static function getCustomerCountry($id_lang, $id_customer)

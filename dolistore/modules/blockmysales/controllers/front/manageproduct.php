@@ -39,12 +39,12 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 		// Get env variables
 		$active = '';
 		$products = array();
-		$id_lang = (int)$this->context->language->id;
-		$customer_id = (int)$this->context->customer->id;
+		$id_lang = (int) $this->context->language->id;
+		$customer_id = (int) $this->context->customer->id;
 
-		if (!empty($customer_id))
+		if (!empty($customer_id))	// If we are a logged user.
 		{
-			if (Tools::isSubmit('id_customer'))	$customer_id = Tools::getValue('id_customer');
+			if (Tools::isSubmit('id_customer'))	$customer_id = Tools::getValue('id_customer');		// Set to a given id or to 'all'
 			if (Tools::isSubmit('active'))		$active		 = Tools::getValue('active');
 
 			if ($customer_id !== 'all') {
@@ -145,9 +145,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 					$colorTabNbr = 1;
 
-					if (count($result))
+					if (count($result))	// If 1 or several products found for the seller or for everybody
 					{
-						foreach ($result as $id => $values)	// For each product
+						foreach ($result as $id => $values)	// Loop to show each product
 						{
 							$products[$id] = $values;
 
@@ -294,7 +294,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 						$this->context->smarty->assign('voucherareok', $voucherareok);
 
-						if ($voucherareok)
+						if ($voucherareok)	// Previous check test is ok, we can continue
 						{
 							// Calculate totalvoucher
 							$query = "SELECT SUM( od.value ) as total_voucher
@@ -363,9 +363,6 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							'password' => Configuration::get('BLOCKMYSALES_WEBSERVICES_PASSWORD'),
 							'entity' => '');
 
-							$socid=0;
-							$foundthirdparty=false;
-
 							// Call the WebService method to find third party id from name or company name.
 							$WS_DOL_URL = $dolibarr_webservices_url . '/server_thirdparty.php';
 							//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
@@ -375,6 +372,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$soapclient->soap_defencoding='UTF-8';
 								$soapclient->decodeUTF8(false);
 							}
+
+							$socid=0;
+							$foundthirdparty=false;
 
 							if ($customer_id != 'all')
 							{
@@ -395,7 +395,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								if (! $foundthirdparty)
 								{
-									foreach ($allparameters as $parameters)
+									foreach ($allparameters as $parameters)	// Loop on each set of search
 									{
 										$result = $soapclient->call($WS_METHOD, $parameters);
 										if (! $result)
@@ -417,7 +417,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							else
 							{
 								$foundthirdparty=true;
+
 								$socid='all';
+
+								// Search for each $publisher / $company to get and set $socid to list of companies
+
+
+
 							}
 
 							$this->context->smarty->assign('foundthirdparty', $foundthirdparty);
@@ -426,19 +432,29 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							$errorcallws=0;
 							$lastdate='2000-01-01';
 
-							if ($socid > 0 || $socid == 'all')
+							$listofsocid = array();
+							if ($socid > 0) {
+								$listofsocid = array($socid);
+							}
+							if ($socid == 'all') {
+								$listofsocid = array(0);
+							}
+
+							// Define $dolistoreinvoices
+							$WS_DOL_URL = $dolibarr_webservices_url . '/server_supplier_invoice.php';
+							$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
+							//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
+							$soapclient = new soapclient_nusoap($WS_DOL_URL);
+							if ($soapclient)
 							{
-								// Define $dolistoreinvoices
-								$WS_DOL_URL = $dolibarr_webservices_url . '/server_supplier_invoice.php';
-								$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
-								//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
-								$soapclient = new soapclient_nusoap($WS_DOL_URL);
-								if ($soapclient)
-								{
-									$soapclient->soap_defencoding='UTF-8';
-									$soapclient->decodeUTF8(false);
-								}
-								$parameters = array('authentication'=>$authentication,'id'=>$socid,'ref'=>'');
+								$soapclient->soap_defencoding='UTF-8';
+								$soapclient->decodeUTF8(false);
+							}
+
+							foreach($listofsocid as $socid)
+							{
+								// Make one call for each thirdparty
+								$parameters = array('authentication'=>$authentication, 'id'=>$socid, 'ref'=>'');
 								BlockMySales::prestalog("Call method ".$WS_METHOD." for socid=".$socid);
 								$result = $soapclient->call($WS_METHOD,$parameters);
 								if (! $result)
@@ -615,25 +631,25 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$nbdaysaccessible = Configuration::get('BLOCKMYSALES_NBDAYSACCESSIBLE');
 
 					$newproduct=array(
-					'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
-					'active' => 0,
-					'file_name' => Tools::getValue('product_file_name'),
-					'module_version' => Tools::getValue('module_version'),
-					'dolibarr_min' => Tools::getValue('dolibarr_min'),
-					'dolibarr_max' => Tools::getValue('dolibarr_max'),
-					'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
-					'dolibarr_disable_info' => Tools::getValue('dolibarr_disable_info'),
-					'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
-					'product_name' => array(),
-					'resume' => array(),
-					'keywords' => array(),
-					'description' => array()
+						'price' => (Tools::isSubmit('price') ? Tools::getValue('price') : 0),
+						'active' => 0,
+						'file_name' => Tools::getValue('product_file_name'),
+						'module_version' => Tools::getValue('module_version'),
+						'dolibarr_min' => Tools::getValue('dolibarr_min'),
+						'dolibarr_max' => Tools::getValue('dolibarr_max'),
+						'dolibarr_core_include' => (Tools::isSubmit('dolibarr_core_include') ? Tools::getValue('dolibarr_core_include') : 0),
+						'dolibarr_disable_info' => Tools::getValue('dolibarr_disable_info'),
+						'nb_days_accessible' => (Tools::isSubmit('nb_days_accessible') ? Tools::getValue('nb_days_accessible') : (!empty($nbdaysaccessible) ? $nbdaysaccessible : 365)),
+						'product_name' => array(),
+						'resume' => array(),
+						'keywords' => array(),
+						'description' => array()
 					);
 					$languageTAB=array();
 					$file=array(
-					'product_file_path' => Tools::getValue('product_file_path'),
-					'upload' => 1,
-					'errormsg' => null
+						'product_file_path' => Tools::getValue('product_file_path'),
+						'upload' => 1,
+						'errormsg' => null
 					);
 					$product_file_name=Tools::getValue('product_file_name');
 					$virtual_product_file=null;
