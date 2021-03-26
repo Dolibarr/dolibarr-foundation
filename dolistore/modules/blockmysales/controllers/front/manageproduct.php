@@ -52,11 +52,22 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 			}
 
 			$customer = BlockMySales::getCustomer($this->context->customer, $customer_id);
+			// Here customer can be one record of customer (if id_customer=int)  or an array of all customers (if id_customer=all)
+			if ($customer_id != 'all')
+			{
+				$arrayofcustomers = array($customer);
+			}
+			else
+			{
+				$arrayofcustomers = $customer;
+			}
 
 			if ($customer !== false)
 			{
 				if (!is_null($customer) && !empty($customer))
 				{
+					BlockMySales::prestalog("getCustomer an array customer with count=".count($customer));
+
 					$this->context->smarty->assign('phpself', $this->context->link->getModuleLink('blockmysales', 'manageproduct'));
 					$this->context->smarty->assign('cardproduct', $this->context->link->getModuleLink('blockmysales', 'cardproduct'));
 					$this->context->smarty->assign('ps_bms_templates_dir', _PS_MODULE_DIR_.'blockmysales/views/templates/front');
@@ -373,11 +384,18 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$soapclient->decodeUTF8(false);
 							}
 
-							$socid=0;
-							$foundthirdparty=false;
+							$socid = 0;
+							$listofsocid = array();
+							$searchwasdoneon = '';
 
-							if ($customer_id != 'all')
-							{
+							$dolistoreinvoicesoutput=array();
+							$dolistoreinvoicesoutput[-1] = '';
+
+							foreach($arrayofcustomers as $customer) {
+								$publisher = trim($customer['firstname'].' '.$customer['lastname']);
+								$company = trim($customer['company']);
+
+								// Search for each $publisher / $company to get and set $socid to list of companies
 								$WS_METHOD  = 'getThirdParty';
 
 								$allparameters = array();
@@ -389,56 +407,55 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$company.' ('.$publisher.')'); $searchwasdoneonarray[] = $company.' ('.$publisher.')';
 									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher.' ('.$company.')'); $searchwasdoneonarray[] = $publisher.' ('.$company.')';
 								}
-								$searchwasdoneon=join(", ",$searchwasdoneonarray);
+								$searchwasdoneon .= ($searchwasdoneon ? ',<br>' : '').join(", ",$searchwasdoneonarray);
 
-								$this->context->smarty->assign('searchwasdoneon', $searchwasdoneon);
-
-								if (! $foundthirdparty)
+								$foundThirdpartyIntoDolibarr = false;
+								foreach ($allparameters as $parameters)	// Loop on each set of search
 								{
-									foreach ($allparameters as $parameters)	// Loop on each set of search
+									$result = $soapclient->call($WS_METHOD, $parameters);
+									if (! $result)
 									{
-										$result = $soapclient->call($WS_METHOD, $parameters);
-										if (! $result)
+										$soapclient_error=$soapclient->error_str;
+									}
+									else
+									{
+										$socid=$result['thirdparty']['id'];
+										if ($socid > 0)
 										{
-											$soapclient_error=$soapclient->error_str;
-										}
-										else
-										{
-											$socid=$result['thirdparty']['id'];
-											if ($socid)
-											{
-												$foundthirdparty=true;
+											$foundThirdpartyIntoDolibarr = true;
+											if (empty($listofsocid[$customer['id_customer']])) {
+												$listofsocid[$customer['id_customer']] = $socid;
+											} else {
+												if ($listofsocid[$customer['id_customer']] != $socid) {
+													// Found 2 different thirdparties
+													$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher='.$publisher.' and company='.$company.' was found twice into Dolibarr with id '.$listofsocid[$customer['id_customer']].' and '.$socid.' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Check</a><br>'."\n";
+												}
+											}
+										} else {
+											if ($result['result']['result_code'] == 'DUPLICATE_FOUND') {
+												$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher='.$publisher.' and company='.$company.' was found twice into Dolibarr when searching on '.join(',', $parameters).' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Check</a><br>'."\n";
+												$searchwasdoneon .= '<br>WARNING: publisher='.$publisher.' and company='.$company.' was found twice into Dolibarr when searching on '.join(',', $parameters)."<br>\n";
 												break;
 											}
 										}
 									}
 								}
-							}
-							else
-							{
-								$foundthirdparty=true;
 
-								$socid='all';
+								$this->context->smarty->assign('searchwasdoneon', $searchwasdoneon);
 
-								// Search for each $publisher / $company to get and set $socid to list of companies
-
-
-
+								if (!$foundThirdpartyIntoDolibarr) {
+									if ($customer_id == 'all') {
+										$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher='.$publisher.' and company='.$company.' was not found into Dolibarr - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Check</a><br>'."\n";
+									}
+								}
 							}
 
-							$this->context->smarty->assign('foundthirdparty', $foundthirdparty);
+
+							$this->context->smarty->assign('foundthirdparty', count($listofsocid));
 
 							// Call the WebService method to get amount received
 							$errorcallws=0;
 							$lastdate='2000-01-01';
-
-							$listofsocid = array();
-							if ($socid > 0) {
-								$listofsocid = array($socid);
-							}
-							if ($socid == 'all') {
-								$listofsocid = array(0);
-							}
 
 							// Define $dolistoreinvoices
 							$WS_DOL_URL = $dolibarr_webservices_url . '/server_supplier_invoice.php';
@@ -451,7 +468,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$soapclient->decodeUTF8(false);
 							}
 
-							foreach($listofsocid as $socid)
+							foreach($listofsocid as $id_customer => $socid)
 							{
 								// Make one call for each thirdparty
 								$parameters = array('authentication'=>$authentication, 'id'=>$socid, 'ref'=>'');
@@ -462,12 +479,28 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									$soapclient_error=$soapclient->error_str;
 									$errorcallws++;
 									BlockMySales::prestalog("Call method ".$WS_METHOD." error ".$soapclient_error);
+									$dolistoreinvoicesoutput[-1] .= "ERRROR For socid = ".$socid." ".$soapclient_error."<br>";
 								}
 								else
 								{
 									if ($result['result']['result_code'] == 'OK')
 									{
 										BlockMySales::prestalog("Call method ".$WS_METHOD." OK");
+										if (empty($result['invoices'])) {
+											// Try to retreive name of publisher
+											$publisher = '';
+											$company = '';
+											foreach($arrayofcustomers as $customer) {
+												if ($id_customer == $customer['id_customer']) {
+													$publisher = trim($customer['firstname'].' '.$customer['lastname']);
+													$company = trim($customer['company']);
+													break;
+												}
+											}
+											if ($customer_id == 'all') {
+												$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher id='.$id_customer.' publisher='.$publisher.' and company='.$company.' found into Dolibarr id='.$socid.' has never claimed its balance - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer.'" target="_blank">Check</a><br>'."\n";
+											}
+										}
 										foreach($result['invoices'] as $invoice)
 										{
 											$dateinvoice=substr($invoice['date_invoice'], 0, 10);
@@ -481,117 +514,122 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 												&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
 												) $isfordolistore=1;
 
-												if (! $isfordolistore)
+											if (! $isfordolistore)
+											{
+												if (count($invoice['lines']) < 1)
 												{
-													if (count($invoice['lines']) < 1)
-													{
-														// TODO à traiter
-														//print 'Error during call of web service '.$WS_METHOD.'. Result='.$result['result']['result_code'].'. No lines for invoice found.';
-														$errorcallws++;
-														break;
-													}
-
-													foreach($invoice['lines'] as $line)
-													{
-														if (preg_match('/dolistore/i',$line['desc'])
-															&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
-															&& ! preg_match('/agios/i',$invoice['ref_supplier'])
-															&& ! preg_match('/frais/i',$invoice['ref_supplier'])
-															&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
-															)
-														{
-															$isfordolistore++;
-														}
-													}
+													// TODO à traiter
+													//print 'Error during call of web service '.$WS_METHOD.'. Result='.$result['result']['result_code'].'. No lines for invoice found.';
+													$errorcallws++;
+													break;
 												}
 
-												if ($isfordolistore)
+												foreach($invoice['lines'] as $line)
 												{
-													$dolistoreinvoices[]=array(
+													if (preg_match('/dolistore/i',$line['desc'])
+														&& ! preg_match('/Remboursement certificat|Remboursement domaine/i',$line['desc'])
+														&& ! preg_match('/agios/i',$invoice['ref_supplier'])
+														&& ! preg_match('/frais/i',$invoice['ref_supplier'])
+														&& ! preg_match('/comDolistore/i',$invoice['ref_supplier'])
+														)
+													{
+														$isfordolistore++;
+													}
+												}
+											}
+
+											if ($isfordolistore)
+											{
+												$dolistoreinvoices[]=array(
 													'id'=>$invoice['id'],
 													'ref'=>$invoice['ref'],
 													'ref_supplier'=>$invoice['ref_supplier'],
 													'status'=>$invoice['status'],
 													'date'=>$invoice['date_invoice'],
+													'datenohour'=>$dateinvoice,
 													'amount_ht'=>$invoice['total_net'],
 													'amount_vat'=>$invoice['total_vat'],
 													'amount_ttc'=>$invoice['total'],
 													'fk_thirdparty'=>$invoice['fk_thirdparty']
-													);
-												}
+												);
+											}
 										}
 									}
 									else
 									{
+										$dolistoreinvoicesoutput[-1] .= "ERRROR Result code not OK for socid = ".$socid."<br>";
 										$webservice_error=$WS_METHOD;
 										$webservice_error_code=$result['result']['result_code'];
 										$webservice_error_label=$result['result']['result_label'];
 										$errorcallws++;
 									}
 								}
+							}
 
-								//$errorcallws++; // for debug
-								$dolistoreinvoiceslines=array();
+							//$errorcallws++; // for debug
 
-								if (empty($errorcallws))
+							if (empty($errorcallws))
+							{
+								if (count($dolistoreinvoices))
 								{
-									if (count($dolistoreinvoices))
+									$this->context->smarty->assign('nbofsupplierinvoices', count($dolistoreinvoices));
+
+									$sortdolistoreinvoices = $this->dol_sort_array($dolistoreinvoices,'date');
+
+									$i=0;
+									$before2013=0;
+									$after2013=0;
+
+									foreach($sortdolistoreinvoices as $item)
 									{
-										$sortdolistoreinvoices = $this->dol_sort_array($dolistoreinvoices,'date');
-
-										$i=0;
-										$before2013=0;
-
-										foreach($sortdolistoreinvoices as $item)
+										$dolistoreinvoicesoutput[$i]='';
+										$tmpdate=preg_replace('/(\s|T)00:00:00Z/','',$item['date']);
+										if ((strcmp($tmpdate, '2013-01-01') < 0) && empty($before2013))
 										{
-											$dolistoreinvoiceslines[$i]='';
-											$tmpdate=preg_replace('/(\s|T)00:00:00Z/','',$item['date']);
-											if ((strcmp($tmpdate, '2013-01-01') < 0) && empty($before2013))
-											{
-												$before2013=1;
-												$dolistoreinvoiceslines[$i].= sprintf($this->module->l('Before %s:', 'blockmysales'), Tools::displayDate('2013-01-01'))."<br>";
-											}
-											if ($before2013 && (strcmp($tmpdate, '2013-01-01') >= 0) && empty($after2013))
-											{
-												$after2013=1;
-												$dolistoreinvoiceslines[$i].= sprintf($this->module->l('After %s:', 'blockmysales'), Tools::displayDate('2013-01-01'))."<br>";
-											}
-											if ($tmpdate > $lastdate) $lastdate = $tmpdate;
-											$dolistoreinvoiceslines[$i].= $this->module->l('Date: ', 'blockmysales');
-											$dolistoreinvoiceslines[$i].= ' <b>'.Tools::displayDate($tmpdate).'</b> - ';
-											if ((strcmp($tmpdate,'2013-01-01') < 0)) $dolistoreinvoiceslines[$i].= ' <b>'.$item['amount_ttc'].$this->module->l('€ incl tax', 'blockmysales');
-											else $dolistoreinvoiceslines[$i].= ' <b>'.$item['amount_ht'].$this->module->l('€ excl tax', 'blockmysales');
-											$dolistoreinvoiceslines[$i].= '</b>';
-											if ($item['ref_supplier'])
-											{
-												$dolistoreinvoiceslines[$i].= ' - '.$this->module->l('Supplier ref: ', 'blockmysales');
-												$dolistoreinvoiceslines[$i].= ' <b>'.$item['ref_supplier'].'</b>';
-											}
-											if ($item['status'] != 2) $dolistoreinvoiceslines[$i].= ' - '.$this->module->l('Payment in process', 'blockmysales');
-											if ($item['ref'] || $customer_id == 'all')
-											{
-												$dolistoreinvoiceslines[$i].= ' <img title="';
-												$dolistoreinvoiceslines[$i].= $this->module->l('Ref Dolibarr -> Invoice: ', 'blockmysales');
-												$dolistoreinvoiceslines[$i].= ' '.$item['ref'];
-												$dolistoreinvoiceslines[$i].= ' - ';
-												$dolistoreinvoiceslines[$i].= $this->module->l('Supplier: ', 'blockmysales');
-												$dolistoreinvoiceslines[$i].= ' '.$item['fk_thirdparty'];
-												$dolistoreinvoiceslines[$i].= '" src="/img/admin/asterisk.gif">';
-											}
-
-											$dolistoreinvoiceslines[$i].= '<br>'."\n";
-											if (strcmp($tmpdate,'2013-01-01') < 0) $alreadyreceived+=$item['amount_ttc'];
-											else $alreadyreceived+=$item['amount_ht'];
-
-											$i++;
+											$before2013=1;
+											$dolistoreinvoicesoutput[$i].= sprintf($this->module->l('Before %s:', 'blockmysales'), Tools::displayDate('2013-01-01'))."<br>\n";
+										}
+										if ($before2013 && (strcmp($tmpdate, '2013-01-01') >= 0) && empty($after2013))
+										{
+											$after2013=1;
+											$dolistoreinvoicesoutput[$i].= sprintf($this->module->l('After %s:', 'blockmysales'), Tools::displayDate('2013-01-01'))."<br>\n";
+										}
+										if ($tmpdate > $lastdate) $lastdate = $tmpdate;
+										$dolistoreinvoicesoutput[$i].= $this->module->l('Date: ', 'blockmysales');
+										$dolistoreinvoicesoutput[$i].= ' <b>'.Tools::displayDate($tmpdate).'</b> - ';
+										if ((strcmp($tmpdate,'2013-01-01') < 0)) $dolistoreinvoicesoutput[$i].= ' <b>'.$item['amount_ttc'].$this->module->l('€ incl tax', 'blockmysales');
+										else $dolistoreinvoicesoutput[$i].= ' <b>'.$item['amount_ht'].$this->module->l('€ excl tax', 'blockmysales');
+										$dolistoreinvoicesoutput[$i].= '</b>';
+										if ($item['ref_supplier'])
+										{
+											$dolistoreinvoicesoutput[$i].= ' - '.$this->module->l('Supplier ref: ', 'blockmysales');
+											$dolistoreinvoicesoutput[$i].= ' <b>'.$item['ref_supplier'].'</b>';
+										}
+										if ($item['status'] != 2) $dolistoreinvoicesoutput[$i].= ' - '.$this->module->l('Payment in process', 'blockmysales');
+										if ($item['ref'] || $customer_id == 'all')
+										{
+											$dolistoreinvoicesoutput[$i].= ' <img title="';
+											$dolistoreinvoicesoutput[$i].= $this->module->l('Ref Dolibarr -> Invoice: ', 'blockmysales');
+											$dolistoreinvoicesoutput[$i].= ' '.$item['ref'];
+											$dolistoreinvoicesoutput[$i].= ' - ';
+											$dolistoreinvoicesoutput[$i].= $this->module->l('Supplier: ', 'blockmysales');
+											$dolistoreinvoicesoutput[$i].= ' '.$item['fk_thirdparty'];
+											$dolistoreinvoicesoutput[$i].= '" src="/img/admin/asterisk.gif">';
 										}
 
-										$this->context->smarty->assign('alreadyreceived', $alreadyreceived);
-									}
-								}
+										$dolistoreinvoicesoutput[$i].= '<br>'."\n";
+										if (strcmp($tmpdate,'2013-01-01') < 0) $alreadyreceived+=$item['amount_ttc'];
+										else $alreadyreceived+=$item['amount_ht'];
 
-								$this->context->smarty->assign('dolistoreinvoiceslines', $dolistoreinvoiceslines);
+										$i++;
+									}
+
+									$this->context->smarty->assign('alreadyreceived', $alreadyreceived);
+								}
 							}
+
+							$this->context->smarty->assign('dolistoreinvoiceslines', $dolistoreinvoicesoutput);
+
 							//$alreadyreceived=0; // for debug
 							$this->context->smarty->assign('soapclient_error', $soapclient_error);
 							$this->context->smarty->assign('webservice_error', $webservice_error);
@@ -614,7 +652,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								if ((strcmp($lastdate,$firstdayofmonth) > 0) && $customer_id != 'all') $showremaintoreceive=false;
 							}
 							else
+							{
 								$showremaintoreceive=false;
+							}
 
 							$this->context->smarty->assign('showremaintoreceive', $showremaintoreceive);
 						}
