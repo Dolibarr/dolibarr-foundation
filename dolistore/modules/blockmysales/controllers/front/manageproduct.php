@@ -216,7 +216,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									AND o.id_order = od.id_order";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-							//prestalog("Request to count totalamount ".$query);
+							BlockMySales::prestalog("Request to count totalamount ".$query);
 							//print '<!-- calculate totalamount '.$query.' -->'."\n";
 
 							$subresult = Db::getInstance()->ExecuteS($query);
@@ -252,7 +252,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									AND o.date_add <= DATE_ADD('".date("Y-m-d 23:59:59",time())."', INTERVAL - ".$mindelaymonth." MONTH)";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-							//prestalog("Request to count totatamountclaimable ".$query);
+							BlockMySales::prestalog("Request to count totatamountclaimable ".$query);
 							//print '<!-- calculate totatamountclaimable '.$query.' -->'."\n";
 
 							$subresult = Db::getInstance()->ExecuteS($query);
@@ -284,7 +284,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						// Check there is no bad voucher name (All voucher must be named "xxxxCidseller").
 						// Having bad voucher name makes to forget to remove discounts.
 						$query = "SELECT od.name, od.id_order FROM "._DB_PREFIX_."order_cart_rule as od";
-						//prestalog($query);
+						BlockMySales::prestalog($query);
 
 						$subresult = Db::getInstance()->ExecuteS($query);
 						if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -315,7 +315,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							//$query.= " AND o.date_add <= '".date("Y-m-d 23:59:59",time())."'";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-							//prestalog($query);
+							BlockMySales::prestalog($query);
 
 							$subresult = Db::getInstance()->ExecuteS($query);
 							if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -336,7 +336,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							$query.= " AND date_add <= DATE_ADD('".date("Y-m-d 23:59:59",time())."', INTERVAL - ".$mindelaymonth." MONTH)";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-							//prestalog($query);
+							BlockMySales::prestalog($query);
 
 							$subresult = Db::getInstance()->ExecuteS($query);
 							if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -376,7 +376,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							// Call the WebService method to find third party id from name or company name.
 							$WS_DOL_URL = $dolibarr_webservices_url . '/server_thirdparty.php';
-							//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
+							//BlockMySales::prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
 							$soapclient = new soapclient_nusoap($WS_DOL_URL);
 							if ($soapclient)
 							{
@@ -460,7 +460,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							// Define $dolistoreinvoices
 							$WS_DOL_URL = $dolibarr_webservices_url . '/server_supplier_invoice.php';
 							$WS_METHOD  = 'getSupplierInvoicesForThirdParty';
-							//prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
+							//BlockMySales::prestalog("Create soapclient_nusoap for URL=".$WS_DOL_URL);
 							$soapclient = new soapclient_nusoap($WS_DOL_URL);
 							if ($soapclient)
 							{
