@@ -66,7 +66,11 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 			{
 				if (!is_null($customer) && !empty($customer))
 				{
-					BlockMySales::prestalog("getCustomer an array customer with count=".count($customer));
+					if ($customer_id != 'all') {
+						BlockMySales::prestalog("getCustomer we got the first record address (firsname, lastname and country)");
+					} else {
+						BlockMySales::prestalog("getCustomer we got an array of customers with count=".count($customer));
+					}
 
 					$this->context->smarty->assign('phpself', $this->context->link->getModuleLink('blockmysales', 'manageproduct'));
 					$this->context->smarty->assign('cardproduct', $this->context->link->getModuleLink('blockmysales', 'cardproduct'));
@@ -128,6 +132,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					// totalamount
 					$totalamount=0;
 					$totalamountclaimable=0;
+					$totalamountforcustomer=array();
+					$totalamountclaimableforcustomer=array();
+					$totalamountalreadyreceivedforcustomer=array();
 
 					// Define dateafter and datebefore
 					$dateafter=null;
@@ -142,12 +149,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					// array to store all invoices already payed
 					$dolistoreinvoices=array();
 
-					// Get list of products
+					// Get list of products (for the customer or for everybody)
 					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, p.dolibarr_min, p.dolibarr_max, pl.name, pl.description_short, pl.link_rewrite';
 					$query.= ' FROM '._DB_PREFIX_.'product as p';
 					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
 					$query.= ' WHERE 1 = 1';
-					if ($customer_id != 'all') $query.= ' AND p.reference LIKE "c'.$customer_id.'d2%"';
+					if ($customer_id != 'all') {
+						$query.= ' AND p.reference LIKE "c'.$customer_id.'d2%"';
+					} else {
+						$query.= ' AND p.reference LIKE "c%d2%"';
+					}
 					if ($active == 'no')  $query.= ' AND active = FALSE';
 					if ($active == 'yes') $query.= ' AND active = TRUE';
 					$query.= ' ORDER BY pl.name';
@@ -158,6 +169,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 					if (count($result))	// If 1 or several products found for the seller or for everybody
 					{
+						BlockMySales::prestalog("Customer with id = ".$customer_id." has ".count($result)." products");		// $customer_id can be 'all'
 						foreach ($result as $id => $values)	// Loop to show each product
 						{
 							$products[$id] = $values;
@@ -175,37 +187,42 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							}
 
 							$id_product = $values['id_product'];
+							$ref_product = $values['reference'];
 							$products[$id]['productcardlink'] = $this->context->link->getModuleLink('blockmysales', 'cardproduct') . '?id_p=' . $id_product; // product card link
 
 							$products[$id] = array_merge($products[$id], array('price_ttc' => round($values['price'] * (100 + $vatrate) / 100, 2)));
 							$products[$id]['price'] = round($values['price'], 5);
 
-							//recuperation nom fichier
-							$query = 'SELECT display_filename, date_add FROM '._DB_PREFIX_.'product_download WHERE `id_product` = '.$id_product;
-							$subresult = Db::getInstance()->ExecuteS($query);
-							$filename = "";
-							$datedeposit=0;
-							foreach ($subresult AS $subrow) {
-								$products[$id] = array_merge($products[$id], array('filename' => $subrow['display_filename']));
-								$products[$id] = array_merge($products[$id], array('datedeposit' => $subrow['date_add']));
+							if ($customer_id != 'all') {
+								//recuperation nom fichier
+								$query = 'SELECT display_filename, date_add FROM '._DB_PREFIX_.'product_download WHERE `id_product` = '.$id_product;
+								$subresult = Db::getInstance()->ExecuteS($query);
+								foreach ($subresult AS $subrow) {
+									$products[$id] = array_merge($products[$id], array('filename' => $subrow['display_filename']));
+									$products[$id] = array_merge($products[$id], array('datedeposit' => $subrow['date_add']));
+								}
+
+								//recuperation de l'image du produit
+								$cover = Product::getCover($id_product);
+								// get Image by id
+								if (count($cover) > 0)
+									$image_url = Context::getContext()->link->getImageLink($values['link_rewrite'], $cover['id_image'], 'small');
+								else
+									$image_url = _THEME_PROD_DIR_.'en-default-small.jpg';
+
+								$products[$id] = array_merge($products[$id], array('image_url' => $image_url));
+							} else {
+								$products[$id] = array_merge($products[$id], array('filename' => 'not available in id_customer=all mode'));
+								$products[$id] = array_merge($products[$id], array('datedeposit' => 'not available in id_customer=all mode'));
+								$products[$id] = array_merge($products[$id], array('image_url' => 'not available in id_customer=all mode'));
 							}
 
-							//recuperation de l'image du produit
-							$cover = Product::getCover($id_product);
-							// get Image by id
-							if (count($cover) > 0)
-								$image_url = Context::getContext()->link->getImageLink($values['link_rewrite'], $cover['id_image'], 'small');
-							else
-								$image_url = _THEME_PROD_DIR_.'en-default-small.jpg';
-
-							$products[$id] = array_merge($products[$id], array('image_url' => $image_url));
-
-							if ($colorTabNbr%2)
+							if ($colorTabNbr % 2)
 								$products[$id] = array_merge($products[$id], array('colorTab' => "#ffffff"));
 							else
 								$products[$id] = array_merge($products[$id], array('colorTab' => "#eeeeee"));
 
-							// Calculate totalamount for this product
+							// Calculate totalamount (total of sales) for this product
 							$query = "SELECT SUM( od.product_quantity ) as nbra,
 									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * GREATEST(0, (CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED))) * o.valid, 2) ) as amount_ht,
 									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * GREATEST(0, (CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED))) * o.valid * (100 + od.tax_rate) / 100, 2) ) as amount_ttc,
@@ -216,7 +233,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									AND o.id_order = od.id_order";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-							BlockMySales::prestalog("Request to count totalamount ".$query);
+							BlockMySales::prestalog("Request ".$colorTabNbr." to count totalamount ".$query);
 							//print '<!-- calculate totalamount '.$query.' -->'."\n";
 
 							$subresult = Db::getInstance()->ExecuteS($query);
@@ -228,7 +245,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							foreach ($subresult AS $subrow) {
 								$products[$id]['nbr_achats'] = $subrow['nbra'];
 								$products[$id]['nbr_amount'] = $subrow['amount_ht'];
-								$products[$id]['nbr_qtysold'] = $subrow['qtysold'];
+								$products[$id]['nbr_qtysold'] = $subrow['qtysold'];		// qty on real sales (we exclude refund)
 								if ($subrow['min_date'] && $subrow['qtysold'])
 								{
 									if (! empty($min_date)) $min_date = min($min_date, $subrow['min_date']);
@@ -236,11 +253,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								}
 							}
 
+							$id_customer_of_product = preg_replace('/d2.*$/', '', $ref_product);
+							$id_customer_of_product = preg_replace('/^c/', '', $id_customer_of_product);
+
 							$totalnbsell+=$products[$id]['nbr_achats'];
 							if ($products[$id]['nbr_amount'] > 0) $totalnbsellpaid+=$products[$id]['nbr_qtysold'];
 							$totalamount+=$products[$id]['nbr_amount'];
 
-							// Calculate totalamountclaimable (amount validated supplier can claim)
+							$totalamountforcustomer[$id_customer_of_product] += $products[$id]['nbr_amount'];
+
+							// Calculate totalamountclaimable (amount validated that a supplier can claim)
 							$query = "SELECT SUM( od.product_quantity ) as nbra,
 									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid, 2) ) as amount_ht,
 									sum( ROUND((od.product_price - od.reduction_amount) * (100 - od.reduction_percent) / 100 * (od.product_quantity - od.product_quantity_refunded) * o.valid * (100 + od.tax_rate) / 100, 2) ) as amount_ttc,
@@ -252,7 +274,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									AND o.date_add <= DATE_ADD('".date("Y-m-d 23:59:59",time())."', INTERVAL - ".$mindelaymonth." MONTH)";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
-							BlockMySales::prestalog("Request to count totatamountclaimable ".$query);
+							BlockMySales::prestalog("Request ".$colorTabNbr." to count totatamountclaimable ".$query);
 							//print '<!-- calculate totatamountclaimable '.$query.' -->'."\n";
 
 							$subresult = Db::getInstance()->ExecuteS($query);
@@ -270,6 +292,8 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							$totalamountclaimable+=$nbr_amount2;
 
+							$totalamountclaimableforcustomer[$id_customer_of_product]+=$nbr_amount2;
+
 							$colorTabNbr++;
 						}
 						//var_dump($products);
@@ -284,7 +308,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						// Check there is no bad voucher name (All voucher must be named "xxxxCidseller").
 						// Having bad voucher name makes to forget to remove discounts.
 						$query = "SELECT od.name, od.id_order FROM "._DB_PREFIX_."order_cart_rule as od";
-						BlockMySales::prestalog($query);
+						BlockMySales::prestalog("Now scan existing vouchers ".$query);
 
 						$subresult = Db::getInstance()->ExecuteS($query);
 						if ($subresult === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -308,13 +332,18 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						if ($voucherareok)	// Previous check test is ok, we can continue
 						{
 							// Calculate totalvoucher
-							$query = "SELECT SUM( od.value ) as total_voucher
+							$query = "SELECT od.name, SUM( od.value ) as total_voucher
 									FROM "._DB_PREFIX_."order_cart_rule as od,  "._DB_PREFIX_."orders as o
-									WHERE od.name LIKE '%C".($customer_id != 'all' ? $customer_id : "%")."'
-									AND o.id_order = od.id_order";
+									WHERE o.id_order = od.id_order";
+							if ($customer_id != 'all') {
+								$query .= " AND od.name LIKE '%C".$customer_id."'";
+							} else {
+								$query .= " AND (od.name LIKE '%C__' OR od.name LIKE '%C___')";
+							}
 							//$query.= " AND o.date_add <= '".date("Y-m-d 23:59:59",time())."'";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+							$query .= ' GROUP BY od.name';
 							BlockMySales::prestalog($query);
 
 							$subresult = Db::getInstance()->ExecuteS($query);
@@ -324,18 +353,27 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							foreach ($subresult AS $subrow)
 							{
 								$totalvoucher_ttc += $subrow['total_voucher'];
+
+								$id_customer_of_product = preg_replace('/^.*c(\d+)$/i', '\1', $subrow['name']);
+								BlockMySales::prestalog("We remove ".$subrow['total_voucher']." from totalamountforcustomer of customer id =".$id_customer_of_product);
+								$totalamountforcustomer[$id_customer_of_product] -= $subrow['total_voucher'];
 							}
 							$totalvoucher_ht = round($totalvoucher_ttc / (100 + $vatrate) * 100, 2);
 
 
 							// Calculate totalvoucherclaimable
-							$query = "SELECT SUM( od.value ) as total_voucher
+							$query = "SELECT od.name, SUM( od.value ) as total_voucher
 									FROM "._DB_PREFIX_."order_cart_rule as od,  "._DB_PREFIX_."orders as o
-									WHERE od.name LIKE '%C".($customer_id != 'all' ? $customer_id : "%")."'
-									AND o.id_order = od.id_order";
+									WHERE o.id_order = od.id_order";
+							if ($customer_id != 'all') {
+								$query .= " AND od.name LIKE '%C".$customer_id."'";
+							} else {
+								$query .= " AND (od.name LIKE '%C__' OR od.name LIKE '%C___')";
+							}
 							$query.= " AND date_add <= DATE_ADD('".date("Y-m-d 23:59:59",time())."', INTERVAL - ".$mindelaymonth." MONTH)";
 							if ($dateafter)  $query.= " AND date_add >= '".$dateafter." 00:00:00'";
 							if ($datebefore) $query.= " AND date_add <= '".$datebefore." 23:59:59'";
+							$query .= ' GROUP BY od.name';
 							BlockMySales::prestalog($query);
 
 							$subresult = Db::getInstance()->ExecuteS($query);
@@ -345,12 +383,18 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							foreach ($subresult AS $subrow)
 							{
 								$totalvoucherclaimable_ttc += $subrow['total_voucher'];
+
+								$id_customer_of_product = preg_replace('/^.*c(\d+)$/i', '\1', $subrow['name']);
+								BlockMySales::prestalog("We remove ".$subrow['total_voucher']." from totalamountclaimableforcustomer of customer id =".$id_customer_of_product);
+								$totalamountclaimableforcustomer[$id_customer_of_product] -= $subrow['total_voucher'];
 							}
 							$totalvoucherclaimable_ht = round($totalvoucherclaimable_ttc / (100 + $vatrate) * 100, 2);
 
+
+
 							// define variables
-							$mytotalamount=round($foundationfeerate*($totalamount - $totalvoucher_ht),2);
-							$mytotalamountclaimable=round($foundationfeerate*($totalamountclaimable - $totalvoucherclaimable_ht),2);
+							$mytotalamount=round($foundationfeerate*($totalamount - $totalvoucher_ht), 2);
+							$mytotalamountclaimable=round($foundationfeerate*($totalamountclaimable - $totalvoucherclaimable_ht), 2);
 							$alreadyreceived=0;
 							$datelastpayment=0;
 
@@ -391,7 +435,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							$dolistoreinvoicesoutput=array();
 							$dolistoreinvoicesoutput[-1] = '';
 
+							$i = 0;
 							foreach($arrayofcustomers as $customer) {
+								$i++;
+
 								$publisher = trim($customer['firstname'].' '.$customer['lastname']);
 								$company = trim($customer['company']);
 
@@ -412,6 +459,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$foundThirdpartyIntoDolibarr = false;
 								foreach ($allparameters as $parameters)	// Loop on each set of search
 								{
+									BlockMySales::prestalog("Call method ".$WS_METHOD." #".$i." customer['id']=".$customer['id_customer']);
 									$result = $soapclient->call($WS_METHOD, $parameters);
 									if (! $result)
 									{
@@ -468,11 +516,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$soapclient->decodeUTF8(false);
 							}
 
+							BlockMySales::prestalog("We loop on the ".count($listofsocid)." companies to get invoices");
+
+							$i = 0;
 							foreach($listofsocid as $id_customer => $socid)
 							{
+								$i++;
+
 								// Make one call for each thirdparty
 								$parameters = array('authentication'=>$authentication, 'id'=>$socid, 'ref'=>'');
-								BlockMySales::prestalog("Call method ".$WS_METHOD." for socid=".$socid);
+								BlockMySales::prestalog("Call method ".$WS_METHOD." #".$i." for socid=".$socid);
 								$result = $soapclient->call($WS_METHOD,$parameters);
 								if (! $result)
 								{
@@ -540,7 +593,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 											if ($isfordolistore)
 											{
+												// Array of already received and paid invoices
 												$dolistoreinvoices[]=array(
+													'dolistore_customer_id'=>$id_customer,
 													'id'=>$invoice['id'],
 													'ref'=>$invoice['ref'],
 													'ref_supplier'=>$invoice['ref_supplier'],
@@ -552,12 +607,15 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 													'amount_ttc'=>$invoice['total'],
 													'fk_thirdparty'=>$invoice['fk_thirdparty']
 												);
+
+												// Add amount already received for this customer
+												$totalamountalreadyreceivedforcustomer[$id_customer]+=$invoice['total_net'];
 											}
 										}
 									}
 									else
 									{
-										$dolistoreinvoicesoutput[-1] .= "ERRROR Result code not OK for socid = ".$socid."<br>";
+										$dolistoreinvoicesoutput[-1] .= "ERROR Result code not OK for socid = ".$socid."<br>";
 										$webservice_error=$WS_METHOD;
 										$webservice_error_code=$result['result']['result_code'];
 										$webservice_error_label=$result['result']['result_label'];
@@ -625,6 +683,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									}
 
 									$this->context->smarty->assign('alreadyreceived', $alreadyreceived);
+								}
+							}
+
+							// Complete log with amount to claim per company
+							if ($id_customer == 'all') {
+								foreach($totalamountforcustomer as $id_customer_of_product => $value) {
+									$tmpmessage= 'OK Customer with id '.$id_customer_of_product.' in dolistore has sold for '.$totalamountclaimableforcustomer[$id_customer_of_product].' ('.$value.' in 1 month)';
+									$tmpmessage.= '. Can ask '.round(($foundationfeerate * $totalamountclaimableforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2);
+									$tmpmessage.= ' ('.round(($foundationfeerate * $totalamountforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2).' in 1 month)';
+									$dolistoreinvoicesoutput[-1] .= $tmpmessage."<br>\n";
 								}
 							}
 
