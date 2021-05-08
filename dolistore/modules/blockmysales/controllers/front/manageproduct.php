@@ -687,12 +687,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 							}
 
 							// Complete log with amount to claim per company
-							if ($id_customer == 'all') {
+							if ($customer_id == 'all') {
 								foreach($totalamountforcustomer as $id_customer_of_product => $value) {
 									$tmpmessage= 'OK Customer with id '.$id_customer_of_product.' in dolistore has sold for '.$totalamountclaimableforcustomer[$id_customer_of_product].' ('.$value.' in 1 month)';
 									$tmpmessage.= '. Can ask '.round(($foundationfeerate * $totalamountclaimableforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2);
 									$tmpmessage.= ' ('.round(($foundationfeerate * $totalamountforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2).' in 1 month)';
 									$dolistoreinvoicesoutput[-1] .= $tmpmessage."<br>\n";
+									BlockMySales::prestalog($tmpmessage);
 								}
 							}
 
