@@ -691,7 +691,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								foreach($totalamountforcustomer as $id_customer_of_product => $value) {
 									$tmpmessage= 'OK Customer with id '.$id_customer_of_product.' in dolistore has sold for '.$totalamountclaimableforcustomer[$id_customer_of_product].' ('.$value.' in 1 month)';
 									$tmpmessage.= '. Can ask '.round(($foundationfeerate * $totalamountclaimableforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2);
-									$tmpmessage.= ' ('.round(($foundationfeerate * $totalamountforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2).' in 1 month)';
+									$tmpmessage.= ' ('.round(($foundationfeerate * $totalamountforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2).' in 1 month) <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer_of_product.'" target="_blank">Check</a>';
 									BlockMySales::prestalog($tmpmessage);
 									$dolistoreinvoicesoutput[-1] .= $tmpmessage."<br>\n";
 								}
