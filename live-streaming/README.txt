@@ -29,9 +29,9 @@ Go on https://studio.youtube.com, click on "Create - Go live" then "Schedule str
 = Preparing screen and slides to show (10mn before event) =
 
 On first screen A, launch Chrome browser with 2 tabs only: Dolibarr web app and the Slides to show in Drive. 
-Open the tab with the Web app and Click F11 to switch in full screen mode.
+Open the tab with the Dolibarr Web app and Click F11 to switch in full screen mode.
 Then switch to second tab with CTRL+TAB
-Click on start presentation os Slides then Click on the Cross "Exit full screen" (you leave the Fullscreen mode of Google slide 
+Click on "Play/Read" presentation of Slides then Click on the Cross "Exit full screen" (you leave the Fullscreen mode of Google slide 
 but keep the full mode of browser).
 You can now switch with CTRL+TAB between web application and slides without loosing the full screen.
 
