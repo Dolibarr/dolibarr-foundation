@@ -575,7 +575,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 												}
 											}
 											if ($customer_id == 'all') {
-												$dolistoreinvoicesoutput[-3] .= 'WARNING: publisher id='.$id_customer.' publisher='.$publisher.' and company='.$company.' found into Dolibarr id='.$socid.' has a balance of '.$totalamountforcustomer[$customer['id_customer']].' and did never claim claimable amout of '.$totalamountclaimableforcustomer[$customer['id_customer']].' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer.'" target="_blank">Supplier dashboard</a><br>'."\n";
+												$dolistoreinvoicesoutput[-3] .= 'WARNING: publisher id='.$id_customer.' publisher='.$publisher.' and company='.$company.' found into Dolibarr id='.$socid.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> and did never claim claimable amout of '.$totalamountclaimableforcustomer[$customer['id_customer']].' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer.'" target="_blank">Supplier dashboard</a><br>'."\n";
 											}
 										}
 
