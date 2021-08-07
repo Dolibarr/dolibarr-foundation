@@ -149,7 +149,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					// array to store all invoices already payed
 					$dolistoreinvoices=array();
 
-					// Get list of products (for the customer or for everybody)
+					// Get list of all products (for the customer or for everybody)
 					$query = 'SELECT p.id_product, p.reference, p.supplier_reference, p.location, p.active, p.price, p.wholesale_price, p.dolibarr_min, p.dolibarr_max, pl.name, pl.description_short, pl.link_rewrite';
 					$query.= ' FROM '._DB_PREFIX_.'product as p';
 					$query.= ' LEFT JOIN '._DB_PREFIX_.'product_lang as pl on pl.id_product = p.id_product AND pl.id_lang = '.$id_lang;
@@ -249,17 +249,20 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								if ($subrow['min_date'] && $subrow['qtysold'])
 								{
 									if (! empty($min_date)) $min_date = min($min_date, $subrow['min_date']);
-									else $min_date=$subrow['min_date'];
+									else $min_date = $subrow['min_date'];
 								}
 							}
 
 							$id_customer_of_product = preg_replace('/d2.*$/', '', $ref_product);
 							$id_customer_of_product = preg_replace('/^c/', '', $id_customer_of_product);
 
-							$totalnbsell+=$products[$id]['nbr_achats'];
+							$totalnbsell += $products[$id]['nbr_achats'];
 							if ($products[$id]['nbr_amount'] > 0) $totalnbsellpaid+=$products[$id]['nbr_qtysold'];
-							$totalamount+=$products[$id]['nbr_amount'];
+							$totalamount += $products[$id]['nbr_amount'];
 
+							if (!array_key_exists($id_customer_of_product, $totalamountforcustomer)) {
+								$totalamountforcustomer[$id_customer_of_product] = 0;
+							}
 							$totalamountforcustomer[$id_customer_of_product] += $products[$id]['nbr_amount'];
 
 							// Calculate totalamountclaimable (amount validated that a supplier can claim)
@@ -286,13 +289,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								if ($subrow['min_date'] && $subrow['qtysold'])
 								{
 									if (! empty($min_date2)) $min_date2 = min($min_date2,$subrow['min_date']);
-									else $min_date2=$subrow['min_date'];
+									else $min_date2 = $subrow['min_date'];
 								}
 							}
 
-							$totalamountclaimable+=$nbr_amount2;
+							$totalamountclaimable += $nbr_amount2;
 
-							$totalamountclaimableforcustomer[$id_customer_of_product]+=$nbr_amount2;
+							if (!array_key_exists($id_customer_of_product, $totalamountclaimableforcustomer)) {
+								$totalamountclaimableforcustomer[$id_customer_of_product] = 0;
+							}
+							$totalamountclaimableforcustomer[$id_customer_of_product] += $nbr_amount2;
 
 							$colorTabNbr++;
 						}
@@ -434,6 +440,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							$dolistoreinvoicesoutput=array();
 							$dolistoreinvoicesoutput[-1] = '';
+							$dolistoreinvoicesoutput[-2] = '';
+							$dolistoreinvoicesoutput[-3] = '';
+							$dolistoreinvoicesoutput[-4] = '';
+
+							if ($customer_id == 'all') {
+								$dolistoreinvoicesoutput[-2] .= '<br>'."\n";
+							}
 
 							$i = 0;
 							foreach($arrayofcustomers as $customer) {
@@ -441,6 +454,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								$publisher = trim($customer['firstname'].' '.$customer['lastname']);
 								$company = trim($customer['company']);
+
+
+								if (empty($totalamountforcustomer[$customer['id_customer']])) {
+									// Amount sold is 0, we can discard search of thirdparty into Dolibarr
+									//$dolistoreinvoicesoutput[-1] .= 'publisher id='.$customer['id_customer'].' publisher='.$publisher.' and company='.$company.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Supplier dashboard</a><br>'."\n";
+									continue;
+								}
 
 								// Search for each $publisher / $company to get and set $socid to list of companies
 								$WS_METHOD  = 'getThirdParty';
@@ -476,13 +496,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 											} else {
 												if ($listofsocid[$customer['id_customer']] != $socid) {
 													// Found 2 different thirdparties
-													$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher='.$publisher.' and company='.$company.' was found twice into Dolibarr with id '.$listofsocid[$customer['id_customer']].' and '.$socid.' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Check</a><br>'."\n";
+													$dolistoreinvoicesoutput[-2] .= 'WARNING: publisher id='.$customer['id_customer'].' publisher='.$publisher.' and company='.$company.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> but was found twice into Dolibarr with id '.$listofsocid[$customer['id_customer']].' and '.$socid.' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Supplier dashboard</a><br>'."\n";
 												}
 											}
 										} else {
 											if ($result['result']['result_code'] == 'DUPLICATE_FOUND') {
-												$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher='.$publisher.' and company='.$company.' was found twice into Dolibarr when searching on '.join(',', $parameters).' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Check</a><br>'."\n";
-												$searchwasdoneon .= '<br>WARNING: publisher='.$publisher.' and company='.$company.' was found twice into Dolibarr when searching on '.join(',', $parameters)."<br>\n";
+												$dolistoreinvoicesoutput[-2] .= 'WARNING: publisher id='.$customer['id_customer'].' publisher='.$publisher.' and company='.$company.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> but was found twice into Dolibarr when searching on '.join(',', $parameters).' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Supplier dashboard</a><br>'."\n";
+												$searchwasdoneon .= '<br>WARNING: publisher id='.$customer['id_customer'].' publisher='.$publisher.' and company='.$company.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> but was found twice into Dolibarr when searching on '.join(',', $parameters)."<br>\n";
 												break;
 											}
 										}
@@ -493,7 +513,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								if (!$foundThirdpartyIntoDolibarr) {
 									if ($customer_id == 'all') {
-										$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher='.$publisher.' and company='.$company.' was not found into Dolibarr - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Check</a><br>'."\n";
+										$dolistoreinvoicesoutput[-2] .= 'WARNING: publisher id='.$customer['id_customer'].' publisher='.$publisher.' and company='.$company.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> but was not found into Dolibarr - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Supplier dashboard</a><br>'."\n";
 									}
 								}
 							}
@@ -501,7 +521,11 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							$this->context->smarty->assign('foundthirdparty', count($listofsocid));
 
-							// Call the WebService method to get amount received
+							if ($customer_id == 'all') {
+								$dolistoreinvoicesoutput[-3] .= '<br>'."\n";
+							}
+
+							// Call the WebService method to get amount received for customer with a sold amount > 0
 							$errorcallws=0;
 							$lastdate='2000-01-01';
 
@@ -516,7 +540,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$soapclient->decodeUTF8(false);
 							}
 
-							BlockMySales::prestalog("We loop on the ".count($listofsocid)." companies to get invoices");
+							BlockMySales::prestalog("We loop on the ".count($listofsocid)." companies to get supplier invoices");
 
 							$i = 0;
 							foreach($listofsocid as $id_customer => $socid)
@@ -526,13 +550,13 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								// Make one call for each thirdparty
 								$parameters = array('authentication'=>$authentication, 'id'=>$socid, 'ref'=>'');
 								BlockMySales::prestalog("Call method ".$WS_METHOD." #".$i." for socid=".$socid);
-								$result = $soapclient->call($WS_METHOD,$parameters);
+								$result = $soapclient->call($WS_METHOD, $parameters);
 								if (! $result)
 								{
 									$soapclient_error=$soapclient->error_str;
 									$errorcallws++;
 									BlockMySales::prestalog("Call method ".$WS_METHOD." error ".$soapclient_error);
-									$dolistoreinvoicesoutput[-1] .= "ERRROR For socid = ".$socid." ".$soapclient_error."<br>";
+									$dolistoreinvoicesoutput[-3] .= "ERROR: For socid = ".$socid." ".$soapclient_error."<br>";
 								}
 								else
 								{
@@ -551,9 +575,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 												}
 											}
 											if ($customer_id == 'all') {
-												$dolistoreinvoicesoutput[-1] .= 'WARNING: publisher id='.$id_customer.' publisher='.$publisher.' and company='.$company.' found into Dolibarr id='.$socid.' has never claimed its balance - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer.'" target="_blank">Check</a><br>'."\n";
+												$dolistoreinvoicesoutput[-3] .= 'WARNING: publisher id='.$id_customer.' publisher='.$publisher.' and company='.$company.' found into Dolibarr id='.$socid.' has a balance of '.$totalamountforcustomer[$customer['id_customer']].' and did never claim claimable amout of '.$totalamountclaimableforcustomer[$customer['id_customer']].' - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer.'" target="_blank">Supplier dashboard</a><br>'."\n";
 											}
 										}
+
 										foreach($result['invoices'] as $invoice)
 										{
 											$dateinvoice=substr($invoice['date_invoice'], 0, 10);
@@ -609,13 +634,16 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 												);
 
 												// Add amount already received for this customer
-												$totalamountalreadyreceivedforcustomer[$id_customer]+=$invoice['total_net'];
+												if (!array_key_exists($id_customer, $totalamountalreadyreceivedforcustomer)) {
+													$totalamountalreadyreceivedforcustomer[$id_customer] = 0;
+												}
+												$totalamountalreadyreceivedforcustomer[$id_customer] += $invoice['total_net'];
 											}
 										}
 									}
 									else
 									{
-										$dolistoreinvoicesoutput[-1] .= "ERROR Result code not OK for socid = ".$socid."<br>";
+										$dolistoreinvoicesoutput[-3] .= "ERROR: Result code not OK for socid = ".$socid."<br>";
 										$webservice_error=$WS_METHOD;
 										$webservice_error_code=$result['result']['result_code'];
 										$webservice_error_label=$result['result']['result_label'];
@@ -623,6 +651,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									}
 								}
 							}
+
+
+							// Now we list all the vendor invoices made.
 
 							//$errorcallws++; // for debug
 
@@ -688,13 +719,28 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 							// Complete log with amount to claim per company
 							if ($customer_id == 'all') {
+								$dolistoreinvoicesoutput[-4] .= '<br>'."\n";
+
 								foreach($totalamountforcustomer as $id_customer_of_product => $value) {
-									$tmpmessage= 'OK Customer with id '.$id_customer_of_product.' in dolistore has sold for '.$totalamountclaimableforcustomer[$id_customer_of_product].' ('.$value.' in 1 month)';
+									// Set indices to avoid warnings
+									if (!array_key_exists($id_customer_of_product, $totalamountforcustomer)) {
+										$totalamountforcustomer[$id_customer_of_product] = 0;
+									}
+									if (!array_key_exists($id_customer_of_product, $totalamountclaimableforcustomer)) {
+										$totalamountclaimableforcustomer[$id_customer_of_product] = 0;
+									}
+									if (!array_key_exists($id_customer_of_product, $totalamountalreadyreceivedforcustomer)) {
+										$totalamountalreadyreceivedforcustomer[$id_customer_of_product] = 0;
+									}
+
+									$tmpmessage= 'OK Customer with publisher id='.$id_customer_of_product.' in dolistore has sold for '.$totalamountclaimableforcustomer[$id_customer_of_product].' ('.$value.' in 1 month)';
 									$tmpmessage.= '. Can ask '.round(($foundationfeerate * $totalamountclaimableforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2);
-									$tmpmessage.= ' ('.round(($foundationfeerate * $totalamountforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2).' in 1 month) <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer_of_product.'" target="_blank">Check</a>';
+									$tmpmessage.= ' ('.round(($foundationfeerate * $totalamountforcustomer[$id_customer_of_product]) - $totalamountalreadyreceivedforcustomer[$id_customer_of_product], 2).' in 1 month) <a href="/fr/module/blockmysales/manageproduct?id_customer='.$id_customer_of_product.'" target="_blank">Supplier dashboard</a>';
 									BlockMySales::prestalog($tmpmessage);
-									$dolistoreinvoicesoutput[-1] .= $tmpmessage."<br>\n";
+									$dolistoreinvoicesoutput[-4] .= $tmpmessage."<br>\n";
 								}
+
+								$dolistoreinvoicesoutput[-4] .= '<br>'."\n";
 							}
 
 							$this->context->smarty->assign('dolistoreinvoiceslines', $dolistoreinvoicesoutput);
