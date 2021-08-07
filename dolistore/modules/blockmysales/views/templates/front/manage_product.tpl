@@ -127,7 +127,7 @@
 					<div class="alert alert-danger">
 						{l s='Third party %s was not found into our payment backoffice system.' sprintf=$company mod='blockmysales'}<br>
 						Search was done on <strong>{$searchwasdoneon}</strong><br>
-						{l s='If you already received a payment, please contact us to contact@dolibarr.org to fix this, this means following information are wrong.' mod='bloackmysales'}:
+						{l s='If you already received a payment, please contact us at contact@dolibarr.org to fix this, it means following information are wrong.' mod='bloackmysales'}
 					</div>
 					<div>
 						{l s='If you never request any payment yet, you can trust following informations.' mod='bloackmysales'}
