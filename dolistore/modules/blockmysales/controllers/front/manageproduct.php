@@ -90,6 +90,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$country=trim($customer['iso_code']);
 					$this->context->smarty->assign('country', $country);
 
+					$email=trim($customer['email']);
+					$this->context->smarty->assign('email', $email);
+
 					$vatrate = Configuration::get('BLOCKMYSALES_VATRATE');
 					$this->context->smarty->assign('vatrate', $vatrate);
 					$this->context->smarty->assign('vatratepercent', $vatrate.'%');

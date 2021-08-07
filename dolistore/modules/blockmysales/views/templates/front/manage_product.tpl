@@ -15,6 +15,7 @@
 			<div>{l s='Statistics are for download/sells of components submited by for current user:' mod='blockmysales'}</div>
 			<div><b>{l s='Name:' mod='blockmysales'} {$publisher}</b></div>
 			{if $company}<div><b>{l s='Company:' mod='blockmysales'} {$company}</b></div>{/if}
+			{if $email}<div><b>{l s='Email:' mod='blockmysales'} {$email}</b></div>{/if}
 			{if $country}<div><b>{l s='Country:' mod='blockmysales'} {$country}</b></div>{/if}
 		{/if}
 	</div>
