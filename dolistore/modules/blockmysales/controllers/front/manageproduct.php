@@ -84,9 +84,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$publisher=trim($customer['firstname'].' '.$customer['lastname']);
 					$this->context->smarty->assign('publisher', $publisher);
 
-					$company=trim($customer['company']);			// Field company comping from the customer record
+					$company=trim($customer['company']);				// Field company comping from the customer record
 					if (empty($company)) {
-						$company = $customer['companyaddress'];		// Field company coming from the address
+						$company = trim($customer['companyaddress']);	// Field company coming from the address
 					}
 					$this->context->smarty->assign('company', $company);
 
@@ -454,14 +454,17 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$dolistoreinvoicesoutput[-2] .= '<br>'."\n";
 							}
 
+							// arrayofcustomers is an array of all customer.
+							// You may have 1 entry per different address of customers, for the same customer_id (in most cases, there is only 0 to 4 sub addresses only).
+							//
 							$i = 0;
 							foreach($arrayofcustomers as $customer) {
 								$i++;
 
 								$publisher = trim($customer['firstname'].' '.$customer['lastname']);
-								$company = trim($customer['company']);			// Field company comping from the customer record
+								$company = trim($customer['company']);				// Field company comping from the customer record
 								if (empty($company)) {
-									$company = $customer['companyaddress'];		// Field company coming from the address
+									$company = trim($customer['companyaddress']);	// Field company coming from the address
 								}
 
 								if (empty($totalamountforcustomer[$customer['id_customer']])) {
@@ -472,8 +475,12 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								// Search for each $publisher / $company to get and set $socid to list of companies
 								// TODO Call the REST API to search
-								$sqlfilters = array();
-								
+								$sqlfilters = "(t.nom:like:'".$publisher."%') or (t.name_alias:like:'".$publisher."%')";
+								if ($company) {
+									$sqlfilters .= " or (t.nom:like:'".company."%') or (t.name_alias:like:'".company."%')";
+								}
+								// ...
+
 								// Search thirdparty using the WS
 								$WS_METHOD  = 'getThirdParty';
 
@@ -484,14 +491,14 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								{
 									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$company); $searchwasdoneonarray[] =$company;
 									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$company.' ('.$publisher.')'); $searchwasdoneonarray[] = $company.' ('.$publisher.')';
-									$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher.' ('.$company.')'); $searchwasdoneonarray[] = $publisher.' ('.$company.')';
+									//$allparameters[] = array('authentication'=>$authentication,'id'=>0,'ref'=>$publisher.' ('.$company.')'); $searchwasdoneonarray[] = $publisher.' ('.$company.')';
 								}
 								$searchwasdoneon .= ($searchwasdoneon ? ',<br>' : '').join(", ",$searchwasdoneonarray);
 
 								$foundThirdpartyIntoDolibarr = false;
 								foreach ($allparameters as $parameters)	// Loop on each set of search
 								{
-									BlockMySales::prestalog("Call method ".$WS_METHOD." #".$i." customer['id']=".$customer['id_customer']);
+									BlockMySales::prestalog("Call method ".$WS_METHOD." #".$i." customer['id']=".$customer['id_customer']." parameters=".join(', ', $parameters));
 									$result = $soapclient->call($WS_METHOD, $parameters);
 									if (! $result)
 									{
@@ -582,9 +589,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 											foreach($arrayofcustomers as $customer) {
 												if ($id_customer == $customer['id_customer']) {
 													$publisher = trim($customer['firstname'].' '.$customer['lastname']);
-													$company = trim($customer['company']);			// Field company comping from the customer record
+													$company = trim($customer['company']);				// Field company comping from the customer record
 													if (empty($company)) {
-														$company = $customer['companyaddress'];		// Field company coming from the address
+														$company = trim($customer['companyaddress']);	// Field company coming from the address
 													}
 													break;
 												}

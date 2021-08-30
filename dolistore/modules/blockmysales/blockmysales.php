@@ -556,6 +556,7 @@ class BlockMySales extends Module
 
 		// Check if current user is also an employee with admin user
 		$query = "SELECT id_employee, id_profile, email, active FROM "._DB_PREFIX_."employee WHERE lastname = '".addslashes($lastname)."' AND firstname = '".addslashes($firstname)."'";
+		BlockMySales::prestalog("getCustomer query=".$query);
 		$subresult = Db::getInstance()->ExecuteS($query);
 		if (empty($subresult[0]['id_employee'])) // If not an admin user
 		{
