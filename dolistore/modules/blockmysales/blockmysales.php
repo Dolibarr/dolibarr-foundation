@@ -568,12 +568,12 @@ class BlockMySales extends Module
 
 		// Get publisher, company and country.
 		// NOTE: A customer can have several address, even in same country, so you can have duplicate record here.
-		$query = "SELECT DISTINCT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, a.company, a.city, a.id_country, co.iso_code";
+		$query = "SELECT DISTINCT c.id_customer, c.firstname, c.lastname, c.email, c.optin, c.active, c.deleted, c.company, a.company as companyaddress, a.city, a.id_country, co.iso_code";
 		$query.= " FROM "._DB_PREFIX_."customer as c";
 		$query.= " LEFT JOIN "._DB_PREFIX_."address as a ON a.id_customer = c.id_customer AND a.deleted = 0";
 		$query.= " LEFT JOIN "._DB_PREFIX_."country as co ON a.id_country = co.id_country";
 		if ($request_customer_id != 'all') {
-			$query.= " WHERE c.id_customer = " . $request_customer_id;
+			$query.= " WHERE c.id_customer = " . ((int) $request_customer_id);
 		} else {
 			$query.= " WHERE (SELECT COUNT(id_product) FROM "._DB_PREFIX_."product as p WHERE p.reference LIKE CONCAT('c', c.id_customer, 'd%')) > 0";	// Return only record that have 1 product in sale
 		}
@@ -600,7 +600,7 @@ class BlockMySales extends Module
 		// Get customer country
 		$query = "SELECT a.id_country
                                 FROM "._DB_PREFIX_."address as a
-                                WHERE a.id_customer = " . $id_customer;
+                                WHERE a.id_customer = " . ((int) $id_customer);
 
 		$cresult = Db::getInstance()->ExecuteS($query);
 

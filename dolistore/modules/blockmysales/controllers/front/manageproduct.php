@@ -84,7 +84,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 					$publisher=trim($customer['firstname'].' '.$customer['lastname']);
 					$this->context->smarty->assign('publisher', $publisher);
 
-					$company=trim($customer['company']);
+					$company=trim($customer['company']);			// Field company comping from the customer record
+					if (empty($company)) {
+						$company = $customer['companyaddress'];		// Field company coming from the address
+					}
 					$this->context->smarty->assign('company', $company);
 
 					$country=trim($customer['iso_code']);
@@ -456,8 +459,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								$i++;
 
 								$publisher = trim($customer['firstname'].' '.$customer['lastname']);
-								$company = trim($customer['company']);
-
+								$company = trim($customer['company']);			// Field company comping from the customer record
+								if (empty($company)) {
+									$company = $customer['companyaddress'];		// Field company coming from the address
+								}
 
 								if (empty($totalamountforcustomer[$customer['id_customer']])) {
 									// Amount sold is 0, we can discard search of thirdparty into Dolibarr
@@ -466,6 +471,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								}
 
 								// Search for each $publisher / $company to get and set $socid to list of companies
+								// TODO Call the REST API to search
+								$sqlfilters = array();
+								
+								// Search thirdparty using the WS
 								$WS_METHOD  = 'getThirdParty';
 
 								$allparameters = array();
@@ -573,7 +582,10 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 											foreach($arrayofcustomers as $customer) {
 												if ($id_customer == $customer['id_customer']) {
 													$publisher = trim($customer['firstname'].' '.$customer['lastname']);
-													$company = trim($customer['company']);
+													$company = trim($customer['company']);			// Field company comping from the customer record
+													if (empty($company)) {
+														$company = $customer['companyaddress'];		// Field company coming from the address
+													}
 													break;
 												}
 											}
