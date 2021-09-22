@@ -14,7 +14,7 @@
    height="200"
    id="svg3450"
    version="1.1"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="dolibarr_logo.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr-foundation/logo-cliparts/dolibarr_logo.png"
    inkscape:export-xdpi="77.362831"
@@ -61,13 +61,13 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4142136"
-     inkscape:cx="391.6782"
+     inkscape:cx="419.82114"
      inkscape:cy="-50.366015"
-     inkscape:current-layer="g4648"
+     inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1023"
+     inkscape:window-height="1024"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -188,16 +188,16 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#007b8c;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#007b8c;fill-opacity:1;fill-rule:nonzero;stroke:none"
        x="643.31146"
        y="229.77211"
        id="text5484"
        transform="scale(0.88533213,1.1295196)"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.95219803px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#007b8c;fill-opacity:1;fill-rule:nonzero;stroke:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.95219803px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#007b8c;fill-opacity:1;fill-rule:nonzero;stroke:none"
          sodipodi:role="line"
          id="tspan5486"
          x="643.31146"
-         y="229.77211">ERP/CRM</tspan></text>
+         y="229.77211">ERP CRM</tspan></text>
     <ellipse
        style="fill:#007b8c;fill-opacity:1;stroke:none;stroke-width:1.02999127;stroke-opacity:1"
        id="path957"

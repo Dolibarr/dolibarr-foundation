@@ -12,13 +12,14 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg2816"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   width="3011.811"
-   height="7334.6455"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   width="3212.5984"
+   height="7823.6221"
    sodipodi:docname="dolibarr_rollup_de.svg"
    inkscape:export-filename="/home/ldestailleur/git/dolibarr_foundation/rollups/dolibarr_rollup_de.png"
    inkscape:export-xdpi="300"
-   inkscape:export-ydpi="300">
+   inkscape:export-ydpi="300"
+   viewBox="0 0 3011.811 7334.6455">
   <title
      id="title3054">Rollkup</title>
   <sodipodi:namedview
@@ -31,14 +32,14 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1024"
      id="namedview2818"
      showgrid="false"
      inkscape:document-units="cm"
      units="cm"
-     inkscape:zoom="0.20450884"
-     inkscape:cx="915.66313"
-     inkscape:cy="4070.6777"
+     inkscape:zoom="0.05112721"
+     inkscape:cx="-5109.1244"
+     inkscape:cy="2547.2298"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -58,7 +59,11 @@
        empspacing="5"
        visible="true"
        enabled="true"
-       snapvisiblegridlinesonly="true" />
+       snapvisiblegridlinesonly="true"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1" />
   </sodipodi:namedview>
   <metadata
      id="metadata2822">
@@ -121,10 +126,10 @@
     </linearGradient>
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 3667.3228 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="3011.811 : 3667.3228 : 1"
-       inkscape:persp3d-origin="1505.9055 : 2444.8818 : 1"
+       inkscape:vp_x="0 : 3667.3227 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_z="3011.811 : 3667.3227 : 1"
+       inkscape:persp3d-origin="1505.9055 : 2444.8817 : 1"
        id="perspective148" />
     <linearGradient
        id="linearGradient7625">
@@ -220,7 +225,7 @@
        x="-0.24450453"
        id="filter6116"
        inkscape:collect="always"
-       color-interpolation-filters="sRGB">
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          id="feGaussianBlur6118"
          stdDeviation="14.26963"
@@ -233,7 +238,7 @@
        x="-0.24450453"
        id="filter6116-8"
        inkscape:collect="always"
-       color-interpolation-filters="sRGB">
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          id="feGaussianBlur6118-7"
          stdDeviation="14.26963"
@@ -246,7 +251,7 @@
        x="-0.24450453"
        id="filter6116-9"
        inkscape:collect="always"
-       color-interpolation-filters="sRGB">
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          id="feGaussianBlur6118-5"
          stdDeviation="14.26963"
@@ -274,10 +279,10 @@
        gradientTransform="matrix(0.95998712,0,0,0.95998716,79.317094,167.48057)" />
     <inkscape:perspective
        id="perspective3846"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333332 : 1"
+       inkscape:vp_z="1 : 0.49999999 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_x="0 : 0.49999999 : 1"
        sodipodi:type="inkscape:persp3d" />
     <linearGradient
        inkscape:collect="always"
@@ -322,9 +327,9 @@
          id="stop4470" />
     </linearGradient>
     <filter
-       color-interpolation-filters="sRGB"
        inkscape:collect="always"
-       id="filter3775">
+       id="filter3775"
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          inkscape:collect="always"
          stdDeviation="11.473048"
@@ -576,10 +581,10 @@
        inkscape:collect="always"
        xlink:href="#linearGradient4175"
        id="linearGradient4181"
-       x1="1122.9322"
-       y1="4379.3876"
+       x1="1122.9323"
+       y1="4379.3877"
        x2="2319.8606"
-       y2="4379.3876"
+       y2="4379.3877"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
        y2="669.14978"
@@ -645,17 +650,17 @@
        inkscape:collect="always" />
     <inkscape:perspective
        id="perspective3097"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333332 : 1"
+       inkscape:vp_z="1 : 0.49999999 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_x="0 : 0.49999999 : 1"
        sodipodi:type="inkscape:persp3d" />
     <inkscape:perspective
        id="perspective3235"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333332 : 1"
+       inkscape:vp_z="1 : 0.49999999 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_x="0 : 0.49999999 : 1"
        sodipodi:type="inkscape:persp3d" />
     <radialGradient
        id="radialGradient4120"
@@ -1972,22 +1977,22 @@
          id="feGaussianBlur4693" />
     </filter>
     <filter
-       color-interpolation-filters="sRGB"
        inkscape:collect="always"
-       id="filter4743-1">
+       id="filter4743-1"
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          inkscape:collect="always"
          stdDeviation="2.9289908"
          id="feGaussianBlur4745-3" />
     </filter>
     <filter
-       color-interpolation-filters="sRGB"
        inkscape:collect="always"
        id="filter3973-5"
        x="-0.22803947"
        width="1.4560789"
        y="-0.27940634"
-       height="1.5588127">
+       height="1.5588127"
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          inkscape:collect="always"
          stdDeviation="51.83223"
@@ -2394,7 +2399,7 @@
        r="43.527" />
   </defs>
   <rect
-     style="opacity:0.75444839;fill:url(#linearGradient4232);fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline"
+     style="display:inline;opacity:0.75444839;fill:url(#linearGradient4232);fill-opacity:1;fill-rule:nonzero;stroke:none"
      id="rect9394-2-1"
      width="170.52168"
      height="1655.0022"
@@ -2402,7 +2407,7 @@
      y="302.39203"
      transform="matrix(-0.99998487,0.00550146,-2.8492539e-4,0.99999996,0,0)" />
   <rect
-     style="opacity:0.75444839;fill:url(#linearGradient4198);fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline"
+     style="display:inline;opacity:0.75444839;fill:url(#linearGradient4198);fill-opacity:1;fill-rule:nonzero;stroke:none"
      id="rect9394-2"
      width="173.28691"
      height="1655.0022"
@@ -2410,7 +2415,7 @@
      y="285.81729"
      transform="matrix(0.99998535,0.00541366,2.8954594e-4,0.99999996,0,0)" />
   <rect
-     style="opacity:0.75444839;fill:url(#linearGradient4090);fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline"
+     style="display:inline;opacity:0.75444839;fill:url(#linearGradient4090);fill-opacity:1;fill-rule:nonzero;stroke:none"
      id="rect9394"
      width="171.44485"
      height="3007.6782"
@@ -2423,11 +2428,11 @@
      y="2046.389"
      x="0.0025720596"
      id="fondBleu-0"
-     style="fill:url(#linearGradient4036);display:inline" />
+     style="display:inline;fill:url(#linearGradient4036)" />
   <path
-     style="opacity:0.1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:31.24587822;stroke-linecap:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter4171)"
+     style="opacity:0.1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:31.24587822;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4171)"
      id="path4485"
-     d="m 187.1218,7208.1655 c -262.883128,95.66 -149.783104,68.84 -111.887087,42.97 9.479854,-6.48 17.427811,-14.11 25.636317,-21.37 14.87796,-15.27 35.61847,-26.78 53.11949,-40.41 15.33531,-15.56 32.98906,-29.57 51.12422,-43.48 16.92484,-15.61 34.44576,-30.94 50.88486,-46.82 16.51326,-14.53 35.15732,-27.77 50.79566,-42.83 13.73656,-17.54 30.68923,-33.29 49.18895,-48.38 17.25561,-12.85 32.60679,-26.68 44.89651,-42.14 12.7675,-18 30.22709,-34.15 46.76854,-50.48 24.29261,-19.32 49.05628,-38.35 72.39675,-58.28 31.48905,-28.27 55.93058,-59.98 79.49988,-91.76 23.64156,-35.1 48.44616,-69.61 75.17188,-103.57 34.89552,-41.02 64.60343,-83.96 95.70887,-126.44 4.67237,-6.46 9.66982,-12.81 14.01714,-19.38 9.43658,-14.27 17.11877,-29.1 26.30692,-43.45 14.3583,-22.42 30.44172,-44.33 45.59938,-66.49 33.30702,-45.61 60.41157,-93.24 90.22537,-140.01 37.03202,-52.27 63.77125,-107.66 91.04925,-162.72 32.6821,-63.36 60.1985,-127.88 83.4784,-193.27 26.2438,-78.49 47.1611,-157.79 67.9759,-237.07 22.5681,-88.74 37.2298,-178.35 54.0912,-267.69 16.8426,-83.75 24.0565,-168.24 31.7673,-252.6 9.5644,-106.99 22.0067,-213.74 27.4901,-320.89 4.9433,-107.03 6.0904,-214.16 5.4446,-321.25 3.9484,-92.14 2.9208,-184.42 9.8958,-276.48 10.8048,-90.19 16.1928,-180.57 19.0988,-271.04 2.3788,-82.83 1.4803,-165.68 1.4446,-248.52 -3.2283,-87.14 6.594,-174.13 20.2241,-260.67 15.3968,-100.55 39.3351,-200.11 68.716,-299.04 4.979,-16.36 10.1819,-32.68 14.9371,-49.07 14.9761,-51.61 9.9054,-41.1 27.1256,-91.64 14.5152,-42.6 32.6125,-84.41 50.5341,-126.33 32.3293,-75.38 81.6577,-145.89 132.8034,-215.54 45.9723,-61.74 96.4005,-121.59 149.2186,-180.48 48.059,-53.41 100.5095,-104.45 155.35,-154.42 52.6762,-45.9 111.299,-88.09 165.0555,-133.34 34.5976,-27.06 65.5501,-56.55 102.5465,-82.01 65.8215,-33.61 140.579,-60.61 210.0788,-88.75 8.3979,-3.4 33.812,-13.33 25.4501,-9.88 -34.1783,14.08 -68.6036,27.86 -102.9054,41.79 9.3877,-4 18.6713,-8.12 28.163,-11.99 53.3274,-21.75 106.5564,-43.63 160.2883,-64.88 33.7981,-13.36 69.6827,-24.08 103.6726,-37.77 60.1273,-17.33 121.2209,-33.01 181.7375,-49.71 47.3742,-12.91 95.3678,-24.46 143.0937,-36.65 0,0 -123.4537,68.22 -123.4537,68.22 l 0,0 c -46.5871,11.48 -93.5076,22.31 -139.4688,35.03 -60.9894,16.57 -122.9129,31.9 -181.9524,51.74 -24.3543,9.32 -49.0239,17.97 -73.8205,26.68 -9.4296,3.31 -37.1474,13.98 -28.1945,10.07 23.6726,-10.37 157.7145,-65.78 72.2737,-29.6 -52.9119,21.76 -105.7658,43.6 -158.7362,65.29 -8.8149,3.61 -35.4008,14.26 -26.617,10.61 37.0735,-15.4 74.2241,-30.7 111.4903,-45.86 6.518,-2.65 -12.7556,5.64 -19.2396,8.33 -6.2768,2.61 -12.7406,4.98 -19.0363,7.57 -6.2961,2.58 -12.4902,5.29 -18.7352,7.94 -39.5308,24.64 -70.944,54.81 -107.0633,81.86 -53.9457,45.67 -114.0772,87.41 -167.1687,133.6 -27.7458,24.79 -55.8449,49.34 -81.6137,75.19 -32.3323,32.44 -18.6281,20.11 -49.8131,52.92 -8.1868,8.62 -16.7386,17.06 -25.1078,25.58 -53.9915,58.76 -105.1207,118.59 -152.0264,180.35 -51.4853,69.37 -101.3925,139.44 -135.3871,214.3 -5.6628,12.85 -30.8748,69.81 -35.9027,82.29 -18.0762,44.87 -31.663,90.23 -45.1603,135.86 -4.8375,16.35 -9.8995,32.67 -14.8493,49.01 -29.9449,98.57 -54.2557,197.85 -69.459,298.16 -12.5117,85.8 -18.9312,171.95 -16.8213,258.24 -0.2151,83.2 -1.4309,166.4 -3.6612,249.59 -3.2344,90.4 -7.7557,180.82 -17.8399,270.99 -8.4727,92.16 -8.6458,184.65 -12.9519,276.94 -1.5922,107.46 -1.9572,214.92 -7.3463,322.34 -3.4714,56.65 -6.499,113.36 -11.1607,169.97 -2.7772,33.73 -7.3561,67.39 -9.7476,101.13 -1.1427,16.13 -1.429,32.28 -2.1437,48.42 -6.4869,84.66 -13.5613,169.44 -31.5046,253.36 -17.1728,89.3 -32.6029,178.76 -52.7335,267.77 -20.2827,79.15 -41.6003,158.17 -65.2697,236.86 -22.8662,65.44 -48.5911,130.46 -81.7787,193.71 -26.2823,55.22 -51.3925,111.03 -88.9292,163.08 -29.4779,46.69 -55.2218,94.54 -88.80598,139.88 -14.96507,22.08 -31.35877,43.77 -45.80512,66.02 -4.74322,7.3 -8.87729,14.8 -13.31593,22.19 -3.87787,7.23 -7.18166,14.62 -11.63354,21.68 -4.22873,6.7 -9.57593,13.02 -14.36388,19.53 -31.36606,42.48 -60.95823,85.56 -95.8222,126.68 -9.71643,13.01 -20.33532,25.67 -29.9644,38.71 -15.47487,20.96 -26.72379,43.42 -43.20853,64.04 -23.61651,32.08 -47.92809,64.02 -77.49453,93.59 -9.19521,8.05 -17.87868,16.4 -27.51326,24.19 -4.03464,3.26 -8.85689,6.01 -12.79448,9.33 -9.6286,8.12 -17.20886,17.27 -30.12554,23.3 -15.97824,16.24 -34.09723,31.65 -47.55501,48.98 -10.7736,16.44 -24.93963,32.1 -43.70591,44.55 -17.62133,15.28 -37.86082,29.06 -50.22082,47.09 -12.70134,16.24 -31.17919,30.16 -49.98643,42.99 -15.4174,17 -35.66512,31.32 -51.10394,48.34 -16.89763,14.33 -36.41796,26.97 -50.88602,42.7 -14.72842,15.51 -36.8862,25.74 -53.05046,40.24 -52.19881,51.03 -77.73391,55.02 -184.075839,93.55 0,0 125.082619,-70.89 125.082619,-70.89 z"
+     d="m 187.1218,7208.1655 c -262.883128,95.66 -149.783104,68.84 -111.887087,42.97 9.479854,-6.48 17.427811,-14.11 25.636317,-21.37 14.87796,-15.27 35.61847,-26.78 53.11949,-40.41 15.33531,-15.56 32.98906,-29.57 51.12422,-43.48 16.92484,-15.61 34.44576,-30.94 50.88486,-46.82 16.51326,-14.53 35.15732,-27.77 50.79566,-42.83 13.73656,-17.54 30.68923,-33.29 49.18895,-48.38 17.25561,-12.85 32.60679,-26.68 44.89651,-42.14 12.7675,-18 30.22709,-34.15 46.76854,-50.48 24.29261,-19.32 49.05628,-38.35 72.39675,-58.28 31.48905,-28.27 55.93058,-59.98 79.49988,-91.76 23.64156,-35.1 48.44616,-69.61 75.17188,-103.57 34.89552,-41.02 64.60343,-83.96 95.70887,-126.44 4.67237,-6.46 9.66982,-12.81 14.01714,-19.38 9.43658,-14.27 17.11877,-29.1 26.30692,-43.45 14.3583,-22.42 30.44172,-44.33 45.59938,-66.49 33.30702,-45.61 60.41157,-93.24 90.22537,-140.01 37.03202,-52.27 63.77125,-107.66 91.04925,-162.72 32.6821,-63.36 60.1985,-127.88 83.4784,-193.27 26.2438,-78.49 47.1611,-157.79 67.9759,-237.07 22.5681,-88.74 37.2298,-178.35 54.0912,-267.69 16.8426,-83.75 24.0565,-168.24 31.7673,-252.6 9.5644,-106.99 22.0067,-213.74 27.4901,-320.89 4.9433,-107.03 6.0904,-214.16 5.4446,-321.25 3.9484,-92.14 2.9208,-184.42 9.8958,-276.48 10.8048,-90.19 16.1928,-180.57 19.0988,-271.04 2.3788,-82.83 1.4803,-165.68 1.4446,-248.52 -3.2283,-87.14 6.594,-174.13 20.2241,-260.67 15.3968,-100.55 39.3351,-200.11 68.716,-299.04 4.979,-16.36 10.1819,-32.68 14.9371,-49.07 14.9761,-51.61 9.9054,-41.1 27.1256,-91.64 14.5152,-42.6 32.6125,-84.41 50.5341,-126.33 32.3293,-75.38 81.6577,-145.89 132.8034,-215.54 45.9723,-61.74 96.4005,-121.59 149.2186,-180.48 48.059,-53.41 100.5095,-104.45 155.35,-154.42 52.6762,-45.9 111.299,-88.09 165.0555,-133.34 34.5976,-27.06 65.5501,-56.55 102.5465,-82.01 65.8215,-33.61 140.579,-60.61 210.0788,-88.75 8.3979,-3.4 33.812,-13.33 25.4501,-9.88 -34.1783,14.08 -68.6036,27.86 -102.9054,41.79 9.3877,-4 18.6713,-8.12 28.163,-11.99 53.3274,-21.75 106.5564,-43.63 160.2883,-64.88 33.7981,-13.36 69.6827,-24.08 103.6726,-37.77 60.1273,-17.33 121.2209,-33.01 181.7375,-49.71 47.3742,-12.91 95.3678,-24.46 143.0937,-36.65 0,0 -123.4537,68.22 -123.4537,68.22 v 0 c -46.5871,11.48 -93.5076,22.31 -139.4688,35.03 -60.9894,16.57 -122.9129,31.9 -181.9524,51.74 -24.3543,9.32 -49.0239,17.97 -73.8205,26.68 -9.4296,3.31 -37.1474,13.98 -28.1945,10.07 23.6726,-10.37 157.7145,-65.78 72.2737,-29.6 -52.9119,21.76 -105.7658,43.6 -158.7362,65.29 -8.8149,3.61 -35.4008,14.26 -26.617,10.61 37.0735,-15.4 74.2241,-30.7 111.4903,-45.86 6.518,-2.65 -12.7556,5.64 -19.2396,8.33 -6.2768,2.61 -12.7406,4.98 -19.0363,7.57 -6.2961,2.58 -12.4902,5.29 -18.7352,7.94 -39.5308,24.64 -70.944,54.81 -107.0633,81.86 -53.9457,45.67 -114.0772,87.41 -167.1687,133.6 -27.7458,24.79 -55.8449,49.34 -81.6137,75.19 -32.3323,32.44 -18.6281,20.11 -49.8131,52.92 -8.1868,8.62 -16.7386,17.06 -25.1078,25.58 -53.9915,58.76 -105.1207,118.59 -152.0264,180.35 -51.4853,69.37 -101.3925,139.44 -135.3871,214.3 -5.6628,12.85 -30.8748,69.81 -35.9027,82.29 -18.0762,44.87 -31.663,90.23 -45.1603,135.86 -4.8375,16.35 -9.8995,32.67 -14.8493,49.01 -29.9449,98.57 -54.2557,197.85 -69.459,298.16 -12.5117,85.8 -18.9312,171.95 -16.8213,258.24 -0.2151,83.2 -1.4309,166.4 -3.6612,249.59 -3.2344,90.4 -7.7557,180.82 -17.8399,270.99 -8.4727,92.16 -8.6458,184.65 -12.9519,276.94 -1.5922,107.46 -1.9572,214.92 -7.3463,322.34 -3.4714,56.65 -6.499,113.36 -11.1607,169.97 -2.7772,33.73 -7.3561,67.39 -9.7476,101.13 -1.1427,16.13 -1.429,32.28 -2.1437,48.42 -6.4869,84.66 -13.5613,169.44 -31.5046,253.36 -17.1728,89.3 -32.6029,178.76 -52.7335,267.77 -20.2827,79.15 -41.6003,158.17 -65.2697,236.86 -22.8662,65.44 -48.5911,130.46 -81.7787,193.71 -26.2823,55.22 -51.3925,111.03 -88.9292,163.08 -29.4779,46.69 -55.2218,94.54 -88.80598,139.88 -14.96507,22.08 -31.35877,43.77 -45.80512,66.02 -4.74322,7.3 -8.87729,14.8 -13.31593,22.19 -3.87787,7.23 -7.18166,14.62 -11.63354,21.68 -4.22873,6.7 -9.57593,13.02 -14.36388,19.53 -31.36606,42.48 -60.95823,85.56 -95.8222,126.68 -9.71643,13.01 -20.33532,25.67 -29.9644,38.71 -15.47487,20.96 -26.72379,43.42 -43.20853,64.04 -23.61651,32.08 -47.92809,64.02 -77.49453,93.59 -9.19521,8.05 -17.87868,16.4 -27.51326,24.19 -4.03464,3.26 -8.85689,6.01 -12.79448,9.33 -9.6286,8.12 -17.20886,17.27 -30.12554,23.3 -15.97824,16.24 -34.09723,31.65 -47.55501,48.98 -10.7736,16.44 -24.93963,32.1 -43.70591,44.55 -17.62133,15.28 -37.86082,29.06 -50.22082,47.09 -12.70134,16.24 -31.17919,30.16 -49.98643,42.99 -15.4174,17 -35.66512,31.32 -51.10394,48.34 -16.89763,14.33 -36.41796,26.97 -50.88602,42.7 -14.72842,15.51 -36.8862,25.74 -53.05046,40.24 -52.19881,51.03 -77.73391,55.02 -184.075839,93.55 0,0 125.082619,-70.89 125.082619,-70.89 z"
      transform="matrix(0.9347791,0,0,0.92557775,91.299977,449.12568)"
      inkscape:connector-curvature="0" />
   <rect
@@ -2443,36 +2448,38 @@
      id="text5488"
      y="1281.0006"
      x="1640.8232"
-     style="font-size:133.22389221px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#1a1811;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#1a1811;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3067"
-       x="1662.0298"
-       y="1281.0006">Moderne Verwaltungs Software </tspan><tspan
+       x="1661.9972"
+       y="1281.0006"
+       style="font-size:133.22389221px;line-height:1.25">Moderne Verwaltungs Software </tspan><tspan
        sodipodi:role="line"
        id="tspan3069"
-       x="1662.0298"
-       y="1447.5305">für kleine und mittlere Unternehmen, </tspan><tspan
+       x="1661.9973"
+       y="1447.5305"
+       style="font-size:133.22389221px;line-height:1.25">für kleine und mittlere Unternehmen, </tspan><tspan
        sodipodi:role="line"
        id="tspan3071"
-       x="1662.0298"
-       y="1614.0603">Freiberufler, Organisationen </tspan><tspan
+       x="1661.9973"
+       y="1614.0603"
+       style="font-size:133.22389221px;line-height:1.25">Freiberufler, Organisationen </tspan><tspan
        sodipodi:role="line"
        id="tspan3073"
-       x="1640.8232"
-       y="1780.5902" /></text>
+       x="1683.2037"
+       y="1780.5902"
+       style="font-size:133.22389221px;line-height:1.25"> </tspan></text>
   <text
      transform="scale(0.90969884,1.0992649)"
      id="text5518"
      y="5951.333"
      x="1450.8041"
-     style="font-size:88.16776276px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7623);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7623);fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3144"
-       style="fill:url(#linearGradient7623)"
+       style="font-size:88.16776276px;line-height:1.25;fill:url(#linearGradient7623)"
        x="1450.8041"
        y="5951.333">Bleiben Sie frei in Ihrer Verwaltung</tspan></text>
   <text
@@ -2480,47 +2487,49 @@
      id="text5522"
      y="4544.8262"
      x="943.76422"
-     style="font-size:151.41072083px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3243"
        x="943.76422"
-       y="4544.8262">Einfach einzusetzen</tspan></text>
+       y="4544.8262"
+       style="font-size:151.41072083px;line-height:1.25">Einfach einzusetzen</tspan></text>
   <text
      transform="scale(0.9078095,1.1015527)"
      id="text5522-7"
      y="4958.6055"
      x="942.4563"
-     style="font-size:151.41072083px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3140"
        x="942.4563"
-       y="4958.6055">Einfach für Entwickler</tspan></text>
+       y="4958.6055"
+       style="font-size:151.41072083px;line-height:1.25">Einfach für Entwickler</tspan></text>
   <text
      transform="scale(0.9078095,1.1015527)"
      id="text5522-7-9"
      y="4753.3062"
      x="936.40106"
-     style="font-size:151.41072083px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3138"
        x="936.40106"
-       y="4753.3062">Einfach zu benutzen</tspan></text>
+       y="4753.3062"
+       style="font-size:151.41072083px;line-height:1.25">Einfach zu benutzen</tspan></text>
   <text
      transform="scale(0.90969884,1.0992649)"
      id="text5518-8"
      y="5826.7002"
      x="262.48816"
-     style="font-size:88.16776276000000223px;font-style:normal;font-weight:normal;fill:url(#linearGradient7631);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;text-anchor:start;text-align:start;writing-mode:lr;line-height:125%"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient7631);fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
-       id="tspan3142">Dolibarr, opensource ERP/CRM Software GNU GPL Lizenz.</tspan></text>
+       id="tspan3142"
+       x="262.48816"
+       y="5826.7002"
+       style="font-size:88.16776276px;line-height:1.25">Dolibarr, opensource ERP/CRM Software GNU GPL Lizenz.</tspan></text>
   <path
      inkscape:connector-curvature="0"
      id="path5862-7"
@@ -2559,132 +2568,135 @@
      id="text2945"
      y="1873.3474"
      x="344.68323"
-     style="font-size:78.19787598px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3081"
        x="344.68323"
-       y="1873.3474">- Produkte und Service Katalog</tspan></text>
+       y="1873.3474"
+       style="font-size:78.19787598px;line-height:1.25">- Produkte und Service Katalog</tspan></text>
   <text
      transform="scale(0.71104952,1.4063718)"
      id="text2945-1"
      y="2933.5771"
      x="349.82928"
-     style="font-size:79.35123443999999893px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;text-anchor:start;text-align:start;writing-mode:lr;line-height:125%"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
-       id="tspan3130">- Alle Modüle konfigurierbar</tspan></text>
+       id="tspan3130"
+       x="349.82928"
+       y="2933.5771"
+       style="font-size:79.35123444px;line-height:1.25">- Alle Modüle konfigurierbar</tspan></text>
   <text
      transform="scale(0.73226432,1.3656271)"
      id="text2945-4"
      y="2349.8596"
      x="1850.5394"
-     style="font-size:80.19580841px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3120"
        x="1850.5394"
-       y="2349.8596">- P.O.S. system, Lieferungen, Service Verträge</tspan></text>
+       y="2349.8596"
+       style="font-size:80.19580841px;line-height:1.25">- P.O.S. system, Lieferungen, Service Verträge</tspan></text>
   <text
      transform="scale(0.74532298,1.3417002)"
      id="text2945-4-9"
      y="2502.3904"
      x="1818.4198"
-     style="font-size:81.62595367px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3122"
        x="1818.4198"
-       y="2502.3904">- Viele andere Modüle</tspan></text>
+       y="2502.3904"
+       style="font-size:81.62595367px;line-height:1.25">- Viele andere Modüle</tspan></text>
   <text
      transform="scale(0.74402493,1.344041)"
      id="text2945-4-9-8"
      y="2608.4802"
      x="1818.5009"
-     style="font-size:81.48381042px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3124"
        x="1818.5009"
-       y="2608.4802">- LDAP Verbindung, Exports, Imports, PDF, etc...</tspan></text>
+       y="2608.4802"
+       style="font-size:81.48381042px;line-height:1.25">- LDAP Verbindung, Exports, Imports, PDF, etc...</tspan></text>
   <text
      transform="scale(0.71104952,1.4063718)"
      id="text2945-1-5"
      y="2828.9468"
      x="349.82928"
-     style="font-size:79.35123443999999893px;font-style:normal;font-weight:normal;fill:#ffffd9;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;text-anchor:start;text-align:start;writing-mode:lr;line-height:125%"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
-       id="tspan3128">- Web basiert : laüft lokal (Intranet), Internet, Smartphone</tspan></text>
+       id="tspan3128"
+       x="349.82928"
+       y="2828.9468"
+       style="font-size:79.35123444px;line-height:1.25">- Web basiert : laüft lokal (Intranet), Internet, Smartphone</tspan></text>
   <text
      transform="scale(0.71104952,1.4063718)"
      id="text2945-1-1"
      y="2715.5688"
      x="349.82928"
-     style="font-size:79.35123444px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3126"
        x="349.82928"
-       y="2715.5688">- Multi User, Mehrsprachig, laüft auf vielen Systemen</tspan></text>
+       y="2715.5688"
+       style="font-size:79.35123444px;line-height:1.25">- Multi User, Mehrsprachig, laüft auf vielen Systemen</tspan></text>
   <text
      transform="scale(0.71104952,1.4063718)"
      id="text2945-1-1-1"
      y="3044.0176"
      x="349.82928"
-     style="font-size:79.35123444px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3132"
        x="349.82928"
-       y="3044.0176">- Internationale und aktive Entwicklergemeinschaft</tspan></text>
+       y="3044.0176"
+       style="font-size:79.35123444px;line-height:1.25">- Internationale und aktive Entwicklergemeinschaft</tspan></text>
   <text
      transform="scale(0.71494801,1.3987031)"
      id="text2945-5-7"
      y="1770.1608"
      x="340.45209"
-     style="font-size:78.72492218px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3114"
        x="340.45209"
        y="1770.1608"
-       style="fill:#ffffd9;fill-opacity:1">-  Zahlungen, Bank Ausgleich</tspan></text>
+       style="font-size:78.72492218px;line-height:1.25;fill:#ffffd9;fill-opacity:1">-  Zahlungen, Bank Ausgleich</tspan></text>
   <text
      transform="scale(0.73014077,1.3695989)"
      id="text2945-5-7-1-2"
      y="2035.6265"
      x="340.51794"
-     style="font-size:80.39784241px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffd9;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3087"
        x="340.51794"
-       y="2035.6265">- Aktionen, emailings ...</tspan></text>
+       y="2035.6265"
+       style="font-size:80.39784241px;line-height:1.25">- Aktionen, emailings ...</tspan></text>
   <text
      transform="scale(1.0396409,0.9618706)"
      id="text2945-1-1-1-2"
      y="4899.7104"
      x="1471.5905"
-     style="font-size:142.44593811px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#28283c;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#28283c;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3134"
        x="1471.5905"
-       y="4899.7104">Eine Software</tspan></text>
+       y="4899.7104"
+       style="font-size:142.44593811px;line-height:1.25">Eine Software</tspan></text>
   <flowRoot
-     style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:'Bitstream Vera Sans';fill:#000000;fill-opacity:1;stroke:none"
      id="flowRoot4054"
      xml:space="preserve"
      transform="translate(0,0.02550781)"><flowRegion
@@ -2694,22 +2706,23 @@
          height="113.4626"
          width="45.38504"
          id="rect4058" /></flowRegion><flowPara
-       id="flowPara4060" /></flowRoot>  <text
+       id="flowPara4060"
+       style="font-size:40px;line-height:1.25"> </flowPara></flowRoot>  <text
      transform="scale(0.74532298,1.3417002)"
      id="text2945-4-9-1"
      y="2288.3479"
      x="1817.829"
-     style="font-size:81.62595367px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        sodipodi:role="line"
        id="tspan3118"
        x="1817.829"
-       y="2288.3479">- Elektronische Dokumente Verwaltung</tspan></text>
+       y="2288.3479"
+       style="font-size:81.62595367px;line-height:1.25">- Elektronische Dokumente Verwaltung</tspan></text>
   <flowRoot
      xml:space="preserve"
      id="flowRoot3863"
-     style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:'Bitstream Vera Sans';fill:#000000;fill-opacity:1;stroke:none"
      transform="translate(0,0.00550781)"><flowRegion
        id="flowRegion3865"><rect
          id="rect3867"
@@ -2717,9 +2730,10 @@
          height="892.56842"
          x="-383.42728"
          y="3556.9438" /></flowRegion><flowPara
-       id="flowPara3869" /></flowRoot>  <text
+       id="flowPara3869"
+       style="font-size:40px;line-height:1.25"> </flowPara></flowRoot>  <text
      xml:space="preserve"
-     style="font-size:886.12506104px;font-style:normal;font-weight:normal;opacity:0.17204303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline;filter:url(#filter3775);font-family:Bitstream Vera Sans"
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';display:inline;opacity:0.17204303;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3775)"
      x="537.1402"
      y="887.85065"
      id="text2828-6-0"
@@ -2728,10 +2742,10 @@
        id="tspan2830-9-7"
        x="537.1402"
        y="887.85065"
-       style="font-size:518.16009521px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:518.16009521px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none">Dolibarr</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:884.03552246px;font-style:normal;font-weight:normal;fill:url(#linearGradient5510-0);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:4.52927208;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;display:inline;font-family:Bitstream Vera Sans"
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';display:inline;fill:url(#linearGradient5510-0);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:4.52927208;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373"
      x="629.18909"
      y="938.34863"
      id="text2828-5"
@@ -2740,16 +2754,15 @@
        id="tspan2830-0"
        x="629.18909"
        y="938.34863"
-       style="font-size:516.93823242px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510-0);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:4.52927208;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:0.18431373;stroke-dasharray:none;font-family:Bauhaus 93;-inkscape-font-specification:Bauhaus 93">Dolibarr</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:516.93823242px;line-height:125%;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient5510-0);fill-opacity:1;fill-rule:nonzero;stroke:#010101;stroke-width:4.52927208;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.18431373">Dolibarr</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:113.94761658px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline;font-family:Arial;-inkscape-font-specification:Arial"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none"
      x="2190.7822"
      y="597.78326"
      id="text5484-7"
-     transform="scale(0.86982777,1.1496529)"
-     sodipodi:linespacing="100%"><tspan
-       style="font-size:113.94761658px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+     transform="scale(0.86982777,1.1496529)"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:113.94761658px;line-height:100%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#393939;fill-opacity:1;fill-rule:nonzero;stroke:none"
        sodipodi:role="line"
        id="tspan5486-4"
        x="2190.7822"
@@ -2760,16 +2773,16 @@
      y="-0.00050987554"
      x="2.3753283"
      id="fondBleu"
-     style="fill:url(#linearGradient4073);display:inline" />
+     style="display:inline;fill:url(#linearGradient4073)" />
   <rect
      id="rect3082"
      height="108.69069"
      width="3009.436"
      y="176.48973"
      x="2.3753283"
-     style="fill:url(#linearGradient8925);display:inline" />
+     style="display:inline;fill:url(#linearGradient8925)" />
   <rect
-     style="opacity:0.75444839;fill:url(#linearGradient4070);fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline"
+     style="display:inline;opacity:0.75444839;fill:url(#linearGradient4070);fill-opacity:1;fill-rule:nonzero;stroke:none"
      id="rect9394-3"
      width="361.63919"
      height="3007.6785"
@@ -2782,56 +2795,56 @@
      width="3009.436"
      y="1943.0242"
      x="2.3752694"
-     style="fill:url(#linearGradient4140);display:inline" />
+     style="display:inline;fill:url(#linearGradient4140)" />
   <text
      transform="scale(0.72102431,1.3869158)"
      id="text2945-5-7-2"
      y="1677.193"
      x="338.70453"
-     style="font-size:79.39400482px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     sodipodi:linespacing="125%"><tspan
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
        y="1677.193"
        x="338.70453"
        sodipodi:role="line"
-       id="tspan3079-6">-  Leads, Kunden, Lieferanten, Mitglieder </tspan></text>
+       id="tspan3079-6"
+       style="font-size:79.39400482px;line-height:1.25">-  Leads, Kunden, Lieferanten, Mitglieder </tspan></text>
   <text
      transform="scale(0.84632806,1.1815749)"
      id="text5576"
      y="5140.3521"
      x="1279.1862"
-     style="font-size:133.85281372px;font-style:normal;font-weight:normal;fill:#32183c;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     style="font-style:normal;font-weight:normal;line-height:0%;font-family:'Bitstream Vera Sans';fill:#32183c;fill-opacity:1;stroke:none"
      xml:space="preserve"><tspan
        y="5140.3521"
        x="1279.1862"
        id="tspan5578"
        sodipodi:role="line"
-       style="font-size:128.18321228px;fill:#32183c;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial">www.dolibarr.org</tspan></text>
+       style="font-size:128.18321228px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#32183c;fill-opacity:1;stroke:none">www.dolibarr.org</tspan></text>
   <path
-     style="fill:url(#linearGradient3479);display:inline"
+     style="display:inline;fill:url(#linearGradient3479)"
      inkscape:connector-curvature="0"
-     d="m 2477.1101,4130.0919 2.4566,0 1.6009,1.5271 c 0,6.2988 0,12.6927 0,19.062 0,0.1656 0.1044,0.3689 0,0.492 -0.5124,0.5973 -0.6262,1.1955 0,1.7971 0.077,0.074 0,0.2193 0,0.3261 0,0.492 0,0.9806 0,1.4705 0,0.1276 0,0.2566 0,0.3796 0,0.6181 -0.9092,0.6871 0,1.8517 0.178,0.23 0,0.5813 0,0.8715 0,6.4115 0,12.7526 0,18.8985 l -1.1729,1.6794 -2.8846,0 0,-48.3543 z"
+     d="m 2477.1101,4130.0919 h 2.4566 l 1.6009,1.5271 c 0,6.2988 0,12.6927 0,19.062 0,0.1656 0.1044,0.3689 0,0.492 -0.5124,0.5973 -0.6262,1.1955 0,1.7971 0.077,0.074 0,0.2193 0,0.3261 0,0.492 0,0.9806 0,1.4705 0,0.1276 0,0.2566 0,0.3796 0,0.6181 -0.9092,0.6871 0,1.8517 0.178,0.23 0,0.5813 0,0.8715 0,6.4115 0,12.7526 0,18.8985 l -1.1729,1.6794 h -2.8846 v -48.3543 z"
      id="imagebot_593" />
   <path
-     style="fill:url(#linearGradient7441);display:inline"
+     style="display:inline;fill:url(#linearGradient7441)"
      inkscape:connector-curvature="0"
-     d="m 2476.1609,3800.9534 2.4567,0.018 0.9633,0.9188 c 0.8261,0.567 0.6375,1.2591 0.6375,2.1816 0,5.7884 0,11.6488 0,17.4885 0,0.6175 -0.6921,1.3377 -0.6921,1.9548 0,1.0601 0.027,2.1577 0,3.2557 0,0.112 0.4571,-0.067 0.4543,0.1945 l -0.019,0.7211 c 0,0.1861 -0.4456,0.037 -0.4456,0.1637 -6e-4,0.8922 -6e-4,1.7782 -6e-4,2.6402 0,0.6534 0.6953,1.0376 0.6953,1.6911 0,4.7289 0,9.4073 0,13.9833 6e-4,1.0236 0.1837,1.2125 -0.6023,2.3474 l -0.5706,0.8167 -2.8847,-0.018 0,-48.3545 0,0 0,0 z"
+     d="m 2476.1609,3800.9534 2.4567,0.018 0.9633,0.9188 c 0.8261,0.567 0.6375,1.2591 0.6375,2.1816 0,5.7884 0,11.6488 0,17.4885 0,0.6175 -0.6921,1.3377 -0.6921,1.9548 0,1.0601 0.027,2.1577 0,3.2557 0,0.112 0.4571,-0.067 0.4543,0.1945 l -0.019,0.7211 c 0,0.1861 -0.4456,0.037 -0.4456,0.1637 -6e-4,0.8922 -6e-4,1.7782 -6e-4,2.6402 0,0.6534 0.6953,1.0376 0.6953,1.6911 0,4.7289 0,9.4073 0,13.9833 6e-4,1.0236 0.1837,1.2125 -0.6023,2.3474 l -0.5706,0.8167 -2.8847,-0.018 v -48.3545 0 0 z"
      id="imagebot_591" />
   <path
-     style="fill:url(#linearGradient7438);display:inline"
+     style="display:inline;fill:url(#linearGradient7438)"
      inkscape:connector-curvature="0"
-     d="m 2161.7534,3862.9627 5.1469,0.021 0,109.6271 -5.5749,-0.021 c -1.7849,-0.7471 -1.8162,-2.0824 -1.9399,-3.3867 l 0,-33.7666 c 3.32,-14.7715 2.0334,-25.118 0,-34.7469 l 0,-34.856 c 0.4363,-1.173 0.5742,-2.5303 2.3679,-2.8691 z"
+     d="m 2161.7534,3862.9627 5.1469,0.021 v 109.6271 l -5.5749,-0.021 c -1.7849,-0.7471 -1.8162,-2.0824 -1.9399,-3.3867 v -33.7666 c 3.32,-14.7715 2.0334,-25.118 0,-34.7469 v -34.856 c 0.4363,-1.173 0.5742,-2.5303 2.3679,-2.8691 z"
      id="imagebot_589" />
   <path
-     style="fill:url(#linearGradient7435);display:inline"
+     style="display:inline;fill:url(#linearGradient7435)"
      inkscape:connector-curvature="0"
-     d="m 2161.7689,3783.7246 c 4.1653,-30.0861 28.9881,-39.4607 38.5173,-40.211 22.0039,-3.2486 157.0268,-7.2261 237.1713,1.0836 18.4766,2.1587 39.0706,18.9148 40.6157,40.3601 l 0,447.3969 c -0.2279,39.6863 -15.7992,54.3496 -38.2036,62.5299 -37.0226,11.0227 -136.2249,15.8146 -217.4216,3.5055 -48.4147,-7.4913 -58.3284,-35.3753 -60.6791,-67.2686 l 0,-447.3964 0,0 z"
+     d="m 2161.7689,3783.7246 c 4.1653,-30.0861 28.9881,-39.4607 38.5173,-40.211 22.0039,-3.2486 157.0268,-7.2261 237.1713,1.0836 18.4766,2.1587 39.0706,18.9148 40.6157,40.3601 v 447.3969 c -0.2279,39.6863 -15.7992,54.3496 -38.2036,62.5299 -37.0226,11.0227 -136.2249,15.8146 -217.4216,3.5055 -48.4147,-7.4913 -58.3284,-35.3753 -60.6791,-67.2686 z"
      id="imagebot_587" />
   <path
-     style="fill:url(#linearGradient7430);stroke:#000000;stroke-width:0.80927885;stroke-miterlimit:4;display:inline"
+     style="display:inline;fill:url(#linearGradient7430);stroke:#000000;stroke-width:0.80927885;stroke-miterlimit:4"
      inkscape:connector-curvature="0"
      stroke-miterlimit="4"
-     d="m 2175.4274,3790.2837 c 2.7166,-31.3429 21.3692,-33.9099 34.9551,-35.578 l 64.4354,-2.6818 c 2.8746,4.1909 4.5965,9.7518 10.6992,10.1076 l 66.3204,0.1516 c 6.0458,-0.162 8.0068,-5.5129 10.7735,-9.8401 l 63.0068,3.242 c 23.2795,2.6185 36.342,13.8686 36.8589,35.7173 l 0,395.8884 c -37.8046,4.1321 -91.8846,2.381 -113.4141,12.3963 -20.1599,-18.1776 -39.5272,-16.8386 -58.4656,-0.4063 -22.7104,-8.2012 -76.7797,-8.7369 -115.1696,-13.106 l 0,-395.8885 z"
+     d="m 2175.4274,3790.2837 c 2.7166,-31.3429 21.3692,-33.9099 34.9551,-35.578 l 64.4354,-2.6818 c 2.8746,4.1909 4.5965,9.7518 10.6992,10.1076 l 66.3204,0.1516 c 6.0458,-0.162 8.0068,-5.5129 10.7735,-9.8401 l 63.0068,3.242 c 23.2795,2.6185 36.342,13.8686 36.8589,35.7173 v 395.8884 c -37.8046,4.1321 -91.8846,2.381 -113.4141,12.3963 -20.1599,-18.1776 -39.5272,-16.8386 -58.4656,-0.4063 -22.7104,-8.2012 -76.7797,-8.7369 -115.1696,-13.106 v -395.8885 z"
      id="imagebot_539" />
   <image
      style="display:inline"
@@ -2850,7 +2863,7 @@
      height="395.15338"
      width="632.24548" />
   <image
-     style="opacity:0.1935484;display:inline;filter:url(#filter4691)"
+     style="display:inline;opacity:0.1935484;filter:url(#filter4691)"
      y="-4581.4844"
      x="-974.00635"
      id="image3846-1"
