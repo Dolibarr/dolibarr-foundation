@@ -2,7 +2,8 @@ Files used for the Dolibarr Academy MOOC.
 
 To edit a course:
 -----------------
-* launch Opale (3.7) - Atelier Opale.
+* install Opale (3.7 or 3.8) https://download.scenari.software/Opale/
+* launch Opale - Atelier Opale.
 * If course is not loaded already, import it with menu Import - select *.scar file.
 * Edit the course.
 * Export/Save the course into a .scar file.
@@ -22,9 +23,5 @@ To load the course into courses.dolibarr.org:
 * Find the SCORM activity (create one if it doesn't exists, with name to "Accès au cours ....", Uncheck "Appareance - Display activity name" and set "Display course structure in player" to "Disabled" and in "Activity completion", set a minimal score and "Completed").
 * Remove the zip file.
 * Upload the new zip file.
-
-
-
-
 
 
