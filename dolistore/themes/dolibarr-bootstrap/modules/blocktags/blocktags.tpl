@@ -31,10 +31,10 @@
 	<div class="block_content">
 		{if $tags}
 			{foreach from=$tags item=tag name=myLoop}
-				<a 
-				class="{$tag.class} {if $smarty.foreach.myLoop.last}last_item{elseif $smarty.foreach.myLoop.first}first_item{else}item{/if}"
-				href="{$link->getPageLink('search', true, NULL, "tag={$tag.name|urlencode}")|escape:'html':'UTF-8'}" 
-				title="{l s='More about' mod='blocktags'} {$tag.name|escape:'html':'UTF-8'}" 
+				<a
+						class="{$tag.class} {if $smarty.foreach.myLoop.last}last_item{elseif $smarty.foreach.myLoop.first}first_item{else}item{/if}"
+						href="{$link->getPageLink('search', true, NULL, "tag={$tag.name|urlencode}&search_query={$smarty.get.search_query}")|escape:'html':'UTF-8'}"
+						title="{l s='More about' mod='blocktags'} {$tag.name|escape:'html':'UTF-8'}"
 				>
 					{$tag.name|escape:'html':'UTF-8'}
 				</a>
