@@ -34,5 +34,10 @@
 			<span>{l s='Search' mod='blocksearch'}</span>
 		</button>
 	</form>
+	{if $smarty.get.tag}
+
+		{l s='Filter by version' mod='blocksearch'}&nbsp;{$smarty.get.tag} &nbsp;
+		<a href="https://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI|replace:"tag={$smarty.get.tag}&":""}">{l s='Remove filter' mod='blocksearch'}</a>
+	{/if}
 </div>
 <!-- /Block search module TOP -->
