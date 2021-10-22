@@ -293,8 +293,10 @@ public static function findWithTag($id_lang, $expr, $page_number = 1, $page_size
 					INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (
 						product_shop.`id_category_default` = cl.`id_category`
 						AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
-					)
-					WHERE p.`id_product` '.$product_pool.'
+					) 
+					INNER JOIN '._DB_PREFIX_.'tag as tg ON (pt.id_tag = tg.id_tag AND tg.`id_lang` = '.(int)$id_lang.')
+
+					WHERE tg.name = "'.pSQL($tags).'" AND p.`id_product` '.$product_pool.'
 					ORDER BY position DESC LIMIT 10';
             return $db->executeS($sql, true, false);
         }
