@@ -37,9 +37,9 @@
      showgrid="false"
      inkscape:document-units="cm"
      units="mm"
-     inkscape:zoom="0.16909682"
-     inkscape:cx="229.92359"
-     inkscape:cy="2976.7851"
+     inkscape:zoom="0.11956951"
+     inkscape:cx="1213.9372"
+     inkscape:cy="5552.376"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -149,26 +149,6 @@
     </filter>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient7617"
-       id="linearGradient7623"
-       x1="1333.0808"
-       y1="6001.1572"
-       x2="3164.687"
-       y2="6001.1572"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.91544177,0,0,0.91544182,9.576578,383.61102)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient7625"
-       id="linearGradient7631"
-       x1="197.89114"
-       y1="5871.3262"
-       x2="2731.322"
-       y2="5871.3262"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.89051085,0,0,0.89051087,207.802,373.16348)" />
-    <linearGradient
-       inkscape:collect="always"
        xlink:href="#SVGID_6_"
        id="linearGradient8925"
        gradientUnits="userSpaceOnUse"
@@ -246,16 +226,6 @@
          style="stop-color:#204670;stop-opacity:0.28938907"
          offset="1" />
     </linearGradient>
-    <linearGradient
-       y2="590.91046"
-       x2="750.66968"
-       y1="380.58545"
-       x1="731.55249"
-       gradientTransform="matrix(3.2573251,0,0,8.2893613,46.165961,2034.6383)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4036"
-       xlink:href="#fondBleu_1_-6"
-       inkscape:collect="always" />
     <linearGradient
        id="linearGradient9396-3">
       <stop
@@ -514,14 +484,40 @@
          offset="1"
          style="stop-color:#263c5a;stop-opacity:1" />
     </linearGradient>
+    <linearGradient
+       y2="482.35367"
+       x2="7.5913167"
+       y1="95.393822"
+       x1="348.68591"
+       gradientTransform="matrix(3.2573252,0,0,8.2971479,46.166156,2029.8931)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient4036-3"
+       xlink:href="#fondBleu_1_-6-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="14.5372"
+       x2="874.00421"
+       y1="580.74219"
+       x1="-32.1133"
+       gradientUnits="userSpaceOnUse"
+       id="fondBleu_1_-6-6">
+      <stop
+         id="stop3072-5-7"
+         style="stop-color:#24326d;stop-opacity:0.78431374;"
+         offset="0" />
+      <stop
+         id="stop3074-9-5"
+         style="stop-color:#20456e;stop-opacity:0.33440515"
+         offset="1" />
+    </linearGradient>
   </defs>
   <rect
-     height="5169.4624"
+     height="5174.3179"
      width="2834.6455"
-     y="1917.1521"
+     y="1912.2963"
      x="0"
-     id="fondBleu-0"
-     style="display:inline;fill:url(#linearGradient4036);stroke-width:0.95994085" />
+     id="fondBleu-0-3"
+     style="display:inline;fill:url(#linearGradient4036-3);stroke-width:0.9603917" />
   <rect
      y="2780.3486"
      x="323.98523"
@@ -541,22 +537,22 @@
      id="text5518"
      y="5899.0977"
      x="1226.1594"
-     style="font-style:normal;font-weight:normal;font-size:11.44317532px;line-height:0%;font-family:'Bitstream Vera Sans';fill:url(#linearGradient7623);fill-opacity:1;stroke:none;stroke-width:0.95359796"
+     style="font-style:normal;font-weight:normal;font-size:11.44317532px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359796;"
      xml:space="preserve"><tspan
        y="5899.0977"
        x="1226.1594"
        id="tspan5520"
        sodipodi:role="line"
-       style="font-size:84.07660675px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:url(#linearGradient7623);fill-opacity:1;stroke-width:0.95359796"
+       style="font-size:84.07660675px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:0.95359796;"
        transform="matrix(1,0,0,-1,0,6485.5623)">Soyez libre dans la gestion de votre activité...</tspan></text>
   <text
      transform="scale(0.89598431,1.116091)"
      id="text5522"
      y="4350.1689"
      x="587.3349"
-     style="font-style:normal;font-weight:normal;font-size:11.44317627px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#263c5c;fill-opacity:1;stroke:none;stroke-width:0.95359802"
+     style="font-style:normal;font-weight:normal;font-size:11.44317627px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359802;"
      xml:space="preserve"><tspan
-       style="font-size:144.38496399px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#263c5c;fill-opacity:1;stroke:none;stroke-width:0.95359802"
+       style="font-size:144.38496399px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359802;"
        y="4350.1689"
        x="587.3349"
        id="tspan5524"
@@ -599,9 +595,9 @@
      id="text5522-7"
      y="4762.2764"
      x="586.08752"
-     style="font-style:normal;font-weight:normal;font-size:11.44317627px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#263c5c;fill-opacity:1;stroke:none;stroke-width:0.95359802"
+     style="font-style:normal;font-weight:normal;font-size:11.44317627px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359802;"
      xml:space="preserve"><tspan
-       style="font-size:144.38496399px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#263c5c;fill-opacity:1;stroke:none;stroke-width:0.95359802"
+       style="font-size:144.38496399px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359802;"
        y="4762.2764"
        x="586.08752"
        id="tspan5524-8"
@@ -612,9 +608,9 @@
      id="text5522-7-9"
      y="4554.4927"
      x="580.31317"
-     style="font-style:normal;font-weight:normal;font-size:11.44317627px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#263c5c;fill-opacity:1;stroke:none;stroke-width:0.95359802"
+     style="font-style:normal;font-weight:normal;font-size:11.44317627px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359802;"
      xml:space="preserve"><tspan
-       style="font-size:144.38496399px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#263c5c;fill-opacity:1;stroke:none;stroke-width:0.95359802"
+       style="font-size:144.38496399px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.95359802;"
        y="4554.4927"
        x="580.31317"
        id="tspan5524-8-2"
@@ -625,143 +621,143 @@
      id="text5518-8"
      y="5622.8237"
      x="377.71658"
-     style="font-style:normal;font-weight:normal;font-size:11.13153458px;line-height:0%;font-family:'Bitstream Vera Sans';fill:url(#linearGradient7631);fill-opacity:1;stroke:none;stroke-width:0.92762786"
+     style="font-style:normal;font-weight:normal;font-size:11.13153458px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.92762786;"
      xml:space="preserve"><tspan
        y="5622.8237"
        x="377.71658"
        id="tspan5520-2"
        sodipodi:role="line"
-       style="font-size:81.78688049px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:url(#linearGradient7631);fill-opacity:1;stroke-width:0.92762786"
+       style="font-size:81.78688049px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:0.92762786;"
        transform="matrix(1,0,0,-1,0,6485.5623)">Dolibarr, le logiciel ERP et CRM Open Source sous licence GNU GPL.</tspan></text>
   <text
      transform="scale(0.73395372,1.3624837)"
      id="text2945"
      y="1833.9403"
      x="318.70828"
-     style="font-style:normal;font-weight:normal;font-size:12.05634403px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#176f00;fill-opacity:1;stroke:none;stroke-width:1.00469518"
+     style="font-style:normal;font-weight:normal;font-size:12.05634403px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00469518;"
      xml:space="preserve"><tspan
        y="1833.9403"
        x="318.70828"
        id="tspan2947"
        sodipodi:role="line"
-       style="font-size:80.59156799px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#176f00;fill-opacity:1;stroke-width:1.00469518"
+       style="font-size:80.59156799px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:1.00469518;"
        transform="matrix(1,0,0,-1,0,5032.0382)">- Produits, Services, Stocks, Fabrications</tspan></text>
   <text
      transform="scale(0.76175103,1.3127649)"
      id="text2945-1"
      y="3104.0974"
      x="306.76163"
-     style="font-style:normal;font-weight:normal;font-size:12.420928px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#176f00;fill-opacity:1;stroke:none;stroke-width:1.03507745"
+     style="font-style:normal;font-weight:normal;font-size:12.420928px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.03507745;"
      xml:space="preserve"><tspan
        y="3104.0974"
        x="306.76163"
        id="tspan2947-7"
        sodipodi:role="line"
-       style="font-size:85.53118134px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#176f00;fill-opacity:1;stroke-width:1.03507745"
+       style="font-size:85.53118134px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:1.03507745;"
        transform="matrix(1,0,0,-1,0,5502.4656)">- Application modulaire, paramétrable</tspan></text>
   <text
      transform="scale(0.76168993,1.3128702)"
      id="text2945-4"
      y="2375.7869"
      x="1667.2133"
-     style="font-style:normal;font-weight:normal;font-size:11.97280312px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#007b8c;fill-opacity:1;stroke:none;stroke-width:0.99773359"
+     style="font-style:normal;font-weight:normal;font-size:11.97280312px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#fffed9;fill-opacity:1;stroke:none;stroke-width:0.99773359;"
      xml:space="preserve"><tspan
        y="2375.7869"
        x="1667.2133"
        id="tspan2947-0"
        sodipodi:role="line"
-       style="font-size:81.07751465px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#007b8c;fill-opacity:1;stroke-width:0.99773359"
+       style="font-size:81.07751465px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#fffed9;fill-opacity:1;stroke-width:0.99773359;"
        transform="matrix(1,0,0,-1,0,5220.5694)">- RH, Congés, Notes de frais</tspan></text>
   <text
      transform="scale(0.78738174,1.270032)"
      id="text2945-4-9"
      y="2567.9265"
      x="1617.5011"
-     style="font-style:normal;font-weight:normal;font-size:12.15979767px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#176f00;fill-opacity:1;stroke:none;stroke-width:1.01331639"
+     style="font-style:normal;font-weight:normal;font-size:12.15979767px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.01331639;"
      xml:space="preserve"><tspan
        y="2567.9265"
        x="1617.5011"
        id="tspan2947-0-4"
        sodipodi:role="line"
-       style="font-size:82.34378815px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#176f00;fill-opacity:1;stroke-width:1.01331639"
+       style="font-size:82.34378815px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:1.01331639;"
        transform="matrix(1,0,0,-1,0,5313.6692)">- Plus de 100 autres modules fonctionnels...</tspan></text>
   <text
      transform="scale(0.80812776,1.2374281)"
      id="text2945-4-9-8"
      y="2745.2632"
      x="1577.6074"
-     style="font-style:normal;font-weight:normal;font-size:12.02305031px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#6f6000;fill-opacity:1;stroke:none;stroke-width:1.00192082"
+     style="font-style:normal;font-weight:normal;font-size:12.02305031px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#fffed9;fill-opacity:1;stroke:none;stroke-width:1.00192082;"
      xml:space="preserve"><tspan
        y="2745.2632"
        x="1577.6074"
        id="tspan2947-0-4-8"
        sodipodi:role="line"
-       style="font-size:81.41776276px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#6f6000;fill-opacity:1;stroke-width:1.00192082"
+       style="font-size:81.41776276px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#fffed9;fill-opacity:1;stroke-width:1.00192082;"
        transform="matrix(1,0,0,-1,0,5304.4148)">- Connectivité, Exports, Imports, ...</tspan></text>
   <text
      transform="scale(0.7806714,1.2809487)"
      id="text2945-1-5"
      y="3064.5513"
      x="299.14041"
-     style="font-style:normal;font-weight:normal;font-size:12.72943974px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#007b8c;fill-opacity:1;stroke:none;stroke-width:1.0607866"
+     style="font-style:normal;font-weight:normal;font-size:12.72943974px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#fffed9;fill-opacity:1;stroke:none;stroke-width:1.0607866;"
      xml:space="preserve"><tspan
        y="3064.5513"
        x="299.14041"
        id="tspan2947-7-5"
        sodipodi:role="line"
-       style="font-size:87.65561676px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#007b8c;fill-opacity:1;stroke-width:1.0607866"
+       style="font-size:87.65561676px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#fffed9;fill-opacity:1;stroke-width:1.0607866;"
        transform="matrix(1,0,0,-1,0,5318.6532)">- Accès bureau, tablette, smartphone</tspan></text>
   <text
      transform="scale(0.75786446,1.3194972)"
      id="text2945-1-1"
      y="2858.2649"
      x="308.37366"
-     style="font-style:normal;font-weight:normal;font-size:12.35755539px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#101010;fill-opacity:1;stroke:none;stroke-width:1.02979624"
+     style="font-style:normal;font-weight:normal;font-size:12.35755539px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.02979624;"
      xml:space="preserve"><tspan
        y="2858.2649"
        x="308.37366"
        id="tspan2947-7-7"
        sodipodi:role="line"
-       style="font-size:85.0947876px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#101010;fill-opacity:1;stroke-width:1.02979624"
+       style="font-size:85.0947876px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:1.02979624;"
        transform="matrix(1,0,0,-1,0,5474.3911)">- Multi-utilisateurs, multi-langues, multi-plateformes</tspan></text>
   <text
      transform="scale(0.74489755,1.3424665)"
      id="text2945-1-1-1"
      y="3152.6008"
      x="313.87222"
-     style="font-style:normal;font-weight:normal;font-size:12.14611912px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#6f6000;fill-opacity:1;stroke:none;stroke-width:1.01217651"
+     style="font-style:normal;font-weight:normal;font-size:12.14611912px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#fffed9;fill-opacity:1;stroke:none;stroke-width:1.01217651;"
      xml:space="preserve"><tspan
        y="3152.6008"
        x="313.87222"
        id="tspan2947-7-7-1"
        sodipodi:role="line"
-       style="font-size:83.63883209px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#6f6000;fill-opacity:1;stroke-width:1.01217651"
+       style="font-size:83.63883209px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#fffed9;fill-opacity:1;stroke-width:1.01217651;"
        transform="matrix(1,0,0,-1,0,5380.7255)">- Communauté Open Source et écosystème actif</tspan></text>
   <text
      transform="scale(0.71332246,1.4018905)"
      id="text2945-5-7"
      y="1571.1309"
      x="328.13046"
-     style="font-style:normal;font-weight:normal;font-size:11.71744251px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#101010;fill-opacity:1;stroke:none;stroke-width:0.97645354"
+     style="font-style:normal;font-weight:normal;font-size:11.71744251px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.97645354;"
      xml:space="preserve"><tspan
        y="1571.1309"
        x="328.13046"
        id="tspan2947-2-6"
        sodipodi:role="line"
-       style="font-size:78.32616425px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#101010;fill-opacity:1;stroke-width:0.97645354"
+       style="font-size:78.32616425px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:0.97645354;"
        transform="matrix(1,0,0,-1,0,5032.0382)">- Clients, Fournisseurs, Prospects, Adhérents</tspan></text>
   <text
      transform="scale(0.73982541,1.3516703)"
      id="text2945-5-7-1-2"
      y="1965.177"
      x="316.1218"
-     style="font-style:normal;font-weight:normal;font-size:12.15279484px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#6f6000;fill-opacity:1;stroke:none;stroke-width:1.01273286"
+     style="font-style:normal;font-weight:normal;font-size:12.15279484px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#fffed9;fill-opacity:1;stroke:none;stroke-width:1.01273286;"
      xml:space="preserve"><tspan
        y="1965.177"
        x="316.1218"
        id="tspan2947-2-6-4-3"
        sodipodi:role="line"
-       style="font-size:81.23631287px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#6f6000;fill-opacity:1;stroke-width:1.01273286"
+       style="font-size:81.23631287px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#fffed9;fill-opacity:1;stroke-width:1.01273286;"
        transform="matrix(1,0,0,-1,0,5032.0382)">- Agenda, Projets, Emailings....</tspan></text>
   <flowRoot
      style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:'Bitstream Vera Sans';fill:#000000;fill-opacity:1;stroke:none"
@@ -780,13 +776,13 @@
      id="text2945-4-9-1"
      y="2243.7222"
      x="1683.3373"
-     style="font-style:normal;font-weight:normal;font-size:11.64590931px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#101010;fill-opacity:1;stroke:none;stroke-width:0.97049242"
+     style="font-style:normal;font-weight:normal;font-size:11.64590931px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.97049242;"
      xml:space="preserve"><tspan
        y="2243.7222"
        x="1683.3373"
        id="tspan2947-0-4-7"
        sodipodi:role="line"
-       style="font-size:78.86384583px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#101010;fill-opacity:1;stroke-width:0.97049242"
+       style="font-size:78.86384583px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke-width:0.97049242;"
        transform="matrix(1,0,0,-1,0,5313.6692)">- GED, Contrats, POS</tspan></text>
   <rect
      height="171.17426"
@@ -897,13 +893,13 @@
      id="text2945-5-7-1-2-5"
      y="1691.7396"
      x="320.95206"
-     style="font-style:normal;font-weight:normal;font-size:11.8510828px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#007b8c;fill-opacity:1;stroke:none;stroke-width:0.98759025"
+     style="font-style:normal;font-weight:normal;font-size:11.8510828px;line-height:0%;font-family:'Bitstream Vera Sans';fill:#fffed9;fill-opacity:1;stroke:none;stroke-width:0.98759025;"
      xml:space="preserve"><tspan
        y="1691.7396"
        x="320.95206"
        id="tspan2947-2-6-4-3-3"
        sodipodi:role="line"
-       style="font-size:79.21949768px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#007b8c;fill-opacity:1;stroke-width:0.98759025"
+       style="font-size:79.21949768px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#fffed9;fill-opacity:1;stroke-width:0.98759025;"
        transform="matrix(1,0,0,-1,0,5032.0382)">- Devis, Commandes, Factures, Encaissements en ligne</tspan></text>
   <path
      style="display:inline;fill:url(#linearGradient4630);stroke-width:5.63712549"
@@ -952,17 +948,17 @@
      id="path1565"
      d="m 469.39476,4778.6071 -66.19654,83.932 -33.09827,-41.966 12.41185,-15.7367 20.68642,26.2281 53.7846,-68.1939 z"
      inkscape:connector-curvature="0"
-     style="fill:#263c5c;fill-opacity:1;fill-rule:evenodd;stroke-width:9.31732178" />
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:9.31732178" />
   <path
      id="path1565-2"
      d="m 472.00378,5006.1877 -66.19656,83.932 -33.09826,-41.966 12.41184,-15.7367 20.68642,26.2281 53.78461,-68.194 z"
      inkscape:connector-curvature="0"
-     style="fill:#263c5c;fill-opacity:1;fill-rule:evenodd;stroke-width:9.31732178" />
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:9.31732178" />
   <path
      id="path1565-21"
      d="m 466.78575,5227.6232 -66.19655,83.9318 -33.09827,-41.9658 12.41185,-15.7367 20.68642,26.2281 53.78459,-68.194 z"
      inkscape:connector-curvature="0"
-     style="fill:#263c5c;fill-opacity:1;fill-rule:evenodd;stroke-width:9.31732178" />
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:9.31732178" />
   <flowRoot
      xml:space="preserve"
      id="flowRoot1646"
