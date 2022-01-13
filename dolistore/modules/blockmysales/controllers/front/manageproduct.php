@@ -467,7 +467,7 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 									$company = trim($customer['companyaddress']);	// Field company coming from the address
 								}
 
-								if (empty($totalamountforcustomer[$customer['id_customer']])) {
+								if (empty($totalamountforcustomer[$customer['id_customer']]) && $customer_id === 'all') {
 									// Amount sold is 0, we can discard search of thirdparty into Dolibarr
 									//$dolistoreinvoicesoutput[-1] .= 'publisher id='.$customer['id_customer'].' publisher='.$publisher.' and company='.$company.' has sold for <b>'.$totalamountforcustomer[$customer['id_customer']].'</b> - <a href="/fr/module/blockmysales/manageproduct?id_customer='.$customer['id_customer'].'" target="_blank">Supplier dashboard</a><br>'."\n";
 									continue;
