@@ -1576,7 +1576,7 @@ class BlockMySales extends Module
 			if ($status > 0) {
 				$dolibarr_disable_info = null;
 			} else {
-				$dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : $this->l('The module has been deactivated by the developer'));
+				$dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : $this->l('The module is disabled (not yet validated or disabled manually with no reason provided)'));
 			}
 
 			//Mise a jour du produit en base
