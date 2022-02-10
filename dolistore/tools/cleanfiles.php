@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 include '../config/settings.inc.php';
 
@@ -41,8 +42,6 @@ if ($resql) {
 
 	if (count($arrayoffiles)) {
 		print 'Found '.count($arrayoffiles).' entries of files'."\n";
-
-
 	} else {
 		print 'Failed to find existing files in database.'."\n";
 	}
@@ -55,14 +54,15 @@ if ($resql) {
 			$key = array_search($file, $arrayoffiles);
 			print 'File '.$file.' exists in database for module '.$arrayoflabel[$key]."\n";
 			$nbfound++;
-		} elseif (preg_match('/^[a-f0-9]$/', $file)) {
-			print 'File '.$file.' is not into database, we delete it.'."\n";
+		} elseif (preg_match('/^[a-f0-9]+$/', $file)) {
+			print 'File '.$file.' is not into database, we delete it.';
 			$nbnotfound++;
 			//unlink('/home/dolibarr/dolistore.com/httpdocs/download/'.$file);
 			if ($mode == 'confirm') {
 				rename('/home/dolibarr/dolistore.com/httpdocs/download/'.$file, '/tmp/old/'.$file);
+				print " -> Done\n";
 			} else {
-				print "Disabled in test mode.\n";
+				print " -> Disabled in test mode.\n";
 			}
 		} else {
 			print 'File '.$file.' discarded'."\n";
@@ -70,7 +70,5 @@ if ($resql) {
 	}
 }
 
-print 'Result: found='.$nbfound.' notfound='.$nbnotfound."\n";
-
-
+print 'Result of scan of /home/dolibarr/dolistore.com/httpdocs/download: found='.$nbfound.' notfound='.$nbnotfound."\n";
 
