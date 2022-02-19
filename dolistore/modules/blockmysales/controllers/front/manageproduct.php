@@ -569,7 +569,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 								// Make one call for each thirdparty
 								$parameters = array('authentication'=>$authentication, 'id'=>$socid, 'ref'=>'');
 								BlockMySales::prestalog("Call method ".$WS_METHOD." #".$i." for socid=".$socid);
+								//$soapclient->setDebugLevel(9);
 								$result = $soapclient->call($WS_METHOD, $parameters);
+								//var_dump($result);
 								if (! $result)
 								{
 									$soapclient_error=$soapclient->error_str;
@@ -799,6 +801,14 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 						{
 							$this->context->smarty->assign('badvoucherlist', $badvoucherlist);
 						}
+					}
+
+					if (!empty($errorcallws)) {
+						$showremaintoreceive=false;
+						$remaintoreceive = 0;
+						$remaintoreceivein2month = 0;
+						$this->context->smarty->assign('remaintoreceivein2month', $remaintoreceivein2month);
+						$this->context->smarty->assign('remaintoreceive', $remaintoreceive);
 					}
 
 					/*
