@@ -420,13 +420,13 @@ $(document).ready(function() {
 				if (split == true) {
 					var keywords = $("#keywords_" + language.id_lang + " input[name='keywords_" + language.id_lang + "']").val().split(",");
 					keywords = keywords.filter(function(elem) {
-						return $.isNumeric(elem) == false;
+						return elem.match(/^v?\d+$/) ? false : true;
 					});
 					keywords.join(',');
 					$("#keywords_" + language.id_lang + " input[name='keywords_" + language.id_lang + "']").val(keywords);
 				}
 				for (i = 0; i < max; i++) {
-					console.log("v"+min.toString());
+					console.log("add v"+min.toString());
 					dolibarr_tags.push("v"+min.toString());
 					min++;
 				}
