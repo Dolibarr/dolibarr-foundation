@@ -1030,6 +1030,7 @@ class BlockMySales extends Module
 							//echo implode(',', $pattern['types']).'<br>';
 							if (strpos($content, '<?php') !== 0) continue;  // We discard files that are not php pages (we discard scripts)
 							if (strpos($path, 'htdocs_') > 0) continue;  // We discard files that are files into htdocs_... because it is files for core, so no need to be compatible with custom
+							if (strpos($path, 'phpunit') > 0) continue;  // We discard files that are files into phpunit because it is files for core, so no need to be compatible with custom
 
 							$regs = array();
 							if (!empty($pattern['multiple']))
