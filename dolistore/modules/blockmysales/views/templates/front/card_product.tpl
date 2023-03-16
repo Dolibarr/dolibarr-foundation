@@ -259,7 +259,7 @@
 		var current_shop_id = {$current_shop_id|intval};
 		var languages = {$languages|@json_encode nofilter};
 		var productactive = {$product.active};
-		var disableinfo = "{if $product.dolibarr_disable_info}{$product.dolibarr_disable_info}{else}null{/if}";
+		var disableinfo = "{if $product.dolibarr_disable_info}1{else}null{/if}";
 		{literal}
 		var originalOrder = false;
 
@@ -330,7 +330,7 @@
 			getModuleName();
 			setKeywords();
 		});
-		if (!productactive && disableinfo) {
+		if (!productactive && disableinfo == 1) {
 			$('#dolibarr_disable_blockinfo').show();
 		}
 		$('#active_off').change(function () {
