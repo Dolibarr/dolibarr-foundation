@@ -3,8 +3,4 @@ README (english)
 Flyers
 --------------------------------
 
-This directory contains source for the OpenOffice.org
-office suite (www.openoffice.org) to create flyers.
-
-Note: You may need to install some font to read correctly files
-into this directory. For this, see directory doc/font.
+This directory contains source for Inkscape to create flyers.
