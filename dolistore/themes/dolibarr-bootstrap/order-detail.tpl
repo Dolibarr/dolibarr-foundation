@@ -286,9 +286,8 @@
 						<td><label for="cb_{$product.id_order_detail|intval}">{if $product.product_reference}{$product.product_reference|escape:'html':'UTF-8'}{else}--{/if}</label></td>
 						<td class="bold">
 							{assign var=orderstate value=[2,5,12]}
-							{if in_array($order->current_state, $orderstate)}
 							<label for="cb_{$product.id_order_detail|intval}">
-								{if $product.download_hash && $invoice && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0}
+								{if $product.download_hash && $invoice && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0 && in_array($order->current_state, $orderstate)}
 									{if isset($is_guest) && $is_guest}
 									<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'html':'UTF-8'}-{$product.download_hash|escape:'html':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")|escape:'html':'UTF-8'}" title="{l s='Download this product'}">
 									{else}
@@ -305,7 +304,6 @@
 									{$product.product_name|escape:'html':'UTF-8'}
 								{/if}
 							</label>
-							{/if}
 						</td>
 						<td class="return_quantity">
 							<input class="order_qte_input form-control grey" name="order_qte_input[{$product.id_order_detail|intval}]" type="text" size="2" value="{$productQuantity|intval}" />
