@@ -285,6 +285,7 @@
 						{if $return_allowed}<td class="order_cb"><input type="checkbox" id="cb_{$product.id_order_detail|intval}" name="ids_order_detail[{$product.id_order_detail|intval}]" value="{$product.id_order_detail|intval}" /></td>{/if}
 						<td><label for="cb_{$product.id_order_detail|intval}">{if $product.product_reference}{$product.product_reference|escape:'html':'UTF-8'}{else}--{/if}</label></td>
 						<td class="bold">
+							{if $order->current_state != 7}
 							<label for="cb_{$product.id_order_detail|intval}">
 								{if $product.download_hash && $invoice && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0}
 									{if isset($is_guest) && $is_guest}
@@ -303,6 +304,7 @@
 									{$product.product_name|escape:'html':'UTF-8'}
 								{/if}
 							</label>
+							{/if}
 						</td>
 						<td class="return_quantity">
 							<input class="order_qte_input form-control grey" name="order_qte_input[{$product.id_order_detail|intval}]" type="text" size="2" value="{$productQuantity|intval}" />
