@@ -27,6 +27,6 @@
 <li class="sendtofriend">
 	{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
 	<br>
-	{l s='The dissatisfaction rate is' mod='blockmysales'} <span class="price">{displayPrice price=$dissatisfaction_rate|floatval|replace:'.':','}%</span>
+	{l s='The dissatisfaction rate is' mod='blockmysales'} <span class="price">{$dissatisfaction_rate|floatval}%</span>
 	<br><br>
 </li>

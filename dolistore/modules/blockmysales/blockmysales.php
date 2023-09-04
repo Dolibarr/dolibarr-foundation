@@ -27,7 +27,7 @@ class BlockMySales extends Module
 		$this->name = 'blockmysales';
 		$this->author = 'DolibarrDev';
 		$this->tab = 'front_office_features';
-		$this->version = '2.3';
+		$this->version = '2.4';
 
 		//$this->bootstrap = true;
 		parent::__construct();
@@ -52,7 +52,8 @@ class BlockMySales extends Module
 			//!$this->registerHook('displayCustomerAccount') ||
 			//!$this->registerHook('displayMyAccountBlock') ||
 			//!$this->registerHook('actionValidateOrder') ||
-			//!$this->registerHook('hookActionProductUpdate') ||
+			//!$this->registerHook('actionProductUpdate') ||
+			//!$this->registerHook('displayLeftColumnProduct') ||
 			!$this->installSql()
 			)
 			return false;
@@ -77,6 +78,8 @@ class BlockMySales extends Module
 			//!$this->unregisterHook('displayCustomerAccount') ||
 			//!$this->unregisterHook('displayMyAccountBlock') ||
 			//!$this->unregisterHook('actionValidateOrder') ||
+			//!$this->unregisterHook('actionProductUpdate') ||
+			//!$this->unregisterHook('displayLeftColumnProduct') ||
 			//!Configuration::deleteByName('BLOCKMYSALES_VERSION') ||
 			//!Configuration::deleteByName('BLOCKMYSALES_FILELOG_PATH') ||
 			//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_URL') ||
@@ -406,12 +409,12 @@ class BlockMySales extends Module
 
 			$nbofsells = (int)$subresult[0]['nbofsells'];
 			$refunded = (int)$subresult[0]['refunded'];
-			$dissatisfaction_rate = (float)(round($refunded / $nbofsells, 3));
+			$dissatisfaction_rate = ($nbofsells > 0 ? (float)(round($refunded / $nbofsells, 3)) : 0);
 
 			$this->context->smarty->assign(array(
 				'nbofsells' => $nbofsells,
 				'refunded' => $refunded,
-				'dissatisfaction_rate' => $dissatisfaction_rate
+				'dissatisfaction_rate' => (!empty($dissatisfaction_rate) ? $dissatisfaction_rate : 0)
 			));
 
 			return $this->display(__FILE__, '/views/templates/hook/product_statistic.tpl');
