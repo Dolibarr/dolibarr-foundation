@@ -344,9 +344,35 @@
 			}
 		});
 		$('#upd').css('opacity', '0.5');
-		$('#agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
+		$('#agreeforsupport, #agreewithtermofuse, #agreetoaddwikipage').attr('checked', false);
+		if ($('#price').val() > 0) {
+			$('#agreeforsupportblock').show();
+		} else {
+			$('#agreeforsupportblock').hide();
+		}
+		$('#price').on('keyup change', function () {
+			if ($(this).val() > 0) {
+				$('#agreeforsupportblock').show();
+			} else {
+				$('#agreeforsupportblock').hide();
+			}
+		});
+		$('#agreeforsupport').change(function () {
+			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked') && $('#agreewithtermofuse').is(':checked')) {
+				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
+			}   
+			else {
+				$('#upd').removeClass('button_large').addClass('button_large_disabled').attr('disabled', 'disabled').css('opacity', '0.5');
+			}
+		});
 		$('#agreewithtermofuse').change(function () {
-			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked')) {
+			var agreeforsupport = false;
+			if ($('#price').val() > 0) {
+				agreeforsupport = $('#agreeforsupport').is(':checked');
+			} else {
+				agreeforsupport = true;
+			}
+			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked') && agreeforsupport) {
 				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
 			}   
 			else {
@@ -354,7 +380,13 @@
 			}
 		});
 		$('#agreetoaddwikipage').change(function () {
-			if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked')) {
+			var agreeforsupport = false;
+			if ($('#price').val() > 0) {
+				agreeforsupport = $('#agreeforsupport').is(':checked');
+			} else {
+				agreeforsupport = true;
+			}
+			if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked') && agreeforsupport) {
 				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
 			}   
 			else {

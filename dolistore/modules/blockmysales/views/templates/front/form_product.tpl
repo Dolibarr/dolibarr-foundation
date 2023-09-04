@@ -292,6 +292,16 @@
 										{/foreach}
 									</td>
 								</tr>
+								<tr id="agreeforsupportblock">
+									<td colspan="2">
+										<div><br>
+											<input type="checkbox" id="agreeforsupport" name="agreeforsupport" />
+											<label for="agreeforsupport" id="agreeforsupportlabel">
+												{l s='I agree to provide support for my module' mod='blockmysales'}
+											</label>
+										</div>
+									</td>
+								</tr>
 								<tr>
 									<td colspan="2">
 										<div><br>
