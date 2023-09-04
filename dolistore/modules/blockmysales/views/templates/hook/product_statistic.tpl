@@ -24,7 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li class="sendtofriend">
+<li class="box-info-product">
+	<br>
 	{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
 	<br>
 	{l s='The dissatisfaction rate is' mod='blockmysales'} <span class="price">{$dissatisfaction_rate|floatval}%</span>
