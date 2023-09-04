@@ -52,6 +52,7 @@ class BlockMySales extends Module
 			//!$this->registerHook('displayCustomerAccount') ||
 			//!$this->registerHook('displayMyAccountBlock') ||
 			//!$this->registerHook('actionValidateOrder') ||
+			//!$this->registerHook('hookActionProductUpdate') ||
 			!$this->installSql()
 			)
 			return false;
@@ -305,6 +306,89 @@ class BlockMySales extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
+	public function hookActionProductUpdate($params)
+	{
+		$send_disable_info = Tools::getValue('send_disable_info');
+		$dolibarr_disable_info = $params['product']->dolibarr_disable_info;
+
+		if (!empty($send_disable_info) && !empty($dolibarr_disable_info)) {
+
+			// Getting differents vars
+			$context = Context::getContext();
+			$id_lang = (int)$context->language->id;
+			$iso_code = $this->context->language->iso_code;
+			$id_shop = (int)$context->shop->id;
+			$configuration = Configuration::getMultiple(
+				array(
+					'PS_SHOP_EMAIL',
+					'PS_MAIL_METHOD',
+					'PS_MAIL_SERVER',
+					'PS_MAIL_USER',
+					'PS_MAIL_PASSWD',
+					'PS_SHOP_NAME',
+					'PS_MAIL_COLOR'
+				), $id_lang, null, $id_shop
+			);
+
+			$ref_product = $params['product']->reference;
+			$product_name = $params['product']->name[1];
+
+			Logger::addLog('mailalerts: $ref_product= '.$ref_product, 1);
+
+			//Find the id customer
+			$d2indice = strpos($ref_product,'d2');
+
+			if ($d2indice !== false) {
+				$id_sellers = substr($ref_product, 1, $d2indice);
+
+				Logger::addLog('mailalerts: $id_sellers= '.$id_sellers, 1);
+
+				//Find sellers email
+				$queryemail = 'SELECT c.firstname, c.lastname, c.email';
+				$queryemail.= ' FROM '._DB_PREFIX_.'customer as c';
+				$queryemail.= ' WHERE c.id_customer="'.$id_sellers.'"';
+
+				Logger::addLog('mailalerts: $queryemail= '.$queryemail, 1);
+
+				$resultemail = Db::getInstance()->executeS($queryemail);
+				if ($resultemail === false) {
+					die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$queryemail));
+				}
+				if (count($resultemail)) {
+					foreach ($resultemail as $rowemail) {
+						Logger::addLog('mailalerts: $rowemail[email]= '.$rowemail['email'], 1);
+
+						// Filling-in vars for email
+						$template_vars = array(
+							'{firstname}' => $rowemail['firstname'],
+							'{lastname}' => $rowemail['lastname'],
+							'{product_name}' => $product_name,
+							'{dolibarr_disable_info}' => $dolibarr_disable_info,
+							'{shop_name}' => $configuration['PS_SHOP_NAME'],
+							'{iso_code}' => $iso_code
+						);
+
+						Mail::Send(
+							$id_lang,
+							'product_disable_info',
+							sprintf(Mail::l('Your %s module has been deactivated', $id_lang), $product_name),
+							$template_vars,
+							$rowemail['email'],
+							null,
+							$configuration['PS_SHOP_EMAIL'],
+							$configuration['PS_SHOP_NAME'],
+							null,
+							null,
+							dirname(__FILE__).'/mails/',
+							null,
+							$id_shop
+						);
+					}
+				}
+			}
+		}
+	}
+
 	public function hookActionValidateOrder($params)
 	{
 		if (!$this->merchant_order || empty($this->merchant_mails))
@@ -330,7 +414,7 @@ class BlockMySales extends Module
 					'PS_SHOP_NAME',
 					'PS_MAIL_COLOR'
 				), $id_lang, null, $id_shop
-				);
+			);
 			$delivery = new Address((int)$order->id_address_delivery);
 			$invoice = new Address((int)$order->id_address_invoice);
 			$order_date_text = Tools::displayDate($order->date_add);

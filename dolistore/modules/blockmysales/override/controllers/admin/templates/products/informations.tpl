@@ -245,6 +245,21 @@
 			<input type="text" id="dolibarr_disable_info" name="dolibarr_disable_info" value="{$product->dolibarr_disable_info|htmlentitiesUTF8}" />
 		</div>
 	</div>
+	
+	<div class="form-group redirect_product_options" style="display:none">
+		<label class="control-label col-lg-3" for="send_disable_info">
+			<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='Used to send the reason by e-mail for deactivation of the product sheet.'}">
+				{$bullet_common_field} {l s='Reason for disabling'}
+			</span>
+		</label>
+		<div class="col-lg-5">
+		<div class="checkbox">
+			<label for="send_disable_info">
+				<input type="checkbox" name="send_disable_info" id="send_disable_info" value="1">
+				{l s='Send an email to the module seller'}</label>
+		</div></div>
+	</div>
 
 	<div class="form-group redirect_product_options" style="display:none">
 		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}</span></div>
