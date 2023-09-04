@@ -389,6 +389,35 @@ class BlockMySales extends Module
 		}
 	}
 
+	public function hookExtraLeft($params)
+	{
+		$product_id = (int)Tools::getValue('id_product');
+
+		$product = new Product($product_id, false, $this->context->language->id);
+
+		if ($product->price > "0") {
+
+			$query = "SELECT SUM(if(od.product_quantity > 0, od.product_quantity, 0)) AS nbofsells";
+			$query.= ", SUM(if(od.product_quantity_refunded > 0, od.product_quantity_refunded, 0)) AS refunded";
+			$query.= " FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o";
+			$query.= " WHERE o.id_order = od.id_order AND od.product_id = ".$product_id;
+
+			$subresult = Db::getInstance()->ExecuteS($query);
+
+			$nbofsells = (int)$subresult[0]['nbofsells'];
+			$refunded = (int)$subresult[0]['refunded'];
+			$dissatisfaction_rate = (float)(round($refunded / $nbofsells, 3));
+
+			$this->context->smarty->assign(array(
+				'nbofsells' => $nbofsells,
+				'refunded' => $refunded,
+				'dissatisfaction_rate' => $dissatisfaction_rate
+			));
+
+			return $this->display(__FILE__, '/views/templates/hook/product_statistic.tpl');
+		}
+	}
+
 	public function hookActionValidateOrder($params)
 	{
 		if (!$this->merchant_order || empty($this->merchant_mails))
