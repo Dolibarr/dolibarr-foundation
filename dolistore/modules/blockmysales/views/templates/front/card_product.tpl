@@ -352,13 +352,13 @@
 		}
 		$('#price').on('keyup change', function () {
 			if ($(this).val() > 0) {
-				$('#agreeforsupportblock').show();
+				$('#dolibarr_support').attr('required','required');
 			} else {
-				$('#agreeforsupportblock').hide();
+				$('#dolibarr_support').removeAttr('required');
 			}
 		});
-		$('#agreeforsupport').change(function () {
-			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked') && $('#agreewithtermofuse').is(':checked')) {
+		$('#dolibarr_support').on('keyup', function () {
+			if ($(this).val().length > 0 && $('#agreetoaddwikipage').is(':checked') && $('#agreewithtermofuse').is(':checked')) {
 				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
 			}   
 			else {
@@ -366,13 +366,13 @@
 			}
 		});
 		$('#agreewithtermofuse').change(function () {
-			var agreeforsupport = false;
+			var dolibarr_support = false;
 			if ($('#price').val() > 0) {
-				agreeforsupport = $('#agreeforsupport').is(':checked');
+				dolibarr_support = ($('#dolibarr_support').val().length > 0 ? true : false);
 			} else {
-				agreeforsupport = true;
+				dolibarr_support = true;
 			}
-			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked') && agreeforsupport) {
+			if ($(this).is(':checked') && $('#agreetoaddwikipage').is(':checked') && dolibarr_support) {
 				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
 			}   
 			else {
@@ -380,13 +380,13 @@
 			}
 		});
 		$('#agreetoaddwikipage').change(function () {
-			var agreeforsupport = false;
+			var dolibarr_support = false;
 			if ($('#price').val() > 0) {
-				agreeforsupport = $('#agreeforsupport').is(':checked');
+				dolibarr_support = ($('#dolibarr_support').val().length > 0 ? true : false);
 			} else {
-				agreeforsupport = true;
+				dolibarr_support = true;
 			}
-			if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked') && agreeforsupport) {
+			if ($(this).is(':checked') && $('#agreewithtermofuse').is(':checked') && dolibarr_support) {
 				$('#upd').removeClass('button_large_disabled').addClass('button_large').attr('disabled', false).css('opacity', '');
 			}   
 			else {

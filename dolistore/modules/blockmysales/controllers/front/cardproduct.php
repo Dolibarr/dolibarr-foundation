@@ -392,7 +392,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 							$query = 'SELECT
 									`id_supplier`, `id_manufacturer`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `quantity`, `price`, `wholesale_price`, `available_for_order`,
 									`reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
-									`dolibarr_disable_info`, `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`
+									`dolibarr_disable_info`, `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_support`
 									FROM `'._DB_PREFIX_.'product`
 									WHERE `id_product` = '.$product_id.' ';
 							$result = Db::getInstance()->ExecuteS($query);
@@ -409,6 +409,7 @@ class blockmysalescardproductModuleFrontController extends ModuleFrontController
 								$product['dolibarr_max'] 			= $row['dolibarr_max'];
 								$product['dolibarr_core_include']	= $row['dolibarr_core_include'];
 								$product['dolibarr_disable_info']	= $row['dolibarr_disable_info'];
+								$product['dolibarr_support']		= $row['dolibarr_support'];
 							}
 
 							$query = 'SELECT `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later`

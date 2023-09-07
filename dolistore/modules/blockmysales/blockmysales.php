@@ -68,8 +68,9 @@ class BlockMySales extends Module
 		$dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
 		$dolibarr_core_include = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_core_include` tinyint(1) DEFAULT 0');
 		$dolibarr_disable_info = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_disable_info` varchar(255)');
+		$dolibarr_support = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_support` varchar(255)');
 
-		return ($module_version & $dolibarr_min & $dolibarr_max & $dolibarr_core_include & $dolibarr_disable_info);
+		return ($module_version & $dolibarr_min & $dolibarr_max & $dolibarr_core_include & $dolibarr_disable_info & $dolibarr_support);
 	}
 
 	public function uninstall()
@@ -1370,16 +1371,20 @@ class BlockMySales extends Module
 			// Reason for disabling
 			$dolibarr_disable_info = null;	// default null when created
 
+			// Support
+			$dolibarr_support = (Tools::isSubmit('dolibarr_support') ? Tools::getValue('dolibarr_support') : null);
+
 			//insertion du produit en base
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product` (
-                                        `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
-                                        `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
-                                        `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
-                                        `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_disable_info`
-                                        ) VALUES (
-                            0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.addslashes($reference).'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
-                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.addslashes($module_version).'\', \''.addslashes($dolibarr_min).'\', \''.addslashes($dolibarr_max).'\', '.addslashes($dolibarr_core_include).', \''.addslashes($dolibarr_disable_info).'\'
-                        )';
+                  `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
+                  `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
+                  `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
+                  `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_disable_info`, `dolibarr_support`
+                   ) VALUES (
+                  0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.addslashes($reference).'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
+                  '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.addslashes($module_version).'\', \''.addslashes($dolibarr_min).'\', \''.addslashes($dolibarr_max).'\',
+                  '.addslashes($dolibarr_core_include).', \''.addslashes($dolibarr_disable_info).'\', \''.addslashes($dolibarr_support).'\'
+                  )';
 
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -1696,6 +1701,9 @@ class BlockMySales extends Module
 				$dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : $this->l('The module is disabled (not yet validated or disabled manually with no reason provided)'));
 			}
 
+			// Support
+			$dolibarr_support = (Tools::isSubmit('dolibarr_support') ? Tools::getValue('dolibarr_support') : null);
+
 			//Mise a jour du produit en base
 			$query = 'UPDATE `'._DB_PREFIX_.'product` SET
                                         `id_category_default`   = '.$id_categorie_default.',
@@ -1707,7 +1715,8 @@ class BlockMySales extends Module
                                         `dolibarr_min`          = \''.addslashes($dolibarr_min).'\',
                                         `dolibarr_max`          = \''.addslashes($dolibarr_max).'\',
                                         `dolibarr_core_include` = '.$dolibarr_core_include.',
-                                        `dolibarr_disable_info` = \''.addslashes($dolibarr_disable_info).'\',';
+                                        `dolibarr_disable_info` = \''.addslashes($dolibarr_disable_info).'\',
+                                        `dolibarr_support`      = \''.addslashes($dolibarr_support).'\',';
 			if ($status >= 0) $query.= ' `active` = '.$status.',';          // We don't change if status is -1
 			if ($oldPrice == 0 && $newPrice > 0) {
 				$query.= ' `available_for_order` = 1, `show_price` = 1, `cache_has_attachments` = 0,';
