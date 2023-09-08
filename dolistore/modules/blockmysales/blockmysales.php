@@ -399,6 +399,8 @@ class BlockMySales extends Module
 
 		$product = new Product($product_id, false, $this->context->language->id);
 
+		$parameters = array();
+
 		if ($product->price > "0") {
 
 			$query = "SELECT SUM(if(od.product_quantity > 0, od.product_quantity, 0)) AS nbofsells";
@@ -412,12 +414,21 @@ class BlockMySales extends Module
 			$refunded = (int)$subresult[0]['refunded'];
 			$dissatisfaction_rate = ($nbofsells > 0 ? (float)(round($refunded / $nbofsells, 3)) : 0);
 
-			$this->context->smarty->assign(array(
-				'nbofsells' => $nbofsells,
-				'refunded' => $refunded,
-				'dissatisfaction_rate' => (!empty($dissatisfaction_rate) ? $dissatisfaction_rate : 0)
-			));
+			$parameters['id_product'] = $product_id;
+			$parameters['nbofsells'] = $nbofsells;
+			$parameters['refunded'] = $refunded;
+			$parameters['dissatisfaction_rate'] = (!empty($dissatisfaction_rate) ? $dissatisfaction_rate : 0);
+		}
 
+		$query = 'SELECT dolibarr_support';
+		$query.= ' FROM '._DB_PREFIX_.'product';
+		$query.= ' WHERE id_product = '.$product_id;
+		$result = Db::getInstance()->ExecuteS($query);
+
+		$parameters['dolibarr_support'] = (!empty($result[0]['dolibarr_support']) ? $result[0]['dolibarr_support'] : false);
+
+		if ($product->price > "0" || !empty($parameters['dolibarr_support'])) {
+			$this->context->smarty->assign($parameters);
 			return $this->display(__FILE__, '/views/templates/hook/product_statistic.tpl');
 		}
 	}

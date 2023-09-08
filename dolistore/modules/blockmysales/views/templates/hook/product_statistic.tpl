@@ -24,10 +24,19 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+
+{if $dolibarr_support}
 <li class="box-info-product">
+	{l s='How to contact support:' mod='blockmysales'} <span>{$dolibarr_support}</span>
 	<br>
+</li>
+{/if}
+
+{if $id_product}
+<li class="box-info-product">
 	{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
 	<br>
 	{l s='The dissatisfaction rate is' mod='blockmysales'} <span class="price">{$dissatisfaction_rate|floatval}%</span>
-	<br><br>
+	<br>
 </li>
+{/if}
