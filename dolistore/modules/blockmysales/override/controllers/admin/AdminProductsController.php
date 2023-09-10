@@ -8,27 +8,35 @@ class AdminProductsController extends AdminProductsControllerCore
 		$this->_select .= ', a.date_add as dateadd, a.dolibarr_min, a.dolibarr_max';
 
 		$this->fields_list['name'] = array(
-				'title' => $this->l('Name'),
-				'filter_key' => 'b!name',
-				'callback' => 'getDolVersions'
+			'title' => $this->l('Name'),
+			'filter_key' => 'b!name',
+			'callback' => 'getDolVersions'
 		);
 
 		$this->fields_list['dateadd'] = array(
-				'title' => $this->l('Date add'),
-				'align' => 'text-center',
-				'class' => 'fixed-width-sm',
-				'type' => 'date',
-				'callback' => 'newProductAdd',
-				'orderby' => false
+			'title' => $this->l('Date add'),
+			'align' => 'text-center',
+			'class' => 'fixed-width-sm',
+			'type' => 'date',
+			'callback' => 'newProductAdd',
+			'orderby' => true
 		);
 
 		$this->fields_list['dolibarr_core_include'] = array(
-				'title' => $this->l('Request include core'),
-				'align' => 'text-center',
-				'active' => '',
-				'class' => 'fixed-width-sm',
-				'type' => 'bool',
-				'orderby' => false
+			'title' => $this->l('Request include core'),
+			'align' => 'text-center',
+			'active' => '',
+			'class' => 'fixed-width-sm',
+			'type' => 'bool',
+			'orderby' => true
+		);
+
+		$this->fields_list['dolibarr_max'] = array(
+			'title' => $this->l('Dolibarr max version'),
+			'align' => 'text-center',
+			'class' => 'fixed-width-sm',
+			'type' => 'text',
+			'orderby' => true
 		);
 	}
 
@@ -40,14 +48,10 @@ class AdminProductsController extends AdminProductsControllerCore
 
 	public function getDolVersions($name, $product)
 	{
-		if (! empty($product['dolibarr_max']))
-		{
-			if (!empty($product['dolibarr_min']))
-			{
+		if (!empty($product['dolibarr_max'])) {
+			if (!empty($product['dolibarr_min'])) {
 				return $name . ' ' . $product['dolibarr_min'] . ' - ' . $product['dolibarr_max'];
-			}
-			else
-			{
+			} else {
 				return $name . ' ' . $product['dolibarr_max'];
 			}
 		}

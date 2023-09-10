@@ -1,0 +1,12 @@
+
+[{shop_url}] 
+
+Hi {firstname} {lastname},
+
+Your module {product_name} has been disabled for the following reason:
+
+{dolibarr_disable_info}
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

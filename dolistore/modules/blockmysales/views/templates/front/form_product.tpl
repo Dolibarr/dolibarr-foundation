@@ -181,6 +181,18 @@
 								<tr>
 									<td colspan="2"><hr></td>
 								</tr>
+								<!-- Support -->
+								<tr>
+									<td nowrap="nowrap" valign="top">{l s='How to contact support:' mod='blockmysales'}</td>
+									<td>
+										<input size="48" maxlength="255" name="dolibarr_support" id="dolibarr_support" value="{if $product.dolibarr_support}{$product.dolibarr_support}{/if}" type="text" />
+										<br>
+										{l s='Used to define how to contact support (mandatory if the module is paid).' mod='blockmysales'}
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><hr></td>
+								</tr>
 								<!-- Categories -->
 								<tr>
 									<td width="14%" valign="top">

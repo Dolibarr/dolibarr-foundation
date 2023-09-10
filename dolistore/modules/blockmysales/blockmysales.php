@@ -27,7 +27,7 @@ class BlockMySales extends Module
 		$this->name = 'blockmysales';
 		$this->author = 'DolibarrDev';
 		$this->tab = 'front_office_features';
-		$this->version = '2.3';
+		$this->version = '2.4';
 
 		//$this->bootstrap = true;
 		parent::__construct();
@@ -52,6 +52,8 @@ class BlockMySales extends Module
 			//!$this->registerHook('displayCustomerAccount') ||
 			//!$this->registerHook('displayMyAccountBlock') ||
 			//!$this->registerHook('actionValidateOrder') ||
+			//!$this->registerHook('actionProductUpdate') ||
+			//!$this->registerHook('displayLeftColumnProduct') ||
 			!$this->installSql()
 			)
 			return false;
@@ -66,8 +68,9 @@ class BlockMySales extends Module
 		$dolibarr_max = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_max` varchar(6)');
 		$dolibarr_core_include = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_core_include` tinyint(1) DEFAULT 0');
 		$dolibarr_disable_info = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_disable_info` varchar(255)');
+		$dolibarr_support = Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'product` ADD COLUMN IF NOT EXISTS `dolibarr_support` varchar(255)');
 
-		return ($module_version & $dolibarr_min & $dolibarr_max & $dolibarr_core_include & $dolibarr_disable_info);
+		return ($module_version & $dolibarr_min & $dolibarr_max & $dolibarr_core_include & $dolibarr_disable_info & $dolibarr_support);
 	}
 
 	public function uninstall()
@@ -76,6 +79,8 @@ class BlockMySales extends Module
 			//!$this->unregisterHook('displayCustomerAccount') ||
 			//!$this->unregisterHook('displayMyAccountBlock') ||
 			//!$this->unregisterHook('actionValidateOrder') ||
+			//!$this->unregisterHook('actionProductUpdate') ||
+			//!$this->unregisterHook('displayLeftColumnProduct') ||
 			//!Configuration::deleteByName('BLOCKMYSALES_VERSION') ||
 			//!Configuration::deleteByName('BLOCKMYSALES_FILELOG_PATH') ||
 			//!Configuration::deleteByName('BLOCKMYSALES_WEBSERVICES_URL') ||
@@ -305,6 +310,129 @@ class BlockMySales extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
+	public function hookActionProductUpdate($params)
+	{
+		$send_disable_info = Tools::getValue('send_disable_info');
+		$dolibarr_disable_info = $params['product']->dolibarr_disable_info;
+
+		if (!empty($send_disable_info) && !empty($dolibarr_disable_info)) {
+
+			// Getting differents vars
+			$context = Context::getContext();
+			$id_lang = (int)$context->language->id;
+			$iso_code = $this->context->language->iso_code;
+			$id_shop = (int)$context->shop->id;
+			$configuration = Configuration::getMultiple(
+				array(
+					'PS_SHOP_EMAIL',
+					'PS_MAIL_METHOD',
+					'PS_MAIL_SERVER',
+					'PS_MAIL_USER',
+					'PS_MAIL_PASSWD',
+					'PS_SHOP_NAME',
+					'PS_MAIL_COLOR'
+				), $id_lang, null, $id_shop
+			);
+
+			$ref_product = $params['product']->reference;
+			$product_name = $params['product']->name[1];
+
+			Logger::addLog('mailalerts: $ref_product= '.$ref_product, 1);
+
+			//Find the id customer
+			$d2indice = strpos($ref_product,'d2');
+
+			if ($d2indice !== false) {
+				$id_sellers = substr($ref_product, 1, $d2indice);
+
+				Logger::addLog('mailalerts: $id_sellers= '.$id_sellers, 1);
+
+				//Find sellers email
+				$queryemail = 'SELECT c.firstname, c.lastname, c.email';
+				$queryemail.= ' FROM '._DB_PREFIX_.'customer as c';
+				$queryemail.= ' WHERE c.id_customer="'.$id_sellers.'"';
+
+				Logger::addLog('mailalerts: $queryemail= '.$queryemail, 1);
+
+				$resultemail = Db::getInstance()->executeS($queryemail);
+				if ($resultemail === false) {
+					die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$queryemail));
+				}
+				if (count($resultemail)) {
+					foreach ($resultemail as $rowemail) {
+						Logger::addLog('mailalerts: $rowemail[email]= '.$rowemail['email'], 1);
+
+						// Filling-in vars for email
+						$template_vars = array(
+							'{firstname}' => $rowemail['firstname'],
+							'{lastname}' => $rowemail['lastname'],
+							'{product_name}' => $product_name,
+							'{dolibarr_disable_info}' => $dolibarr_disable_info,
+							'{shop_name}' => $configuration['PS_SHOP_NAME'],
+							'{iso_code}' => $iso_code
+						);
+
+						Mail::Send(
+							$id_lang,
+							'product_disable_info',
+							sprintf(Mail::l('Your %s module has been deactivated', $id_lang), $product_name),
+							$template_vars,
+							$rowemail['email'],
+							null,
+							$configuration['PS_SHOP_EMAIL'],
+							$configuration['PS_SHOP_NAME'],
+							null,
+							null,
+							dirname(__FILE__).'/mails/',
+							null,
+							$id_shop
+						);
+					}
+				}
+			}
+		}
+	}
+
+	public function hookExtraLeft($params)
+	{
+		$product_id = (int)Tools::getValue('id_product');
+
+		$product = new Product($product_id, false, $this->context->language->id);
+
+		$parameters = array();
+
+		if ($product->price > "0") {
+
+			$query = "SELECT SUM(if(od.product_quantity > 0, od.product_quantity, 0)) AS nbofsells";
+			$query.= ", SUM(if(od.product_quantity_refunded > 0, od.product_quantity_refunded, 0)) AS refunded";
+			$query.= " FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o";
+			$query.= " WHERE o.id_order = od.id_order AND od.product_id = ".$product_id;
+
+			$subresult = Db::getInstance()->ExecuteS($query);
+
+			$nbofsells = (int)$subresult[0]['nbofsells'];
+			$refunded = (int)$subresult[0]['refunded'];
+			$dissatisfaction_rate = ($nbofsells > 0 ? (float)(round($refunded / $nbofsells, 3)) : 0);
+
+			$parameters['id_product'] = $product_id;
+			$parameters['nbofsells'] = $nbofsells;
+			$parameters['refunded'] = $refunded;
+			$parameters['dissatisfaction_rate'] = (!empty($dissatisfaction_rate) ? $dissatisfaction_rate : 0);
+		}
+
+		$query = 'SELECT dolibarr_support';
+		$query.= ' FROM '._DB_PREFIX_.'product';
+		$query.= ' WHERE id_product = '.$product_id;
+		$result = Db::getInstance()->ExecuteS($query);
+
+		$parameters['dolibarr_support'] = (!empty($result[0]['dolibarr_support']) ? $result[0]['dolibarr_support'] : false);
+
+		if ($product->price > "0" || !empty($parameters['dolibarr_support'])) {
+			$this->context->smarty->assign($parameters);
+			return $this->display(__FILE__, '/views/templates/hook/product_statistic.tpl');
+		}
+	}
+
 	public function hookActionValidateOrder($params)
 	{
 		if (!$this->merchant_order || empty($this->merchant_mails))
@@ -330,7 +458,7 @@ class BlockMySales extends Module
 					'PS_SHOP_NAME',
 					'PS_MAIL_COLOR'
 				), $id_lang, null, $id_shop
-				);
+			);
 			$delivery = new Address((int)$order->id_address_delivery);
 			$invoice = new Address((int)$order->id_address_invoice);
 			$order_date_text = Tools::displayDate($order->date_add);
@@ -1254,16 +1382,20 @@ class BlockMySales extends Module
 			// Reason for disabling
 			$dolibarr_disable_info = null;	// default null when created
 
+			// Support
+			$dolibarr_support = (Tools::isSubmit('dolibarr_support') ? Tools::getValue('dolibarr_support') : null);
+
 			//insertion du produit en base
 			$query = 'INSERT INTO `'._DB_PREFIX_.'product` (
-                                        `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
-                                        `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
-                                        `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
-                                        `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_disable_info`
-                                        ) VALUES (
-                            0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.addslashes($reference).'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
-                            '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.addslashes($module_version).'\', \''.addslashes($dolibarr_min).'\', \''.addslashes($dolibarr_max).'\', '.addslashes($dolibarr_core_include).', \''.addslashes($dolibarr_disable_info).'\'
-                        )';
+                  `id_supplier`, `id_manufacturer`, `id_tax_rules_group`, `id_category_default`, `on_sale`, `ean13`, `ecotax`, `is_virtual`,
+                  `quantity`, `price`, `wholesale_price`, `reference`, `supplier_reference`, `location`, `weight`, `out_of_stock`,
+                  `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `indexed`, `date_add`, `date_upd`,
+                  `module_version`, `dolibarr_min`, `dolibarr_max`, `dolibarr_core_include`, `dolibarr_disable_info`, `dolibarr_support`
+                   ) VALUES (
+                  0, 0, '.$taxe_id.', '.$id_categorie_default.', 0, 0, 0.00, 1, '.$qty.', '.$prix_ht.', '.$prix_ht.', \''.addslashes($reference).'\', \'\', \'\', 0, 0, 0, 0, 0, 0,
+                  '.$status.', 1, \''.$dateNow.'\', \''.$dateNow.'\', \''.addslashes($module_version).'\', \''.addslashes($dolibarr_min).'\', \''.addslashes($dolibarr_max).'\',
+                  '.addslashes($dolibarr_core_include).', \''.addslashes($dolibarr_disable_info).'\', \''.addslashes($dolibarr_support).'\'
+                  )';
 
 			$result = Db::getInstance()->Execute($query);
 			if ($result === false) die(Tools::displayError('Invalid loadLanguage() SQL query!: '.$query));
@@ -1580,6 +1712,9 @@ class BlockMySales extends Module
 				$dolibarr_disable_info = (Tools::isSubmit('dolibarr_disable_info') ? Tools::getValue('dolibarr_disable_info') : $this->l('The module is disabled (not yet validated or disabled manually with no reason provided)'));
 			}
 
+			// Support
+			$dolibarr_support = (Tools::isSubmit('dolibarr_support') ? Tools::getValue('dolibarr_support') : null);
+
 			//Mise a jour du produit en base
 			$query = 'UPDATE `'._DB_PREFIX_.'product` SET
                                         `id_category_default`   = '.$id_categorie_default.',
@@ -1591,7 +1726,8 @@ class BlockMySales extends Module
                                         `dolibarr_min`          = \''.addslashes($dolibarr_min).'\',
                                         `dolibarr_max`          = \''.addslashes($dolibarr_max).'\',
                                         `dolibarr_core_include` = '.$dolibarr_core_include.',
-                                        `dolibarr_disable_info` = \''.addslashes($dolibarr_disable_info).'\',';
+                                        `dolibarr_disable_info` = \''.addslashes($dolibarr_disable_info).'\',
+                                        `dolibarr_support`      = \''.addslashes($dolibarr_support).'\',';
 			if ($status >= 0) $query.= ' `active` = '.$status.',';          // We don't change if status is -1
 			if ($oldPrice == 0 && $newPrice > 0) {
 				$query.= ' `available_for_order` = 1, `show_price` = 1, `cache_has_attachments` = 0,';
