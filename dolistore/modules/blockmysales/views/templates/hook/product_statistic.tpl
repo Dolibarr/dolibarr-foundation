@@ -26,17 +26,17 @@
 
 
 {if $dolibarr_support}
-<li class="box-info-product">
-	{l s='How to contact support:' mod='blockmysales'} <span>{$dolibarr_support}</span>
+<li class="box-info2-product">
+	<b>{l s='Support available at:' mod='blockmysales'}</b>: <span>{$dolibarr_support}</span>
 	<br>
 </li>
 {/if}
 
 {if $id_product}
-<li class="box-info-product">
+<li class="box-info2-product">
 	{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
 	<br>
-	{l s='The dissatisfaction rate is' mod='blockmysales'} <span class="price">{$dissatisfaction_rate|floatval}%</span>
+	<b>{l s='Negative feedback rate' mod='blockmysales'}</b>: <span class="price">{$dissatisfaction_rate|floatval}%</span>
 	<br>
 </li>
 {/if}
