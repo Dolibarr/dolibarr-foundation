@@ -22,6 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{assign var=orderstate value=[2,5,12]}
 {if isset($order)}
 {if isset($reorderingAllowed) && $reorderingAllowed}
 <div class="box box-small clearfix">
