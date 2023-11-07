@@ -1048,7 +1048,7 @@ class BlockMySales extends Module
 					0 => array(
 						'name'          => 'main',
 						'types'         => array('php'),
-						'pattern'       => '(require|include).*(main|master)\.inc\.php',
+						'pattern'       => '(require|include).*(main|master|main_module)\.inc\.php',
 						'multiple'      => true     // Means we must find 0 or several times the pattern. Error if found 1 occurrence.
 					),
 					/*2 => array(
