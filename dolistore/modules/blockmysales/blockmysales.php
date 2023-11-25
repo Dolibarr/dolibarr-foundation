@@ -407,6 +407,7 @@ class BlockMySales extends Module
 			$query.= ", SUM(if(od.product_quantity_refunded > 0, od.product_quantity_refunded, 0)) AS refunded";
 			$query.= " FROM "._DB_PREFIX_."order_detail as od,  "._DB_PREFIX_."orders as o";
 			$query.= " WHERE o.id_order = od.id_order AND od.product_id = ".$product_id;
+			$query.= " AND o.invoice_date >= CURRENT_DATE - INTERVAL '6 months'";
 
 			$subresult = Db::getInstance()->ExecuteS($query);
 
