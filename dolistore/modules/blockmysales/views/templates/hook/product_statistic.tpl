@@ -32,11 +32,16 @@
 </li>
 {/if}
 
-{if $id_product}
-<li class="box-info2-product">
-	{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
+{if $nbofsells < 5}
 	<br>
-	<b>{l s='Negative feedback rate' mod='blockmysales'}</b>: <span class="price">{$dissatisfaction_rate|floatval}%</span>
-	<br>
-</li>
+	<b>{l s='This module has not been sold enough or has been on sale for a too short to have statistics' mod='blockmysales'}</b>
+{else}
+	{if $id_product}
+	<li class="box-info2-product">
+		{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
+		<br>
+		<b>{l s='Negative feedback rate' mod='blockmysales'}</b>: <span class="price">{$dissatisfaction_rate * 100|floatval}%</span>
+		<br>
+	</li>
+	{/if}
 {/if}

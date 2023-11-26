@@ -200,9 +200,9 @@
 			</div>
 			{if isset($HOOK_EXTRA_RIGHT) && $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}
 			{if !$content_only}
-				<!-- usefull links-->
+				<!-- usefull links--><br>
 				<ul id="usefull_link_block" class="clearfix no-print">
-					{if $HOOK_EXTRA_LEFT}{$HOOK_EXTRA_LEFT}{/if}
+					<!--{if $HOOK_EXTRA_LEFT}{$HOOK_EXTRA_LEFT}{/if}-->
 					<li class="print">
 						<a href="javascript:print();">
 							{l s='Print'}
@@ -500,6 +500,11 @@
 				{if isset($product) && $product->description}
 					<!-- full description -->
 					<div  class="rte">{$product->description}</div>
+
+                <br><br>
+                <ul id="usefull_link_block" class="clearfix no-print">
+                     {if $HOOK_EXTRA_LEFT}{$HOOK_EXTRA_LEFT}{/if}
+                </ul>
 			</section>
 			<!--end  More info -->
 		{/if}

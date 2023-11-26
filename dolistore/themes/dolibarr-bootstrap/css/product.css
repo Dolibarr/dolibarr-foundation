@@ -422,7 +422,8 @@ span.view_scroll_spacer {
   border-bottom: 1px solid #b0afaf; 
 }
 .box-info2-product {
-  background: #f0f0f0;
+  /* background: #f0f0f0; */
+  margin-bottom: 25px !important;
 }
 
 .box-info-product p {
