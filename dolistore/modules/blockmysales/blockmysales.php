@@ -853,9 +853,9 @@ class BlockMySales extends Module
 			// module_mymodule-x.y.zip, moduleprestashop_mymodule-x.y.zip
 			// theme_mytheme-x.y.zip
 			// website_mytemplate-123456.zip
-			if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
-				&& ! preg_match('/^theme_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
-				&& ! preg_match('/^website_([-a-zA-Z0-9]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
+			if (! preg_match('/^module([a-zA-Z0-9]*)_([-a-zA-Z0-9_]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
+				&& ! preg_match('/^theme_([a-zA-Z0-9_]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
+				&& ! preg_match('/^website_([a-zA-Z0-9_]+)\-([0-9][0-9\.]*)\.zip$/i',$originalfilename)
 				)
 			{
 				$return['errormsg'] = $this->l('Package seems to not respect some rules:').'<br>';
