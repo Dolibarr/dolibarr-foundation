@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{assign var=orderstate value=[2,5,12]}
+{assign var=orderstate value=[2,5,12,15]}
 {if isset($order)}
 {if isset($reorderingAllowed) && $reorderingAllowed}
 <div class="box box-small clearfix">
@@ -286,7 +286,7 @@
 						{if $return_allowed}<td class="order_cb"><input type="checkbox" id="cb_{$product.id_order_detail|intval}" name="ids_order_detail[{$product.id_order_detail|intval}]" value="{$product.id_order_detail|intval}" /></td>{/if}
 						<td><label for="cb_{$product.id_order_detail|intval}">{if $product.product_reference}{$product.product_reference|escape:'html':'UTF-8'}{else}--{/if}</label></td>
 						<td class="bold">
-							{assign var=orderstate value=[2,5,12]}
+							{assign var=orderstate value=[2,5,12,15]}
 							<label for="cb_{$product.id_order_detail|intval}">
 								{if $product.download_hash && $invoice && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0 && in_array($order->current_state, $orderstate)}
 									{if isset($is_guest) && $is_guest}
