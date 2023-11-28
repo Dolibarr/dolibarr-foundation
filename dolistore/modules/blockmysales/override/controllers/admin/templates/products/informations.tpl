@@ -214,7 +214,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="dolibarr_support">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Used to define how to contact support (mandatory if the module is paid).'}">
+			title="{l s='Used to define how to contact the support team  (mandatory if the module is paid).'}">
 				{$bullet_common_field} {l s='Support'}
 			</span>
 		</label>
@@ -300,7 +300,7 @@
 	<div class="form-group redirect_product_options">
 		<label class="control-label col-lg-3" for="dolibarr_support">
 			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='Used to define how to contact support (mandatory if the module is paid).'}">
+			title="{l s='Used to define how to contact the support team  (mandatory if the module is paid).'}">
 				{$bullet_common_field} {l s='Support'}
 			</span>
 		</label>

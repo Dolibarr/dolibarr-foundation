@@ -187,7 +187,7 @@
 									<td>
 										<input size="48" maxlength="255" name="dolibarr_support" id="dolibarr_support" value="{if $product.dolibarr_support}{$product.dolibarr_support}{/if}" type="text" />
 										<br>
-										{l s='Used to define how to contact support (mandatory if the module is paid).' mod='blockmysales'}
+										{l s='Used to define how to contact the support team (mandatory if the module is paid).' mod='blockmysales'}
 									</td>
 								</tr>
 								<tr>
