@@ -28,14 +28,13 @@
 {if $dolibarr_support}
 <li class="box-info2-product">
 	<b>{l s='Support available at:' mod='blockmysales'}</b>: <span>{$dolibarr_support}</span>
-	<br>
 </li>
 {/if}
 
 {if $nbofsells < 5}
-	<br>
+	<li class="box-info2-product">
 	<b>{l s='This module has not been sold enough or has been on sale for a too short to have statistics' mod='blockmysales'}</b>
-	<br>
+	</li>
 {else}
 	{if $id_product}
 	<li class="box-info2-product">
