@@ -35,6 +35,7 @@
 {if $nbofsells < 5}
 	<br>
 	<b>{l s='This module has not been sold enough or has been on sale for a too short to have statistics' mod='blockmysales'}</b>
+	<br>
 {else}
 	{if $id_product}
 	<li class="box-info2-product">
