@@ -183,7 +183,7 @@
 				<div>{l s='Due to a setup problem, your payment information are not available for the moment.' mod='blockmysales'}</div>
 			{/if}
 		</div><!-- End payments list tab -->
-		<div id="manageproduct_tabs-2">
+		<div id="manageproduct_tabs-3">
 			<br>
 			{if $voucherareok}
 
