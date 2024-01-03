@@ -32,8 +32,10 @@
 			{if $products}
 			<li><a href="#manageproduct_tabs-1">{l s='Your modules' mod='blockmysales'}</a></li>
 			<li><a href="#manageproduct_tabs-2">{l s='Your payment information' mod='blockmysales'}</a></li>
+			<li><a href="#manageproduct_tabs-3">{l s='Your payment archives' mod='blockmysales'}</a></li>
+
 			{/if}
-			<li><a href="#manageproduct_tabs-3">{l s='Submit a module/plugin' mod='blockmysales'}</a></li>
+			<li><a href="#manageproduct_tabs-4">{l s='Submit a module/plugin' mod='blockmysales'}</a></li>
 		</ul>
 		{if $products}
 		<!-- Product list tab -->
@@ -106,33 +108,6 @@
 				<div>{l s='* any sell is validated after a %s month delay' sprintf=$mindelaymonth mod='blockmysales'}</div>
 				{if $totalvoucherclaimable_ht || $totalvoucher_ht}
 					<div>{l s='** Total amount of vouchers offered excl tax' mod='blockmysales'}</div>
-				{/if}
-
-				{if $foundthirdparty}
-					<p>
-						<div>
-						{if $customer_id == 'all'}
-							{l s='Payments already distributed (invoices with "dolistore")' mod='blockmysales'}
-						{else}
-							{l s='Payments received back (all time)' mod='blockmysales'}
-						{/if}
-						</div>
-						{if $dolistoreinvoiceslines}
-							{foreach from=$dolistoreinvoiceslines key=id item=line}
-								{$line}
-							{/foreach}
-						{/if}
-					</p>
-				{else}
-					<br>
-					<div class="alert alert-danger">
-						{l s='Third party %s was not found into our payment backoffice system.' sprintf=$company mod='blockmysales'}<br>
-						Search was done on <strong>{$searchwasdoneon}</strong><br>
-						{l s='If you already received a payment, please contact us at contact@dolibarr.org to fix this, it means following information are wrong.' mod='bloackmysales'}
-					</div>
-					<div>
-						{l s='If you never request any payment yet, you can trust following informations.' mod='bloackmysales'}
-					</div>
 				{/if}
 
 				{if !$dateafter && !$datebefore}
@@ -208,9 +183,50 @@
 				<div>{l s='Due to a setup problem, your payment information are not available for the moment.' mod='blockmysales'}</div>
 			{/if}
 		</div><!-- End payments list tab -->
+		<div id="manageproduct_tabs-3">
+			<br>
+			{if $voucherareok}
+
+				{if $foundthirdparty}
+					<p>
+						<div>
+						{if $customer_id == 'all'}
+							{l s='Payments already distributed (invoices with "dolistore")' mod='blockmysales'}
+						{else}
+							{l s='Payments received back (all time)' mod='blockmysales'}
+						{/if}
+						</div>
+						{if $dolistoreinvoiceslines}
+							{foreach from=$dolistoreinvoiceslines key=id item=line}
+								{$line}
+							{/foreach}
+						{/if}
+					</p>
+				{else}
+					<br>
+					<div class="alert alert-danger">
+						{l s='Third party %s was not found into our payment backoffice system.' sprintf=$company mod='blockmysales'}<br>
+						Search was done on <strong>{$searchwasdoneon}</strong><br>
+						{l s='If you already received a payment, please contact us at contact@dolibarr.org to fix this, it means following information are wrong.' mod='bloackmysales'}
+					</div>
+					<div>
+						{l s='If you never request any payment yet, you can trust following informations.' mod='bloackmysales'}
+					</div>
+				{/if}
+
+			{else}
+				<font color="#AA0000">
+				{foreach from=$badvoucherlist key=id item=voucher}
+					<div>{l s='Error, a bad voucher %1$s name was found into database and applied to order %2$s. A voucher name must end with C[idseller]' sprintf=[$voucher.vouchername,$voucher.idorder] mod='blockmysales'}</div>
+				{/foreach}
+				<div>{l s='Please come back later when problem is fixed' mod='blockmysales'}</div>
+				</font>
+				<div>{l s='Due to a setup problem, your payment information are not available for the moment.' mod='blockmysales'}</div>
+			{/if}
+		</div><!-- End payments archive list tab -->
 		{/if}
 		<!-- Submit new product tab -->
-		<div id="manageproduct_tabs-3">
+		<div id="manageproduct_tabs-4">
 			{if $action == 'create' && !$cancel}
 				{if $create_flag < 0}
 					{$create_errors}
@@ -305,7 +321,7 @@ $(document).ready(function() {
 			{
 				beforeActivate: function( event, ui ) {
 					var manageproducttab = ui.newPanel.attr('id');
-					if (manageproducttab == 'manageproduct_tabs-3') {
+					if (manageproducttab == 'manageproduct_tabs-4') {
 						$( "#sales_list_link" ).hide();
 					} else {
 						$( "#sales_list_link" ).show();
@@ -318,7 +334,7 @@ $(document).ready(function() {
 			$( "#manageproduct_tabs" ).tabs("option", "active", $( "#manageproduct_tabs" ).find("manageproduct_tabs-2").index()-1 );
 		{/literal}{/if}{literal}
 		{/literal}{if $tab == 'submit'}{literal}
-			$( "#manageproduct_tabs" ).tabs("option", "active", $( "#manageproduct_tabs" ).find("manageproduct_tabs-3").index() );
+			$( "#manageproduct_tabs" ).tabs("option", "active", $( "#manageproduct_tabs" ).find("manageproduct_tabs-4").index() );
 		{/literal}{/if}{literal}
 	});
 	$(function() {
