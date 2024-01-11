@@ -63,7 +63,7 @@ class modMarketplace extends DolibarrModules
 		$this->name = preg_replace('/^mod/i', '', get_class($this));
 
 		// Module description, used if translation string 'ModuleMarketplaceDesc' not found (Marketplace is name of module).
-		$this->description = "MarketplaceDescription";
+		$this->description = "This module provide the features to publish an online market place. It is for example used for the v2 of dolistore.com. The module provides a ready to use template of a website that can be used with the Dolibarr website module. It also offer various tools to manage your marketplace.";
 		// Used only if file README.md and README-LL.md not found.
 		$this->descriptionlong = "MarketplaceDescription";
 
@@ -136,7 +136,7 @@ class modMarketplace extends DolibarrModules
 		// A condition to hide module
 		$this->hidden = false;
 		// List of module class names that must be enabled if this module is enabled. Example: array('always'=>array('modModuleToEnable1','modModuleToEnable2'), 'FR'=>array('modModuleToEnableFR')...)
-		$this->depends = array();
+		$this->depends = array('always'=>array('modSociete', 'modProduct', 'modCategorie', 'modCommande', 'modFacture', 'modBanque', 'modMailing', 'modWebsite'));
 		// List of module class names to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->requiredby = array();
 		// List of module class names this module is in conflict with. Example: array('modModuleToDisable1', ...)
@@ -147,7 +147,7 @@ class modMarketplace extends DolibarrModules
 
 		// Prerequisites
 		$this->phpmin = array(7, 0); // Minimum version of PHP required by module
-		$this->need_dolibarr_version = array(11, -3); // Minimum version of Dolibarr required by module
+		$this->need_dolibarr_version = array(20, -3); // Minimum version of Dolibarr required by module
 		$this->need_javascript_ajax = 0;
 
 		// Messages at activation
