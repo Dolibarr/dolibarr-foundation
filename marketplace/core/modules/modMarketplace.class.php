@@ -27,6 +27,9 @@
  *  \brief      Description and activation file for module Marketplace
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
+include_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+include_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
+
 
 /**
  *  Description and activation class for module Marketplace
@@ -439,7 +442,7 @@ class modMarketplace extends DolibarrModules
 	 */
 	public function init($options = '')
 	{
-		global $conf, $langs;
+		global $conf, $langs, $user, $mysoc;
 
 		//$result = $this->_load_tables('/install/mysql/', 'marketplace');
 		$result = $this->_load_tables('/marketplace/sql/');
@@ -462,6 +465,7 @@ class modMarketplace extends DolibarrModules
 		$sql = array();
 
 		// Document templates
+		/*
 		$moduledir = dol_sanitizeFileName('marketplace');
 		$myTmpObjects = array();
 		$myTmpObjects['MyObject'] = array('includerefgeneration'=>0, 'includedocgeneration'=>0);
@@ -494,6 +498,83 @@ class modMarketplace extends DolibarrModules
 				));
 			}
 		}
+		*/
+
+
+		// Default customer for Point of sale
+		if (!getDolGlobalInt('MARKETPLACE_ID_THIRDPARTY')) {	// If a customer has already ben set into the TakePos setup page
+			$societe = new Societe($this->db);
+			$nametouse = $langs->trans("DefaultMarketplaceThirdLabel");
+
+			$searchcompanyid = $societe->fetch(0, $nametouse);
+			if ($searchcompanyid == 0) {
+				$societe->name = $nametouse;
+				$societe->client = 1;
+				$societe->code_client = -1;
+				$societe->code_fournisseur = -1;
+				$societe->note_private = "Default customer automaticaly created by Marketplace module activation. Can be used as the default generic customer in the Marketplace setup. Can also be edited or removed if you don't need a generic customer.";
+
+				$searchcompanyid = $societe->create($user);
+			}
+			if ($searchcompanyid > 0) {
+				// We already have or we have create a thirdparty with id = $searchcompanyid, so we link use it into setup
+				dolibarr_set_const($this->db, "MARKETPLACE_ID_THIRDPARTY", $searchcompanyid, 'chaine', 0, '', $conf->entity);
+			} else {
+				setEventMessages($societe->error, $societe->errors, 'errors');
+			}
+		}
+
+		// Create product category DefaultPOSCatLabel if not exists
+		$categories = new Categorie($this->db);
+		$cate_arbo = $categories->get_full_arbo('product', 0, 1);
+		if (is_array($cate_arbo)) {
+			if (!count($cate_arbo) || !getDolGlobalString('MARKETPLACE_ROOT_CATEGORY_ID')) {
+				$category = new Categorie($this->db);
+
+				$category->label = $langs->trans("DefaultMarketPlaceCatLabel");
+				$category->type = Categorie::TYPE_PRODUCT;
+
+				$result = $category->create($user);
+
+				if ($result > 0) {
+					dolibarr_set_const($this->db, 'MARKETPLACE_ROOT_CATEGORY_ID', $result, 'chaine', 0, $note = 'Id of category for products visible in marketplace', $conf->entity);
+
+					/* TODO Create a generic product only if there is no product yet. If 0 product,  we create 1. If there is already product, it is better to show a message to ask to add product in the category */
+					/*
+					 $product = new Product($this->db);
+					 $product->status = 1;
+					 $product->ref = "takepos";
+					 $product->label = $langs->trans("DefaultPOSProductLabel");
+					 $product->create($user);
+					 $product->setCategories($result);
+					 */
+				} else {
+					setEventMessages($category->error, $category->errors, 'errors');
+				}
+			}
+		}
+
+		/*
+		// Create cash account CASH-POS / DefaultCashPOSLabel if not exists
+		if (!getDolGlobalInt('MARKETPLACE_ID_BANKACCOUNT_CASH')) {
+			require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+			$cashaccount = new Account($this->db);
+			$searchaccountid = $cashaccount->fetch(0, "CASH-POS");
+			if ($searchaccountid == 0) {
+				$cashaccount->ref = "CASH-MARKETPLACE";
+				$cashaccount->label = $langs->trans("DefaultCashPOSLabel");
+				$cashaccount->courant = 2;
+				$cashaccount->country_id = $mysoc->country_id ? $mysoc->country_id : 1;
+				$cashaccount->date_solde = dol_now();
+				$searchaccountid = $cashaccount->create($user);
+			}
+			if ($searchaccountid > 0) {
+				dolibarr_set_const($this->db, "MARKETPLACE_ID_BANKACCOUNT_CASH", $searchaccountid, 'chaine', 0, '', $conf->entity);
+			} else {
+				setEventMessages($cashaccount->error, $cashaccount->errors, 'errors');
+			}
+		}
+		*/
 
 		return $this->_init($sql, $options);
 	}

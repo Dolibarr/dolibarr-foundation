@@ -94,7 +94,7 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = marketplaceAdminPrepareHead();
-print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'marketplace@marketplace');
+print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'fa-store');
 
 dol_include_once('/marketplace/core/modules/modMarketplace.class.php');
 $tmpmodule = new modMarketplace($db);

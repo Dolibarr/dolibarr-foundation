@@ -94,6 +94,7 @@ $formSetup = new FormSetup($db);
 
 // Enter here all parameters in your setup page
 
+/*
 // Setup conf for selection of an URL
 $item = $formSetup->newItem('MARKETPLACE_MYPARAM1');
 $item->fieldOverride = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'];
@@ -142,9 +143,15 @@ $formSetup->newItem('MARKETPLACE_MYPARAM9')->setAsSelect($TField);
 $item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
 $item->setAsMultiSelect($TField);
 $item->helpText = $langs->transnoentities('MARKETPLACE_MYPARAM10');
+*/
 
+// Setup conf for root category of proucts to sell
+$formSetup->newItem('MARKETPLACE_ROOT_CATEGORY_ID')->setAsCategory('product');
 
+// Setup conf for category new
+$formSetup->newItem('MARKETPLACE_SPECIAL_CATEGORY_ID')->setAsCategory('product');
 
+/*
 // Setup conf MARKETPLACE_MYPARAM10
 $item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
 $item->setAsColor();
@@ -157,7 +164,7 @@ $item->helpText = $langs->transnoentities('AnHelpMessage');
 //$item->fieldOverride = false; // set this var to override field output will override $fieldInputOverride and $fieldOutputOverride too
 //$item->fieldInputOverride = false; // set this var to override field input
 //$item->fieldOutputOverride = false; // set this var to override field output
-
+*/
 
 $setupnotempty += count($formSetup->items);
 
@@ -295,7 +302,7 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = marketplaceAdminPrepareHead();
-print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "marketplace@marketplace");
+print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "fa-store");
 
 // Setup page goes here
 echo '<span class="opacitymedium">'.$langs->trans("MarketplaceSetupPage").'</span><br><br>';

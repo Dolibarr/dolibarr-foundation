@@ -28,11 +28,9 @@ ModuleMarketplaceDesc = Marketplace description
 MarketplaceSetup = Marketplace setup
 Settings = Settings
 MarketplaceSetupPage = Marketplace setup page
-MARKETPLACE_MYPARAM1 = My param 1
-MARKETPLACE_MYPARAM1Tooltip = My param 1 tooltip
-MARKETPLACE_MYPARAM2=My param 2
-MARKETPLACE_MYPARAM2Tooltip=My param 2 tooltip
-
+NewSection=New section
+MARKETPLACE_ROOT_CATEGORY_ID=Root category for products to sell on the marketplace
+MARKETPLACE_SPECIAL_CATEGORY_ID=Category for the widget "New products" on marketplace
 
 #
 # About page
@@ -47,8 +45,7 @@ MarketplaceAboutPage = Marketplace about page
 MarketplaceArea = Home Marketplace
 MyPageName = My page name
 
-#
-# Sample widget
-#
-MyWidget = My widget
-MyWidgetDescription = My widget description
+DefaultMarketplaceThirdLabel=Marketplace generic customer
+DefaultMarketPlaceCatLabel=Marketplace products 
+DefaultPOSProductLabel=Product example for Marketplace
+
