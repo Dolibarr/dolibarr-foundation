@@ -35,6 +35,7 @@ MARKETPLACE_SPECIAL_CATEGORY_ID=Category for the widget "Promotions" on the home
 MARKETPLACE_DELAY_FOR_NEW=Age maximum (in days) for a product to be visible into the "New products" section
 MARKETPLACE_PROSPECTCUSTOMER_ID=Category for all prospects or customers created from the marketplace website
 MARKETPLACE_VENDOR_ID=Category for all vendors selling products on the marketplace website
+MARKETPLACE_URL_FOR_LOGO=URL for the logo of the marketplace
 
 #
 # About page

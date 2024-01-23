@@ -145,6 +145,8 @@ $item->setAsMultiSelect($TField);
 $item->helpText = $langs->transnoentities('MARKETPLACE_MYPARAM10');
 */
 
+$formSetup->newItem('Products')->setAsTitle();
+
 // Setup conf for root category of proucts to sell
 $formSetup->newItem('MARKETPLACE_ROOT_CATEGORY_ID')->setAsCategory('product');
 
@@ -155,8 +157,10 @@ $formSetup->newItem('MARKETPLACE_VERSIONS_CATEGORY_ID')->setAsCategory('product'
 $formSetup->newItem('MARKETPLACE_SPECIAL_CATEGORY_ID')->setAsCategory('product');
 
 // Setup conf for category New
-$item = $formSetup->newItem('MARKETPLACE_DELAY_FOR_NEW');
-$item->defaultFieldValue = '30';
+$itemdelay = $formSetup->newItem('MARKETPLACE_DELAY_FOR_NEW');
+$itemdelay->defaultFieldValue = '30';
+
+$formSetup->newItem('ThirdParties')->setAsTitle();
 
 // Setup conf for category Promotions
 $formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_ID')->setAsCategory('customer');
@@ -164,6 +168,13 @@ $formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_ID')->setAsCategory('customer'
 // Setup conf for category Promotions
 $formSetup->newItem('MARKETPLACE_VENDOR_ID')->setAsCategory('supplier');
 
+
+$formSetup->newItem('Website')->setAsTitle();
+
+// Setup conf for URL of logo
+$itemlogo = $formSetup->newItem('MARKETPLACE_URL_FOR_LOGO');
+$itemlogo->fieldAttr['placeholder'] = 'https://...';
+$itemlogo->cssClass = 'minwidth500';
 
 /*
 // Setup conf MARKETPLACE_MYPARAM10
@@ -333,13 +344,14 @@ echo '<span class="opacitymedium">'.$langs->trans("MarketplaceSetupPage").'</spa
 }
 */
 if (!empty($formSetup->items)) {
-	print $formSetup->generateOutput(true);
+	print $formSetup->generateOutput(true, true);
 	print '<br>';
 } else {
 	print '<br>'.$langs->trans("NothingToSetup");
 }
 
 
+/*
 $moduledir = 'marketplace';
 $myTmpObjects = array();
 // TODO Scan list of objects
@@ -348,9 +360,7 @@ $myTmpObjects['myobject'] = array('label'=>'MyObject', 'includerefgeneration'=>0
 
 foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
 	if ($myTmpObjectArray['includerefgeneration']) {
-		/*
-		 * Orders Numbering model
-		 */
+		// Orders Numbering model
 		$setupnotempty++;
 
 		print load_fiche_titre($langs->trans("NumberingModules", $myTmpObjectArray['label']), '', '');
@@ -456,9 +466,7 @@ foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
 	}
 
 	if ($myTmpObjectArray['includedocgeneration']) {
-		/*
-		 * Document templates generators
-		 */
+		// Document templates generators
 		$setupnotempty++;
 		$type = strtolower($myTmpObjectKey);
 
@@ -601,6 +609,7 @@ foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
 		print '</table>';
 	}
 }
+*/
 
 if (empty($setupnotempty)) {
 	print '<br>'.$langs->trans("NothingToSetup");
