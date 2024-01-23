@@ -164,7 +164,9 @@ class modMarketplace extends DolibarrModules
 		// Example: $this->const=array(1 => array('MARKETPLACE_MYNEWCONST1', 'chaine', 'myvalue', 'This is a constant to add', 1),
 		//                             2 => array('MARKETPLACE_MYNEWCONST2', 'chaine', 'myvalue', 'This is another constant to add', 0, 'current', 1)
 		// );
-		$this->const = array();
+		$this->const = array(
+			1 => array('PRODUCT_USE_OTHER_FIELD_IN_TRANSLATION', 'chaine', '1', 'Constant to support multiple translation of private notes on products', 1),
+		);
 
 		// Some keys to add into the overwriting translation tables
 		/*$this->overwrite_translation = array(

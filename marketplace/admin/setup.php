@@ -158,6 +158,12 @@ $formSetup->newItem('MARKETPLACE_SPECIAL_CATEGORY_ID')->setAsCategory('product')
 $item = $formSetup->newItem('MARKETPLACE_DELAY_FOR_NEW');
 $item->defaultFieldValue = '30';
 
+// Setup conf for category Promotions
+$formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_ID')->setAsCategory('customer');
+
+// Setup conf for category Promotions
+$formSetup->newItem('MARKETPLACE_VENDOR_ID')->setAsCategory('supplier');
+
 
 /*
 // Setup conf MARKETPLACE_MYPARAM10

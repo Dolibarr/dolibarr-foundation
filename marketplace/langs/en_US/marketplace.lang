@@ -33,6 +33,8 @@ MARKETPLACE_ROOT_CATEGORY_ID=Root category for products to sell on the marketpla
 MARKETPLACE_VERSIONS_CATEGORY_ID=Category for the widget "Version" on the home page of the markeplate website
 MARKETPLACE_SPECIAL_CATEGORY_ID=Category for the widget "Promotions" on the home page of the marketplace website
 MARKETPLACE_DELAY_FOR_NEW=Age maximum (in days) for a product to be visible into the "New products" section
+MARKETPLACE_PROSPECTCUSTOMER_ID=Category for all prospects or customers created from the marketplace website
+MARKETPLACE_VENDOR_ID=Category for all vendors selling products on the marketplace website
 
 #
 # About page
