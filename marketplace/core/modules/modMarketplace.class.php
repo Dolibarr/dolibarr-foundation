@@ -501,8 +501,9 @@ class modMarketplace extends DolibarrModules
 		*/
 
 
-		// Default customer for Point of sale
-		if (!getDolGlobalInt('MARKETPLACE_ID_THIRDPARTY')) {	// If a customer has already ben set into the TakePos setup page
+		// Default customer
+		/*
+		if (!getDolGlobalInt('MARKETPLACE_ID_THIRDPARTY')) {	// If a customer has already ben set into the setup page
 			$societe = new Societe($this->db);
 			$nametouse = $langs->trans("DefaultMarketplaceThirdLabel");
 
@@ -523,6 +524,7 @@ class modMarketplace extends DolibarrModules
 				setEventMessages($societe->error, $societe->errors, 'errors');
 			}
 		}
+		*/
 
 		// Create product category DefaultPOSCatLabel if not exists
 		$categories = new Categorie($this->db);

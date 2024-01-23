@@ -148,8 +148,16 @@ $item->helpText = $langs->transnoentities('MARKETPLACE_MYPARAM10');
 // Setup conf for root category of proucts to sell
 $formSetup->newItem('MARKETPLACE_ROOT_CATEGORY_ID')->setAsCategory('product');
 
-// Setup conf for category new
+// Setup conf for category Version
+$formSetup->newItem('MARKETPLACE_VERSIONS_CATEGORY_ID')->setAsCategory('product');
+
+// Setup conf for category Promotions
 $formSetup->newItem('MARKETPLACE_SPECIAL_CATEGORY_ID')->setAsCategory('product');
+
+// Setup conf for category New
+$item = $formSetup->newItem('MARKETPLACE_DELAY_FOR_NEW');
+$item->defaultFieldValue = '30';
+
 
 /*
 // Setup conf MARKETPLACE_MYPARAM10
@@ -308,7 +316,7 @@ print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "fa-s
 echo '<span class="opacitymedium">'.$langs->trans("MarketplaceSetupPage").'</span><br><br>';
 
 
-if ($action == 'edit') {
+/*if ($action == 'edit') {
 	print $formSetup->generateOutput(true);
 	print '<br>';
 } elseif (!empty($formSetup->items)) {
@@ -316,6 +324,11 @@ if ($action == 'edit') {
 	print '<div class="tabsAction">';
 	print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?action=edit&token='.newToken().'">'.$langs->trans("Modify").'</a>';
 	print '</div>';
+}
+*/
+if (!empty($formSetup->items)) {
+	print $formSetup->generateOutput(true);
+	print '<br>';
 } else {
 	print '<br>'.$langs->trans("NothingToSetup");
 }
