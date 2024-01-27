@@ -43,7 +43,7 @@ class modMarketplace extends DolibarrModules
 	 */
 	public function __construct($db)
 	{
-		global $langs, $conf;
+		global $conf;
 		$this->db = $db;
 
 		// Id for module (must be unique).
@@ -174,7 +174,7 @@ class modMarketplace extends DolibarrModules
 			'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
 		)*/
 
-		if (!isset($conf->marketplace) || !isset($conf->marketplace->enabled)) {
+		if (!ismodEnabled('marketplace')) {
 			$conf->marketplace = new stdClass();
 			$conf->marketplace->enabled = 0;
 		}
@@ -444,7 +444,9 @@ class modMarketplace extends DolibarrModules
 	 */
 	public function init($options = '')
 	{
-		global $conf, $langs, $user, $mysoc;
+		global $conf, $langs, $user;
+
+		$langs->loadLangs(array("marketplace@marketplace"));
 
 		//$result = $this->_load_tables('/install/mysql/', 'marketplace');
 		$result = $this->_load_tables('/marketplace/sql/');
@@ -534,7 +536,6 @@ class modMarketplace extends DolibarrModules
 		if (is_array($cate_arbo)) {
 			if (!count($cate_arbo) || !getDolGlobalString('MARKETPLACE_ROOT_CATEGORY_ID')) {
 				$category = new Categorie($this->db);
-
 				$category->label = $langs->trans("DefaultMarketPlaceCatLabel");
 				$category->type = Categorie::TYPE_PRODUCT;
 
