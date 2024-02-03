@@ -31,7 +31,7 @@ class mailing_mailing_marketplace_selector1 extends MailingTargets
 	/**
 	 * @var string String with name of icon for myobject. Must be the part after the 'object_' into object_myobject.png
 	 */
-	public $picto = 'marketplace@marketplace';
+	public $picto = 'fa-store';
 
 	/**
 	 * @var DoliDB Database handler.
