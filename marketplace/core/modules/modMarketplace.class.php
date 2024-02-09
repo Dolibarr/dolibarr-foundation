@@ -43,7 +43,6 @@ class modMarketplace extends DolibarrModules
 	 */
 	public function __construct($db)
 	{
-		global $conf;
 		$this->db = $db;
 
 		// Id for module (must be unique).
@@ -126,6 +125,8 @@ class modMarketplace extends DolibarrModules
 			),
 			// Set this to 1 if features of module are opened to external users
 			'moduleforexternal' => 0,
+			// Set this to 1 if the module provides a website template into doctemplates/websites/website_template-mytemplate
+			'websitetemplates' => 1
 		);
 
 		// Data directories to create when module is enabled.
