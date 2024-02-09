@@ -143,7 +143,7 @@ if (isModEnabled('barcode') && getDolGlobalString('BARCODE_PRODUCT_ADDON_NUM')) 
 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
-	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit clean_all_before_import \n";
+	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit [clean_all_before_import]\n";
 	print "NB: Limit is set to 20 by default \n";
 	print "NB: clean_all_before_import is set to true by default \n";
 	exit(-1);
@@ -209,6 +209,9 @@ SELECT
 FROM ps_product p
 ";
 
+$importkey = dol_print_date(dol_now(), 'dayhourlog');
+
+
 // Start of transaction
 $db->begin();
 
@@ -217,11 +220,10 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
-print "Connected successfully...\n";
+print "Connected to ".$db_host." ".$db_name." successfully...\n";
 
 
 if ($clean_all_before_import == true) {
-
 	if ($result_all_products = $conn->query($delete_products_query)) {
 		while ($obji = $result_all_products->fetch_object()) {
 			$list_of_imported_products = new Product($db);
@@ -297,6 +299,9 @@ if ($result_products = $conn->query($products_query)) {
 		} else {
 			$action = 'added';
 			$result = $product->create($user);
+
+			$sql = 'UPDATE '.MAIN_DB_PREFIX."product SET import_key = '".$db->escape($importkey)."' WHERE rowid = ".((int) $result);
+			$db->query($sql);
 		}
 
 
@@ -373,8 +378,12 @@ if ($result_products = $conn->query($products_query)) {
 			if ($result_product_categories = $conn->query($products_categories_query)) {
 				while ($objcategories = $result_product_categories->fetch_object()) {
 					$get_cat = new Categorie($db);
-					$get_cat->fetch('', '', Categorie::TYPE_PRODUCT, $objcategories->id_category);
-					$categries_and_versions_list[] = $get_cat->id;
+					$resget = $get_cat->fetch('', '', Categorie::TYPE_PRODUCT, $objcategories->id_category);
+					if ($resget <= 0 || empty($get_version->id)) {
+						//print ' - Product category "'.$objverions->name.'" not found in Dolibarr, we discard it.';
+					} else {
+						$categries_and_versions_list[$get_cat->id] = $get_cat->id;
+					}
 				}
 			}
 
@@ -392,20 +401,32 @@ if ($result_products = $conn->query($products_query)) {
 			";
 			if ($result_product_verions = $conn->query($products_versions_query)) {
 				while ($objverions = $result_product_verions->fetch_object()) {
-					$get_version = new Categorie($db);
-					$get_version->fetch('', $objverions->name, Categorie::TYPE_PRODUCT);
-					$categries_and_versions_list[] = $get_version->id;
+					if ($objverions->name) {	// Some tags are empty
+						$get_version = new Categorie($db);
+						$resget = $get_version->fetch('', $objverions->name, Categorie::TYPE_PRODUCT);
+						if ($resget <= 0 || empty($get_version->id)) {
+							//print ' - Product category "'.$objverions->name.'" not found in Dolibarr, we discard it.';
+						} else {
+							$categries_and_versions_list[$get_version->id] = $get_version->id;
+						}
+					}
 				}
-			}
-
-			$ret_cat = $product->setCategories($categries_and_versions_list);
-			if ($ret_cat < 0) {
-				print " - Error in setCategories result code = " . $ret_cat . " - " . $product->errorsToString();
-				$error++;
 			} else {
-				print " - setCategories and versions OK";
+				print 'SQL error';
 			}
 
+			if (!empty($categries_and_versions_list)) {
+				$ret_cat = $product->setCategories($categries_and_versions_list);
+				if ($ret_cat < 0) {
+					print " - Error in setCategories result code = " . $ret_cat . " - " . $product->errorsToString().' '.join(',', $categries_and_versions_list);
+					$error++;
+				} else {
+					print " - setCategories and versions OK";
+				}
+			} else {
+				$error++;
+				print " - not category found on this product";
+			}
 
 			// Add pictures
 			$products_images_query = "
