@@ -3405,7 +3405,7 @@ body {
 .bodywebsite #thumbs_list {
   overflow: hidden;
   float: left;
-  width: 393px;
+  width: 392px;
 }
 @media (min-width: 992px) and (max-width: 1199px) {
   .bodywebsite #thumbs_list {
