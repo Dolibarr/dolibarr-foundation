@@ -96,7 +96,7 @@ if (!$res && file_exists("../../../../master.inc.php")) {
 	$res = @include "../../../../master.inc.php";
 }
 if (!$res) {
-	print "Include of master fails";
+	print "Include of master fails. Try to call script with full path.";
 	exit(-1);
 }
 // After this $db, $mysoc, $langs, $conf and $hookmanager are defined (Opened $db handler to database will be closed at end of file).
@@ -163,10 +163,10 @@ $categories_to_clean_query ="
 WITH RECURSIVE top_down_cte AS
 (
     SELECT `rowid`,`label`,`fk_parent` FROM llx_categorie WHERE rowid = " . ((int) $root_category) . "
-    UNION	
-    SELECT m.rowid,m.label,m.fk_parent FROM top_down_cte 	
-    INNER JOIN " . MAIN_DB_PREFIX . "categorie AS m 	
-    ON top_down_cte.rowid = m.fk_parent	
+    UNION
+    SELECT m.rowid,m.label,m.fk_parent FROM top_down_cte
+    INNER JOIN " . MAIN_DB_PREFIX . "categorie AS m
+    ON top_down_cte.rowid = m.fk_parent
 )SELECT * FROM top_down_cte;
 ";
 
@@ -174,10 +174,10 @@ $versions_to_clean_query ="
 WITH RECURSIVE top_down_cte AS
 (
     SELECT `rowid`,`label`,`fk_parent` FROM llx_categorie WHERE rowid = " . ((int) $root_version) . "
-    UNION	
-    SELECT m.rowid,m.label,m.fk_parent FROM top_down_cte 	
-    INNER JOIN " . MAIN_DB_PREFIX . "categorie AS m 	
-    ON top_down_cte.rowid = m.fk_parent	
+    UNION
+    SELECT m.rowid,m.label,m.fk_parent FROM top_down_cte
+    INNER JOIN " . MAIN_DB_PREFIX . "categorie AS m
+    ON top_down_cte.rowid = m.fk_parent
 )SELECT * FROM top_down_cte;
 ";
 
@@ -243,15 +243,15 @@ select
 	pc.id_parent ,
 	pc.position ,
 	pcl.description ,
-	pl.language_code 
+	pl.language_code
 FROM
 	ps_category pc,
 	ps_category_lang pcl,
-	ps_lang pl 
+	ps_lang pl
 where
-	pc.id_category = pcl.id_category AND 
-	pcl.id_lang = pl.id_lang AND 
-	pl.language_code = '" . $current_lang . "' and 
+	pc.id_category = pcl.id_category AND
+	pcl.id_lang = pl.id_lang AND
+	pl.language_code = '" . $current_lang . "' and
 	pc.active = 1
 ";
 
@@ -283,7 +283,7 @@ if ($result_cats = $conn->query($categories_query)) {
 		// Add alternative languages
 		if (!$error && 1) {
 			$categories_lang_query = "
-			SELECT 
+			SELECT
 				pc.id_category,
 				pl.language_code,
 				pcl.name,
@@ -300,10 +300,10 @@ if ($result_cats = $conn->query($categories_query)) {
 			FROM
 				ps_category pc,
 				ps_category_lang pcl,
-				ps_lang pl 
+				ps_lang pl
 			WHERE
-				pc.id_category = pcl.id_category AND 
-				pcl.id_lang = pl.id_lang AND 
+				pc.id_category = pcl.id_category AND
+				pcl.id_lang = pl.id_lang AND
 				pc.id_category = " . $obj->id_category . "
 			";
 
@@ -363,17 +363,17 @@ if ($result_parents = $conn->query($categories_query)) {
 // Add versions tags
 $versions_query = "
 select
-	t.name 
+	t.name
 FROM
 	ps_product_tag pt,
-	ps_tag t 
+	ps_tag t
 where
-	pt.id_tag = t.id_tag and 
+	pt.id_tag = t.id_tag and
 	t.name REGEXP 'v[0-9]'and
 	LENGTH (t.name) < 4 and
     t.name NOT LIKE 'vv%'
-GROUP BY t.name 
-ORDER BY t.name  ASC 
+GROUP BY t.name
+ORDER BY t.name  ASC
 ";
 if ($result_versions = $conn->query($versions_query)) {
 	while ($objv = $result_versions->fetch_object()) {

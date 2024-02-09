@@ -96,7 +96,7 @@ if (!$res && file_exists("../../../../master.inc.php")) {
 	$res = @include "../../../../master.inc.php";
 }
 if (!$res) {
-	print "Include of master fails";
+	print "Include of master fails. Try to call script with full path.";
 	exit(-1);
 }
 // After this $db, $mysoc, $langs, $conf and $hookmanager are defined (Opened $db handler to database will be closed at end of file).
@@ -136,6 +136,11 @@ if (isModEnabled('barcode') && getDolGlobalString('BARCODE_PRODUCT_ADDON_NUM')) 
 }
 
 
+
+/*
+ * Main
+ */
+
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
 	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit clean_all_before_import \n";
@@ -171,11 +176,11 @@ switch ($langs->getDefaultLang()) {
 };
 
 $products_query = "
-SELECT 
+SELECT
 	p.id_product,
 	pl.name,
 	pl.description_short,
-	pl.description,	
+	pl.description,
 	p.active,
 	p.id_category_default,
 	p.on_sale,
@@ -190,16 +195,16 @@ SELECT
 	p.dolibarr_max,
 	p.dolibarr_support,
 	p.date_add,
-	l.language_code 
+	l.language_code
 FROM ps_product p
-LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product 
-LEFT JOIN ps_lang l on pl.id_lang  = l.id_lang 
+LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product
+LEFT JOIN ps_lang l on pl.id_lang  = l.id_lang
 WHERE l.language_code = '" . $current_lang . "'
-order by date_add DESC 
+order by date_add DESC
 limit ". $limit;
 
 $delete_products_query = "
-SELECT 
+SELECT
 	p.id_product
 FROM ps_product p
 ";
@@ -230,7 +235,7 @@ if ($clean_all_before_import == true) {
 				}
 				print "\n";
 			}
-			
+
 		}
 	}
 }
@@ -253,7 +258,11 @@ if ($result_products = $conn->query($products_query)) {
 		}
 
 		$formbarcode = new FormBarCode($db);
-		$tmpcode = $modBarCodeProduct->getNextValue($product, $fk_barcode_type);
+		if (is_object($modBarCodeProduct)) {
+			$tmpcode = $modBarCodeProduct->getNextValue($product, $fk_barcode_type);
+		} else {
+			$tmpcode = null;
+		}
 		$product->barcode = $tmpcode;
 		$product->ref = $obj->reference;
 		$product->label = $obj->name;
@@ -304,7 +313,7 @@ if ($result_products = $conn->query($products_query)) {
 
 			// Add alternative languages
 			$products_lang_query = "
-			SELECT 
+			SELECT
 				p.id_product,
 				l.language_code,
 				pl.name,
@@ -319,8 +328,8 @@ if ($result_products = $conn->query($products_query)) {
 					ELSE ''
 				END dol_lang_code
 			FROM ps_product p
-			LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product 
-			LEFT JOIN ps_lang l on pl.id_lang  = l.id_lang 
+			LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product
+			LEFT JOIN ps_lang l on pl.id_lang  = l.id_lang
 			WHERE p.id_product = " . $obj->id_product . "
 			";
 
@@ -348,18 +357,18 @@ if ($result_products = $conn->query($products_query)) {
 			$categries_and_versions_list = array();
 			$products_categories_query = "
 			select
-				pcp.id_category 
+				pcp.id_category
 			FROM
 				ps_category_product pcp ,
 				ps_category pc ,
 				ps_category_lang pcl ,
-				ps_lang pl 
+				ps_lang pl
 			where
-				pcp.id_product = " . $obj->id_product . " AND 
-				pcp.id_category = pc.id_category AND 
-				pcl.id_category = pcp.id_category AND 
-				pcl.id_lang = pl.id_lang 
-			GROUP BY pcp.id_category 
+				pcp.id_product = " . $obj->id_product . " AND
+				pcp.id_category = pc.id_category AND
+				pcl.id_category = pcp.id_category AND
+				pcl.id_lang = pl.id_lang
+			GROUP BY pcp.id_category
 			";
 			if ($result_product_categories = $conn->query($products_categories_query)) {
 				while ($objcategories = $result_product_categories->fetch_object()) {
@@ -371,15 +380,15 @@ if ($result_products = $conn->query($products_query)) {
 
 			$products_versions_query = "
 			select
-				t.name 
+				t.name
 			FROM
 				ps_product_tag pt,
-				ps_tag t 
+				ps_tag t
 			where
-				pt.id_tag = t.id_tag and 
+				pt.id_tag = t.id_tag and
 				pt.id_product = " . $obj->id_product . "
-			GROUP BY t.name 
-			ORDER BY t.name  ASC 
+			GROUP BY t.name
+			ORDER BY t.name  ASC
 			";
 			if ($result_product_verions = $conn->query($products_versions_query)) {
 				while ($objverions = $result_product_verions->fetch_object()) {
@@ -428,7 +437,7 @@ if ($result_products = $conn->query($products_query)) {
 						$filename = basename($product->ref . '-' . $objimage->id_image . '.jpg');
 						addFileIntoDatabaseIndex($upload_dir, $filename, 'URL_PS', 'imported', 1, $product);
 
-						// Update index to put position 
+						// Update index to put position
 						$rel_dir = preg_replace('/^' . preg_quote(DOL_DATA_ROOT, '/') . '/', '', $upload_dir);
 						$rel_dir = preg_replace('/^[\\/]/', '', $rel_dir);
 						$ref = dol_hash($rel_dir . '/' . $filename, 3);
