@@ -144,7 +144,7 @@ if (isModEnabled('barcode') && getDolGlobalString('BARCODE_PRODUCT_ADDON_NUM')) 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
 	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit [clean_all_before_import]\n";
-	print "NB: Limit is set to 20 by default \n";
+	print "NB: Limit is set to 20 by default (0 = All) \n";
 	print "NB: clean_all_before_import is set to true by default \n";
 	exit(-1);
 }
@@ -155,7 +155,10 @@ $db_name = $argv[2];
 $db_user = $argv[3];
 $db_password = $argv[4];
 $db_port = $argv[5];
-$limit = isset($argv[6])?$argv[6] : 20;
+$limit = 20;
+if(isset($argv[6])){
+	$limit = $argv[6] == 0 ? 0 : $argv[6];
+}
 $clean_all_before_import = isset($argv[7])?$argv[7] : true;
 
 
@@ -200,8 +203,10 @@ FROM ps_product p
 LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product
 LEFT JOIN ps_lang l on pl.id_lang  = l.id_lang
 WHERE l.language_code = '" . $current_lang . "'
-order by date_add DESC
-limit ". $limit;
+order by date_add DESC";
+if ($limit != 0) {
+	$products_query .= " limit ". $limit;
+}
 
 $delete_products_query = "
 SELECT
@@ -300,7 +305,7 @@ if ($result_products = $conn->query($products_query)) {
 			$action = 'added';
 			$result = $product->create($user);
 
-			$sql = 'UPDATE '.MAIN_DB_PREFIX."product SET import_key = '".$db->escape($importkey)."' WHERE rowid = ".((int) $result);
+			$sql = 'UPDATE '.MAIN_DB_PREFIX."product SET import_key = '".$db->escape($importkey)."', datec = '".$obj->date_add."' WHERE rowid = ".((int) $result);
 			$db->query($sql);
 		}
 
