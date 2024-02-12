@@ -176,8 +176,8 @@ class modMarketplace extends DolibarrModules
 		)*/
 
 		if (!ismodEnabled('marketplace')) {
-			$conf->marketplace = new stdClass();
-			$conf->marketplace->enabled = 0;
+			$this->marketplace = new stdClass();
+			$this->marketplace->enabled = 0;
 		}
 
 		// Array to add new pages in new tabs
