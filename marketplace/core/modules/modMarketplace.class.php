@@ -218,7 +218,7 @@ class modMarketplace extends DolibarrModules
 		 'tablib'=>array("Table1", "Table2", "Table3"),
 		 // Request to select fields
 		 'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table1 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table2 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table3 as f'),
-		 // Sort order
+		 // Sort orderhelp
 		 'tabsqlsort'=>array("label ASC", "label ASC", "label ASC"),
 		 // List of fields (result of select to show dictionary)
 		 'tabfield'=>array("code,label", "code,label", "code,label"),
@@ -464,6 +464,7 @@ class modMarketplace extends DolibarrModules
 		$result4=$extrafields->addExtraField('marketplace_max_version',          "DolibarrMax", 'varchar', 30,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result5=$extrafields->addExtraField('marketplace_allow_source_in_core', "WantToIncludeSourceInCore", 'boolean', 40,  3, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result6=$extrafields->addExtraField('marketplace_contact_support',      "HowtoContactSupport", 'varchar', 50,  64, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result6=$extrafields->addExtraField('marketplace_reason_disabled',      "LastReasonDisabled", 'varchar', 60,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		// Permissions
 		$this->remove($options);
