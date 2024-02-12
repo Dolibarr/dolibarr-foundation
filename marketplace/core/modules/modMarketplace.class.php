@@ -456,13 +456,14 @@ class modMarketplace extends DolibarrModules
 		}
 
 		// Create extrafields during init
-		//include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
-		//$extrafields = new ExtraFields($this->db);
-		//$result1=$extrafields->addExtraField('marketplace_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		//$result2=$extrafields->addExtraField('marketplace_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		//$result3=$extrafields->addExtraField('marketplace_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		//$result4=$extrafields->addExtraField('marketplace_myattr4', "New Attr 4 label", 'select',  1,  3, 'thirdparty',   0, 1, '', array('options'=>array('code1'=>'Val1','code2'=>'Val2','code3'=>'Val3')), 1,'', 0, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		//$result5=$extrafields->addExtraField('marketplace_myattr5', "New Attr 5 label", 'text',    1, 10, 'user',         0, 0, '', '', 1, '', 0, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+		$extrafields = new ExtraFields($this->db);
+		$result1=$extrafields->addExtraField('marketplace_separator',            "Marketplace", 'separator', 1,  0, 'product',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result2=$extrafields->addExtraField('marketplace_module_version',       "ModuleVersion", 'varchar', 10,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result3=$extrafields->addExtraField('marketplace_min_version',          "DolibarrMin", 'varchar', 20,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result4=$extrafields->addExtraField('marketplace_max_version',          "DolibarrMax", 'varchar', 30,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result5=$extrafields->addExtraField('marketplace_allow_source_in_core', "WantToIncludeSourceInCore", 'boolean', 40,  3, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result6=$extrafields->addExtraField('marketplace_contact_support',      "HowtoContactSupport", 'varchar', 50,  64, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		// Permissions
 		$this->remove($options);

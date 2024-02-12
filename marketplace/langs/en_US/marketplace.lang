@@ -44,13 +44,13 @@ About = About
 MarketplaceAbout = About Marketplace
 MarketplaceAboutPage = Marketplace about page
 
-#
-# Sample page
-#
 MarketplaceArea = Home Marketplace
-MyPageName = My page name
-
 DefaultMarketplaceThirdLabel=Marketplace generic customer
 DefaultMarketPlaceCatLabel=Products of the Marketplace
 DefaultPOSProductLabel=Product example for Marketplace
 
+ModuleVersion=Version
+DolibarrMin=Dolibarr min
+DolibarrMax=Dolibarr max
+WantToIncludeSourceInCore=Ok for sources in core
+HowtoContactSupport=How to contact support
