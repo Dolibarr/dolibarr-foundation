@@ -139,7 +139,7 @@ $clean_all_before_import = isset($argv[7]) ? $argv[7] : true;
 
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
-$third_parties_root_category = getDolGlobalInt("MARKETPLACE_THIRD_PARTIES_CATEGORY_ID");
+$third_parties_root_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
 // Start of transaction
 $db->begin();
 
