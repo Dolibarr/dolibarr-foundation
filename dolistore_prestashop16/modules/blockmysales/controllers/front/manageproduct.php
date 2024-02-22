@@ -475,9 +475,9 @@ class blockmysalesmanageproductModuleFrontController extends ModuleFrontControll
 
 								// Search for each $publisher / $company to get and set $socid to list of companies
 								// TODO Call the REST API to search
-								$sqlfilters = "(t.nom:like:'".$publisher."%') or (t.name_alias:like:'".$publisher."%')";
+								$sqlfilters = "(t.nom:like:'".real_escape_string($publisher)."%') or (t.name_alias:like:'".real_escape_string($publisher)."%')";
 								if ($company) {
-									$sqlfilters .= " or (t.nom:like:'".company."%') or (t.name_alias:like:'".company."%')";
+									$sqlfilters .= " or (t.nom:like:'".real_escape_string($company)."%') or (t.name_alias:like:'".real_escape_string($company)."%')";
 								}
 								// ...
 
