@@ -40,7 +40,7 @@
 	<li class="box-info2-product">
 		{l s='This module has been purchased' mod='blockmysales'} <span class="price">{$nbofsells}</span> {l s='times' mod='blockmysales'}
 		<br>
-		<b>{l s='Negative feedback rate' mod='blockmysales'}</b>: <span class="price">{$dissatisfaction_rate * 100|floatval}%</span>
+		<b>{l s='Refund rate' mod='blockmysales'}</b>: <span class="price">{$dissatisfaction_rate * 100|floatval}%</span>
 		<br>
 	</li>
 	{/if}
