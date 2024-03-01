@@ -115,13 +115,15 @@ $user->getrights();
 
 include_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
-
+include_once DOL_DOCUMENT_ROOT.'/societe/class/societeaccount.class.php';
+include_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
-	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit clean_all_before_import\n";
+	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit clean_all_before_import id_website\n";
 	print "NB: Limit is set to 20 by default (0 = All) \n";
 	print "NB: clean_all_before_import is set to true by default \n";
+	print "NB: id_website define it to import logins and passwords \n";
 	exit(-1);
 }
 
@@ -136,6 +138,7 @@ if (isset($argv[6])) {
 	$limit = $argv[6] == 0 ? 0 : $argv[6];
 }
 $clean_all_before_import = isset($argv[7]) ? $argv[7] : "true";
+$id_website = $argv[8];
 
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
@@ -159,6 +162,16 @@ switch ($langs->getDefaultLang()) {
 		break;
 };
 
+// Check id_website if exist
+if(!empty($id_website)){
+	$website = new Website($db);
+	$result_website = $website->fetch($id_website);
+	if ($result_website <= 0) {
+		print "NO WEBSITE FOUND WITH THIS ID  ...\n";
+		exit;
+	}
+}
+
 // Check MARKETPLACE_PROSPECTCUSTOMER_ID Categorie
 $categorie = new Categorie($db);
 $result = $categorie->fetch($marketplace_third_parties_category);
@@ -181,6 +194,7 @@ $sql_request_for_customers = "select
 	pc.lastname,
 	pc.id_gender,
 	pc.email,
+	pc.passwd,
 	pc.date_add,
 	pc.company,
 	pc.website,
@@ -287,6 +301,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		if (!empty($objsql->rowid)) {
 			$action = 're-imported';
 			$result = $customer->update($objsql->rowid, $user);
+			$rowid_soc = $objsql->rowid;
 		} else {
 
 			// Organise search criteria to check if this customer exist in dolibarr
@@ -330,9 +345,11 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 				$action = 'updated';
 				$result = $customer->update($objsqlr->rowid, $user);
+				$rowid_soc = $objsqlr->rowid;
 			}else{
 				$action = 'imported';
 				$result = $customer->create($user);
+				$rowid_soc = $result;
 			}		
 
 			if($action == "updated"){
@@ -355,7 +372,6 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		}
 
 		if (!$error && 1) {
-			$rowid_customer = $result;
 
 			// Add  groups
 			$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
@@ -423,7 +439,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				while ($objaddr = $result_customer_addresses->fetch_object()) {
 					$get_country_id = getCountry($objaddr->iso_code, '3');
 					$objectcontact = new Contact($db);
-					$objectcontact->socid = $rowid_customer;
+					$objectcontact->socid = $rowid_soc;
 					$objectcontact->ref_ext = $objaddr->id_customer;
 					$objectcontact->alias_name = $objaddr->alias;
 					$objectcontact->lastname = $objaddr->lastname;
@@ -444,6 +460,27 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					}
 				}
 			}
+
+
+			// Add connection credentials for a specific website	
+			if(!empty($id_website)) {
+				$societeaccount = new SocieteAccount($db);
+				$societeaccount->login = $obj->email;
+				$societeaccount->pass_crypted =$obj->passwd;
+				$societeaccount->fk_soc = $rowid_soc;
+				$societeaccount->fk_website = $id_website;
+				$societeaccount->site = "dolibarr_website";
+				$societeaccount->status = "1";
+				$ret_account = $societeaccount->create($user);
+				if ($ret_account < 0) {
+					print " - Error in creating account result code = " . $ret_account . " - " . $societeaccount->errorsToString();
+					$error++;
+				} else {
+					print " - Create account OK";
+				}
+			}
+			
+
 		}
 		print "\n";
 	}
