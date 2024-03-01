@@ -119,7 +119,7 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
-	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit [clean_all_before_import]\n";
+	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit clean_all_before_import\n";
 	print "NB: Limit is set to 20 by default (0 = All) \n";
 	print "NB: clean_all_before_import is set to true by default \n";
 	exit(-1);
@@ -135,11 +135,11 @@ $limit = 20;
 if (isset($argv[6])) {
 	$limit = $argv[6] == 0 ? 0 : $argv[6];
 }
-$clean_all_before_import = isset($argv[7]) ? $argv[7] : true;
+$clean_all_before_import = isset($argv[7]) ? $argv[7] : "true";
 
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
-$third_parties_root_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
+$marketplace_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
 // Start of transaction
 $db->begin();
 
@@ -159,25 +159,14 @@ switch ($langs->getDefaultLang()) {
 		break;
 };
 
-// Check MARKETPLACE_THIRD_PARTIES_CATEGORY_ID Categorie
+// Check MARKETPLACE_PROSPECTCUSTOMER_ID Categorie
 $categorie = new Categorie($db);
-$result = $categorie->fetch($third_parties_root_category);
+$result = $categorie->fetch($marketplace_third_parties_category);
 if ($result <= 0) {
-	print "No MARKETPLACE_THIRD_PARTIES_CATEGORY_ID  defined...\n";
+	print "No MARKETPLACE_PROSPECTCUSTOMER_ID  defined...\n";
 	exit;
 }
 
-
-$sql_request_to_clean_groups = "
-WITH RECURSIVE top_down_cte AS
-(
-    SELECT `rowid`,`label`,`fk_parent` FROM llx_categorie WHERE rowid = " . ((int) $third_parties_root_category) . "
-    UNION
-    SELECT m.rowid,m.label,m.fk_parent FROM top_down_cte
-    INNER JOIN " . MAIN_DB_PREFIX . "categorie AS m
-    ON top_down_cte.rowid = m.fk_parent
-)SELECT * FROM top_down_cte;
-";
 
 $delete_customers_query = "
 SELECT
@@ -185,19 +174,6 @@ SELECT
 FROM ps_customer c
 ";
 
-
-$sql_request_for_groups = "
-select
-	pgl.id_group ,
-	pgl.name ,
-	pl.language_code 
-FROM
-	ps_group_lang pgl ,
-	ps_lang pl 
-WHERE 
-	pgl.id_lang = pl.id_lang AND 
-	pl.language_code = '" . $current_lang . "'
-";
 
 $sql_request_for_customers = "select
 	pc.id_customer,
@@ -228,117 +204,28 @@ if ($limit != 0) {
 }
 
 
-if ($clean_all_before_import == true) {
-	if ($resultg_to_clean = $db->query($sql_request_to_clean_groups)) {
-
-		while ($objg_to_clean = $resultg_to_clean->fetch_object()) {
-			if ($objg_to_clean->rowid == $third_parties_root_category) {
-				continue;
-			}
-
-			$groupobject = new Categorie($db);
-			$groupobject->fetch($objg_to_clean->rowid);
-
-			$resultg_delete = $groupobject->delete($user);
-
-			if ($resultg_delete < 0) {
-				setEventMessages($object->error, $object->errors, 'errors');
-				$error++;
-				exit;
-			}
-		}
-	}
-}
-
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 print "Connected successfully...\n";
 
+if ($clean_all_before_import === "true") {
+	if ($result_all_customers = $conn->query($delete_customers_query)) {
+		while ($objc = $result_all_customers->fetch_object()) {
+			$list_of_imported_customers = new Societe($db);
+			$is_imported_before = $list_of_imported_customers->fetch('', '', $objc->id_customer);
 
-if ($result_all_customers = $conn->query($delete_customers_query)) {
-	while ($objc = $result_all_customers->fetch_object()) {
-		$list_of_imported_customers = new Societe($db);
-		$is_imported_before = $list_of_imported_customers->fetch('', '', $objc->id_customer);
-
-		if ($is_imported_before > 0) {
-			$resulti_delete = $list_of_imported_customers->delete($list_of_imported_customers->id, $user);
-			if ($resulti_delete < 0) {
-				print " - Error in deleting product ref_ext = " . $objc->id_customer . " - " . $list_of_imported_customers->errorsToString();
-			} else {
-				print " - Third-party ref_ext = " . $objc->id_customer . " deleted.";
-			}
-			print "\n";
-		}
-	}
-}
-
-if ($result_groups = $conn->query($sql_request_for_groups)) {
-	while ($objgr = $result_groups->fetch_object()) {
-
-
-		// Create subcategories
-		$group = new Categorie($db);
-
-		$group->label = $objgr->name;
-		$group->fk_parent = $third_parties_root_category;
-		$group->ref_ext = $objgr->id_group;
-		$group->type = Categorie::TYPE_CUSTOMER;
-
-		$result = $group->create($user);
-
-		if ($result < 0) {
-			print " - Third-party Group Error => " . $result . " - " . $group->errorsToString();
-			$$error++;
-		} else {
-			print " - Third-party Group : " . $group->label . " added successfully.";
-		}
-
-		// Add alternative languages
-		if (!$error && 1) {
-			$group_lang_query = "
-			select
-				pgl.id_group ,
-				pgl.name ,
-				pl.language_code ,
-				CASE
-					pl.language_code
-					WHEN 'en-us' THEN 'en_US'
-					WHEN 'fr-fr' THEN 'fr_FR'
-					WHEN 'es-es' THEN 'es_ES'
-					WHEN 'it-it' THEN 'it_IT'
-					WHEN 'de-de' THEN 'de_DE'
-					ELSE ''
-				END dol_lang_code
-			FROM
-				ps_group_lang pgl ,
-				ps_lang pl 
-			WHERE 
-				pgl.id_lang = pl.id_lang AND 
-				pgl.id_group = " . $objgr->id_group . "
-			";
-
-			if ($result_cats_lang = $conn->query($group_lang_query)) {
-
-				while ($objlang = $result_cats_lang->fetch_object()) {
-					$group->multilangs[$objlang->dol_lang_code] = array(
-						'label' => $objlang->name,
-						'description' => ''
-					);
+			if ($is_imported_before > 0) {
+				$resulti_delete = $list_of_imported_customers->delete($list_of_imported_customers->id, $user);
+				if ($resulti_delete < 0) {
+					print " - Error in deleting product ref_ext = " . $objc->id_customer . " - " . $list_of_imported_customers->errorsToString();
+				} else {
+					print " - Third-party ref_ext = " . $objc->id_customer . " deleted.";
 				}
-			}
-
-			$ret = $group->setMultiLangs($user);
-			if ($ret < 0) {
-				print " - Error in setMultiLangs result code = " . $ret . " - " . $product->errorsToString();
-				$error++;
-			} else {
-				print " - setMultiLangs OK";
+				print "\n";
 			}
 		}
-
-		print "\n";
 	}
 }
 
@@ -389,7 +276,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 		$customer->default_lang = $obj->dol_lang_code;
 
-		// Check if this customer exists
+		// Check if this customer is imported before
 		$sql = "SELECT rowid FROM " . MAIN_DB_PREFIX . "societe";
 		$sql .= " WHERE ref_ext = '" . $obj->id_customer . "' LIMIT 1";
 
@@ -398,13 +285,64 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 
 		if (!empty($objsql->rowid)) {
-			$action = 'updated';
+			$action = 're-imported';
 			$result = $customer->update($objsql->rowid, $user);
 		} else {
-			$action = 'added';
-			$result = $customer->create($user);
 
-			$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET import_key = '" . $db->escape($importkey) . "', datec = '" . $obj->date_add . "' WHERE rowid = " . ((int) $result);
+			// Organise search criteria to check if this customer exist in dolibarr
+			$publisher = trim($obj->firstname.' '.$obj->lastname);
+			$company = trim($obj->company);	
+			if (empty($company)) {
+				// Get company from address
+				$request_to_get_company = "
+					SELECT DISTINCT c.company
+					FROM ps_customer as c
+					LEFT JOIN ps_address as a ON a.id_customer = c.id_customer AND a.deleted = 0
+					WHERE c.id_customer = ".$obj->id_customer."
+					LIMIT 1
+				";
+				$fetch_company = mysqli_fetch_row($conn->query($request_to_get_company));
+				if(!empty($fetch_company['company'])){
+					$company = trim($fetch_company['company']);
+				}
+			}
+			$sqlfilters = "t.nom LIKE '".$publisher."%' or t.name_alias LIKE '".$publisher."%'";
+			if ($company) {
+				$sqlfilters .= " or t.nom LIKE '".$company."%' or t.name_alias LIKE '".$company."%'";
+			}
+			$sqlr = "SELECT rowid FROM " . MAIN_DB_PREFIX . "societe as t";
+			$sqlr .= " WHERE " . $sqlfilters . " LIMIT 1";
+
+			// Check if this customer exist
+			$resqlr = $db->query($sqlr);
+			$objsqlr = $db->fetch_object($resqlr);
+			if (!empty($objsqlr->rowid)) {
+				$existing_dol_customer = new Societe($db);
+				$existing_dol_customer->fetch($objsqlr->rowid);
+
+				// Complete existing customer information by adding imported information
+				$customer->url = (!empty($existing_dol_customer->url)) ? $existing_dol_customer->url : $customer->url ; 
+				$customer->name_alias = (!empty($existing_dol_customer->name_alias)) ? $existing_dol_customer->url : $customer->name_alias ; 
+				$customer->idprof2 = (!empty($existing_dol_customer->idprof2)) ? $existing_dol_customer->idprof2 : $customer->idprof2 ; 
+				$customer->idprof3 = (!empty($existing_dol_customer->idprof3)) ? $existing_dol_customer->idprof3 : $customer->idprof3 ; 
+				$customer->ref_ext = (!empty($existing_dol_customer->ref_ext)) ? $existing_dol_customer->ref_ext : $customer->ref_ext ; 
+				$customer->default_lang = (!empty($existing_dol_customer->default_lang)) ? $existing_dol_customer->default_lang : $customer->default_lang ; 
+
+				$action = 'updated';
+				$result = $customer->update($objsqlr->rowid, $user);
+			}else{
+				$action = 'imported';
+				$result = $customer->create($user);
+			}		
+
+			if($action == "updated"){
+				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET import_key = '" . $db->escape($importkey) . "' WHERE rowid = " . ((int) $objsqlr->rowid);
+			}
+
+			if($action == "imported"){
+				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET import_key = '" . $db->escape($importkey) . "', datec = '" . $obj->date_add . "' WHERE rowid = " . ((int) $result);
+			}
+
 			$db->query($sql);
 		}
 
@@ -420,36 +358,12 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			$rowid_customer = $result;
 
 			// Add  groups
-			$groups_list = array();
-			$customer_groups_query = "
-			select
-				pcg.id_group
-			FROM
-				ps_customer_group pcg 
-			where
-				pcg.id_customer = " . $obj->id_customer . "
-			";
-			if ($result_customer_groups = $conn->query($customer_groups_query)) {
-				while ($objgroup = $result_customer_groups->fetch_object()) {
-					$get_group = new Categorie($db);
-					$resget = $get_group->fetch('', '', Categorie::TYPE_CUSTOMER, $objgroup->id_group);
-					if ($resget > 0) {
-						$groups_list[$get_group->id] = $get_group->id;
-					}
-				}
-			}
-
-			if (!empty($groups_list)) {
-				$ret_cat = $customer->setCategories($groups_list, 'customer');
-				if ($ret_cat < 0) {
-					print " - Error in setCategories result code = " . $ret_cat . " - " . $customer->errorsToString() . ' ' . join(',', $groups_list);
-					$error++;
-				} else {
-					print " - set group OK";
-				}
-			} else {
+			$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
+			if ($ret_cat < 0) {
+				print " - Error in setCategories result code = " . $ret_cat . " - " . $customer->errorsToString();
 				$error++;
-				print " - no group found on this customer";
+			} else {
+				print " - set group OK";
 			}
 
 
