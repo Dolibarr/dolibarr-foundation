@@ -350,8 +350,9 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		
 		//Get clicked link href
-		var image_href = $(this).attr("href");
-		
+		var image_href = $(this).attr("src");
+
+        console.log('cc');
 		
 		if ($('#lightbox').length > 0) { // #lightbox exists
 			
@@ -391,22 +392,7 @@ jQuery(document).ready(function($) {
         var url = $(this).attr('src');
         $('#bigpic').attr('src', url);
         $('#view_large_button').attr('href', url);
+        $('#view_large_button').attr('src', url);
     });
 });
 
-$(document).on('click', '.product_quantity_up', function(e) {
-    e.preventDefault();
-    fieldName = $(this).data('field-qty');
-    var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-    if (!isNaN(currentVal))
-        $('input[name=' + fieldName + ']').val(currentVal + 1).trigger('keyup');
-});
-$(document).on('click', '.product_quantity_down', function(e) {
-    e.preventDefault();
-    fieldName = $(this).data('field-qty');
-    var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-    if (!isNaN(currentVal) && currentVal > 1)
-        $('input[name=' + fieldName + ']').val(currentVal - 1).trigger('keyup');
-    else
-        $('input[name=' + fieldName + ']').val(1);
-});
