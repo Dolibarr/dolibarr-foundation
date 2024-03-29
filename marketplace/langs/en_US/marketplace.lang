@@ -36,6 +36,10 @@ MARKETPLACE_DELAY_FOR_NEW=Age maximum (in days) for a product to be visible into
 MARKETPLACE_PROSPECTCUSTOMER_ID=Category for all prospects or customers created from the marketplace website
 MARKETPLACE_VENDOR_ID=Category for all vendors selling products on the marketplace website
 MARKETPLACE_URL_FOR_LOGO=URL for the logo of the marketplace
+MARKETPLACE_WEBSITE_ID=Code of website to use for the marketplace
+MARKETPLACE_WEBSITE_ID_HELP=You must go into the menu Websites and create a website with a code name. You can import the website template for marketplace and fill here the code of the website you have created.
+MARKETPLACE_SECRET_KEY=Key for prestashop 1.6 password encryption
+MARKETPLACE_SECRET_KEY_HELP=If some users were migrated from prestashop 1.6 migration, this is the prestashop cookie key used to validate the password.
 
 #
 # About page

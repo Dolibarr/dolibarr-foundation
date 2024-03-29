@@ -169,12 +169,18 @@ $formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_ID')->setAsCategory('customer'
 $formSetup->newItem('MARKETPLACE_VENDOR_ID')->setAsCategory('supplier');
 
 
-$formSetup->newItem('Website')->setAsTitle();
+
+$formSetup->newItem('WebSite')->setAsTitle();
 
 // Setup conf for URL of logo
 $itemlogo = $formSetup->newItem('MARKETPLACE_URL_FOR_LOGO');
 $itemlogo->fieldAttr['placeholder'] = 'https://...';
 $itemlogo->cssClass = 'minwidth500';
+
+// Name of template to use
+$formSetup->newItem('MARKETPLACE_WEBSITE_ID')->helpText = $langs->trans("MARKETPLACE_WEBSITE_ID_HELP");
+$formSetup->newItem('MARKETPLACE_SECRET_KEY')->helpText = $langs->trans("MARKETPLACE_SECRET_KEY_HELP");
+
 
 /*
 // Setup conf MARKETPLACE_MYPARAM10
