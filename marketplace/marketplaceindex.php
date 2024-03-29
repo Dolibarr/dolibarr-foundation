@@ -104,10 +104,13 @@ $formfile = new FormFile($db);
 
 llxHeader("", $langs->trans("MarketplaceArea"), '', '', 0, 0, '', '', '', 'mod-marketplace page-index');
 
-print load_fiche_titre($langs->trans("MarketplaceArea"), '', 'marketplace.png@marketplace');
+print load_fiche_titre($langs->trans("MarketplaceArea"), '', 'fa-store');
 
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
+print $langs->trans("ThisPageContainsInformationAndStatisticsAboutYourMarketplace");
+
+print 'TODO...';
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT
 // Draft MyObject
