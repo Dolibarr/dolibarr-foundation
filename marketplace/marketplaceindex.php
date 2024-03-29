@@ -110,7 +110,7 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 
 print $langs->trans("ThisPageContainsInformationAndStatisticsAboutYourMarketplace");
 
-print 'TODO...';
+print '<br><br>TODO...';
 
 /* BEGIN MODULEBUILDER DRAFT MYOBJECT
 // Draft MyObject
