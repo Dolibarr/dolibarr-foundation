@@ -184,6 +184,7 @@ SELECT
 	pl.name,
 	pl.description_short,
 	pl.description,
+	(SELECT link_rewrite FROM ps_product_lang AS pl_en WHERE pl_en.id_product = p.id_product AND pl_en.id_lang = (SELECT id_lang FROM ps_lang WHERE language_code = 'en-us')) AS link_rewrite,
 	p.active,
 	p.id_category_default,
 	p.on_sale,
@@ -198,6 +199,8 @@ SELECT
 	p.dolibarr_max,
 	p.dolibarr_support,
 	p.date_add,
+	p.dolibarr_core_include,
+	p.dolibarr_disable_info,
 	l.language_code
 FROM ps_product p
 LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product
@@ -283,12 +286,13 @@ if ($result_products = $conn->query($products_query)) {
 		$product->mandatory_period = !empty(GETPOST("mandatoryperiod", 'alpha')) ? 1 : 0;
 
 		// Extrafields
-		$product->array_options['options_moduleversion'] = $obj->module_version;
-		$product->array_options['options_dolibarrmin'] = $obj->dolibarr_min;
-		$product->array_options['options_dolibarrmax'] = $obj->dolibarr_max;
-		$product->array_options['options_shortdescription'] = $obj->description_short;
-		$product->array_options['options_howtocontactsupport'] = $obj->dolibarr_support;
-
+		$product->array_options['options_marketplace_module_version'] = $obj->module_version;
+		$product->array_options['options_marketplace_min_version'] = $obj->dolibarr_min;
+		$product->array_options['options_marketplace_max_version'] = $obj->dolibarr_max;
+		$product->array_options['options_marketplace_contact_support'] = $obj->dolibarr_support;
+		$product->array_options['options_marketplace_allow_source_in_core'] = $obj->dolibarr_core_include;
+		$product->array_options['options_marketplace_reason_disabled'] = $obj->dolibarr_disable_info;
+		$product->array_options['options_marketplace_old_url'] = 'https://www.dolistore.com/' . $obj->id_product . '-' . $obj->link_rewrite . '.html';
 
 		// Check if this product exists
 		$sql = "SELECT rowid FROM " . MAIN_DB_PREFIX . "product";

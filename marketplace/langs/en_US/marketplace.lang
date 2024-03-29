@@ -41,7 +41,6 @@ MARKETPLACE_URL_FOR_LOGO=URL for the logo of the marketplace
 # About page
 #
 About = About
-MarketplaceAbout = About Marketplace
 MarketplaceAboutPage = Marketplace about page
 
 MarketplaceArea = Home Marketplace
