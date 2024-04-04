@@ -101,7 +101,7 @@ print '<br>';
 print '<br>';
 
 $command = 'import-cats.php  db_host  db_user  db_password  db_port';
-print 'To import categories...<br>';
+print 'To import (create or update) categories...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
 print '</div>';
@@ -109,7 +109,7 @@ print '</div>';
 print '<br>';
 
 $command = 'import-third-parties.php  db_host  db_user  db_password  db_port  limit  clean_all_before_import(0|1)  id_website';
-print 'To import thirdparties (customers or sellers)...<br>';
+print 'To import (create or update) thirdparties (customers or sellers)...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
 print '</div>';
@@ -117,7 +117,7 @@ print '</div>';
 print '<br>';
 
 $command = 'import-products.php  db_host  db_user  db_password  db_port  limit  clean_all_before_import(0|1)';
-print 'To import products...<br>';
+print 'To import (create or update) products...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
 print '</div>';
