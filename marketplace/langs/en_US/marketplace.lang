@@ -23,7 +23,7 @@ ModuleMarketplaceName = Marketplace
 ModuleMarketplaceDesc = Marketplace management. Provides an ecommerce and marketplace web portal template and features to allow to sell products in a amarketplace.
 
 #
-# Admin page
+# Admin pages
 #
 MarketplaceSetup = Marketplace setup
 Settings = Settings
@@ -37,13 +37,12 @@ MARKETPLACE_PROSPECTCUSTOMER_ID=Category for all prospects or customers created 
 MARKETPLACE_VENDOR_ID=Category for all vendors selling products on the marketplace website
 MARKETPLACE_URL_FOR_LOGO=URL for the logo of the marketplace
 MARKETPLACE_WEBSITE_ID=Code of website to use for the marketplace
-MARKETPLACE_WEBSITE_ID_HELP=You must go into the menu Websites and create a website with a code name. You can import the website template for marketplace and fill here the code of the website you have created.
+MARKETPLACE_WEBSITE_ID_HELP=You must go into the menu Websites and create a website with a code name. You can init the website from the marketplace template, and fill here the code of the website you have created.
 MARKETPLACE_SECRET_KEY=Key for prestashop 1.6 password encryption
 MARKETPLACE_SECRET_KEY_HELP=If some users were migrated from prestashop 1.6 migration, this is the prestashop cookie key used to validate the password.
 
-#
-# About page
-#
+ImportTip=Migration tips
+
 About = About
 MarketplaceAboutPage = Marketplace about page
 
