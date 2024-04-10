@@ -257,6 +257,11 @@ if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
 
 print "Import remote products (limit=".$limit.") - May take a long time...\n";
 
+
+// We disable recursive category assignement (we don't want it)
+$conf->global->CATEGORIE_RECURSIV_ADD = 0;
+
+
 // Start of transaction
 $db->begin();
 
@@ -296,6 +301,7 @@ if ($result_products = $conn->query($products_query)) {
 		$product->tva_tx = "20";
 		$product->mandatory_period = !empty(GETPOST("mandatoryperiod", 'alpha')) ? 1 : 0;
 		$product->import_key = dol_print_date($now, 'dayhourlog');
+		$product->note_private = 'Old DoliStore ID = '.$obj->id_product;
 
 		// Extrafields
 		$product->array_options['options_marketplace_module_version'] = $obj->module_version;
@@ -334,7 +340,7 @@ if ($result_products = $conn->query($products_query)) {
 			print " - Create Error => " . $result . " - " . $product->errorsToString();
 			$error++;
 		} else {
-			print " - Product ref_ext = " . $product->ref_ext . " " . $action . " successfully";
+			print " - #".$i." Product id=".$product->id.", ref_ext = " . $product->ref_ext . " " . $action . " successfully";
 		}
 
 
@@ -428,6 +434,7 @@ if ($result_products = $conn->query($products_query)) {
 			";
 			if ($result_product_categories = $conn->query($products_categories_query)) {
 				while ($objcategories = $result_product_categories->fetch_object()) {
+					//print $objcategories->id_category."\n";
 					$get_cat = new Categorie($db);
 					$resget = $get_cat->fetch('', '', Categorie::TYPE_PRODUCT, $objcategories->id_category);
 					if ($resget <= 0 || empty($get_cat->id)) {

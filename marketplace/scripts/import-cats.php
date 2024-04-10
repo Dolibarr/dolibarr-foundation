@@ -254,6 +254,7 @@ if (!empty($clean_all_before_import)) {
 }
 
 
+
 $conn = getDoliDBInstance('mysqli', $db_host, $db_user, $db_password, $db_name, $db_port);
 if (! $conn->connected) {
 	die("Connection failed: " . $conn->connect_error);
@@ -299,10 +300,10 @@ if ($result_cats = $conn->query($categories_query)) {
 		$result = $categorie->create($user);
 
 		if ($result < 0) {
-			print " - Categorie Error => " . $result . " - " . $categorie->errorsToString();
+			print " - Category : " . $categorie->label." => error " . $result . " - " . $categorie->errorsToString();
 			$error++;
 		} else {
-			print " - Categorie : " . $categorie->label . " added successfully.";
+			print " - Category : " . $categorie->label . " added successfully with id = ".$categorie->id." and fk_parent = ".$categorie->fk_parent;
 		}
 
 		// Add alternative languages
@@ -363,23 +364,25 @@ if ($result_parents = $conn->query($categories_query)) {
 			continue;
 		}
 
-		// Current categorie object
+		// Current category object from remote id
 		$current_categorie = new Categorie($db);
 		$current_categorie->fetch('', '', Categorie::TYPE_PRODUCT, $objpid->id_category);
 
-		// Parent categorie object
-		$parent_categorie = new Categorie($db);
-		$parent_categorie->fetch('', '', Categorie::TYPE_PRODUCT, $objpid->id_parent);
+		if ($current_categorie->id > 0) {
+			// Parent category object
+			$parent_categorie = new Categorie($db);
+			$parent_categorie->fetch('', '', Categorie::TYPE_PRODUCT, $objpid->id_parent);
 
-		$current_categorie->fk_parent = $parent_categorie->id;
+			$current_categorie->fk_parent = $parent_categorie->id;
 
-		$result = $current_categorie->update($user);
+			$result = $current_categorie->update($user);
 
-		if ($result < 0) {
-			print " - Set Categorie parent Error => " . $result . " - " . $categorie->errorsToString() . "\n";
-			$error++;
-		} else {
-			print " - Categorie parent : " . $current_categorie->label . " added successfully.\n";
+			if ($result < 0) {
+				print " - Set Category parent Error => " . $result . " - " . $categorie->errorsToString() . "\n";
+				$error++;
+			} else {
+				print " - Category parent : " . $current_categorie->label . " added successfully.\n";
+			}
 		}
 	}
 }
@@ -415,13 +418,11 @@ if ($result_versions = $conn->query($versions_query)) {
 		$result = $version_category->create($user);
 
 		if ($result < 0) {
-			print " - Version Error => " . $result . " - " . $version_category->errorsToString();
+			print " - Category Version : " . $version_category->label." => error " . $result . " - " . $version_category->errorsToString();
 			$error++;
 		} else {
-			print " - Version : " . $version_category->label . " added successfully.";
+			print " - Category Version : " . $version_category->label . " added successfully";
 		}
-		print "\n";
-
 
 		$langs_list = array('en_US', 'fr_FR', 'es_ES', 'it_IT', 'de_DE');
 		foreach ($langs_list as $value_lang) {

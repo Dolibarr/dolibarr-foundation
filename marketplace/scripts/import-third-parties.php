@@ -424,7 +424,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			//$error++;
 			//exit();
 		} else {
-			print " - Third-party nb=".$i." id=".$customer->id.", ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
+			print " - #".$i." Third party id=".$customer->id.", ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
 		}
 
 		if (!$error && 1) {
