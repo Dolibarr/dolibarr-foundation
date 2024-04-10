@@ -544,11 +544,11 @@ if ($result_products = $conn->query($products_query)) {
 
 // -------------------- END OF YOUR CODE --------------------
 
-if (!$error) {
+if (!$error || 1) {
 	$db->commit();
 	print '--- end ok' . "\n";
 } else {
-	print '--- end error code=' . $error . "\n";
+	print '--- end error nb=' . $error . "\n";
 	$db->rollback();
 }
 
