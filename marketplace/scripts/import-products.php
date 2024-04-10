@@ -118,6 +118,7 @@ include_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 include_once DOL_DOCUMENT_ROOT . '/ecm/class/ecmfiles.class.php';
 include_once DOL_DOCUMENT_ROOT . '/core/lib/security.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formbarcode.class.php';
+require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
 
 // Load object modBarCodeProduct
 $res = 0;
@@ -159,7 +160,7 @@ $limit = 20;
 if(isset($argv[6])){
 	$limit = $argv[6] == 0 ? 0 : $argv[6];
 }
-$clean_all_before_import = isset($argv[7])?$argv[7] : true;
+$clean_all_before_import = isset($argv[7])?$argv[7] : false;
 
 
 // Select from prestashop
@@ -220,8 +221,6 @@ FROM ps_product p
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
 
 
-// Start of transaction
-$db->begin();
 
 
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
@@ -231,7 +230,7 @@ if ($conn->connect_error) {
 print "Connected to ".$db_host." ".$db_name." successfully...\n";
 
 
-if ($clean_all_before_import == true) {
+if ($clean_all_before_import === 'true') {
 	if ($result_all_products = $conn->query($delete_products_query)) {
 		while ($obji = $result_all_products->fetch_object()) {
 			$list_of_imported_products = new Product($db);
@@ -249,6 +248,9 @@ if ($clean_all_before_import == true) {
 		}
 	}
 }
+
+// Start of transaction
+$db->begin();
 
 if ($result_products = $conn->query($products_query)) {
 
@@ -280,8 +282,8 @@ if ($result_products = $conn->query($products_query)) {
 		$product->url = $obj->id_product;
 		$product->ref_ext = $obj->id_product;
 		$product->price = price2num($obj->price);
-		$product->price_ttc = price2num($obj->price);
-		$product->price_base_type = 'TTC';
+		//$product->price_ttc = price2num($obj->price);
+		$product->price_base_type = 'HT';
 		$product->tva_tx = "20";
 		$product->mandatory_period = !empty(GETPOST("mandatoryperiod", 'alpha')) ? 1 : 0;
 
@@ -366,6 +368,30 @@ if ($result_products = $conn->query($products_query)) {
 				print " - setMultiLangs OK";
 			}
 
+			// Add owner by adding supplier price
+			if (preg_match('/c(.*?)d/', $product->ref, $matches)) {
+				$get_supplier = new Societe($db);
+				$resget = $get_supplier->fetch('', '', $matches[1]);
+
+				$object_ProductFournisseur = new ProductFournisseur($db);
+				$object_ProductFournisseur->fetch($product->id);
+				
+				if ($resget <= 0 || empty($get_supplier->id)) {
+					print " - Error in set default supplier (Import third parties before products) ";
+					//$error++;
+				} else {
+					$id_fourn = $get_supplier->id;
+					$ref_product_fourn = $product->ref;
+					print $id_fourn;
+					$ret_add_fournisseur = $object_ProductFournisseur->add_fournisseur($user, $id_fourn, $ref_product_fourn, 1);
+					$ret_update_buyprice = $object_ProductFournisseur->update_buyprice(1, 0, $user, 'HT', $get_supplier, 1, $ref_product_fourn, 20, 0, '', 0, 0, '', '', array(), '', 0, 'HT');
+				}
+
+			}else{
+				print " - Error in retrieve owner ID from ref " . $product->ref;
+				$error++;
+			}
+
 
 			// Add  categories and verions
 			$categries_and_versions_list = array();
@@ -388,8 +414,8 @@ if ($result_products = $conn->query($products_query)) {
 				while ($objcategories = $result_product_categories->fetch_object()) {
 					$get_cat = new Categorie($db);
 					$resget = $get_cat->fetch('', '', Categorie::TYPE_PRODUCT, $objcategories->id_category);
-					if ($resget <= 0 || empty($get_version->id)) {
-						//print ' - Product category "'.$objverions->name.'" not found in Dolibarr, we discard it.';
+					if ($resget <= 0 || empty($get_cat->id)) {
+						print ' - Product category '.$objcategories->id_category.' not found in Dolibarr, we discard it.';
 					} else {
 						$categries_and_versions_list[$get_cat->id] = $get_cat->id;
 					}
@@ -458,7 +484,7 @@ if ($result_products = $conn->query($products_query)) {
 					}
 					$img = $upload_dir . '/' . $product->ref . '-' . $objimage->id_image . '.jpg';;
 					if (!file_put_contents($img, file_get_contents($url))) {
-						$error++;
+						//$error++;
 					} else {
 						// Add thumb
 						$product->addThumbs($img);
