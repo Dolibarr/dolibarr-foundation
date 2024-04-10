@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 /* Copyright (C) 2007-2023 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,7 +117,7 @@ include_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
-	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port \n";
+	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port [clean_all_before_import]\n";
 	exit(-1);
 }
 
@@ -127,6 +126,7 @@ $db_name = $argv[2];
 $db_user = $argv[3];
 $db_password = $argv[4];
 $db_port = $argv[5];
+$clean_all_before_import = $argv[6];
 
 // Select from prestashop
 $current_lang = $langs->getDefaultLang();
@@ -181,60 +181,74 @@ WITH RECURSIVE top_down_cte AS
 )SELECT * FROM top_down_cte;
 ";
 
-$message = "The MARKETPLACE_ROOT_CATEGORY and MARKETPLACE_VERSIONS_CATEGORY will initially be empty, and they will be populated with imported categories and versions. If you have products related to subcategories of these categories, you should re-import products again, setting the parameter clean_all_before_import to true...\n";
+$message = "The MARKETPLACE_ROOT_CATEGORY and MARKETPLACE_VERSIONS_CATEGORY will be populated with imported categories and versions.\nNote: Link between the products and the categories will be imported later during the import of products.\n";
 
 // Ask confirmation
 print $message . "\n";
 print "Hit Enter to continue or CTRL+C to stop...\n";
 $input = trim(fgets(STDIN));
 
-if ($resultc_to_clean = $db->query($categories_to_clean_query)) {
 
-	while ($objc_to_clean = $resultc_to_clean->fetch_object()) {
-		if ($objc_to_clean->rowid == $root_category) {
-			continue;
-		}
+if (!empty($clean_all_before_import)) {
+	print "Clean existing subcategories of MARKETPLACE_ROOT_CATEGORY";
 
-		$catobject = new Categorie($db);
-		$catobject->fetch($objc_to_clean->rowid);
+	if ($resultc_to_clean = $db->query($categories_to_clean_query)) {
 
-		$resultc_delete = $catobject->delete($user);
+		while ($objc_to_clean = $resultc_to_clean->fetch_object()) {
+			if ($objc_to_clean->rowid == $root_category) {
+				continue;
+			}
 
-		if ($resultc_delete < 0) {
-			setEventMessages($object->error, $object->errors, 'errors');
-			$error++;
-			exit;
-		}
-	}
-}
+			print ".";
 
-if ($resultv_to_clean = $db->query($versions_to_clean_query)) {
+			$catobject = new Categorie($db);
+			$catobject->fetch($objc_to_clean->rowid);
 
-	while ($objv_to_clean = $resultv_to_clean->fetch_object()) {
-		if ($objv_to_clean->rowid == $root_version) {
-			continue;
-		}
+			$resultc_delete = $catobject->delete($user);
 
-		$catvobject = new Categorie($db);
-		$catvobject->fetch($objv_to_clean->rowid);
-
-		$resultv_delete = $catvobject->delete($user);
-
-		if ($resultv_delete < 0) {
-			setEventMessages($object->error, $object->errors, 'errors');
-			$error++;
-			exit;
+			if ($resultc_delete < 0) {
+				setEventMessages($object->error, $object->errors, 'errors');
+				$error++;
+				exit;
+			}
 		}
 	}
+
+	print "\n";
+
+	print "Clean existing subcategories of MARKETPLACE_VERSIONS_CATEGORY";
+
+	if ($resultv_to_clean = $db->query($versions_to_clean_query)) {
+
+		while ($objv_to_clean = $resultv_to_clean->fetch_object()) {
+			if ($objv_to_clean->rowid == $root_version) {
+				continue;
+			}
+
+			print ".";
+
+			$catvobject = new Categorie($db);
+			$catvobject->fetch($objv_to_clean->rowid);
+
+			$resultv_delete = $catvobject->delete($user);
+
+			if ($resultv_delete < 0) {
+				setEventMessages($object->error, $object->errors, 'errors');
+				$error++;
+				exit;
+			}
+		}
+	}
+
+	print "\n";
 }
 
 
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
-if ($conn->connect_error) {
+$conn = getDoliDBInstance('mysqli', $db_host, $db_user, $db_password, $db_name, $db_port);
+if (! $conn->connected) {
 	die("Connection failed: " . $conn->connect_error);
 }
-print "Connected successfully...\n";
+print "Connected successfully to remote database on ".$db_host."...\n";
 
 $categories_query = "
 select
@@ -251,7 +265,7 @@ FROM
 where
 	pc.id_category = pcl.id_category AND
 	pcl.id_lang = pl.id_lang AND
-	pl.language_code = '" . $current_lang . "' and
+	pl.language_code = '" . $conn->escape($current_lang) . "' and
 	pc.active = 1
 ";
 
@@ -275,7 +289,7 @@ if ($result_cats = $conn->query($categories_query)) {
 
 		if ($result < 0) {
 			print " - Categorie Error => " . $result . " - " . $categorie->errorsToString();
-			$$error++;
+			$error++;
 		} else {
 			print " - Categorie : " . $categorie->label . " added successfully.";
 		}
@@ -352,7 +366,7 @@ if ($result_parents = $conn->query($categories_query)) {
 
 		if ($result < 0) {
 			print " - Set Categorie parent Error => " . $result . " - " . $categorie->errorsToString() . "\n";
-			$$error++;
+			$error++;
 		} else {
 			print " - Categorie parent : " . $current_categorie->label . " added successfully.\n";
 		}
@@ -390,10 +404,11 @@ if ($result_versions = $conn->query($versions_query)) {
 
 		if ($result < 0) {
 			print " - Version Error => " . $result . " - " . $version_category->errorsToString();
-			$$error++;
+			$error++;
 		} else {
 			print " - Version : " . $version_category->label . " added successfully.";
 		}
+		print "\n";
 
 
 		$langs_list = array('en_US', 'fr_FR', 'es_ES', 'it_IT', 'de_DE');
@@ -405,15 +420,16 @@ if ($result_versions = $conn->query($versions_query)) {
 		}
 
 
-
-		$ret = $version_category->setMultiLangs($user);
-		if ($ret < 0) {
-			print " - Error in setMultiLangs result code = " . $ret . " - " . $product->errorsToString();
-			$error++;
-		} else {
-			print " - setMultiLangs OK";
+		if (!$error) {
+			$ret = $version_category->setMultiLangs($user);
+			if ($ret < 0) {
+				print " - Error in setMultiLangs result code = " . $ret . " - " . $product->errorsToString();
+				$error++;
+			} else {
+				print " - setMultiLangs OK";
+			}
+			print "\n";
 		}
-		print "\n";
 	}
 }
 
@@ -424,10 +440,10 @@ if (!$error) {
 	$db->commit();
 	print '--- end ok' . "\n";
 } else {
-	print '--- end error code=' . $error . "\n";
+	print '--- end error nb=' . $error . "\n";
 	$db->rollback();
 }
 
 $db->close(); // Close $db database opened handler
 
-exit($error);
+exit($error ? 1 : 0);

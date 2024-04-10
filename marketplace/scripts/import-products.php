@@ -222,9 +222,8 @@ $importkey = dol_print_date(dol_now(), 'dayhourlog');
 
 
 
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
-if ($conn->connect_error) {
+$conn = getDoliDBInstance('mysqli', $db_host, $db_user, $db_password, $db_name, $db_port);
+if (! $conn->connected) {
 	die("Connection failed: " . $conn->connect_error);
 }
 print "Connected to ".$db_host." ".$db_name." successfully...\n";
@@ -375,7 +374,7 @@ if ($result_products = $conn->query($products_query)) {
 
 				$object_ProductFournisseur = new ProductFournisseur($db);
 				$object_ProductFournisseur->fetch($product->id);
-				
+
 				if ($resget <= 0 || empty($get_supplier->id)) {
 					print " - Error in set default supplier (Import third parties before products) ";
 					//$error++;

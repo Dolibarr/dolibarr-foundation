@@ -100,7 +100,7 @@ print '<span class="opacitymedium">This is some tips on how to import existing d
 print '<br>';
 print '<br>';
 
-$command = 'import-cats.php  db_host  db_user  db_password  db_port';
+$command = 'custom/marketplace/scripts/import-cats.php  db_host  db_name  db_user  db_password  db_port  clean_all_before_import(0|1)';
 print 'To import (create or update) categories...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
@@ -108,7 +108,7 @@ print '</div>';
 
 print '<br>';
 
-$command = 'import-third-parties.php  db_host  db_user  db_password  db_port  limit  clean_all_before_import(0|1)  id_website';
+$command = 'custom/marketplace/scripts/import-third-parties.php  db_host  db_user  db_password  db_port  limit  ref_website  clean_all_before_import(0|1)';
 print 'To import (create or update) thirdparties (customers or sellers)...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
@@ -116,7 +116,7 @@ print '</div>';
 
 print '<br>';
 
-$command = 'import-products.php  db_host  db_user  db_password  db_port  limit  clean_all_before_import(0|1)';
+$command = 'custom/marketplace/scripts/import-products.php  db_host  db_user  db_password  db_port  limit  clean_all_before_import(0|1)';
 print 'To import (create or update) products...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';

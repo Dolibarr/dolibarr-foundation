@@ -18,10 +18,9 @@
  */
 
 /**
- *      \file       htdocs/modulebuilder/template/scripts/mymodule.php
- *		\ingroup    mymodule
- *      \brief      This file is a command line script for module MyModule. You can execute it with:
- *      			php mymodule/scripts/mymodule.php
+ *      \file       htdocs/marketplace/scripts/import-third-parties.php
+ *		\ingroup    marketplace
+ *      \brief      Script to import customers and sellers from prestashop
  */
 
 //if (! defined('NOREQUIREDB'))              define('NOREQUIREDB', '1');				// Do not create database handler $db
@@ -120,10 +119,10 @@ include_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
-	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit clean_all_before_import id_website\n";
-	print "NB: Limit is set to 20 by default (0 = All) \n";
+	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit ref_website [clean_all_before_import]\n";
+	print "NB: Limit is max number of record to import (0 = All) \n";
+	print "NB: id_website is required to import logins and passwords \n";
 	print "NB: clean_all_before_import is set to true by default \n";
-	print "NB: id_website define it to import logins and passwords \n";
 	exit(-1);
 }
 
@@ -133,17 +132,40 @@ $db_name = $argv[2];
 $db_user = $argv[3];
 $db_password = $argv[4];
 $db_port = $argv[5];
-$limit = 20;
-if (isset($argv[6])) {
-	$limit = $argv[6] == 0 ? 0 : $argv[6];
-}
-$clean_all_before_import = isset($argv[7]) ? $argv[7] : "true";
-$id_website = $argv[8];
+
+$limit = $argv[6] == 0 ? 0 : $argv[6];
+$id_website = $argv[7];
+$clean_all_before_import = isset($argv[8]) ? $argv[8] : "true";
 
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
 $marketplace_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
 
+// Check id_website if exist
+$result_website = 0;
+if(!empty($id_website)){
+	$website = new Website($db);
+	if (is_numeric($id_website)) {
+		$result_website = $website->fetch($id_website);
+	} else {
+		$result_website = $website->fetch(0, $id_website);
+	}
+	if ($result_website <= 0) {
+		print "NO WEBSITE FOUND WITH THIS ID OR REF  ...\n";
+		exit;
+	}
+} else {
+	print "WEBSITE ID or REF not provided  ...\n";
+	exit;
+}
+
+// Check MARKETPLACE_PROSPECTCUSTOMER_ID Categorie
+$categorie = new Categorie($db);
+$result = $categorie->fetch($marketplace_third_parties_category);
+if ($result <= 0) {
+	print "No MARKETPLACE_PROSPECTCUSTOMER_ID  defined...\n";
+	exit;
+}
 
 $message = "\n NB: If you would like to stop the script immediately upon encountering an error for one record, simply uncomment the lines ( //error++; //exit(); ) in this script... \n";
 
@@ -166,24 +188,6 @@ switch ($langs->getDefaultLang()) {
 		$current_lang = "";
 		break;
 };
-
-// Check id_website if exist
-if(!empty($id_website)){
-	$website = new Website($db);
-	$result_website = $website->fetch($id_website);
-	if ($result_website <= 0) {
-		print "NO WEBSITE FOUND WITH THIS ID  ...\n";
-		exit;
-	}
-}
-
-// Check MARKETPLACE_PROSPECTCUSTOMER_ID Categorie
-$categorie = new Categorie($db);
-$result = $categorie->fetch($marketplace_third_parties_category);
-if ($result <= 0) {
-	print "No MARKETPLACE_PROSPECTCUSTOMER_ID  defined...\n";
-	exit;
-}
 
 
 $delete_customers_query = "
@@ -218,32 +222,34 @@ $sql_request_for_customers = "SELECT
 	LEFT JOIN
 	ps_lang pl ON pc.id_lang = pl.id_lang
 	INNER JOIN (
-	SELECT 
+	SELECT
 		MAX(id_customer) AS id_customer,
 		email
-	FROM 
+	FROM
 		ps_customer
-	GROUP BY 
+	GROUP BY
 		email
 	) AS max_ids ON pc.id_customer = max_ids.id_customer
-	ORDER BY 
+	ORDER BY
 	pc.date_add DESC ";
 
 if ($limit != 0) {
 	$sql_request_for_customers .= " limit " . $limit;
 }
 
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
-if ($conn->connect_error) {
+$conn = getDoliDBInstance('mysqli', $db_host, $db_user, $db_password, $db_name, $db_port);
+if (! $conn->connected) {
 	die("Connection failed: " . $conn->connect_error);
 }
 print "Connected successfully...\n";
 
-if ($clean_all_before_import === "true") {
+if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
+	print "Clean all thirdparties already imported (with ref_ext = remote id) - May take a long time...\n";
 	if ($result_all_customers = $conn->query($delete_customers_query)) {
+		$list_of_imported_customers = new Societe($db);
+		print "Found ".$conn->num_rows($result_all_customers)." third parties in remote database\n";
 		while ($objc = $result_all_customers->fetch_object()) {
-			$list_of_imported_customers = new Societe($db);
+			//print ".";
 			$is_imported_before = $list_of_imported_customers->fetch('', '', $objc->id_customer);
 
 			if ($is_imported_before > 0) {
@@ -259,6 +265,7 @@ if ($clean_all_before_import === "true") {
 	}
 }
 $error_messages= array();
+
 // Start of transaction
 $db->begin();
 if ($result_customers = $conn->query($sql_request_for_customers)) {
@@ -283,9 +290,9 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		$request_to_check_if_customer = "
 			select
 				po.id_order
-			FROM 
-				ps_orders po 
-			WHERE 
+			FROM
+				ps_orders po
+			WHERE
 				po.id_customer = '" . $obj->id_customer . "'
 		";
 		$is_customer = mysqli_num_rows($conn->query($request_to_check_if_customer));
@@ -296,9 +303,9 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		$request_to_check_if_vendor = "
 		select
 			pp.id_product
-		FROM 
-			ps_product pp 
-		WHERE 
+		FROM
+			ps_product pp
+		WHERE
 			pp.reference like '%c" . $obj->id_customer . "d%'
 		";
 		$is_vendor = mysqli_num_rows($conn->query($request_to_check_if_vendor));
@@ -323,7 +330,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 			// Organise search criteria to check if this customer exist in dolibarr
 			$publisher = trim($obj->firstname.' '.$obj->lastname);
-			$company = trim($obj->company);	
+			$company = trim($obj->company);
 			if (empty($company)) {
 				// Get company from address
 				$request_to_get_company = "
@@ -355,12 +362,12 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				$existing_dol_customer->fetch($objsqlr->rowid);
 
 				// Complete existing customer information by adding imported information
-				$customer->url = (!empty($existing_dol_customer->url)) ? $existing_dol_customer->url : $customer->url ; 
-				$customer->name_alias = (!empty($existing_dol_customer->name_alias)) ? $existing_dol_customer->url : $customer->name_alias ; 
-				$customer->idprof2 = (!empty($existing_dol_customer->idprof2)) ? $existing_dol_customer->idprof2 : $customer->idprof2 ; 
-				$customer->idprof3 = (!empty($existing_dol_customer->idprof3)) ? $existing_dol_customer->idprof3 : $customer->idprof3 ; 
-				$customer->ref_ext = (!empty($existing_dol_customer->ref_ext)) ? $existing_dol_customer->ref_ext : $customer->ref_ext ; 
-				$customer->default_lang = (!empty($existing_dol_customer->default_lang)) ? $existing_dol_customer->default_lang : $customer->default_lang ; 
+				$customer->url = (!empty($existing_dol_customer->url)) ? $existing_dol_customer->url : $customer->url ;
+				$customer->name_alias = (!empty($existing_dol_customer->name_alias)) ? $existing_dol_customer->url : $customer->name_alias ;
+				$customer->idprof2 = (!empty($existing_dol_customer->idprof2)) ? $existing_dol_customer->idprof2 : $customer->idprof2 ;
+				$customer->idprof3 = (!empty($existing_dol_customer->idprof3)) ? $existing_dol_customer->idprof3 : $customer->idprof3 ;
+				$customer->ref_ext = (!empty($existing_dol_customer->ref_ext)) ? $existing_dol_customer->ref_ext : $customer->ref_ext ;
+				$customer->default_lang = (!empty($existing_dol_customer->default_lang)) ? $existing_dol_customer->default_lang : $customer->default_lang ;
 
 				$action = 'updated';
 				$result = $customer->update($objsqlr->rowid, $user);
@@ -369,7 +376,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				$action = 'imported';
 				$result = $customer->create($user);
 				$rowid_soc = $result;
-			}		
+			}
 
 			if($action == "updated"){
 				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET import_key = '" . $db->escape($importkey) . "' WHERE rowid = " . ((int) $objsqlr->rowid);
@@ -454,12 +461,12 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				pa.phone_mobile,
 				pa.date_add,
 				pa.city,
-				pc.iso_code 
+				pc.iso_code
 			FROM
 				ps_address pa,
-				ps_country pc 
-			WHERE 
-				pa.id_country = pc.id_country AND 
+				ps_country pc
+			WHERE
+				pa.id_country = pc.id_country AND
 				pa.id_customer = " . $obj->id_customer . "
 			";
 			if ($result_customer_addresses = $conn->query($customer_addresses_query)) {
@@ -495,7 +502,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			}
 
 
-			// Add connection credentials for a specific website	
+			// Add connection credentials for a specific website
 			if(!empty($id_website)) {
 
 				// Check if this account exist
@@ -526,7 +533,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					print " - Create account OK";
 				}
 			}
-			
+
 
 		}
 		print "\n";
