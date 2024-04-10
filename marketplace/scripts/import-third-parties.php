@@ -289,8 +289,10 @@ $error_messages= array();
 print "Import remote third parties (limit=".$limit.") - May take a long time...\n";
 
 // Start of transaction
+$i=0;
 $db->begin();
 if ($result_customers = $conn->query($sql_request_for_customers)) {
+	$i++;
 
 	while ($obj = $result_customers->fetch_object()) {
 		$customer = new Societe($db);
@@ -421,7 +423,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			//$error++;
 			//exit();
 		} else {
-			print " - Third-party ".$customer->id.", ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
+			print " - Third-party nb=".$i." id=".$customer->id.", ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
 		}
 
 		if (!$error && 1) {
