@@ -289,12 +289,12 @@ $error_messages= array();
 print "Import remote third parties (limit=".$limit.") - May take a long time...\n";
 
 // Start of transaction
-$i=0;
 $db->begin();
 if ($result_customers = $conn->query($sql_request_for_customers)) {
-	$i++;
-
+	$i=0;
 	while ($obj = $result_customers->fetch_object()) {
+		$i++;
+
 		$customer = new Societe($db);
 
 		if (!empty($obj->company)) {
@@ -309,6 +309,8 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		$customer->idprof3 = $obj->ape;
 		$customer->ref_ext = $obj->id_customer;
 		$customer->email = $obj->email;
+		// TODO MDA
+		//$customer->no_email = ???
 
 		// Check if customer
 		$request_to_check_if_customer = "
@@ -338,7 +340,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 		$customer->default_lang = $obj->dol_lang_code;
 
-		// Check if this customer is imported before
+		// Check if this customer was imported before
 		$sql = "SELECT rowid FROM " . MAIN_DB_PREFIX . "societe";
 		$sql .= " WHERE ref_ext = '" . $obj->id_customer . "' LIMIT 1";
 
@@ -351,7 +353,6 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			$result = $customer->update($objsql->rowid, $user);
 			$rowid_soc = $objsql->rowid;
 		} else {
-
 			// Organise search criteria to check if this customer exist in dolibarr
 			$publisher = trim($obj->firstname.' '.$obj->lastname);
 			$company = trim($obj->company);

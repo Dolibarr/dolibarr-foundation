@@ -262,7 +262,6 @@ $db->begin();
 
 if ($result_products = $conn->query($products_query)) {
 	$i = 0;
-
 	while ($obj = $result_products->fetch_object()) {
 		$i++;
 
