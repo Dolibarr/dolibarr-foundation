@@ -122,7 +122,7 @@ if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4])
 	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit ref_website [clean_all_before_import]\n";
 	print "NB: Limit is max number of record to import (0 = All) \n";
 	print "NB: id_website is required to import logins and passwords \n";
-	print "NB: clean_all_before_import is set to true by default \n";
+	print "NB: clean_all_before_import will delete all third parties coming from the remote source before \n";
 	exit(-1);
 }
 
@@ -134,25 +134,28 @@ $db_password = $argv[4];
 $db_port = $argv[5];
 
 $limit = $argv[6] == 0 ? 0 : $argv[6];
-$id_website = $argv[7];
-$clean_all_before_import = isset($argv[8]) ? $argv[8] : "true";
+$codeorid_website = $argv[7];
+$clean_all_before_import = isset($argv[8]) ? $argv[8] : "false";
 
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
 $marketplace_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
 
 // Check id_website if exist
+$id_website = 0;
 $result_website = 0;
-if(!empty($id_website)){
+if (!empty($codeorid_website)){
 	$website = new Website($db);
-	if (is_numeric($id_website)) {
-		$result_website = $website->fetch($id_website);
+	if (is_numeric($codeorid_website)) {
+		$result_website = $website->fetch($codeorid_website);
 	} else {
-		$result_website = $website->fetch(0, $id_website);
+		$result_website = $website->fetch(0, $codeorid_website);
 	}
 	if ($result_website <= 0) {
 		print "NO WEBSITE FOUND WITH THIS ID OR REF  ...\n";
 		exit;
+	} else {
+		$id_website = $website->id;
 	}
 } else {
 	print "WEBSITE ID or REF not provided  ...\n";
@@ -266,12 +269,13 @@ if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
 }
 $error_messages= array();
 
+print "Import remote third parties (limit=".$limit.") - May take a long time...\n";
+
 // Start of transaction
 $db->begin();
 if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 	while ($obj = $result_customers->fetch_object()) {
-
 		$customer = new Societe($db);
 
 		if (!empty($obj->company)) {
@@ -397,7 +401,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			//$error++;
 			//exit();
 		} else {
-			print " - Third-party ref_ext = " . $customer->ref_ext . " " . $action . " successfully.";
+			print " - Third-party ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
 		}
 
 		if (!$error && 1) {
@@ -502,35 +506,36 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			}
 
 
-			// Add connection credentials for a specific website
-			if(!empty($id_website)) {
-
+			// Add 1 connection credentials for a specific website
+			if ($id_website > 0) {
 				// Check if this account exist
 				$sqlaccount = "SELECT rowid FROM " . MAIN_DB_PREFIX . "societe_account ";
-				$sqlaccount .= " WHERE login = '" . $obj->email . "' LIMIT 1";
+				$sqlaccount .= " WHERE login = '" . $obj->email . "'";
+				$sqlaccount .= " AND site = 'dolibarr_website' AND fk_website = ".((int) $id_website);
+				$sqlaccount .= " LIMIT 1";
 				$resqlaccount = $db->query($sqlaccount);
 				$objsqlaccount = $db->fetch_object($resqlaccount);
 				if (!empty($objsqlaccount->rowid)) {
-					print " - The email associated with this third party already exists.";
-					continue;
-				}
-				$societeaccount = new SocieteAccount($db);
-				$societeaccount->login = $obj->email;
-				$societeaccount->pass_crypted =$obj->passwd;
-				$societeaccount->fk_soc = $rowid_soc;
-				$societeaccount->fk_website = $id_website;
-				$societeaccount->site = "dolibarr_website";
-				$societeaccount->pass_encoding = "dolistore";
-				$societeaccount->status = "1";
-				$ret_account = $societeaccount->create($user);
-				if ($ret_account < 0) {
-					$error_message = " - Error in creating account result code = " . $ret_account . " - " . $customer->errorsToString();
-					print $error_message;
-					$error_messages[] = $obj->id_customer . ' : ' . $error_message;
-					//$error++;
-					//exit();
+					print " - This third party email already exists as a login account";
 				} else {
-					print " - Create account OK";
+					$societeaccount = new SocieteAccount($db);
+					$societeaccount->login = $obj->email;
+					$societeaccount->pass_crypted =$obj->passwd;
+					$societeaccount->fk_soc = $rowid_soc;
+					$societeaccount->fk_website = ((int) $id_website);
+					$societeaccount->site = "dolibarr_website";
+					$societeaccount->pass_encoding = "dolistore";
+					$societeaccount->status = "1";
+					$ret_account = $societeaccount->create($user);
+					if ($ret_account < 0) {
+						$error_message = " - Error in creating account result code = " . $ret_account . " - " . $customer->errorsToString();
+						print $error_message;
+						$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+						//$error++;
+						//exit();
+					} else {
+						print " - Create account OK";
+					}
 				}
 			}
 
