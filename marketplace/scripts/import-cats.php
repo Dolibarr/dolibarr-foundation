@@ -114,6 +114,12 @@ $user->getrights();
 
 include_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 
+$new = dol_now();
+
+
+/*
+ * Main
+ */
 
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
@@ -284,6 +290,7 @@ if ($result_cats = $conn->query($categories_query)) {
 		$categorie->fk_parent = $root_category;
 		$categorie->ref_ext = $obj->id_category;
 		$categorie->type = Categorie::TYPE_PRODUCT;
+		$categorie->import_key = dol_print_date($now, 'dayhourlog');
 
 		$result = $categorie->create($user);
 
@@ -399,6 +406,7 @@ if ($result_versions = $conn->query($versions_query)) {
 
 		$version_category->fk_parent = $root_version;
 		$version_category->type = Categorie::TYPE_PRODUCT;
+		$version_category->import_key = dol_print_date($now, 'dayhourlog');
 
 		$result = $version_category->create($user);
 

@@ -117,6 +117,13 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 include_once DOL_DOCUMENT_ROOT.'/societe/class/societeaccount.class.php';
 include_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
 
+$now = dol_now();
+
+
+/*
+ * Main
+ */
+
 print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " *****\n";
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
 	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit ref_website [clean_all_before_import]\n";
@@ -140,6 +147,7 @@ $clean_all_before_import = isset($argv[8]) ? $argv[8] : "false";
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
 $marketplace_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
+$marketplace_third_parties_category_vendor = getDolGlobalInt("MARKETPLACE_VENDOR_ID");
 
 // Check id_website if exist
 $id_website = 0;
@@ -166,7 +174,15 @@ if (!empty($codeorid_website)){
 $categorie = new Categorie($db);
 $result = $categorie->fetch($marketplace_third_parties_category);
 if ($result <= 0) {
-	print "No MARKETPLACE_PROSPECTCUSTOMER_ID  defined...\n";
+	print "MARKETPLACE_PROSPECTCUSTOMER_ID  not correctly defined...\n";
+	exit;
+}
+
+// Check MARKETPLACE_VENDOR_ID Categorie
+$categorie = new Categorie($db);
+$result = $categorie->fetch($marketplace_third_parties_category_vendor);
+if ($result <= 0) {
+	print "MARKETPLACE_VENDOR_ID  not correctly defined...\n";
 	exit;
 }
 
@@ -258,7 +274,7 @@ if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
 			if ($is_imported_before > 0) {
 				$resulti_delete = $list_of_imported_customers->delete($list_of_imported_customers->id, $user);
 				if ($resulti_delete < 0) {
-					print " - Error in deleting product ref_ext = " . $objc->id_customer . " - " . $list_of_imported_customers->errorsToString();
+					print " - Error in deleting third party ref_ext = " . $objc->id_customer . " - " . $list_of_imported_customers->errorsToString();
 				} else {
 					print " - Third-party ref_ext = " . $objc->id_customer . " deleted.";
 				}
@@ -289,6 +305,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		$customer->idprof2 = $obj->siret;
 		$customer->idprof3 = $obj->ape;
 		$customer->ref_ext = $obj->id_customer;
+		$customer->email = $obj->email;
 
 		// Check if customer
 		$request_to_check_if_customer = "
@@ -373,20 +390,22 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				$customer->ref_ext = (!empty($existing_dol_customer->ref_ext)) ? $existing_dol_customer->ref_ext : $customer->ref_ext ;
 				$customer->default_lang = (!empty($existing_dol_customer->default_lang)) ? $existing_dol_customer->default_lang : $customer->default_lang ;
 
+				// Note: The import_key is updated after
 				$action = 'updated';
 				$result = $customer->update($objsqlr->rowid, $user);
 				$rowid_soc = $objsqlr->rowid;
-			}else{
+			} else {
+				// Note: The import_key is set after
 				$action = 'imported';
 				$result = $customer->create($user);
 				$rowid_soc = $result;
 			}
 
-			if($action == "updated"){
+			if ($action == "updated"){
 				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET import_key = '" . $db->escape($importkey) . "' WHERE rowid = " . ((int) $objsqlr->rowid);
 			}
 
-			if($action == "imported"){
+			if ($action == "imported"){
 				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET import_key = '" . $db->escape($importkey) . "', datec = '" . $obj->date_add . "' WHERE rowid = " . ((int) $result);
 			}
 
@@ -401,21 +420,32 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			//$error++;
 			//exit();
 		} else {
-			print " - Third-party ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
+			print " - Third-party ".$customer->id.", ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
 		}
 
 		if (!$error && 1) {
-
-			// Add  groups
+			// Add tag/category customer
 			$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
-			if ($ret_cat < 0) {
-				$error_message = " - Error in setCategories result code = " . $ret_cat . " - " . $customer->errorsToString();
+			if ($ret_cat < 0 && $customer->client > 0) {
+				$error_message = " - Error in setCategories customer result code = " . $ret_cat . " - " . $customer->errorsToString();
 				print $error_message;
 				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
 				//$error++;
 				//exit();
 			} else {
-				print " - set group OK";
+				print " - set tag customer OK";
+			}
+
+			// Add tag/category supplier
+			$ret_cat = $customer->setCategories($marketplace_third_parties_category_vendor, 'supplier');
+			if ($ret_cat < 0 && $customer->fournisseur > 0) {
+				$error_message = " - Error in setCategories supplier result code = " . $ret_cat . " - " . $customer->errorsToString();
+				print $error_message;
+				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+				//$error++;
+				//exit();
+			} else {
+				print " - set tag supplier OK";
 			}
 
 			// Add default contact
@@ -526,6 +556,8 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					$societeaccount->site = "dolibarr_website";
 					$societeaccount->pass_encoding = "dolistore";
 					$societeaccount->status = "1";
+					$societeaccount->import_key = dol_print_date($now, 'dayhourlog');
+
 					$ret_account = $societeaccount->create($user);
 					if ($ret_account < 0) {
 						$error_message = " - Error in creating account result code = " . $ret_account . " - " . $customer->errorsToString();
@@ -556,6 +588,8 @@ if (!$error) {
 	}
 } else {
 	print '--- end error code=' . $error . "\n";
+
+	// Repeat all error messages at end
 	foreach ($error_messages as $error_message) {
 		print "\n". $error_message;
 	}

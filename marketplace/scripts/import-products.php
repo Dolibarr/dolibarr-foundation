@@ -136,6 +136,7 @@ if (isModEnabled('barcode') && getDolGlobalString('BARCODE_PRODUCT_ADDON_NUM')) 
 	}
 }
 
+$now = dol_now();
 
 
 /*
@@ -285,6 +286,7 @@ if ($result_products = $conn->query($products_query)) {
 		$product->price_base_type = 'HT';
 		$product->tva_tx = "20";
 		$product->mandatory_period = !empty(GETPOST("mandatoryperiod", 'alpha')) ? 1 : 0;
+		$product->import_key = dol_print_date($now, 'dayhourlog');
 
 		// Extrafields
 		$product->array_options['options_marketplace_module_version'] = $obj->module_version;
@@ -306,7 +308,11 @@ if ($result_products = $conn->query($products_query)) {
 		if (!empty($objsql->rowid)) {
 			$action = 'updated';
 			$result = $product->update($objsql->rowid, $user);
+
+			$sql = 'UPDATE '.MAIN_DB_PREFIX."product SET import_key = '".$db->escape($importkey)."' WHERE rowid = ".((int) $result);
+			$db->query($sql);
 		} else {
+			// Set the import key
 			$action = 'added';
 			$result = $product->create($user);
 
