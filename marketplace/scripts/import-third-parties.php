@@ -265,8 +265,9 @@ print "Connected successfully...\n";
 if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
 	print "Clean all thirdparties already imported (with ref_ext = remote id) - May take a long time...\n";
 	if ($result_all_customers = $conn->query($delete_customers_query)) {
-		$list_of_imported_customers = new Societe($db);
 		print "Found ".$conn->num_rows($result_all_customers)." third parties in remote database\n";
+
+		$list_of_imported_customers = new Societe($db);
 		while ($objc = $result_all_customers->fetch_object()) {
 			//print ".";
 			$is_imported_before = $list_of_imported_customers->fetch('', '', $objc->id_customer);
@@ -296,12 +297,12 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 		if (!empty($obj->company)) {
 			$customer->name = $obj->company;
+			$customer->name_alias = dolGetFirstLastname($obj->firstname, $obj->lastname);
 		} else {
 			$customer->name = dolGetFirstLastname($obj->firstname, $obj->lastname);
 		}
 
 		$customer->url = $obj->website;
-		$customer->name_alias = '';
 		$customer->idprof2 = $obj->siret;
 		$customer->idprof3 = $obj->ape;
 		$customer->ref_ext = $obj->id_customer;
@@ -327,7 +328,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		FROM
 			ps_product pp
 		WHERE
-			pp.reference like '%c" . $obj->id_customer . "d%'
+			pp.reference like 'c" . $obj->id_customer . "d%'
 		";
 		$is_vendor = mysqli_num_rows($conn->query($request_to_check_if_vendor));
 		$customer->fournisseur = ($is_vendor > 0) ? '1' : '0';
@@ -425,30 +426,35 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 		if (!$error && 1) {
 			// Add tag/category customer
-			$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
-			if ($ret_cat < 0 && $customer->client > 0) {
-				$error_message = " - Error in setCategories customer result code = " . $ret_cat . " - " . $customer->errorsToString();
-				print $error_message;
-				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
-				//$error++;
-				//exit();
-			} else {
-				print " - set tag customer OK";
+			if ($customer->client > 0) {
+				$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
+				if ($ret_cat < 0) {
+					$error_message = " - Error in setCategories customer result code = " . $ret_cat . " - " . $customer->errorsToString();
+					print $error_message;
+					$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+					//$error++;
+					//exit();
+				} else {
+					print " - set tag customer OK";
+				}
 			}
 
 			// Add tag/category supplier
-			$ret_cat = $customer->setCategories($marketplace_third_parties_category_vendor, 'supplier');
-			if ($ret_cat < 0 && $customer->fournisseur > 0) {
-				$error_message = " - Error in setCategories supplier result code = " . $ret_cat . " - " . $customer->errorsToString();
-				print $error_message;
-				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
-				//$error++;
-				//exit();
-			} else {
-				print " - set tag supplier OK";
+			if ($customer->fournisseur > 0) {
+				$ret_cat = $customer->setCategories($marketplace_third_parties_category_vendor, 'supplier');
+				if ($ret_cat < 0) {
+					$error_message = " - Error in setCategories supplier result code = " . $ret_cat . " - " . $customer->errorsToString();
+					print $error_message;
+					$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+					//$error++;
+					//exit();
+				} else {
+					print " - set tag supplier OK";
+				}
 			}
 
 			// Add default contact
+			/*
 			$customer->name_bis = $obj->lastname;
 			$customer->email = $obj->email;
 			$customer->firstname = $obj->firstname;
@@ -478,7 +484,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			} else {
 				print " - set default contact OK";
 			}
-
+			*/
 
 			// Add address
 			$customer_addresses_query = "

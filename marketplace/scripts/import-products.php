@@ -147,7 +147,10 @@ print "***** " . $script_file . " (" . $version . ") pid=" . dol_getmypid() . " 
 if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]) || !isset($argv[5])) {	// Check parameters
 	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port limit [clean_all_before_import]\n";
 	print "NB: Limit is set to 20 by default (0 = All) \n";
-	print "NB: clean_all_before_import is set to true by default \n";
+	exit(-1);
+}
+if (!empty($argv[8])) {
+	print "Too many parameters\n";
 	exit(-1);
 }
 
@@ -230,10 +233,13 @@ if (! $conn->connected) {
 print "Connected to ".$db_host." ".$db_name." successfully...\n";
 
 
-if ($clean_all_before_import === 'true') {
+if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
+	print "Clean all products already imported (with ref_ext = remote id) - May take a long time...\n";
 	if ($result_all_products = $conn->query($delete_products_query)) {
+		print "Found ".$conn->num_rows($result_all_products)." products in remote database\n";
+
+		$list_of_imported_products = new Product($db);
 		while ($obji = $result_all_products->fetch_object()) {
-			$list_of_imported_products = new Product($db);
 			$is_imported_before = $list_of_imported_products->fetch('', '', $obji->id_product);
 			if ($is_imported_before > 0) {
 				$resulti_delete = $list_of_imported_products->delete($user);
@@ -249,12 +255,16 @@ if ($clean_all_before_import === 'true') {
 	}
 }
 
+print "Import remote products (limit=".$limit.") - May take a long time...\n";
+
 // Start of transaction
 $db->begin();
 
 if ($result_products = $conn->query($products_query)) {
+	$i = 0;
 
 	while ($obj = $result_products->fetch_object()) {
+		$i++;
 
 		//add one product
 		$product = new Product($db);
@@ -325,7 +335,7 @@ if ($result_products = $conn->query($products_query)) {
 			print " - Create Error => " . $result . " - " . $product->errorsToString();
 			$error++;
 		} else {
-			print " - Product ref_ext = " . $product->ref_ext . " " . $action . " successfully.";
+			print " - Product ref_ext = " . $product->ref_ext . " " . $action . " successfully";
 		}
 
 
@@ -373,7 +383,8 @@ if ($result_products = $conn->query($products_query)) {
 				print " - setMultiLangs OK";
 			}
 
-			// Add owner by adding supplier price
+			// Add owner of a module by adding supplier price
+			$matches = array();
 			if (preg_match('/c(.*?)d/', $product->ref, $matches)) {
 				$get_supplier = new Societe($db);
 				$resget = $get_supplier->fetch('', '', $matches[1]);
@@ -387,16 +398,17 @@ if ($result_products = $conn->query($products_query)) {
 				} else {
 					$id_fourn = $get_supplier->id;
 					$ref_product_fourn = $product->ref;
-					print $id_fourn;
+
 					$ret_add_fournisseur = $object_ProductFournisseur->add_fournisseur($user, $id_fourn, $ref_product_fourn, 1);
 					$ret_update_buyprice = $object_ProductFournisseur->update_buyprice(1, 0, $user, 'HT', $get_supplier, 1, $ref_product_fourn, 20, 0, '', 0, 0, '', '', array(), '', 0, 'HT');
+
+					print " - Adding supplier prices (id_fourn=".$id_fourn." ref_product_fourn=".$ref_product_fourn.") OK";
 				}
 
 			}else{
 				print " - Error in retrieve owner ID from ref " . $product->ref;
 				$error++;
 			}
-
 
 			// Add  categories and verions
 			$categries_and_versions_list = array();

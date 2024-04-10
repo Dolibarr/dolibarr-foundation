@@ -126,6 +126,10 @@ if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4])
 	print "Usage: " . $script_file . " db_host db_name db_user db_password db_port [clean_all_before_import]\n";
 	exit(-1);
 }
+if (!empty($argv[7])) {
+	print "Too many parameters\n";
+	exit(-1);
+}
 
 $db_host = $argv[1];
 $db_name = $argv[2];
