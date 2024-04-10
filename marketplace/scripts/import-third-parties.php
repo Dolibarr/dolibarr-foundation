@@ -143,9 +143,14 @@ $id_website = $argv[8];
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
 $marketplace_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
-// Start of transaction
-$db->begin();
 
+
+$message = "\n NB: If you would like to stop the script immediately upon encountering an error for one record, simply uncomment the lines ( //error++; //exit(); ) in this script... \n";
+
+// Ask confirmation
+print $message . "\n";
+print "Hit Enter to continue or CTRL+C to stop...\n";
+$input = trim(fgets(STDIN));
 
 $current_lang = $langs->getDefaultLang();
 switch ($langs->getDefaultLang()) {
@@ -188,7 +193,7 @@ FROM ps_customer c
 ";
 
 
-$sql_request_for_customers = "select
+$sql_request_for_customers = "SELECT
 	pc.id_customer,
 	pc.firstname,
 	pc.lastname,
@@ -207,11 +212,22 @@ $sql_request_for_customers = "select
 		WHEN 'it-it' THEN 'it_IT'
 		WHEN 'de-de' THEN 'de_DE'
 		ELSE ''
-	END dol_lang_code
-FROM
-	ps_customer pc 
-	left join ps_lang pl on pc.id_lang = pl.id_lang 
-ORDER BY pc.date_add DESC ";
+	END AS dol_lang_code
+	FROM
+	ps_customer pc
+	LEFT JOIN
+	ps_lang pl ON pc.id_lang = pl.id_lang
+	INNER JOIN (
+	SELECT 
+		MAX(id_customer) AS id_customer,
+		email
+	FROM 
+		ps_customer
+	GROUP BY 
+		email
+	) AS max_ids ON pc.id_customer = max_ids.id_customer
+	ORDER BY 
+	pc.date_add DESC ";
 
 if ($limit != 0) {
 	$sql_request_for_customers .= " limit " . $limit;
@@ -242,8 +258,9 @@ if ($clean_all_before_import === "true") {
 		}
 	}
 }
-
-
+$error_messages= array();
+// Start of transaction
+$db->begin();
 if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 	while ($obj = $result_customers->fetch_object()) {
@@ -321,12 +338,14 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					$company = trim($fetch_company['company']);
 				}
 			}
+			$publisher = $db->escape($publisher);
+			$company = $db->escape($company);
 			$sqlfilters = "t.nom LIKE '".$publisher."%' or t.name_alias LIKE '".$publisher."%'";
 			if ($company) {
 				$sqlfilters .= " or t.nom LIKE '".$company."%' or t.name_alias LIKE '".$company."%'";
 			}
 			$sqlr = "SELECT rowid FROM " . MAIN_DB_PREFIX . "societe as t";
-			$sqlr .= " WHERE " . $sqlfilters . " LIMIT 1";
+			$sqlr .= " WHERE (" . $sqlfilters . ") AND t.import_key IS NULL LIMIT 1";
 
 			// Check if this customer exist
 			$resqlr = $db->query($sqlr);
@@ -365,8 +384,11 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 
 		if ($result < 0) {
-			print " - Create Error => " . $result . " - " . $customer->errorsToString();
-			$error++;
+			$error_message = " - Create Error => " . $result . " - " . $customer->errorsToString();
+			print $error_message;
+			$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+			//$error++;
+			//exit();
 		} else {
 			print " - Third-party ref_ext = " . $customer->ref_ext . " " . $action . " successfully.";
 		}
@@ -376,12 +398,14 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			// Add  groups
 			$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
 			if ($ret_cat < 0) {
-				print " - Error in setCategories result code = " . $ret_cat . " - " . $customer->errorsToString();
-				$error++;
+				$error_message = " - Error in setCategories result code = " . $ret_cat . " - " . $customer->errorsToString();
+				print $error_message;
+				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+				//$error++;
+				//exit();
 			} else {
 				print " - set group OK";
 			}
-
 
 			// Add default contact
 			$customer->name_bis = $obj->lastname;
@@ -405,8 +429,11 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 			$ret_contact = $customer->create_individual($user);
 			if ($ret_contact < 0) {
-				setEventMessages($customer->error, $customer->errors, 'errors');
-				$error++;
+				$error_message = " - Error in setIndividual result code = " . $ret_contact . " - " . $customer->errorsToString();
+				print $error_message;
+				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+				//$error++;
+				//exit();
 			} else {
 				print " - set default contact OK";
 			}
@@ -438,6 +465,9 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			if ($result_customer_addresses = $conn->query($customer_addresses_query)) {
 				while ($objaddr = $result_customer_addresses->fetch_object()) {
 					$get_country_id = getCountry($objaddr->iso_code, '3');
+					if ($get_country_id == "NotDefined"){
+						continue;
+					}
 					$objectcontact = new Contact($db);
 					$objectcontact->socid = $rowid_soc;
 					$objectcontact->ref_ext = $objaddr->id_customer;
@@ -453,8 +483,11 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 					$ret_addresse = $objectcontact->create($user);
 					if ($ret_addresse < 0) {
-						print " - Error in set adresse result code = " . $ret_addresse . " - " . $objectcontact->errorsToString();
-						$error++;
+						$error_message = " - Error in set adresse result code = " . $ret_addresse . " - " . $customer->errorsToString();
+						print $error_message;
+						$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+						//$error++;
+						//exit();
 					} else {
 						print " - set adresse OK";
 					}
@@ -464,17 +497,31 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 			// Add connection credentials for a specific website	
 			if(!empty($id_website)) {
+
+				// Check if this account exist
+				$sqlaccount = "SELECT rowid FROM " . MAIN_DB_PREFIX . "societe_account ";
+				$sqlaccount .= " WHERE login = '" . $obj->email . "' LIMIT 1";
+				$resqlaccount = $db->query($sqlaccount);
+				$objsqlaccount = $db->fetch_object($resqlaccount);
+				if (!empty($objsqlaccount->rowid)) {
+					print " - The email associated with this third party already exists.";
+					continue;
+				}
 				$societeaccount = new SocieteAccount($db);
 				$societeaccount->login = $obj->email;
 				$societeaccount->pass_crypted =$obj->passwd;
 				$societeaccount->fk_soc = $rowid_soc;
 				$societeaccount->fk_website = $id_website;
 				$societeaccount->site = "dolibarr_website";
+				$societeaccount->pass_encoding = "dolistore";
 				$societeaccount->status = "1";
 				$ret_account = $societeaccount->create($user);
 				if ($ret_account < 0) {
-					print " - Error in creating account result code = " . $ret_account . " - " . $societeaccount->errorsToString();
-					$error++;
+					$error_message = " - Error in creating account result code = " . $ret_account . " - " . $customer->errorsToString();
+					print $error_message;
+					$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+					//$error++;
+					//exit();
 				} else {
 					print " - Create account OK";
 				}
@@ -492,8 +539,14 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 if (!$error) {
 	$db->commit();
 	print '--- end ok' . "\n";
+	foreach ($error_messages as $error_message) {
+		print "\n". $error_message;
+	}
 } else {
 	print '--- end error code=' . $error . "\n";
+	foreach ($error_messages as $error_message) {
+		print "\n". $error_message;
+	}
 	$db->rollback();
 }
 
