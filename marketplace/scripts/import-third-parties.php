@@ -250,7 +250,7 @@ $sql_request_for_customers = "SELECT
 		email
 	) AS max_ids ON pc.id_customer = max_ids.id_customer
 	ORDER BY
-	pc.date_add DESC ";
+	pc.date_add ASC ";
 
 if ($limit != 0) {
 	$sql_request_for_customers .= " limit " . $limit;
