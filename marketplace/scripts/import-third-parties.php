@@ -228,6 +228,7 @@ $sql_request_for_customers = "SELECT
 	pc.website,
 	pc.siret,
 	pc.ape,
+	pc.optin,
 	CASE pl.language_code
 		WHEN 'en-us' THEN 'en_US'
 		WHEN 'fr-fr' THEN 'fr_FR'
@@ -309,8 +310,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		$customer->idprof3 = $obj->ape;
 		$customer->ref_ext = $obj->id_customer;
 		$customer->email = $obj->email;
-		// TODO MDA
-		//$customer->no_email = ???
+		$customer->no_email = ($obj->optin ? 0 : 1);
 
 		// Check if customer
 		$request_to_check_if_customer = "
