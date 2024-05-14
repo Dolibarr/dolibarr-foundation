@@ -456,6 +456,70 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				}
 			}
 
+
+			// Add the recent contact/address (only one)
+			$customer->name_bis = $obj->lastname;
+			$customer->firstname = $obj->firstname;
+			switch ($obj->id_gender) {
+				case 1:
+					$civility = 'MR';
+					break;
+				case 2:
+					$civility = 'MME';
+					break;
+				case 3:
+					$civility = 'MLE';
+					break;
+				default:
+					$civility = '';
+					break;
+			};
+			$customer->civility_id = $civility;
+			$customer_address_query = "
+			select
+				pa.id_address ,
+				pa.id_customer,
+				pa.address1,
+				pa.address2,
+				pa.phone,
+				pa.postcode,
+				pa.date_add,
+				pa.city,
+				pc.iso_code
+			FROM
+				ps_address pa,
+				ps_country pc
+			WHERE
+				pa.id_country = pc.id_country AND
+				pa.id_customer = " . $obj->id_customer . " 
+			order by pa.date_add desc
+			limit 1
+			";
+
+			if ($result_customer_address = $conn->query($customer_address_query)) {
+				while ($objaddr = $result_customer_address->fetch_object()) {
+					$get_country_id = getCountry($objaddr->iso_code, '3');
+					if ($get_country_id != "NotDefined"){
+						$customer->country_id = $get_country_id;
+					}
+					$customer->address = $objaddr->address1 . "\n" . $objaddr->address2;
+					$customer->town = $objaddr->city;
+					$customer->zip = $objaddr->postcode;
+					$customer->phone_pro = $objaddr->phone;
+				}
+			}
+			$ret_setindividual = $customer->create_individual($user);
+			if ($ret_setindividual < 0) {
+				$error_message = " - Error in set individual result code = " . $ret_setindividual . " - " . $customer->errorsToString();
+				print $error_message;
+				$error_messages[] = $obj->id_customer . ' : ' . $error_message;
+				//$error++;
+				//exit();
+			} else {
+				print " - set individual OK";
+			}
+
+
 			// Add default contact
 			/*
 			$customer->name_bis = $obj->lastname;
@@ -490,6 +554,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			*/
 
 			// Add address
+			/*
 			$customer_addresses_query = "
 			select
 				pa.id_address ,
@@ -543,6 +608,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					}
 				}
 			}
+			*/
 
 
 			// Add 1 connection credentials for a specific website

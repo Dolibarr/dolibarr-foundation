@@ -8431,6 +8431,7 @@ ul.footer_links li + li {
   width: 40px;
   text-align: center;
 }
+
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
