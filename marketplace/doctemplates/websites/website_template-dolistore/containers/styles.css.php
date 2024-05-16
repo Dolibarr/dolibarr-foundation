@@ -8417,6 +8417,21 @@ ul.footer_links li + li {
 .order-history tbody > tr > td {
   vertical-align: top !important;
 }
+.invoice-pdf-link{
+  display: block ruby;
+}
+.order-history-products-list{
+  list-style: initial !important;
+  margin-left: 10px !important;
+}
+.btn-table .button.button-small span {
+  display: inline-flex;
+}
+.tag_version{
+  width: 40px;
+  text-align: center;
+}
+
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
-// END PHP ?>
+// END PHP

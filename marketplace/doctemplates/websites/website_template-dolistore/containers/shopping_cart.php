@@ -25,6 +25,9 @@ include_once DOL_DOCUMENT_ROOT . '/core/lib/website.lib.php';
 
 $website_id = getDolGlobalInt("MARKETPLACE_WEBSITE_ID");
 
+$langs->setDefaultLang($_SESSION['lang']['code']);
+$langs->loadLangs(array("website"));
+
 $website_object = new Website($db);
 $this_website = $website_object->fetch($website_id);
 $order_page_url = "index.php?website=".$website_object->ref."&pageref=order";
@@ -62,9 +65,9 @@ if($product_id && $product_qty) {
     $total_items = count($_SESSION['products']); //count total items
 
     $popup_product_html = '
-        <span class="cross" title="Close window"></span>
+        <span class="cross" title="'.$langs->trans("closeWindow").'"></span>
         <h2>
-            <i class="icon-ok"></i>Product successfully added to your shopping cart
+            <i class="icon-ok"></i> '.$langs->trans("productAddedToCart").'
         </h2>
         <div class="product-image-container layer_cart_img">
             <img class="layer_cart_img img-responsive" src="'.$product_thumb.'" alt="Subtotal V3" title="'.$object->label.'">
@@ -73,11 +76,11 @@ if($product_id && $product_qty) {
             <span id="layer_cart_product_title" class="product-name">'.$object->label.'</span>
             <span id="layer_cart_product_attributes"></span>
             <div>
-            <strong class="dark">Quantity</strong>
+            <strong class="dark">'.$langs->trans("quantity").'</strong>
             <span id="layer_cart_product_quantity">'.$product_qty.'</span>
             </div>
             <div>
-            <strong class="dark">Total</strong>
+            <strong class="dark">'.$langs->trans("total").'</strong>
             <span id="layer_cart_product_price">('.($product_qty * $object->price_ttc).' €)</span>
             </div>
         </div>';
@@ -110,24 +113,24 @@ if(isset($_POST['load_cart']) && $_POST['load_cart'] == 1)
         $cart_box .= '
         <div class="cart-prices">
             <div class="cart-prices-line first-line">
-                <span class="price cart_block_shipping_cost ajax_cart_shipping_cost"> Free shipping! </span>
-                <span> Shipping </span>
+                <span class="price cart_block_shipping_cost ajax_cart_shipping_cost"> '.$langs->trans("FreeShipping").' </span>
+                <span> '.$langs->trans("shipping").' </span>
             </div>
             <div class="cart-prices-line last-line">
                 <span class="price cart_block_total ajax_block_cart_total">' . $total . ' €</span>
-                <span>Total</span>
+                <span>'.$langs->trans("total").'</span>
             </div>
-            <p> Prices may vary depending on your country. </p>
+            <p> '.$langs->trans("pricesMayVaryDependingOnYourCountry").' </p>
         </div>
         <p class="cart-buttons">
-            <a id="button_order_cart" class="btn btn-default button button-small" href="' . $order_page_url . '" title="Check out" rel="nofollow">
-                <span> Check out <i class="icon-chevron-right right"></i>
+            <a id="button_order_cart" class="btn btn-default button button-small" href="' . $order_page_url . '" title="'.$langs->trans("checkOut").'" rel="nofollow">
+                <span> '.$langs->trans("checkOut").' <i class="icon-chevron-right right"></i>
                 </span>
             </a>
         </p>';
         die($cart_box); //exit and output content
     }else{
-        die("<p class='cart_block_no_products'> No products </p>"); //we have empty cart
+        die("<p class='cart_block_no_products'> ".$langs->trans("noProducts")." </p>"); //we have empty cart
     }
 }
 
@@ -140,31 +143,31 @@ if(isset($_POST['load_popup_products_html']) && $_POST['load_popup_products_html
             $total = ($total + $subtotal);
         }
         if(count($_SESSION['products']) == 1){
-            $title = '<span class="ajax_cart_product_txt"> There is 1 item in your cart. </span>';
+            $title = '<span class="ajax_cart_product_txt"> '.$langs->trans("thereIsItemInYourCart").' </span>';
         }else{
-            $title = '<span class="ajax_cart_product_txt_s"> There are <span class="ajax_cart_quantity">'.count($_SESSION['products']).'</span> items in your cart. </span>';
+            $title = '<span class="ajax_cart_product_txt_s"> '.$langs->trans("nbrItemsInCartAjax", count($_SESSION['products'])).' </span>';
         }
         $popup_products_html = '
         <h2>'.$title.'</h2>
         <div class="layer_cart_row">
-            <strong class="dark"> Total products (tax incl.) </strong>
+            <strong class="dark"> '.$langs->trans("totalProductsTaxIncl").' </strong>
             <span class="ajax_block_products_total">'.$total.' €</span>
         </div>
         <div class="layer_cart_row">
-            <strong class="dark"> Total shipping&nbsp;(tax incl.) </strong>
-            <span class="ajax_cart_shipping_cost"> Free shipping! </span>
+            <strong class="dark"> '.$langs->trans("totalShippingTaxIncl").' </strong>
+            <span class="ajax_cart_shipping_cost"> '.$langs->trans("freeShipping").' </span>
         </div>
         <div class="layer_cart_row">
-            <strong class="dark"> Total (tax incl.) </strong>
+            <strong class="dark"> '.$langs->trans("totalTaxIncl").' </strong>
             <span class="ajax_block_cart_total">'.$total.' €</span>
         </div>
         <div class="button-container">
-            <span class="continue btn btn-default button exclusive-medium" title="Continue shopping">
+            <span class="continue btn btn-default button exclusive-medium" title="'.$langs->trans("continueShopping").'">
             <span>
-                <i class="icon-chevron-left left"></i>Continue shopping </span>
+                <i class="icon-chevron-left left"></i>'.$langs->trans("continueShopping").' </span>
             </span>
-            <a class="btn btn-default button button-medium" href="' . $order_page_url . '" title="Proceed to checkout" rel="nofollow">
-            <span> Proceed to checkout <i class="icon-chevron-right right"></i>
+            <a class="btn btn-default button button-medium" href="' . $order_page_url . '" title="'.$langs->trans("proceedToCheckout").'" rel="nofollow">
+            <span> '.$langs->trans("proceedToCheckout").' <i class="icon-chevron-right right"></i>
             </span>
             </a>
         </div>';
