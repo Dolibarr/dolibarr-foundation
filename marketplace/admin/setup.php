@@ -1,6 +1,5 @@
 <?php
-/* Copyright (C) 2004-2017 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2024 Alice Adminson
+/* Copyright (C) 2024 Laurent Destailleur  <eldy@users.sourceforge.net>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -178,7 +177,10 @@ $itemlogo->fieldAttr['placeholder'] = 'https://...';
 $itemlogo->cssClass = 'minwidth500';
 
 // Name of template to use
-$formSetup->newItem('MARKETPLACE_WEBSITE_ID')->helpText = $langs->trans("MARKETPLACE_WEBSITE_ID_HELP");
+$itemforwebsiteid = $formSetup->newItem('MARKETPLACE_WEBSITE_ID');
+$itemforwebsiteid->helpText = $langs->trans("MARKETPLACE_WEBSITE_ID_HELP");
+$itemforwebsiteid->cssClass = 'maxwidth50';
+
 $formSetup->newItem('MARKETPLACE_SECRET_KEY')->helpText = $langs->trans("MARKETPLACE_SECRET_KEY_HELP");
 
 
