@@ -466,6 +466,7 @@ class modMarketplace extends DolibarrModules
 		$result6=$extrafields->addExtraField('marketplace_contact_support',      "HowtoContactSupport", 'varchar', 50,  64, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result6=$extrafields->addExtraField('marketplace_reason_disabled',      "LastReasonDisabled", 'varchar', 60,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result6=$extrafields->addExtraField('marketplace_old_url',              "OldSystemUrl", 'varchar', 70,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result7=$extrafields->addExtraField('marketplace_module_keywords',    	 "ModuleKeywords", 'varchar', 80,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		// Permissions
 		$this->remove($options);
