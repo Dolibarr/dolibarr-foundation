@@ -8433,6 +8433,7 @@ ul.footer_links li + li {
   width: 40px;
   text-align: center;
 }
+
 /******************
 **************
 **************/
@@ -8758,6 +8759,7 @@ button[disabled], html input[disabled] {
 .icon-manage:before {
   content: "\f0ae";
 }
+
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
