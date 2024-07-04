@@ -396,3 +396,44 @@ jQuery(document).ready(function($) {
     });
 });
 
+/*
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.nav-link');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            tabs.forEach(t => t.classList.remove('active'));
+            panes.forEach(p => p.classList.remove('active'));
+
+            tab.classList.add('active');
+            document.getElementById(tab.getAttribute('data-target')).classList.add('active');
+        });
+    });
+});
+*/
+document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.nav-link');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function switchTab(tab) {
+        // Supprime les classes 'active' et 'fade-in' de tous les onglets et panneaux
+        tabs.forEach(t => t.classList.remove('active'));
+        panes.forEach(p => p.classList.remove('active', 'fade-in'));
+
+        // Ajoute la classe 'active' à l'onglet cliqué
+        tab.classList.add('active');
+
+        // Trouve le panneau correspondant et ajoute les classes 'active' et 'fade-in'
+        const pane = document.getElementById(tab.getAttribute('data-target'));
+        pane.classList.add('active', 'fade-in');
+    }
+
+    // Ajoutez un écouteur d'événement de clic à chaque onglet
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => switchTab(tab));
+    });
+});
+
+
+
