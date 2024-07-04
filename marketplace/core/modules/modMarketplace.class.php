@@ -646,7 +646,8 @@ class modMarketplace extends DolibarrModules
 		$result = $this->_init($sql, $options);
 
 		if (! empty($result)) {
-			setEventMessages('The website template(s) "dolistore" provided by the module has been saved into the directory of website templates and is ready to be imported as a new web site.', null, 'warnings');
+			$messageontemplatecopy = $langs->trans("WebsiteTemplateWasCopied", 'dolistore');
+			setEventMessages($messageontemplatecopy, null, 'warnings');
 		}
 		return $result;
 	}

@@ -20,7 +20,7 @@
 # Module label 'ModuleMarketplaceName'
 ModuleMarketplaceName = Marketplace
 # Module description 'ModuleMarketplaceDesc'
-ModuleMarketplaceDesc = Marketplace management. Provides an ecommerce and marketplace web portal template and features to allow to sell products in a amarketplace.
+ModuleMarketplaceDesc = Marketplace management. Provides an ecommerce and marketplace web portal template and features to allow to sell products in a marketplace.
 
 #
 # Admin pages

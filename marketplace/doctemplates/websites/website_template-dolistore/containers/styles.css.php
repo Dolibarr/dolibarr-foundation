@@ -7107,8 +7107,6 @@ h3 {
 .icon-shopping-cart:before {
   content: "\f07a";
 }
-
-
 .shopping_cart>a:first-child b {
   color:#fff;
   font:600 18px/22px "Open Sans",sans-serif;
@@ -8417,6 +8415,7 @@ ul.footer_links li + li {
   display: inline-flex;
 }
 .tag_version{
+
   white-space: nowrap;
   width: 40px;
   text-align: center;
