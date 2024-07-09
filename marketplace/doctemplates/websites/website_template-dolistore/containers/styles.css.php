@@ -18,7 +18,6 @@ body.bodywebsite { margin: 0; font-family: 'Open Sans', sans-serif; }
 /*.bodywebsite a,
 .bodywebsite b,
 .bodywebsite body,
-.bodywebsite div,
 .bodywebsite footer,
 .bodywebsite form,
 .bodywebsite h2,
@@ -33,7 +32,6 @@ body.bodywebsite { margin: 0; font-family: 'Open Sans', sans-serif; }
 .bodywebsite nav,
 .bodywebsite p,
 .bodywebsite section,
-.bodywebsite span,
 .bodywebsite strong,
 .bodywebsite ul {
   margin: 0;
@@ -110,13 +108,6 @@ body {
 .bodywebsite input::-moz-focus-inner {
   border: 0;
   padding: 0;
-}
-.bodywebsite *,
-.bodywebsite :after,
-.bodywebsite :before {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 .bodywebsite a {
   color: #dc7306;
@@ -516,6 +507,7 @@ body {
 .bodywebsite .button.button-small span:hover {
   background: #575757;
   border-color: #303030 #303030 #666 #444;
+  color:#fff;
 }
 .bodywebsite .button.button-medium {
   font-size: 17px;
@@ -2085,6 +2077,7 @@ body {
   padding: 30px;
   overflow: hidden;
   position: static;
+  padding-bottom: 0px !important;
 }
 .bodywebsite #layer_cart .layer_cart_product h2 {
   font: 400 23px/29px Arial, Helvetica, sans-serif;
@@ -2204,7 +2197,7 @@ body {
 .bodywebsite #layer_cart .cross {
   position: absolute;
   right: 7px;
-  top: 8px;
+  top: 15px;
   width: 25px;
   height: 25px;
   cursor: pointer;
@@ -2367,7 +2360,7 @@ body {
 }
 .bodywebsite a {
   color: #dc7306;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 .bodywebsite a:focus,
 .bodywebsite a:hover {
@@ -2817,6 +2810,7 @@ body {
 .bodywebsite .button.button-small span:hover {
   background: #575757;
   border-color: #303030 #303030 #666 #444;
+  color:#fff;
 }
 .bodywebsite .button.button-medium {
   font-size: 17px;
@@ -3662,6 +3656,7 @@ body {
   border: 1px solid #d2d0d0;
   border-top: 1px solid #b0afaf;
   border-bottom: 1px solid #b0afaf;
+  margin-bottom: 30px;
 }
 .bodywebsite .box-info-product p {
   margin-bottom: 7px;
@@ -4440,6 +4435,7 @@ body {
   padding: 30px;
   overflow: hidden;
   position: static;
+  padding-bottom: 0px !important;
 }
 .bodywebsite #layer_cart .layer_cart_product h2 {
   font: 400 23px/29px Arial, Helvetica, sans-serif;
@@ -4559,7 +4555,7 @@ body {
 .bodywebsite #layer_cart .cross {
   position: absolute;
   right: 7px;
-  top: 8px;
+  top: 15px;
   width: 25px;
   height: 25px;
   cursor: pointer;
@@ -5620,7 +5616,7 @@ body {
   color: #e6e6e6;
 }
 .bodywebsite #lightbox {
-  /*position: fixed;*/
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -5944,13 +5940,6 @@ body {
 .bodywebsite button {
   -webkit-appearance: button;
   cursor: pointer;
-}
-.bodywebsite *,
-.bodywebsite *:before,
-.bodywebsite *:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 .bodywebsite input,
 .bodywebsite button {
@@ -6994,6 +6983,7 @@ div.selector select {
 div.checker {
   cursor: pointer;
   margin-right: 5px;
+  display: inline-block;
 }
 div.checker span {
   position: relative;
@@ -7119,9 +7109,6 @@ h3 {
 .icon-shopping-cart:before {
   content: "\f07a";
 }
-/*==========================*/
-
-
 .shopping_cart>a:first-child b {
   color:#fff;
   font:600 18px/22px "Open Sans",sans-serif;
@@ -8430,8 +8417,304 @@ ul.footer_links li + li {
   display: inline-flex;
 }
 .tag_version{
+
+  white-space: nowrap;
   width: 40px;
   text-align: center;
+}
+/*==================================*/
+.nav-link {
+  padding: 5px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+.nav-link.active {
+  border-bottom: 3px solid #333;
+  font-weight: bold;
+  background-color: #dbdbdb;
+}
+.tab-content {
+  padding: 20px;
+  border-top: 2px solid #999 !important;
+  margin-top: -2px !important;
+  margin-bottom: 20px;
+  background-color: fbfbfb;
+}
+.std .tab-pane {
+  display: none;
+}
+.std .tab-pane.active {
+  display: block;
+}
+.add-product-page{
+  border: 1px solid #dbdbdb !important;
+  padding: 0px 15px 10px 15px !important;
+}
+.nav-tabs .nav-link {
+  margin-bottom: -1px;
+  background: 0 0;
+    background-color: rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+}
+.add-product-page h5{
+  text-align: center;
+  margin-bottom: 60px;
+}
+.tab-content .tab-pane .form-group .form-control, #authentication .form-group .form-control{
+  max-width: none !important;
+}
+.box-form{
+  padding: 20px;
+  /*border: 1px solid #dbdbdb;*/
+  margin-top: 20px;
+  padding-top: 0px;
+}
+.textarea-short-description{
+  height: 80px !important;
+}
+.info p {
+  text-align: justify;
+  margin-bottom: 15px !important;
+}
+div.info {
+  border-left: solid 5px #87cfd2;
+  padding-top: 8px;
+  padding-left: 10px;
+  padding-right: 4px;
+  padding-bottom: 8px;
+  margin: 1em 0em 1em 0em;
+  background: #eff8fc;
+  color: #558;
+}
+.price-field{
+  max-width: 53% !important;
+}
+.version-field{
+  width: 120px !important;
+  float: left;
+  margin-right: 8px !important;
+}
+.module-version, .how-to-contact, .module-keywords{
+  max-width: none !important;
+}
+.info-inline{
+  display: inline-block;
+}
+.price-currency{
+  margin-left: 5px;
+}
+.price-free{
+  font-size: 11px;
+  font-style: italic;
+}
+.cat-check-table td{
+  font-size: 13px;
+  padding: 2px !important;
+}
+div.uploader {
+  background: none;
+  height: 27px;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+input.button_large, input.button_large_disabled {
+  position: relative;
+  display: inline-block;
+  padding: 5px 7px;
+  border: 1px solid #cc9900;
+  font-weight: bold;
+  color: black;
+  background: url(https://www.dolistore.com/themes/dolibarr-bootstrap/css/../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+}
+button[disabled], html input[disabled] {
+  cursor: default;
+}
+.lang_span{
+  text-transform: uppercase;
+  font-style: italic;
+  font-size: 10px;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 350px;
+  padding: 15px !important;
+  font-family: sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: normal;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; 
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.tooltip .tooltiptext::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.checkbox_label{
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: 400 !important;
+}
+.field-info{
+  font-family: sans-serif;
+  color: #555;
+  font-size: 12px;
+  font-weight: lighter;
+  text-align: justify;
+  border-left: 1px solid #dbdbdb;
+  padding-left: 12px;
+  margin-top: 6px;
+}
+.dolibarr_core_include{
+  margin-top: 15px !important;
+}
+.subcat-checkbox-td{
+  font-size: 13px;
+  padding: 5px 10px !important;
+  padding-left: 30px !important;  
+  padding-top: 0px !important;
+}
+.cat-checkbox-td{
+  font-size: 13px;
+  padding: 5px 10px !important;
+  padding-top: 4px !important;
+}
+#product-creation-form{
+  font-family: 'Open Sans', sans-serif !important;
+}
+#product-creation-form label{
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: normal !important;
+}
+#product-creation-form hr{
+  margin: 10px 0px 10px 0px !important;
+}
+.ui-state-highlight {
+  height: 50px;
+  background-color: #f0f0f0;
+  border: 1px dashed #ccc;
+}
+.sortable-placeholder {
+  background-color: #f0f0f0;
+  border: 1px dashed #ccc;
+  height: 100px; /* Adjust as needed */
+}
+.icon-move::before {
+  content: "\f047";
+}
+.iconAddImage::before {
+  content: "\f067";
+  color: silver;
+}
+#addImageBtn, #addImageBtn2 {
+  margin-bottom: 10px;
+}
+#addImageBtn span.iconAddImage {
+  cursor: pointer;
+  font-family: "FontAwesome";
+  font-size: 14px;
+  margin-left: 5px;
+}
+#addImageBtn2 span.iconAddImage {
+  cursor: pointer;
+  font-family: "FontAwesome";
+  font-size: 14px;
+  margin-left: 5px;
+}
+.table-body, .tbody-image-cover{
+  font-size: 13px;
+}
+.table-body{
+  border-left: 4px solid #dbdbdb;
+}
+.table-body tr{
+  border-bottom: 1px solid #dbdbdb;
+}
+.td-deleteBtn{
+  text-align: right !important;
+  padding-right: 0px !important;
+}
+.icon-delete:before{
+  content: "\f014";
+}
+.icon-delete{
+  font-size: 17px !important;
+  padding: 0 !important;
+  line-height: 15px;
+  cursor: pointer;
+}
+.tbody-image-cover td {
+  padding: 0 !important;
+}
+.table-body td {
+  padding: 4px 0px 4px 15px !important
+}
+.input-image-cover, .image-input{
+  max-width: 350px;
+}
+.dragging {
+  background-color: #f0f0f0;
+  opacity: 0.7;
+}
+.form-subheading {
+  font-family: "Open Sans", sans-serif !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  color: #555454;
+  font-size: 15px !important;
+  padding: 0 0 0px !important;
+  line-height: normal !important;
+  margin-bottom: 20px !important;
+  border-bottom: 1px solid #dbdbdb !important;
+}
+.image-cover-preview{
+  border: 1px solid #dbdbdb;
+  box-shadow: 1px 1px 3px -1px #333;
+  margin-left: 15px !important;
+}
+.image-preview{
+  border: 1px solid #dbdbdb;
+  box-shadow: 1px 1px 3px -1px #333;
+}
+.fade-in {
+  animation: fadeIn 0.6s;
 }
 
 /******************
@@ -8759,7 +9042,6 @@ button[disabled], html input[disabled] {
 .icon-manage:before {
   content: "\f0ae";
 }
-
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
