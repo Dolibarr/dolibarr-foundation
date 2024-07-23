@@ -15,7 +15,7 @@ body.bodywebsite { margin: 0; font-family: 'Open Sans', sans-serif; }
 @charset "UTF-8";
 @import "//fonts.googleapis.com/css?family=Open+Sans";
 
-/*.bodywebsite a,
+.bodywebsite a,
 .bodywebsite b,
 .bodywebsite body,
 .bodywebsite footer,
@@ -40,7 +40,7 @@ body.bodywebsite { margin: 0; font-family: 'Open Sans', sans-serif; }
   font: inherit;
   font-size: 100%;
   vertical-align: baseline;
-}*/
+}
 .bodywebsite html {
   line-height: 1;
   font-family: sans-serif;
@@ -3330,10 +3330,10 @@ body {
     font-size: 1px;
   }
 }
-.bodywebsite table td {
+/*.bodywebsite table td {
   padding: 9px 10px;
   text-align: left;
-}
+}*/
 .bodywebsite .primary_block {
   margin-bottom: 40px;
 }
@@ -6253,9 +6253,7 @@ body {
 .bodywebsite h3 {
   font-family: "Open Sans", sans-serif !important;
 }
-/******************
-*******************
-******************/
+
 
 .radio input[type="radio"],
 .radio-inline input[type="radio"],
@@ -7109,6 +7107,8 @@ h3 {
 .icon-shopping-cart:before {
   content: "\f07a";
 }
+
+
 .shopping_cart>a:first-child b {
   color:#fff;
   font:600 18px/22px "Open Sans",sans-serif;
@@ -8417,7 +8417,6 @@ ul.footer_links li + li {
   display: inline-flex;
 }
 .tag_version{
-
   white-space: nowrap;
   width: 40px;
   text-align: center;
@@ -8626,308 +8625,11 @@ button[disabled], html input[disabled] {
 #product-creation-form hr{
   margin: 10px 0px 10px 0px !important;
 }
-.ui-state-highlight {
+/*.ui-state-highlight {
   height: 50px;
   background-color: #f0f0f0;
   border: 1px dashed #ccc;
-}
-.sortable-placeholder {
-  background-color: #f0f0f0;
-  border: 1px dashed #ccc;
-  height: 100px; /* Adjust as needed */
-}
-.icon-move::before {
-  content: "\f047";
-}
-.iconAddImage::before {
-  content: "\f067";
-  color: silver;
-}
-#addImageBtn, #addImageBtn2 {
-  margin-bottom: 10px;
-}
-#addImageBtn span.iconAddImage {
-  cursor: pointer;
-  font-family: "FontAwesome";
-  font-size: 14px;
-  margin-left: 5px;
-}
-#addImageBtn2 span.iconAddImage {
-  cursor: pointer;
-  font-family: "FontAwesome";
-  font-size: 14px;
-  margin-left: 5px;
-}
-.table-body, .tbody-image-cover{
-  font-size: 13px;
-}
-.table-body{
-  border-left: 4px solid #dbdbdb;
-}
-.table-body tr{
-  border-bottom: 1px solid #dbdbdb;
-}
-.td-deleteBtn{
-  text-align: right !important;
-  padding-right: 0px !important;
-}
-.icon-delete:before{
-  content: "\f014";
-}
-.icon-delete{
-  font-size: 17px !important;
-  padding: 0 !important;
-  line-height: 15px;
-  cursor: pointer;
-}
-.tbody-image-cover td {
-  padding: 0 !important;
-}
-.table-body td {
-  padding: 4px 0px 4px 15px !important
-}
-.input-image-cover, .image-input{
-  max-width: 350px;
-}
-.dragging {
-  background-color: #f0f0f0;
-  opacity: 0.7;
-}
-.form-subheading {
-  font-family: "Open Sans", sans-serif !important;
-  font-weight: 600 !important;
-  text-transform: uppercase;
-  color: #555454;
-  font-size: 15px !important;
-  padding: 0 0 0px !important;
-  line-height: normal !important;
-  margin-bottom: 20px !important;
-  border-bottom: 1px solid #dbdbdb !important;
-}
-.image-cover-preview{
-  border: 1px solid #dbdbdb;
-  box-shadow: 1px 1px 3px -1px #333;
-  margin-left: 15px !important;
-}
-.image-preview{
-  border: 1px solid #dbdbdb;
-  box-shadow: 1px 1px 3px -1px #333;
-}
-.fade-in {
-  animation: fadeIn 0.6s;
-}
-
-/******************
-**************
-**************/
-.nav-link {
-  padding: 5px 20px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  outline: none;
-}
-.nav-link.active {
-  border-bottom: 3px solid #333;
-  font-weight: bold;
-  background-color: #dbdbdb;
-}
-.tab-content {
-  padding: 20px;
-  border-top: 2px solid #999 !important;
-  margin-top: -2px !important;
-  margin-bottom: 20px;
-  background-color: fbfbfb;
-}
-.std .tab-pane {
-  display: none;
-}
-.std .tab-pane.active {
-  display: block;
-}
-.add-product-page{
-  border: 1px solid #dbdbdb !important;
-  padding: 0px 15px 10px 15px !important;
-}
-.nav-tabs .nav-link {
-  margin-bottom: -1px;
-  background: 0 0;
-    background-color: rgba(0, 0, 0, 0);
-  border: 1px solid transparent;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
-}
-.add-product-page h5{
-  text-align: center;
-  margin-bottom: 60px;
-}
-.tab-content .tab-pane .form-group .form-control, #authentication .form-group .form-control{
-  max-width: none !important;
-}
-.box-form{
-  padding: 20px;
-  /*border: 1px solid #dbdbdb;*/
-  margin-top: 20px;
-  padding-top: 0px;
-}
-.textarea-short-description{
-  height: 80px !important;
-}
-.info p {
-  text-align: justify;
-  margin-bottom: 15px !important;
-}
-div.info {
-  border-left: solid 5px #87cfd2;
-  padding-top: 8px;
-  padding-left: 10px;
-  padding-right: 4px;
-  padding-bottom: 8px;
-  margin: 1em 0em 1em 0em;
-  background: #eff8fc;
-  color: #558;
-}
-.price-field{
-  max-width: 53% !important;
-}
-.version-field{
-  width: 120px !important;
-  float: left;
-  margin-right: 8px !important;
-}
-.module-version, .how-to-contact, .module-keywords{
-  max-width: none !important;
-}
-.info-inline{
-  display: inline-block;
-}
-.price-currency{
-  margin-left: 5px;
-}
-.price-free{
-  font-size: 11px;
-  font-style: italic;
-}
-.cat-check-table td{
-  font-size: 13px;
-  padding: 2px !important;
-}
-div.uploader {
-  background: none;
-  height: 27px;
-  width: 100%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-input.button_large, input.button_large_disabled {
-  position: relative;
-  display: inline-block;
-  padding: 5px 7px;
-  border: 1px solid #cc9900;
-  font-weight: bold;
-  color: black;
-  background: url(https://www.dolistore.com/themes/dolibarr-bootstrap/css/../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
-  cursor: pointer;
-  white-space: normal;
-  text-align: left;
-}
-button[disabled], html input[disabled] {
-  cursor: default;
-}
-.lang_span{
-  text-transform: uppercase;
-  font-style: italic;
-  font-size: 10px;
-}
-.tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 350px;
-  padding: 15px !important;
-  font-family: sans-serif;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: normal;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%; 
-  left: 50%;
-  margin-left: -100px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  text-align: justify;
-  text-justify: inter-word;
-}
-.tooltip .tooltiptext::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-.checkbox_label{
-  cursor: pointer;
-  margin-left: 5px;
-  font-weight: 400 !important;
-}
-.field-info{
-  font-family: sans-serif;
-  color: #555;
-  font-size: 12px;
-  font-weight: lighter;
-  text-align: justify;
-  border-left: 1px solid #dbdbdb;
-  padding-left: 12px;
-  margin-top: 6px;
-}
-.dolibarr_core_include{
-  margin-top: 15px !important;
-}
-.subcat-checkbox-td{
-  font-size: 13px;
-  padding: 5px 10px !important;
-  padding-left: 30px !important;  
-  padding-top: 0px !important;
-}
-.cat-checkbox-td{
-  font-size: 13px;
-  padding: 5px 10px !important;
-  padding-top: 4px !important;
-}
-#product-creation-form{
-  font-family: 'Open Sans', sans-serif !important;
-}
-#product-creation-form label{
-  font-family: 'Open Sans', sans-serif !important;
-  font-weight: normal !important;
-}
-#product-creation-form hr{
-  margin: 10px 0px 10px 0px !important;
-}
-.ui-state-highlight {
-  height: 50px;
-  background-color: #f0f0f0;
-  border: 1px dashed #ccc;
-}
+}*/
 .sortable-placeholder {
   background-color: #f0f0f0;
   border: 1px dashed #ccc;
@@ -9041,6 +8743,93 @@ button[disabled], html input[disabled] {
 }
 .icon-manage:before {
   content: "\f0ae";
+}
+/*===========================*/
+.product-table-icons {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  font-size: 15px !important;
+}
+.icon-edit:before {
+  content: "\f044";
+}
+.order-history tbody{
+  font-size: 14px !important;
+}
+.icon-euro:before {
+  content: "\f153";
+}
+.hasDatepicker  {
+  display: inline;
+  height: 25px;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.42857;
+  color: #9c9b9b;
+  vertical-align: middle;
+  background-color: white;
+  border: 1px solid #d6d4d4;
+  border-radius: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  margin-right: 3px !important;
+}
+.hasDatepicker:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6);
+}
+.inline-date-filter span{
+  float: left;
+  margin-right: 25px;
+}
+.btn-filter {
+  position: relative;
+  display: inline-block;
+  padding: 0px 8px;
+  border: 1px solid #cc9900;
+  font-weight: bold;
+  color: #fff;
+  background: #eea200;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  text-shadow: 0 1px #b57b00;
+}
+.btn-filter:after {
+  content: "\f002";
+  font-family: fontawesome;
+  margin-left: 7px;
+}
+.table-no-border td, .table-no-border th {
+  border: 0 !important;
+  padding-right: 60px;
+  font-size: 14px;
+  padding-bottom: 4px;
+}
+.span-blue{
+  background-color: rgba(238, 162, 0, 0.2);
+  border-color: rgba(238, 162, 0, 0.5);
+  padding: 0px 7px;
+}
+.table-payment-recap td, th{
+  padding: 7px 8px 7px 8px !important;
+  text-align: center !important;
+}
+#generate-csv{
+  position: absolute;
+  top: 0px;
+  right: 15px;
+}
+.p_with_margin{
+  text-align: center;
+  margin: 45px !important;
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
