@@ -185,6 +185,14 @@ $itemforwebsiteid->cssClass = 'maxwidth50';
 $formSetup->newItem('MARKETPLACE_SECRET_KEY')->helpText = $langs->trans("MARKETPLACE_SECRET_KEY_HELP");
 
 
+// Setup conf for email templates
+$formSetup->newItem('EMailTemplates')->setAsTitle();
+
+$formSetup->newItem('MARKETPLACE_WELCOME_EMAIL_TEMPLATE')->setAsEmailTemplate('all');
+
+$formSetup->newItem('MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE')->setAsEmailTemplate('all');
+
+
 /*
 // Setup conf MARKETPLACE_MYPARAM10
 $item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
