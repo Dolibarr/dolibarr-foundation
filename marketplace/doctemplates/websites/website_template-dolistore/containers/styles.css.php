@@ -8831,6 +8831,89 @@ button[disabled], html input[disabled] {
   text-align: center;
   margin: 45px !important;
 }
+/*===========================*/
+.product-table-icons {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  font-size: 15px !important;
+}
+.icon-edit:before {
+  content: "\f044";
+}
+.order-history tbody{
+  font-size: 14px !important;
+}
+.icon-euro:before {
+  content: "\f153";
+}
+.hasDatepicker  {
+  display: inline;
+  height: 25px;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.42857;
+  color: #9c9b9b;
+  vertical-align: middle;
+  background-color: white;
+  border: 1px solid #d6d4d4;
+  border-radius: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  margin-right: 3px !important;
+}
+.hasDatepicker:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6);
+}
+.inline-date-filter span{
+  float: left;
+  margin-right: 25px;
+}
+.btn-filter {
+  position: relative;
+  display: inline-block;
+  padding: 0px 8px;
+  border: 1px solid #cc9900;
+  font-weight: bold;
+  color: #fff;
+  background: #eea200;
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  text-shadow: 0 1px #b57b00;
+}
+.btn-filter:after {
+  content: "\f002";
+  font-family: fontawesome;
+  margin-left: 7px;
+}
+.table-no-border td, .table-no-border th {
+  border: 0 !important;
+  padding-right: 60px;
+  font-size: 14px;
+  padding-bottom: 4px;
+}
+.span-blue{
+  background-color: rgba(238, 162, 0, 0.2);
+  border-color: rgba(238, 162, 0, 0.5);
+  padding: 0px 7px;
+}
+.table-payment-recap td, th{
+  padding: 7px 8px 7px 8px !important;
+  text-align: center !important;
+}
+#generate-csv{
+  position: absolute;
+  top: 0px;
+  right: 15px;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
