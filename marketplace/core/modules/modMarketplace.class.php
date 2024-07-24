@@ -468,6 +468,29 @@ class modMarketplace extends DolibarrModules
 		$result6=$extrafields->addExtraField('marketplace_old_url',              "OldSystemUrl", 'varchar', 70,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result7=$extrafields->addExtraField('marketplace_module_keywords',    	 "ModuleKeywords", 'varchar', 80,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
+		// Create email templates
+
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(welcomeToMarketplace)', '', 'marketplace', 'all', null, 0, 110, '__(welcomeTo)__ __[MAIN_INFO_SOCIETE_NOM]__ __(marketplace)__', null, 0, 0, '__(marketplaceWelcomeEmailContent)__', 1, 1, 1);";
+		$result = $this->db->query($sql);
+		if ($result) {
+			$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
+			dolibarr_set_const($this->db, 'MARKETPLACE_WELCOME_EMAIL_TEMPLATE', $id_template, 'chaine', 0, 'Name of welcome email template', $conf->entity);
+		} else {
+			$this->error = $this->db->lasterror();
+			dol_print_error($this->error);
+		}
+
+
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(resetPasswordMarketplace)', '', 'marketplace', 'all', null, 0, 120, '__(passwordResetRequest)__ [__[MAIN_INFO_SOCIETE_NOM]__]', null, 0, 0,'__(marketplaceResetPasswordEmailContent)__', 1, 1, 1);";
+		$result = $this->db->query($sql);
+		if ($result) {
+			$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
+			dolibarr_set_const($this->db, 'MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE', $id_template, 'chaine', 0, 'Name of forgot password email template', $conf->entity);
+		} else {
+			$this->error = $this->db->lasterror();
+			dol_print_error($this->error);
+		}
+
 		// Permissions
 		$this->remove($options);
 
