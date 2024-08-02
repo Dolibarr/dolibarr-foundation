@@ -50,6 +50,8 @@ MarketplaceArea = Home Marketplace
 DefaultMarketplaceThirdLabel=Marketplace generic customer
 DefaultMarketPlaceCatLabel=Products of the Marketplace
 DefaultPOSProductLabel=Product example for Marketplace
+DefaultMarketPlaceCustomersCatLabel=Marketplace customers
+DefaultMarketPlaceVendorsCatLabel=Marketplace sellers
 
 ModuleVersion=Version
 DolibarrMin=Dolibarr min
