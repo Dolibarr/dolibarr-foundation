@@ -177,10 +177,10 @@ $itemlogo->fieldAttr['placeholder'] = 'https://...';
 $itemlogo->cssClass = 'minwidth500';
 
 // Name of template to use
-$itemforwebsiteid = $formSetup->newItem('MARKETPLACE_WEBSITE_ID');
+/*$itemforwebsiteid = $formSetup->newItem('MARKETPLACE_WEBSITE_ID');
 $itemforwebsiteid->helpText = $langs->trans("MARKETPLACE_WEBSITE_ID_HELP");
 $itemforwebsiteid->fieldAttr['placeholder'] = '';
-$itemforwebsiteid->cssClass = 'maxwidth50';
+$itemforwebsiteid->cssClass = 'maxwidth50';*/
 
 $formSetup->newItem('MARKETPLACE_SECRET_KEY')->helpText = $langs->trans("MARKETPLACE_SECRET_KEY_HELP");
 
