@@ -511,31 +511,64 @@ class modMarketplace extends DolibarrModules
 
 
 		// Default customer
-		/*
-		if (!getDolGlobalInt('MARKETPLACE_ID_THIRDPARTY')) {	// If a customer has already ben set into the setup page
-			$societe = new Societe($this->db);
-			$nametouse = $langs->trans("DefaultMarketplaceThirdLabel");
+		$categories = new Categorie($this->db);
+		$cate_arbo = $categories->get_full_arbo('customer', 0, 1);
+		if (!getDolGlobalInt('MARKETPLACE_PROSPECTCUSTOMER_ID')) {	// If a category was already set into the setup page
+			if (!count($cate_arbo) || !getDolGlobalString('MARKETPLACE_PROSPECTCUSTOMER_ID')) {
+				$category = new Categorie($this->db);
+				$category->label = $langs->trans("DefaultMarketPlaceCustomersCatLabel");
+				$category->type = Categorie::TYPE_CUSTOMER;
 
-			$searchcompanyid = $societe->fetch(0, $nametouse);
-			if ($searchcompanyid == 0) {
-				$societe->name = $nametouse;
-				$societe->client = 1;
-				$societe->code_client = -1;
-				$societe->code_fournisseur = -1;
-				$societe->note_private = "Default customer automaticaly created by Marketplace module activation. Can be used as the default generic customer in the Marketplace setup. Can also be edited or removed if you don't need a generic customer.";
+				$result = $category->create($user);
 
-				$searchcompanyid = $societe->create($user);
-			}
-			if ($searchcompanyid > 0) {
-				// We already have or we have create a thirdparty with id = $searchcompanyid, so we link use it into setup
-				dolibarr_set_const($this->db, "MARKETPLACE_ID_THIRDPARTY", $searchcompanyid, 'chaine', 0, '', $conf->entity);
-			} else {
-				setEventMessages($societe->error, $societe->errors, 'errors');
+				if ($result > 0) {
+					dolibarr_set_const($this->db, 'MARKETPLACE_PROSPECTCUSTOMER_ID', $result, 'chaine', 0, 'Id of category for marketplace customers', $conf->entity);
+
+					/* TODO Create a generic product only if there is no product yet. If 0 product,  we create 1. If there is already product, it is better to show a message to ask to add product in the category */
+					/*
+					 $product = new Product($this->db);
+					 $product->status = 1;
+					 $product->ref = "takepos";
+					 $product->label = $langs->trans("DefaultMarketPlaceCatLabel");
+					 $product->create($user);
+					 $product->setCategories($result);
+					 */
+				} else {
+					setEventMessages($category->error, $category->errors, 'errors');
+				}
 			}
 		}
-		*/
 
-		// Create product category DefaultPOSCatLabel if not exists
+		// Default sellers
+		$categories = new Categorie($this->db);
+		$cate_arbo = $categories->get_full_arbo('supplier', 0, 1);
+		if (!getDolGlobalInt('MARKETPLACE_VENDOR_ID')) {	// If a category was already set into the setup page
+			if (!count($cate_arbo) || !getDolGlobalString('MARKETPLACE_VENDOR_ID')) {
+				$category = new Categorie($this->db);
+				$category->label = $langs->trans("DefaultMarketPlaceVendorsCatLabel");
+				$category->type = Categorie::TYPE_SUPPLIER;
+
+				$result = $category->create($user);
+
+				if ($result > 0) {
+					dolibarr_set_const($this->db, 'MARKETPLACE_VENDOR_ID', $result, 'chaine', 0, 'Id of category for marketplace vendors', $conf->entity);
+
+					/* TODO Create a generic product only if there is no product yet. If 0 product,  we create 1. If there is already product, it is better to show a message to ask to add product in the category */
+					/*
+					 $product = new Product($this->db);
+					 $product->status = 1;
+					 $product->ref = "takepos";
+					 $product->label = $langs->trans("DefaultMarketPlaceCatLabel");
+					 $product->create($user);
+					 $product->setCategories($result);
+					 */
+				} else {
+					setEventMessages($category->error, $category->errors, 'errors');
+				}
+			}
+		}
+
+		// Create product category DefaultMarketPlaceCatLabel if not exists
 		$categories = new Categorie($this->db);
 		$cate_arbo = $categories->get_full_arbo('product', 0, 1);
 		if (is_array($cate_arbo)) {
@@ -554,7 +587,7 @@ class modMarketplace extends DolibarrModules
 					 $product = new Product($this->db);
 					 $product->status = 1;
 					 $product->ref = "takepos";
-					 $product->label = $langs->trans("DefaultPOSProductLabel");
+					 $product->label = $langs->trans("DefaultMarketPlaceCatLabel");
 					 $product->create($user);
 					 $product->setCategories($result);
 					 */
@@ -564,7 +597,7 @@ class modMarketplace extends DolibarrModules
 			}
 		}
 
-		// Create product category DefaultPOSCatLabel if not exists
+		// Create product category Versions if not exists
 		$categories = new Categorie($this->db);
 		$cate_arbo = $categories->get_full_arbo('product', 0, 1);
 		if (is_array($cate_arbo)) {
@@ -583,7 +616,7 @@ class modMarketplace extends DolibarrModules
 					 $product = new Product($this->db);
 					 $product->status = 1;
 					 $product->ref = "takepos";
-					 $product->label = $langs->trans("DefaultPOSProductLabel");
+					 $product->label = $langs->trans("Versions");
 					 $product->create($user);
 					 $product->setCategories($result);
 					 */
@@ -593,7 +626,7 @@ class modMarketplace extends DolibarrModules
 			}
 		}
 
-		// Create product category DefaultPOSCatLabel if not exists
+		// Create product category DefaultSpecialCatLabel if not exists
 		$categories = new Categorie($this->db);
 		$cate_arbo = $categories->get_full_arbo('product', 0, 1);
 		if (is_array($cate_arbo)) {
@@ -612,7 +645,7 @@ class modMarketplace extends DolibarrModules
 					 $product = new Product($this->db);
 					 $product->status = 1;
 					 $product->ref = "takepos";
-					 $product->label = $langs->trans("DefaultPOSProductLabel");
+					 $product->label = $langs->trans("DefaultSpecialCatLabel");
 					 $product->create($user);
 					 $product->setCategories($result);
 					 */

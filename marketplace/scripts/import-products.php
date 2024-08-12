@@ -116,6 +116,7 @@ $user->getrights();
 include_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
 include_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 include_once DOL_DOCUMENT_ROOT . '/ecm/class/ecmfiles.class.php';
+require_once DOL_DOCUMENT_ROOT . "/core/lib/files.lib.php";
 include_once DOL_DOCUMENT_ROOT . '/core/lib/security.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formbarcode.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
@@ -189,7 +190,7 @@ SELECT
 	pl.name,
 	pl.description_short,
 	pl.description,
-	(SELECT link_rewrite FROM ps_product_lang AS pl_en WHERE pl_en.id_product = p.id_product AND pl_en.id_lang = (SELECT id_lang FROM ps_lang WHERE language_code = 'en-us')) AS link_rewrite,
+	pl_en.link_rewrite,
 	p.active,
 	p.id_category_default,
 	p.on_sale,
@@ -206,15 +207,35 @@ SELECT
 	p.date_add,
 	p.dolibarr_core_include,
 	p.dolibarr_disable_info,
+	pk.keywords,
 	l.language_code
 FROM ps_product p
-LEFT JOIN ps_product_lang pl on p.id_product = pl.id_product
-LEFT JOIN ps_lang l on pl.id_lang  = l.id_lang
-WHERE l.language_code = '" . $current_lang . "'
+	LEFT JOIN ps_product_lang pl ON p.id_product = pl.id_product AND pl.id_lang = (SELECT id_lang FROM ps_lang WHERE language_code = '" . $current_lang . "')
+	LEFT JOIN ps_lang l ON pl.id_lang = l.id_lang
+LEFT JOIN ps_product_lang pl_en ON p.id_product = pl_en.id_product AND pl_en.id_lang = (SELECT id_lang FROM ps_lang WHERE language_code = 'en-us')
+LEFT JOIN (
+    SELECT
+        pt.id_product,
+        GROUP_CONCAT(DISTINCT t.name SEPARATOR ', ') AS keywords
+    FROM ps_product_tag pt
+    LEFT JOIN ps_tag t ON pt.id_tag = t.id_tag
+    GROUP BY pt.id_product
+) pk ON p.id_product = pk.id_product
 order by date_add DESC";
 if ($limit != 0) {
 	$products_query .= " limit ". $limit;
 }
+
+$duplicated_references_query = "
+SELECT 
+	pp.reference
+FROM ps_product pp 
+WHERE pp.reference IN (
+    SELECT reference
+    FROM ps_product
+    GROUP BY reference
+    HAVING COUNT(*) > 1
+)";
 
 $delete_products_query = "
 SELECT
@@ -250,16 +271,22 @@ if (!empty($clean_all_before_import) && $clean_all_before_import !== "false") {
 				}
 				print "\n";
 			}
-
 		}
 	}
 }
 
 print "Import remote products (limit=".$limit.") - May take a long time...\n";
 
+$duplicated_references  = array();
+if ($result_duplicated_references = $conn->query($duplicated_references_query)) {
+	while ($objref = $result_duplicated_references->fetch_object()) {
+		$duplicated_references [] = $objref->reference;
+	}
+}
 
-// We disable recursive category assignement (we don't want it)
-$conf->global->CATEGORIE_RECURSIV_ADD = 0;
+
+// We enable recursive category assignement (we use it for search and filter purposes)
+$conf->global->CATEGORIE_RECURSIV_ADD = 1;
 
 
 // Start of transaction
@@ -290,9 +317,16 @@ if ($result_products = $conn->query($products_query)) {
 			$tmpcode = null;
 		}
 		$product->barcode = $tmpcode;
+
 		$product->ref = $obj->reference;
+		// if this reference is duplicated, we add the remote id
+		if (in_array($obj->reference, $duplicated_references)) {
+			$product->ref = $obj->reference.'r'.$obj->id_product;
+		}
+		
 		$product->label = $obj->name;
-		$product->description = $obj->description;
+		$product->description = $obj->description_short;
+		$product->other = $obj->description;
 		$product->url = $obj->id_product;
 		$product->ref_ext = $obj->id_product;
 		$product->price = price2num($obj->price);
@@ -304,6 +338,7 @@ if ($result_products = $conn->query($products_query)) {
 		$product->note_private = 'Old DoliStore ID = '.$obj->id_product;
 
 		// Extrafields
+		$product->array_options['options_marketplace_module_keywords'] = $obj->keywords;
 		$product->array_options['options_marketplace_module_version'] = $obj->module_version;
 		$product->array_options['options_marketplace_min_version'] = $obj->dolibarr_min;
 		$product->array_options['options_marketplace_max_version'] = $obj->dolibarr_max;
@@ -337,8 +372,12 @@ if ($result_products = $conn->query($products_query)) {
 
 
 		if ($result < 0) {
-			print " - Create Error => " . $result . " - " . $product->errorsToString();
 			$error++;
+			$error_message = " - Create Error for product with ref ext => " . $objsql->rowid . " - " . $product->errorsToString();
+			print $error_message;
+			$db->rollback();
+			$db->close();
+			exit;
 		} else {
 			print " - #".$i." Product id=".$product->id.", ref_ext = " . $product->ref_ext . " " . $action . " successfully";
 		}
@@ -374,8 +413,8 @@ if ($result_products = $conn->query($products_query)) {
 				while ($objlang = $result_products_lang->fetch_object()) {
 					$product->multilangs[$objlang->dol_lang_code] = array(
 						'label' => $objlang->name,
-						'description' => $objlang->description,
-						'other' => $objlang->description_short,
+						'description' => $objlang->description_short,
+						'other' => $objlang->description,
 					);
 				}
 			}
@@ -482,7 +521,7 @@ if ($result_products = $conn->query($products_query)) {
 					print " - setCategories and versions OK";
 				}
 			} else {
-				$error++;
+				//$error++;
 				print " - not category found on this product";
 			}
 
@@ -505,7 +544,12 @@ if ($result_products = $conn->query($products_query)) {
 					if (!is_dir($upload_dir)) {
 						mkdir($upload_dir);
 					}
-					$img = $upload_dir . '/' . $product->ref . '-' . $objimage->id_image . '.jpg';;
+					if ($objimage->cover == 1) {
+						$img = $upload_dir . '/' . $product->ref . '-image_cover.jpg';
+					} else {
+						$img = $upload_dir . '/' . $product->ref . '-image_' . $objimage->position . '.jpg';
+					}
+
 					if (!file_put_contents($img, file_get_contents($url))) {
 						//$error++;
 					} else {
@@ -513,7 +557,12 @@ if ($result_products = $conn->query($products_query)) {
 						$product->addThumbs($img);
 
 						// Add index to db
-						$filename = basename($product->ref . '-' . $objimage->id_image . '.jpg');
+						if ($objimage->cover == 1) {
+							$filename = basename($product->ref . '-image_cover.jpg');
+						} else {
+							$filename = basename($product->ref . '-image_' . $objimage->position . '.jpg');
+						}
+
 						addFileIntoDatabaseIndex($upload_dir, $filename, 'URL_PS', 'imported', 1, $product);
 
 						// Update index to put position
@@ -523,7 +572,11 @@ if ($result_products = $conn->query($products_query)) {
 
 						$ecmfile = new EcmFiles($db);
 						$result_get_ecmfile = $ecmfile->fetch('', $ref);
-						$ecmfile->position = $objimage->position;
+						if ($objimage->cover == 1) {
+							$ecmfile->position = 0;
+						} else {
+							$ecmfile->position = $objimage->position;
+						}
 						$result_update_ecmfile = $ecmfile->update($user);
 
 						if ($result_update_ecmfile < 0) {
@@ -544,7 +597,7 @@ if ($result_products = $conn->query($products_query)) {
 
 // -------------------- END OF YOUR CODE --------------------
 
-if (!$error || 1) {
+if (!$error) {
 	$db->commit();
 	print '--- end ok' . "\n";
 } else {
