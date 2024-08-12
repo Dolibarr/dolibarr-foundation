@@ -662,10 +662,10 @@ class modMarketplace extends DolibarrModules
 		}
 
 
-		// Create new website
+		// Create a website for marketplace module
 		$website = new Website($this->db);
 		$website->ref = $ref;
-		$website->description = ' This is the Marketplace for '.$conf->global->MAIN_INFO_SOCIETE_NOM . ' Company';
+		$website->description = $langs->trans("marketplaceDesc", $conf->global->MAIN_INFO_SOCIETE_NOM);		
 		$website->lang = $langs->getDefaultLang();
 		if (getDolGlobalInt('MAIN_MULTILANGS')) {
 			$website->otherlang = "en,fr,de,it,es";

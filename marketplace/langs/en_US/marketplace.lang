@@ -165,3 +165,4 @@ bothFieldsRequired=Both fields are required
 passwordsAreNotTheSame=Passwords are not the same
 wrongOrExpiredToken=Wrong or expired token
 passwordChangedMessage=Your password has been changed, <br> you can log in now
+marketplaceDesc=Welcome to the Marketplace of %s Company
