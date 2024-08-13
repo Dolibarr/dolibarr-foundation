@@ -167,4 +167,6 @@ bothFieldsRequired=Both fields are required
 passwordsAreNotTheSame=Passwords are not the same
 wrongOrExpiredToken=Wrong or expired token
 passwordChangedMessage=Your password has been changed, <br> you can log in now
+ifYouNeedAnInvoice=If you need an invoice, please contact: %s
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Email template for the email "Password forgotten"
+
