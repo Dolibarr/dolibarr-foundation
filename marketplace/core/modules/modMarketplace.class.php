@@ -503,9 +503,6 @@ class modMarketplace extends DolibarrModules
 		$myTmpObjects['MyObject'] = array('includerefgeneration'=>0, 'includedocgeneration'=>0);
 
 		foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
-			if ($myTmpObjectKey == 'MyObject') {
-				continue;
-			}
 			if ($myTmpObjectArray['includerefgeneration']) {
 				$src = DOL_DOCUMENT_ROOT.'/install/doctemplates/'.$moduledir.'/template_myobjects.odt';
 				$dirodt = DOL_DATA_ROOT.'/doctemplates/'.$moduledir;
