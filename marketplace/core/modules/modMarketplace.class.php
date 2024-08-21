@@ -140,7 +140,7 @@ class modMarketplace extends DolibarrModules
 		// A condition to hide module
 		$this->hidden = false;
 		// List of module class names that must be enabled if this module is enabled. Example: array('always'=>array('modModuleToEnable1','modModuleToEnable2'), 'FR'=>array('modModuleToEnableFR')...)
-		$this->depends = array('always'=>array('modSociete', 'modProduct', 'modService', 'modCategorie', 'modCommande', 'modFacture', 'modBanque', 'modMailing', 'modWebsite'));
+		$this->depends = array('always'=>array('modSociete', 'modFournisseur', 'modProduct', 'modService', 'modCategorie', 'modCommande', 'modFacture', 'modBanque', 'modMailing', 'modWebsite'));
 		// List of module class names to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->requiredby = array();
 		// List of module class names this module is in conflict with. Example: array('modModuleToDisable1', ...)
@@ -468,29 +468,6 @@ class modMarketplace extends DolibarrModules
 		$result6=$extrafields->addExtraField('marketplace_old_url',              "OldSystemUrl", 'varchar', 70,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result7=$extrafields->addExtraField('marketplace_module_keywords',    	 "ModuleKeywords", 'varchar', 80,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
-		// Create email templates
-
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(welcomeToMarketplace)', '', 'marketplace', 'all', null, 0, 110, '__(welcomeTo)__ __[MAIN_INFO_SOCIETE_NOM]__ __(marketplace)__', null, 0, 0, '__(marketplaceWelcomeEmailContent)__', 1, 1, 1);";
-		$result = $this->db->query($sql);
-		if ($result) {
-			$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
-			dolibarr_set_const($this->db, 'MARKETPLACE_WELCOME_EMAIL_TEMPLATE', $id_template, 'chaine', 0, 'Name of welcome email template', $conf->entity);
-		} else {
-			$this->error = $this->db->lasterror();
-			dol_print_error($this->error);
-		}
-
-
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(resetPasswordMarketplace)', '', 'marketplace', 'all', null, 0, 120, '__(passwordResetRequest)__ [__[MAIN_INFO_SOCIETE_NOM]__]', null, 0, 0,'__(marketplaceResetPasswordEmailContent)__', 1, 1, 1);";
-		$result = $this->db->query($sql);
-		if ($result) {
-			$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
-			dolibarr_set_const($this->db, 'MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE', $id_template, 'chaine', 0, 'Name of forgot password email template', $conf->entity);
-		} else {
-			$this->error = $this->db->lasterror();
-			dol_print_error($this->error);
-		}
-
 		// Permissions
 		$this->remove($options);
 
@@ -675,6 +652,78 @@ class modMarketplace extends DolibarrModules
 			}
 		}
 
+		// Create email templates
+		$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(welcomeToMarketplace)', '', 'marketplace', 'all', null, 0, 110, '__(welcomeTo)__ __[MAIN_INFO_SOCIETE_NOM]__ __(marketplace)__', null, 0, 0, '__(marketplaceWelcomeEmailContent)__', 1, 1, 1);";
+		$result = $this->db->query($email_sql);
+		if ($result) {
+			$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
+			dolibarr_set_const($this->db, 'MARKETPLACE_WELCOME_EMAIL_TEMPLATE', $id_template, 'chaine', 0, 'Name of welcome email template', $conf->entity);
+		} else {
+			$this->error = $this->db->lasterror();
+			dol_print_error($this->db, $this->error);
+		}
+
+
+		$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(resetPasswordMarketplace)', '', 'marketplace', 'all', null, 0, 120, '__(passwordResetRequest)__ [__[MAIN_INFO_SOCIETE_NOM]__]', null, 0, 0,'__(marketplaceResetPasswordEmailContent)__', 1, 1, 1);";
+		$result = $this->db->query($email_sql);
+		if ($result) {
+			$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
+			dolibarr_set_const($this->db, 'MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE', $id_template, 'chaine', 0, 'Name of forgot password email template', $conf->entity);
+		} else {
+			$this->error = $this->db->lasterror();
+			dol_print_error($this->db, $this->error);
+		}
+
+		// Create default website
+		include_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
+		include_once DOL_DOCUMENT_ROOT.'/website/class/websitepage.class.php';
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/website.lib.php';
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/website2.lib.php';
+		$website = new Website($this->db);
+		
+		// Get free ref for insert
+		$baseRef = "marketplace";
+		$ref = $baseRef;
+		$i = 1;
+
+		// Loop until an available reference is found
+		while ($website->fetch(0, $ref) > 0) {
+			$ref = $baseRef . str_pad($i++, 2, '0', STR_PAD_LEFT);
+		}
+
+
+		// Create a website for marketplace module
+		$website = new Website($this->db);
+		$website->ref = $ref;
+		$website->description = $langs->trans("marketplaceDesc", $conf->global->MAIN_INFO_SOCIETE_NOM);		
+		$website->lang = $langs->getDefaultLang();
+		if (getDolGlobalInt('MAIN_MULTILANGS')) {
+			$website->otherlang = "en,fr,de,it,es";
+		}
+		$result = $website->create($user);
+		if ($result < 0) {
+			setEventMessages($website->error, $website->errors, 'errors');
+		} else {
+			$website_id = $result;
+			// Activate marketplace template
+			$website->setTemplateName("website_template-dolistore");
+
+			$templateZip = DOL_DATA_ROOT.'/doctemplates/websites/website_template-dolistore.zip';
+			$result = $website->importWebSite($templateZip);
+
+			if ($result < 0) {
+				setEventMessages($website->error, $website->errors, 'errors');
+			} else {
+				// Force mode dynamic on
+				dolibarr_set_const($this->db, 'WEBSITE_SUBCONTAINERSINLINE', 1, 'chaine', 0, '', $conf->entity);
+				
+				dolibarr_set_const($this->db, 'MARKETPLACE_WEBSITE_ID', $website_id, 'chaine', 0, 'Marketplace website id', $conf->entity);
+
+				// TODO Create welcome page AND Static pages
+			}
+			
+		}
+
 		/*
 		// Create cash account CASH-POS / DefaultCashPOSLabel if not exists
 		if (!getDolGlobalInt('MARKETPLACE_ID_BANKACCOUNT_CASH')) {
@@ -717,6 +766,9 @@ class modMarketplace extends DolibarrModules
 	public function remove($options = '')
 	{
 		$sql = array();
+
+		$sql[] = "DELETE FROM ".MAIN_DB_PREFIX."c_email_templates WHERE label = '(resetPasswordMarketplace)' AND module = 'marketplace'";
+		$sql[] = "DELETE FROM ".MAIN_DB_PREFIX."c_email_templates WHERE label = '(welcomeToMarketplace)' AND module = 'marketplace'";
 		return $this->_remove($sql, $options);
 	}
 }
