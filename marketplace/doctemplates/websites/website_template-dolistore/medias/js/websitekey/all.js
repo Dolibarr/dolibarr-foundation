@@ -41,13 +41,55 @@ $(document).ready(function() {
         $(document).on('change', 'select[name="currency_payement"]', function() {
             setCurrency($(this).val());
         });
-        $(document).on('click', 'ul.pagination li a', function() {
+        /*$(document).on('click', 'ul.pagination li a', function() {
+            console.log($(this).text());
             var urlPagination = request;
             var newUrl = new URL(urlPagination);
+            console.log(newUrl);
             newUrl.searchParams.set('p', $(this).text());
+            console.log(newUrl);
             window.location.href = newUrl;
             return false;
-        });
+        });*/
+        $(document).on('click', 'ul.pagination li a', function(e) {
+            e.preventDefault();
+
+            var $this = $(this);
+            var pageNo = null;
+
+            if ($this.parent().hasClass('disabled')) {
+                return false;
+            }
+
+            if ($this.parent().hasClass('pagination_previous')) {
+                var href = $this.attr('href');
+                if (href) {
+                    var urlParams = new URLSearchParams(href);
+                    pageNo = urlParams.get('p');
+                }
+            } 
+
+            else if ($this.parent().hasClass('pagination_next')) {
+                var href = $this.attr('href');
+                if (href) {
+                    var urlParams = new URLSearchParams(href);
+                    pageNo = urlParams.get('p');
+                }
+            } 
+
+            else {
+                pageNo = $this.text();
+            }
+        
+            if (pageNo) {
+                var urlPagination = request;
+                var newUrl = new URL(urlPagination);
+                newUrl.searchParams.set('p', pageNo);
+                window.location.href = newUrl;
+            }
+        
+            return false;
+        });        
         $(document).on('submit', '.showall', function() {
             var urlPagination = request;
             var newUrl = new URL(urlPagination);
@@ -243,7 +285,7 @@ function Display(view) {
             html += '<div class="left-block">' + $(element).find('.left-block').html() + '</div>';
             html += '<div class="right-block">';
             html += '<div class="product-flags">' + $(element).find('.product-flags').html() + '</div>';
-            html += '<h5 itemprop="name">' + $(element).find('h5').html() + '</h5>';
+            html += '<h5 class ="list-grid-product-title" itemprop="name">' + $(element).find('h5').html() + '</h5>';
             var rating = $(element).find('.comments_note').html();
             if (rating != null) {
                 html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">' + rating + '</div>';
