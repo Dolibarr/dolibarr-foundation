@@ -46,9 +46,6 @@ if (!$res && file_exists("../../main.inc.php")) {
 if (!$res && file_exists("../../../main.inc.php")) {
 	$res = @include "../../../main.inc.php";
 }
-if (!$res && file_exists("../../../../main.inc.php")) {
-    $res = @include "../../../../main.inc.php";
-}
 if (!$res) {
 	die("Include of main fails");
 }
