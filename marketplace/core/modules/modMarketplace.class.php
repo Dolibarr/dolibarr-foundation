@@ -567,6 +567,45 @@ class modMarketplace extends DolibarrModules
 			}
 		}
 
+		// Create Preferred customer category if not exists
+		$categories = new Categorie($this->db);
+		$cate_arbo = $categories->get_full_arbo('customer', 0, 1);
+		if (!getDolGlobalInt('MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID')) {	// If a category was already set into the setup page
+			if (!count($cate_arbo) || !getDolGlobalString('MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID')) {
+				$category = new Categorie($this->db);
+				$category->label = $langs->trans("DefaultMarketPlacePreferredCustomersCatLabel");
+				$category->type = Categorie::TYPE_CUSTOMER;
+
+				$result = $category->create($user);
+
+				if ($result > 0) {
+					dolibarr_set_const($this->db, 'MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID', $result, 'chaine', 0, 'Id of category for marketplace preferred customers', $conf->entity);
+				} else {
+					setEventMessages($category->error, $category->errors, 'errors');
+				}
+			}
+		}
+
+		// Create products category to exclude from discounts if not exists
+		$categories = new Categorie($this->db);
+		$cate_arbo = $categories->get_full_arbo('product', 0, 1);
+		if (!getDolGlobalInt('MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID')) {	// If a category was already set into the setup page
+			if (!count($cate_arbo) || !getDolGlobalString('MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID')) {
+				$category = new Categorie($this->db);
+				$category->label = $langs->trans("DefaultMarketPlaceProductsCatDiscountExcludeLabel");
+				$category->type = Categorie::TYPE_PRODUCT;
+
+				$result = $category->create($user);
+
+				if ($result > 0) {
+					dolibarr_set_const($this->db, 'MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID', $result, 'chaine', 0, 'Category ID of products to exclude from discounts for preferred marketplace customers', $conf->entity);
+				} else {
+					setEventMessages($category->error, $category->errors, 'errors');
+				}
+			}
+		}
+
+
 		// Create product category DefaultMarketPlaceCatLabel if not exists
 		$categories = new Categorie($this->db);
 		$cate_arbo = $categories->get_full_arbo('product', 0, 1);
@@ -654,7 +693,7 @@ class modMarketplace extends DolibarrModules
 			}
 		}
 
-		// Delete welcome email template and forgot password email template if action is reload
+		// Delete email templates if action is reload
 		if ($action == 'reload') {
 			if (!empty(getDolGlobalInt("MARKETPLACE_WELCOME_EMAIL_TEMPLATE"))) {
 				$delete_email_sql = "DELETE FROM ".MAIN_DB_PREFIX."c_email_templates WHERE label = '(welcomeToMarketplace)' AND module = 'marketplace'";
@@ -671,6 +710,26 @@ class modMarketplace extends DolibarrModules
 				$result = $this->db->query($delete_email_sql);
 				if ($result) {
 					dolibarr_del_const($this->db, 'MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE', $conf->entity);
+				} else {
+					$this->error = $this->db->lasterror();
+					dol_print_error($this->db, $this->error);
+				}
+			}
+			if (!empty(getDolGlobalInt("MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE"))) {
+				$delete_email_sql = "DELETE FROM ".MAIN_DB_PREFIX."c_email_templates WHERE label = '(BuyerOrderConfirmation)' AND module = 'marketplace'";
+				$result = $this->db->query($delete_email_sql);
+				if ($result) {
+					dolibarr_del_const($this->db, 'MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE', $conf->entity);
+				} else {
+					$this->error = $this->db->lasterror();
+					dol_print_error($this->db, $this->error);
+				}
+			}
+			if (!empty(getDolGlobalInt("MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE"))) {
+				$delete_email_sql = "DELETE FROM ".MAIN_DB_PREFIX."c_email_templates WHERE label = '(SellerOrderNotification)' AND module = 'marketplace'";
+				$result = $this->db->query($delete_email_sql);
+				if ($result) {
+					dolibarr_del_const($this->db, 'MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE', $conf->entity);
 				} else {
 					$this->error = $this->db->lasterror();
 					dol_print_error($this->db, $this->error);
@@ -708,6 +767,34 @@ class modMarketplace extends DolibarrModules
 			}
 		}
 
+		// Create MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE
+		if (empty(getDolGlobalInt("MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE"))) {
+			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(BuyerOrderConfirmation)', '', 'marketplace', 'all', null, 0, 140, '__(BuyerOrderConfirmation)__ __[MAIN_INFO_SOCIETE_NOM]__ __(marketplace)__', null, 0, 0, '__(marketplaceBuyerOrderConfirmationContent)__', 1, 1, 1);";
+			$result = $this->db->query($email_sql);
+			if ($result) {
+				$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
+				dolibarr_set_const($this->db, 'MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE', $id_template, 'chaine', 0, 'Name of buyer order confirmation email template', $conf->entity);
+				setEventMessages($langs->trans("emailTemplateLoaded", $langs->trans("MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE"), $emailAction), null, 'warnings');
+			} else {
+				$this->error = $this->db->lasterror();
+				dol_print_error($this->db, $this->error);
+			}
+		}
+
+		// Create MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE
+		if (empty(getDolGlobalInt("MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE"))) {
+			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(SellerOrderNotification)', '', 'marketplace', 'all', null, 0, 130, '__(SellerOrderNotification)__ __[MAIN_INFO_SOCIETE_NOM]__ __(marketplace)__', null, 0, 0, '__(marketplaceSellersOrderConfirmationContent)__', 1, 1, 1);";
+			$result = $this->db->query($email_sql);
+			if ($result) {
+				$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
+				dolibarr_set_const($this->db, 'MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE', $id_template, 'chaine', 0, 'Name of sellers order confirmation email template', $conf->entity);
+				setEventMessages($langs->trans("emailTemplateLoaded", $langs->trans("MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE"), $emailAction), null, 'warnings');
+			} else {
+				$this->error = $this->db->lasterror();
+				dol_print_error($this->db, $this->error);
+			}
+		}
+
 		// Create default website
 		include_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
 		include_once DOL_DOCUMENT_ROOT.'/website/class/websitepage.class.php';
@@ -721,7 +808,7 @@ class modMarketplace extends DolibarrModules
 			if ($result < 0) {
 				setEventMessages($website->error, $website->errors, 'errors');
 			} else {
-				$result = $website->purge();
+				$result = $website->purge($user);
 				if ($result < 0) {
 					setEventMessages($website->error, $website->errors, 'errors');
 				} else {

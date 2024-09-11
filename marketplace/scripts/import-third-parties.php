@@ -144,10 +144,14 @@ $limit = $argv[6] == 0 ? 0 : $argv[6];
 $codeorid_website = $argv[7];
 $clean_all_before_import = isset($argv[8]) ? $argv[8] : "false";
 
+// ID of the preferred customers group/category (customers that are in this category will be imported as preferred customers in dolibarr)
+$preferredCustomerGroupId = 2;
+
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
 $marketplace_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
 $marketplace_third_parties_category_vendor = getDolGlobalInt("MARKETPLACE_VENDOR_ID");
+$marketplace_preferred_third_parties_category = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID");
 
 // Check id_website if exist
 $id_website = 0;
@@ -183,6 +187,14 @@ $categorie = new Categorie($db);
 $result = $categorie->fetch($marketplace_third_parties_category_vendor);
 if ($result <= 0) {
 	print "MARKETPLACE_VENDOR_ID  not correctly defined...\n";
+	exit;
+}
+
+// Check Preferred Customers Categorie
+$categorie = new Categorie($db);
+$result = $categorie->fetch($marketplace_preferred_third_parties_category);
+if ($result <= 0) {
+	print "MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID not correctly defined...\n";
 	exit;
 }
 
@@ -229,6 +241,7 @@ $sql_request_for_customers = "SELECT
 	pc.siret,
 	pc.ape,
 	pc.optin,
+	pc.id_default_group,
 	CASE pl.language_code
 		WHEN 'en-us' THEN 'en_US'
 		WHEN 'fr-fr' THEN 'fr_FR'
@@ -303,6 +316,41 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			$customer->name_alias = dolGetFirstLastname($obj->firstname, $obj->lastname);
 		} else {
 			$customer->name = dolGetFirstLastname($obj->firstname, $obj->lastname);
+		}
+
+		// Get customer address
+		$customer_address_query = "
+		select
+			pa.id_address ,
+			pa.id_customer,
+			pa.address1,
+			pa.address2,
+			pa.phone,
+			pa.postcode,
+			pa.date_add,
+			pa.city,
+			pc.iso_code
+		FROM
+			ps_address pa,
+			ps_country pc
+		WHERE
+			pa.id_country = pc.id_country AND
+			pa.id_customer = " . $obj->id_customer . " 
+		order by pa.date_add desc
+		limit 1
+		";
+
+		if ($result_customer_address = $conn->query($customer_address_query)) {
+			while ($objaddr = $result_customer_address->fetch_object()) {
+				$get_country_id = getCountry($objaddr->iso_code, '3');
+				if ($get_country_id != "NotDefined"){
+					$customer->country_id = $get_country_id;
+				}
+				$customer->address = $objaddr->address1 . "\n" . $objaddr->address2;
+				$customer->town = $objaddr->city;
+				$customer->zip = $objaddr->postcode;
+				$customer->phone_pro = $objaddr->phone;
+			}
 		}
 
 		$customer->url = $obj->website;
@@ -430,7 +478,15 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		if (!$error && 1) {
 			// Add tag/category customer
 			if ($customer->client > 0) {
-				$ret_cat = $customer->setCategories($marketplace_third_parties_category, 'customer');
+				$customer_tags = array();
+				$customer_tags[] = $marketplace_third_parties_category;
+
+				// Add preferred Customer category
+				if ($obj->id_default_group == $preferredCustomerGroupId) {
+					$customer_tags[] = $marketplace_preferred_third_parties_category;
+				}
+
+				$ret_cat = $customer->setCategories($customer_tags, 'customer');
 				if ($ret_cat < 0) {
 					$error_message = " - Error in setCategories customer result code = " . $ret_cat . " - " . $customer->errorsToString();
 					print $error_message;
@@ -475,39 +531,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					break;
 			};
 			$customer->civility_id = $civility;
-			$customer_address_query = "
-			select
-				pa.id_address ,
-				pa.id_customer,
-				pa.address1,
-				pa.address2,
-				pa.phone,
-				pa.postcode,
-				pa.date_add,
-				pa.city,
-				pc.iso_code
-			FROM
-				ps_address pa,
-				ps_country pc
-			WHERE
-				pa.id_country = pc.id_country AND
-				pa.id_customer = " . $obj->id_customer . " 
-			order by pa.date_add desc
-			limit 1
-			";
 
-			if ($result_customer_address = $conn->query($customer_address_query)) {
-				while ($objaddr = $result_customer_address->fetch_object()) {
-					$get_country_id = getCountry($objaddr->iso_code, '3');
-					if ($get_country_id != "NotDefined"){
-						$customer->country_id = $get_country_id;
-					}
-					$customer->address = $objaddr->address1 . "\n" . $objaddr->address2;
-					$customer->town = $objaddr->city;
-					$customer->zip = $objaddr->postcode;
-					$customer->phone_pro = $objaddr->phone;
-				}
-			}
 			$ret_setindividual = $customer->create_individual($user);
 			if ($ret_setindividual < 0) {
 				$error_message = " - Error in set individual result code = " . $ret_setindividual . " - " . $customer->errorsToString();

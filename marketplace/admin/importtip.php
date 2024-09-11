@@ -53,6 +53,7 @@ if (!$res) {
 // Libraries
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
+include_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 require_once '../lib/marketplace.lib.php';
 
 // Translations
@@ -71,8 +72,56 @@ $backtopage = GETPOST('backtopage', 'alpha');
 /*
  * Actions
  */
+if ($action == 'generaterewritefile') {
 
-// None
+	$root_cat_object = new Categorie($db);
+	$result = $root_cat_object->fetch(getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID"));
+
+	$products_list = $root_cat_object->getObjectsInCateg(Categorie::TYPE_PRODUCT, 0, 0, 0,'datec','ASC');
+	$nb_products = count($products_list);
+	if ($nb_products == 0) {
+		setEventMessages($langs->trans("rewriteFileErrorNoProducts"), null, 'errors');
+	} else {
+		$redirects = [];
+
+		foreach ($products_list as $product) {
+			// If the product is not imported, ignore it
+			if (!$product->ref_ext || $product->ref_ext === 'Marketplace') continue;
+
+			// Associate the old ID with the new ID
+			$redirects[$product->ref_ext] = $product->id;
+		}
+
+		// Create a temporary file with the rewrite rules for the httpd.conf
+		$tempDir = sys_get_temp_dir();
+		$tempFile = tempnam($tempDir, 'httpd_rewrites_');
+
+		if ($tempFile && $file = fopen($tempFile, 'w')) {
+			// Add the rewrite rules for each redirection
+			foreach ($redirects as $oldId => $newId) {
+				// Generate the RewriteCond with the old ID in the URL
+				fwrite($file, "RewriteCond %{REQUEST_URI} ^/([a-z]{2})/([a-z\\-]+)/$oldId-([a-z0-9\\-]+)\\.html$ [NC]\n");
+
+				// The new URL redirects to product.php with the new ID
+				fwrite($file, "RewriteRule ^ /product.php?id=$newId [L,R=301]\n");
+			}
+
+			// Close the file
+			fclose($file);
+
+			// Send the file for download
+			header('Content-Type: text/plain');
+			header('Content-Disposition: attachment; filename="httpd_rewrites.txt"');
+			header('Content-Length: ' . filesize($tempFile));
+			readfile($tempFile);
+
+			// Delete the temporary file
+			unlink($tempFile);
+		} else {
+			setEventMessages($langs->trans("rewriteFileErrorUnableToCreateFile"), null, 'errors');
+		}
+	}
+}
 
 
 /*
@@ -121,6 +170,43 @@ print 'To import (create or update) products...<br>';
 print '<div class="urllink">';
 print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
 print '</div>';
+
+print '<br>';
+
+$command = 'custom/marketplace/scripts/import-attached-files.php  db_host  db_user  db_password  db_port  source_dir';
+print 'To import products attached files...<br>';
+print '<div class="urllink">';
+print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
+print '</div>';
+
+print '<br>';
+
+$command = 'custom/marketplace/scripts/import-orders.php  db_host  db_user  db_password  db_port  limit  clean_all_before_import(0|1)';
+print 'To import (create or update) orders...<br>';
+print '<div class="urllink">';
+print '<input type="text" class="quatrevingtpercentminusx" value="'.$command.'">';
+print '</div>';
+
+print '<hr>';
+
+$command = '
+RewriteEngine On
+
+# Products rewrite rules
+RewriteCond %{REQUEST_URI} ^/([a-z]{2})/([a-z\-]+)/([0-9]+)-([a-z0-9\-]+)\.html$ [NC]
+RewriteRule ^ /product.php?extid=%3 [L,R=301]
+
+# Categories rewrite rules
+RewriteCond %{REQUEST_URI} ^/([a-z]{2})/([0-9]{1,2})-([a-z\-]+)$ [NC]
+RewriteRule ^ /index.php?extcat=%2 [L,R=301]
+';
+print $langs->trans("marketplaceRewriteRules");;
+print '<div class="urllink">';
+print '<textarea class="flat" cols="80" rows="10">'.$command.'</textarea>';
+print '</div>';
+print $langs->trans("marketplaceGenerateRewriteFile");
+print ' <a href="'.$_SERVER["PHP_SELF"].'?action=generaterewritefile">'.img_object($langs->trans("Download"), 'download').'</a>';
+print '<hr>';
 
 
 // Page end

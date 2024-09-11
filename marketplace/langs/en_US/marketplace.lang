@@ -40,7 +40,9 @@ MARKETPLACE_WEBSITE_ID=Website to use for the marketplace
 MARKETPLACE_WEBSITE_ID_HELP=All users, customers, orders, etc., created by the marketplace website will be linked to this website.<br><br><b>Important:</b> If you change this value, existing users, customers and orders will stay linked to the old website and won't be migrated to the new one.
 MARKETPLACE_SECRET_KEY=Key for prestashop 1.6 password encryption
 MARKETPLACE_SECRET_KEY_HELP=If some users were migrated from prestashop 1.6 migration, this is the prestashop cookie key used to validate the password.
-
+MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID=Category for all prospects or customers labeled as "Preferred" or qualified for the discount
+MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_DISCOUNT=Discount percentage for "Preferred" prospects or customers
+MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID=Category for products to exclude from the discount
 ImportTip=Migration tips
 
 About = About
@@ -52,6 +54,8 @@ DefaultMarketPlaceCatLabel=Products of the Marketplace
 DefaultPOSProductLabel=Product example for Marketplace
 DefaultMarketPlaceCustomersCatLabel=Marketplace customers
 DefaultMarketPlaceVendorsCatLabel=Marketplace sellers
+DefaultMarketPlacePreferredCustomersCatLabel=Marketplace preferred customers
+DefaultMarketPlaceProductsCatDiscountExcludeLabel=No discount for members
 
 ModuleVersion=Version
 DolibarrMin=Dolibarr min
@@ -170,6 +174,12 @@ passwordChangedMessage=Your password has been changed, <br> you can log in now
 marketplaceDesc=Welcome to the Marketplace of %s Company
 ifYouNeedAnInvoice=If you need an invoice, please contact: %s
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Email template for the email "Password forgotten"
+MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Buyer Order confirmation"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order confirmation"
+BuyerOrderConfirmation=Order confirmation
+SellerOrderNotification=Order notification
+marketplaceBuyerOrderConfirmationContent=<div><p>Hello __BUYER_NAME__,<br /><br />Thank you for your purchase on <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace!<br /><br />Your order has been successfully placed.<br /><u>Order Reference:</u>&nbsp; __ORDER_REF__<br /><u>Order Date:</u> __ORDER_DATE__<br /><u>Order products</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">You can review your order and download your invoice from the <strong>&quot;Order history&quot;</strong> section of your account.</span></span></span></p><p>Thank you for shopping with us!<br />Best regards,<br />The <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>
+marketplaceSellersOrderConfirmationContent=<div>__(Hello)__ __SELLER_NAME__,<p>We are excited to inform you that you have received a new order on <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace!<br /><br /><strong>Order Details:</strong><br /><u>Order Reference:</u>&nbsp; __ORDER_REF__<br /><u>Buyer Name:</u>&nbsp; __BUYER_NAME__<br /><u>Order Date:</u>&nbsp; __ORDER_DATE__<br /><br /><u>Product:</u>&nbsp; __PRODUCT__<br /><u>Quantity:</u>&nbsp; __QTY__<br /><br />Thank you for being a valued seller on <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace!<br /><br />Best regards,<br />The <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>
 pageNotFound=Oops! Page not found.
 pageNotFoundDesc=Sorry, but the page you are looking for doesn't exist, has been removed, or is temporarily unavailable.
 pageNotEditable=This page cannot be edited or previewed in the editor. You may preview it in a new tab.
@@ -177,3 +187,13 @@ emailTemplateLoaded= - <b>%s</b> has been %s.
 websitePurged= - The website <b>%s</b> has been purged.
 templateImported= - The default marketplace template has been imported into the website <b>%s</b>.
 websiteCreated= - Didicated website with ref <b>%s</b> was created.
+DiscountsPreferedCustomers=Discounts for "preferred" prospects/customers
+marketplaceRewriteRules= Rewirte rules to include in your Apache virtual host configuration file
+marketplaceGenerateRewriteFile= You can also generate an Apache rewrite file with separated rules for each product (to include manualy in your Apache virtual host conf)
+rewriteFileErrorNoProducts=You must import products first.
+rewriteFileErrorUnableToCreateFile=Unable to create temporary file.
+invoicesStatsMarketplace=Invoices statistis
+customersStatsMarketplace=Customers statistis
+productsStatsMarketplace=Products statistis
+LastThirdPartiesOnMarketplace=The latest %s Third Parties
+LastpreferredThirdPartiesOnMarketplace=The latest %s Preferred Third Parties

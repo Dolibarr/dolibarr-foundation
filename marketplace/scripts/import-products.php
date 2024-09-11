@@ -167,6 +167,19 @@ if(isset($argv[6])){
 }
 $clean_all_before_import = isset($argv[7])?$argv[7] : false;
 
+// ID of books category (Products in this category will have 5.5% VAT rate and will not be eligible for discount)
+$books_category_id = 7;
+
+$marketplaceDiscountExcludeCategoryId = getDolGlobalInt("MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID");
+
+// Check not elegible for discount products category if defined 
+$categorie = new Categorie($db);
+$result = $categorie->fetch($marketplaceDiscountExcludeCategoryId);
+if ($result <= 0) {
+	print "MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID not correctly defined...\n";
+	exit;
+}
+
 
 // Select from prestashop
 $current_lang = $langs->getDefaultLang();
@@ -333,6 +346,9 @@ if ($result_products = $conn->query($products_query)) {
 		//$product->price_ttc = price2num($obj->price);
 		$product->price_base_type = 'HT';
 		$product->tva_tx = "20";
+		if ($obj->id_category_default == $books_category_id) {
+			$product->tva_tx = "5.5";
+		}
 		$product->mandatory_period = !empty(GETPOST("mandatoryperiod", 'alpha')) ? 1 : 0;
 		$product->import_key = dol_print_date($now, 'dayhourlog');
 		$product->note_private = 'Old DoliStore ID = '.$obj->id_product;
@@ -345,7 +361,7 @@ if ($result_products = $conn->query($products_query)) {
 		$product->array_options['options_marketplace_contact_support'] = $obj->dolibarr_support;
 		$product->array_options['options_marketplace_allow_source_in_core'] = $obj->dolibarr_core_include;
 		$product->array_options['options_marketplace_reason_disabled'] = $obj->dolibarr_disable_info;
-		$product->array_options['options_marketplace_old_url'] = 'https://www.dolistore.com/' . $obj->id_product . '-' . $obj->link_rewrite . '.html';
+		$product->array_options['options_marketplace_old_url'] = '/' . $obj->id_product . '-' . $obj->link_rewrite . '.html';
 
 		// Check if this product exists
 		$sql = "SELECT rowid FROM " . MAIN_DB_PREFIX . "product";
@@ -456,6 +472,7 @@ if ($result_products = $conn->query($products_query)) {
 
 			// Add  categories and verions
 			$categries_and_versions_list = array();
+
 			$products_categories_query = "
 			select
 				pcp.id_category
@@ -510,6 +527,11 @@ if ($result_products = $conn->query($products_query)) {
 				}
 			} else {
 				print 'SQL error';
+			}
+
+			// If the product is a book we add the exclude from discount category
+			if ($obj->id_category_default == $books_category_id) {
+				$categries_and_versions_list[$marketplaceDiscountExcludeCategoryId] = $marketplaceDiscountExcludeCategoryId;
 			}
 
 			if (!empty($categries_and_versions_list)) {

@@ -168,6 +168,18 @@ $formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_ID')->setAsCategory('customer'
 // Setup conf for category Promotions
 $formSetup->newItem('MARKETPLACE_VENDOR_ID')->setAsCategory('supplier');
 
+$formSetup->newItem('DiscountsPreferedCustomers')->setAsTitle();
+
+// Setup conf for preferred customer
+$formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID')->setAsCategory('customer');
+
+// Setup conf for value of discount for preferred customer
+$dicountValue = $formSetup->newItem('MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_DISCOUNT');
+$dicountValue->defaultFieldValue = '20';
+$dicountValue->fieldAttr['placeholder'] = '%';
+
+// Setup conf for products category to exclude from discounts
+$formSetup->newItem('MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID')->setAsCategory('product');
 
 
 $formSetup->newItem('WebSite')->setAsTitle();
@@ -180,11 +192,11 @@ $itemlogo->cssClass = 'minwidth500';
 // Name of template to use
 $website = new Website($db);
 $listofwebsites = $website->fetchAll('ASC', 'position'); // List of websites
-$TField = array();
+$TFieldWebsites = array();
 foreach ($listofwebsites as $key => $valwebsite) {
-	$TField[$valwebsite->id] = $valwebsite->ref;
+	$TFieldWebsites[$valwebsite->id] = $valwebsite->ref;
 }
-$itemforwebsiteid = $formSetup->newItem('MARKETPLACE_WEBSITE_ID')->setAsSelect($TField);
+$itemforwebsiteid = $formSetup->newItem('MARKETPLACE_WEBSITE_ID')->setAsSelect($TFieldWebsites);
 $itemforwebsiteid->helpText = $langs->trans("MARKETPLACE_WEBSITE_ID_HELP");
 $itemforwebsiteid->fieldAttr['placeholder'] = '';
 
@@ -197,6 +209,10 @@ $formSetup->newItem('EMailTemplates')->setAsTitle();
 $formSetup->newItem('MARKETPLACE_WELCOME_EMAIL_TEMPLATE')->setAsEmailTemplate('all');
 
 $formSetup->newItem('MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE')->setAsEmailTemplate('all');
+
+$formSetup->newItem('MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE')->setAsEmailTemplate('all');
+
+$formSetup->newItem('MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE')->setAsEmailTemplate('all');
 
 
 /*
