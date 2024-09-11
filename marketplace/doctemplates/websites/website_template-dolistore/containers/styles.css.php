@@ -8878,6 +8878,9 @@ button[disabled], html input[disabled] {
 }
 #add_to_cart .btn-add-to-cart-product p{
   margin-bottom: 1px !important;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .box-info-product{
   border-bottom-width: 3px !important;
@@ -8900,6 +8903,29 @@ button[disabled], html input[disabled] {
   padding: 0px 5px;
   font-size: 12px;
   margin-left: 10px;
+}
+@media (min-width: 768px) {
+  header .row #header_logo {
+    width: 25% !important;
+  }
+}
+.price.product-price.original-price {
+  font-size: 15px;
+  vertical-align: top;
+  opacity: 0.6;
+  text-decoration: line-through;
+  border-right: 1px solid #dbdbdb;
+  padding-right: 6px;
+}
+.price.product-price.original-price-product-view {
+  font-size: 15px;
+  opacity: 0.6;
+  text-decoration: line-through;
+  display: block;
+  color: #555;
+}
+#languages-block-top {
+  max-width: 33.33% !important;
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
