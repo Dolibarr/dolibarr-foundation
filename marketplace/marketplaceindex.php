@@ -94,8 +94,8 @@ $categ_id = GETPOSTINT('categ_id');
 $userid = GETPOSTINT('userid');
 $socid = GETPOSTINT('socid');
 
-$select_categ_categ_id = GETPOST('select_categ_categ_id', 'array');
-$select_categ_categ_id = getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID");
+//$select_categ_categ_id = GETPOST('select_categ_categ_id', 'array');
+$select_categ_categ_id = array(getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID"));
 // Security check
 if ($user->socid > 0) {
 	$action = '';

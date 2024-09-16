@@ -365,7 +365,7 @@ if ($result_products = $conn->query($products_query)) {
 
 		// Check if this product exists
 		$sql = "SELECT rowid FROM " . MAIN_DB_PREFIX . "product";
-		$sql .= " WHERE url = '" . $obj->id_product . "' LIMIT 1";
+		$sql .= " WHERE url = '" . $obj->id_product . "' OR ref = '" . $product->ref . "' LIMIT 1";
 
 		$resql = $db->query($sql);
 		$objsql = $db->fetch_object($resql);
