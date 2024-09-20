@@ -262,7 +262,7 @@ $sql_request_for_customers = "SELECT
 		ps_customer
 	GROUP BY
 		email
-	) AS max_ids ON pc.id_customer = max_ids.id_customer
+	) AS max_ids ON pc.id_customer = max_ids.id_customer 
 	ORDER BY
 	pc.date_add ASC ";
 
@@ -435,13 +435,33 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				$existing_dol_customer->fetch($objsqlr->rowid);
 
 				// Complete existing customer information by adding imported information
-				$customer->url = (!empty($existing_dol_customer->url)) ? $existing_dol_customer->url : $customer->url ;
-				$customer->name_alias = (!empty($existing_dol_customer->name_alias)) ? $existing_dol_customer->url : $customer->name_alias ;
+				/*$customer->url = (!empty($existing_dol_customer->url)) ? $existing_dol_customer->url : $customer->url ;
+				$customer->name_alias = (!empty($existing_dol_customer->name_alias)) ? $existing_dol_customer->name_alias : $customer->name_alias ;
 				$customer->idprof2 = (!empty($existing_dol_customer->idprof2)) ? $existing_dol_customer->idprof2 : $customer->idprof2 ;
 				$customer->idprof3 = (!empty($existing_dol_customer->idprof3)) ? $existing_dol_customer->idprof3 : $customer->idprof3 ;
 				$customer->ref_ext = (!empty($existing_dol_customer->ref_ext)) ? $existing_dol_customer->ref_ext : $customer->ref_ext ;
-				$customer->default_lang = (!empty($existing_dol_customer->default_lang)) ? $existing_dol_customer->default_lang : $customer->default_lang ;
+				$customer->default_lang = (!empty($existing_dol_customer->default_lang)) ? $existing_dol_customer->default_lang : $customer->default_lang ;*/
 
+				// Complete existing customer information by adding imported information
+				$existing_dol_customer->url = (empty($existing_dol_customer->url)) ? $customer->url : $existing_dol_customer->url ;
+				$existing_dol_customer->name_alias = (empty($existing_dol_customer->name_alias)) ? $customer->name_alias : $existing_dol_customer->name_alias ;
+				$existing_dol_customer->idprof2 = (empty($existing_dol_customer->idprof2)) ? $customer->idprof2 : $existing_dol_customer->idprof2 ;
+				$existing_dol_customer->idprof3 = (empty($existing_dol_customer->idprof3)) ? $customer->idprof3 : $existing_dol_customer->idprof3 ;
+				$existing_dol_customer->ref_ext = (empty($existing_dol_customer->ref_ext)) ? $customer->ref_ext : $existing_dol_customer->ref_ext ;
+				$existing_dol_customer->default_lang = (empty($existing_dol_customer->default_lang)) ? $customer->default_lang : $existing_dol_customer->default_lang ;
+
+				$existing_dol_customer->address = (empty($existing_dol_customer->address)) ? $customer->address : $existing_dol_customer->address ;
+				$existing_dol_customer->town = (empty($existing_dol_customer->town)) ? $customer->town : $existing_dol_customer->town ;
+				$existing_dol_customer->zip = (empty($existing_dol_customer->zip)) ? $customer->zip : $existing_dol_customer->zip ;
+				$existing_dol_customer->phone_pro = (empty($existing_dol_customer->phone_pro)) ? $customer->phone_pro : $existing_dol_customer->phone_pro ;
+				$existing_dol_customer->email = (empty($existing_dol_customer->email)) ? $customer->email : $existing_dol_customer->email ;
+
+				$existing_dol_customer->client = (empty($existing_dol_customer->client)) ? $customer->client : $existing_dol_customer->client ;
+				$existing_dol_customer->code_client = (empty($existing_dol_customer->code_client)) ? $customer->code_client : $existing_dol_customer->code_client ;
+				$existing_dol_customer->fournisseur = (empty($existing_dol_customer->fournisseur)) ? $customer->fournisseur : $existing_dol_customer->fournisseur ;
+				$existing_dol_customer->code_fournisseur = (empty($existing_dol_customer->code_fournisseur)) ? $customer->code_fournisseur : $existing_dol_customer->code_fournisseur ;
+
+				$customer = $existing_dol_customer;
 				// Note: The import_key is updated after
 				$action = 'updated';
 				$result = $customer->update($objsqlr->rowid, $user);
@@ -470,7 +490,6 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			print $error_message;
 			$error_messages[] = $obj->id_customer . ' : ' . $error_message;
 			//$error++;
-			//exit();
 		} else {
 			print " - #".$i." Third party id=".$customer->id.", ref_ext = " . $customer->ref_ext . ", customer = ".$customer->client.", supplier = ".$customer->fournisseur.", " . $action . " successfully";
 		}
@@ -480,6 +499,12 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			if ($customer->client > 0) {
 				$customer_tags = array();
 				$customer_tags[] = $marketplace_third_parties_category;
+
+				// if action is updated keep the old tags
+				$old_customer_tags = $categorie->containing($customer->id, 'customer', 'id');
+				if (!empty($old_customer_tags)) {
+					$customer_tags = array_merge($customer_tags , $old_customer_tags); // Add $old_customer_tags;
+				}
 
 				// Add preferred Customer category
 				if ($obj->id_default_group == $preferredCustomerGroupId) {
@@ -500,7 +525,17 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 			// Add tag/category supplier
 			if ($customer->fournisseur > 0) {
-				$ret_cat = $customer->setCategories($marketplace_third_parties_category_vendor, 'supplier');
+				$supplier_tags = array();
+				$supplier_tags[] = $marketplace_third_parties_category_vendor;
+				
+				// if action is updated keep the old tags
+				$old_supplier_tags = $categorie->containing($customer->id, 'supplier', 'id');
+				if (!empty($old_supplier_tags)) {
+					$supplier_tags = array_merge($old_supplier_tags, $supplier_tags); // add $old_supplier_tags;
+				}
+
+
+				$ret_cat = $customer->setCategories($supplier_tags, 'supplier');
 				if ($ret_cat < 0) {
 					$error_message = " - Error in setCategories supplier result code = " . $ret_cat . " - " . $customer->errorsToString();
 					print $error_message;
