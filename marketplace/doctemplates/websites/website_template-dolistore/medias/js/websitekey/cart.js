@@ -90,7 +90,8 @@ $(document).ready(function(){
     });
 
 
-    $('.addtocart').submit(function(e){
+    //$('.addtocart').submit(function(e){
+    $(document).on('submit', '.addtocart', function(e) {
         var form_data = $(this).serialize();
         var button_content = $(this).find('button[type=submit]');
         button_content.html('<span>Adding...</span>'); //Loading button text

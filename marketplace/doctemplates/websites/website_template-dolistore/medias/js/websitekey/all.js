@@ -219,7 +219,6 @@ function quick_view() {
 }
 
 function bindGrid() {
-    //var view = $.totalStorage('display');
     var view = display;
     if (!view && (typeof displayList != 'undefined') && displayList)
         view = 'list';
@@ -227,11 +226,13 @@ function bindGrid() {
         Display(view);
     else
         $('.display').find('li#grid').addClass('selected');
-    $(document).on('click', '#grid', function(e) {
+    
+    // Unbind and re-bind events to avoid duplicate listeners
+    $('.display').off('click', '#grid').on('click', '#grid', function(e) {
         e.preventDefault();
         Display('grid');
     });
-    $(document).on('click', '#list', function(e) {
+    $('.display').off('click', '#list').on('click', '#list', function(e) {
         e.preventDefault();
         Display('list');
     });
@@ -275,7 +276,7 @@ function Display(view) {
         });
         $('.display').find('li#list').addClass('selected');
         $('.display').find('li#grid').removeAttr('class');
-        $.totalStorage('display', 'list');
+        //$.totalStorage('display', 'list');
     } else {
         $('ul.product_list').removeClass('list').addClass('grid row');
         $('.product_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-md-3');
