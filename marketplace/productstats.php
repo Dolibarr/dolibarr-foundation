@@ -67,7 +67,7 @@ $backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
 
 $type = GETPOST('type', 'intcomma');
 $mode = GETPOST('mode', 'alpha') ? GETPOST('mode', 'alpha') : '';
-$mode = 'facture';
+$mode = 'commande';
 
 // Security check
 if (!empty($user->socid)) {

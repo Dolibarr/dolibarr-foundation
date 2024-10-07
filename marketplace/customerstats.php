@@ -137,7 +137,7 @@ $sql .= ", ".MAIN_DB_PREFIX."categorie_societe as cs";
 if (!$user->hasRight('societe', 'client', 'voir')) {
 $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
 }
-$sql .= ' WHERE s.entity IN ('.getEntity('societe').') AND cs.fk_soc = s.rowid AND cs.fk_categorie = '.((int) getDolGlobalString('MARKETPLACE_THIRD_PARTIES_CATEGORY_ID'));
+$sql .= ' WHERE s.entity IN ('.getEntity('societe').') AND cs.fk_soc = s.rowid AND cs.fk_categorie = '.((int) getDolGlobalString('MARKETPLACE_PROSPECTCUSTOMER_ID'));
 if (!$user->hasRight('societe', 'client', 'voir')) {
 $sql .= " AND s.rowid = sc.fk_soc AND sc.fk_user = ".((int) $user->id);
 }
@@ -265,7 +265,7 @@ if (getDolGlobalString('MAIN_COMPANY_PERENTITY_SHARED')) {
 if (!$user->hasRight('societe', 'client', 'voir')) {
 	$sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
 }
-$sql .= ' WHERE s.entity IN ('.getEntity('societe').') AND cs.fk_soc = s.rowid AND cs.fk_categorie = '.((int) getDolGlobalString('MARKETPLACE_THIRD_PARTIES_CATEGORY_ID'));
+$sql .= ' WHERE s.entity IN ('.getEntity('societe').') AND cs.fk_soc = s.rowid AND cs.fk_categorie = '.((int) getDolGlobalString('MARKETPLACE_PROSPECTCUSTOMER_ID'));
 if (!$user->hasRight('societe', 'client', 'voir')) {
 	$sql .= " AND s.rowid = sc.fk_soc AND sc.fk_user = ".((int) $user->id);
 }
@@ -302,7 +302,7 @@ if ($result) {
 		$lastmodified .= '<tr class="liste_titre"><th colspan="2">';
 		//$lastmodified .= img_picto('', 'company', 'class="pictofixedwidth"');
 		$lastmodified .= '<span class="valignmiddle">'.$transRecordedType.'</span>';
-		$lastmodified .= '<a class="marginleftonlyshort" href="'.DOL_URL_ROOT.'/societe/list.php?sortfield=s.tms&sortorder=DESC&search_category_customer_list[]='.getDolGlobalString("MARKETPLACE_THIRD_PARTIES_CATEGORY_ID").'" title="'.$langs->trans("FullList").'">';
+		$lastmodified .= '<a class="marginleftonlyshort" href="'.DOL_URL_ROOT.'/societe/list.php?sortfield=s.tms&sortorder=DESC&search_category_customer_list[]='.getDolGlobalString("MARKETPLACE_PROSPECTCUSTOMER_ID").'" title="'.$langs->trans("FullList").'">';
 		$lastmodified .= '<span class="badge marginleftonlyshort">...</span>';
 		$lastmodified .= '</a>';
 		$lastmodified .= '</th>';
