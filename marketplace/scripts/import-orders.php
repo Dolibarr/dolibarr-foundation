@@ -223,7 +223,7 @@ $orders_querry = "
 	LEFT JOIN
 		ps_order_state_lang osl ON o.current_state = osl.id_order_state AND osl.id_lang = 1
 	WHERE 
-		(osl.name IN ('Payment accepted', 'Delivered', 'Stripe partial refund') OR osl.name IS NULL) and o.id_order != 0
+		(osl.name IN ('Payment accepted', 'Delivered', 'Stripe partial refund') OR osl.name IS NULL) and o.id_order != 0 
 	ORDER BY
 		o.id_order DESC;
 ";
