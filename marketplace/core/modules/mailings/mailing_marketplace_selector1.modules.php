@@ -24,7 +24,8 @@ class mailing_mailing_marketplace_selector1 extends MailingTargets
 	// CHANGE THIS: Set to 1 if selector is available for admin users only
 	public $require_admin = 0;
 
-	public $enabled = 'isModEnabled("marketplace")';
+	//public $enabled = 'isModEnabled("marketplace")';
+	public $enabled = 0;
 
 	public $require_module = array();
 
