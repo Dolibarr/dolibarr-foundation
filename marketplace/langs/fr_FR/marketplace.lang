@@ -1,4 +1,4 @@
-# Copyright (C) ---Put here your own copyright and developer email---
+# Copyright (C) 2024 Alice Adminson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,38 +17,202 @@
 # Generic
 #
 
-# Module label 'ModuleMyModuleName'
-ModuleMyModuleName = MyModule
-# Module description 'ModuleMyModuleDesc'
-ModuleMyModuleDesc = MyModule description
+# Module label 'ModuleMarketplaceName'
+ModuleMarketplaceName = Place de marché
+# Module description 'ModuleMarketplaceDesc'
+ModuleMarketplaceDesc = Gestion de marché. Fournit un modèle de portail Web de commerce électronique et de marché et des fonctionnalités permettant de vendre des produits sur un marché.
 
 #
-# Admin page
+# Admin pages
 #
-MyModuleSetup = MyModule setup
-Settings = Settings
-MyModuleSetupPage = MyModule setup page
-MYMODULE_MYPARAM1 = My param 1
-MYMODULE_MYPARAM1Tooltip = My param 1 tooltip
-MYMODULE_MYPARAM2=My param 2
-MYMODULE_MYPARAM2Tooltip=My param 2 tooltip
+MarketplaceSetup = Configuration de la place de marché
+Settings = Paramètres
+MarketplaceSetupPage = Page de configuration de la place de marché
+NewSection=Nouvelle section
+MARKETPLACE_ROOT_CATEGORY_ID=Catégorie racine des produits à vendre sur la place de marché
+MARKETPLACE_VERSIONS_CATEGORY_ID=Catégorie pour le widget « Version » sur la page d'accueil du site Web de Markplate
+MARKETPLACE_SPECIAL_CATEGORY_ID=Catégorie pour le widget « Promotions » sur la page d'accueil du site de la place de marché
+MARKETPLACE_DELAY_FOR_NEW=Âge maximum (en jours) pour qu'un produit soit visible dans la section "Nouveaux produits"
+MARKETPLACE_PROSPECTCUSTOMER_ID=Catégorie pour tous les prospects ou clients créés à partir du site Web de la place de marché
+MARKETPLACE_VENDOR_ID=Catégorie pour tous les vendeurs vendant des produits sur le site Web de la place de marché
+MARKETPLACE_URL_FOR_LOGO=URL du logo de la place de marché
+MARKETPLACE_WEBSITE_ID=Site Web à utiliser pour la place de marché
+MARKETPLACE_WEBSITE_ID_HELP=Tous les utilisateurs, clients, commandes, etc., créés par le site Web de la place de marché seront liés à ce site Web.<br><br><b>Important :</b> Si vous modifiez cette valeur, les utilisateurs, clients et commandes existants resteront liés à l'ancien site Web et ne seront pas migrés vers le nouveau.
+MARKETPLACE_SECRET_KEY=Clé pour le cryptage du mot de passe de Prestashop 1.6
+MARKETPLACE_SECRET_KEY_HELP=Si certains utilisateurs ont été migrés depuis la migration de PrestaShop 1.6, il s'agit de la clé de cookie PrestaShop utilisée pour valider le mot de passe.
+MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID=Catégorie pour tous les prospects ou clients étiquetés comme « Préférés » ou qualifiés pour la remise
+MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_DISCOUNT=Pourcentage de remise pour les prospects ou clients « privilégiés »
+MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID=Catégorie de produits à exclure de la remise
+ImportTip=Conseils de migration
 
+About = À propos
+MarketplaceAboutPage = Page à propos de la place de marché
 
-#
-# About page
-#
-About = About
-MyModuleAbout = About MyModule
-MyModuleAboutPage = MyModule about page
+MarketplaceArea = Accueil Marché
+DefaultMarketplaceThirdLabel=Client générique du marché
+DefaultMarketPlaceCatLabel=Produits de la Marketplace
+DefaultPOSProductLabel=Exemple de produit pour Marketplace
+DefaultMarketPlaceCustomersCatLabel=Clients de la place de marché
+DefaultMarketPlaceVendorsCatLabel=Vendeurs de la place de marché
+DefaultMarketPlacePreferredCustomersCatLabel=Clients privilégiés de la place de marché
+DefaultMarketPlaceProductsCatDiscountExcludeLabel=Pas de réduction pour les membres
 
-#
-# Sample page
-#
-MyModuleArea = Home MyModule
-MyPageName = My page name
-
-#
-# Sample widget
-#
-MyWidget = My widget
-MyWidgetDescription = My widget description
+ModuleVersion=Version
+DolibarrMin=Dolibarr min
+DolibarrMax=Dolibarr max
+WantToIncludeSourceInCore=Ok pour les sources dans le noyau
+HowtoContactSupport=Comment contacter le support
+LastReasonDisabled=Dernière raison de désactivation
+OldSystemUrl=URL dans l'ancien système
+ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Cette page contient des informations et des statistiques sur votre marché
+newModuleProduct=Soumettre un nouveau module
+shortDescription=Description courte
+largeDescription=Description longue
+keywords=Mots clés
+moduleProductName=Nom du module/produit
+checkRulesBeforeSubmit=Avant de soumettre un module, assurez-vous qu'il est conforme aux <a href="%s" target="_blank">règles de validation</a>
+status=Statut
+minVersion=Version minimale
+maxVersion=Version Max
+includeModuleInDolibarrCheckbox=Je souhaite que mon module soit inclus dans le noyau Dolibarr dès que possible
+includeModuleInDolibarrInfo=Selon la licence Dolibarr et les conditions d'utilisation de Dolistore, votre module est sous licence OpenSource. Cela signifie que votre travail peut être modifié, réutilisé et redistribué par n'importe qui, y compris par l'équipe de base de Dolibarr pour l'inclure dans la version officielle. Vous pouvez cependant aider le projet à se développer plus rapidement en accélérant ce processus en cochant la case suivante.
+includeModuleInDolibarrDetails=	Étant donné qu'un module Dolibarr est une œuvre dérivée de Dolibarr, un module doit être sous licence compatible avec la licence Dolibarr gpl v3.<br>Cela signifie que votre code source peut être inclus dans la version officielle de Dolibarr pour améliorer Dolibarr lui-même. Cependant, « peut » ne dit pas « quand ».<br>Donc, si vous voulez vraiment que cela se produise le plus rapidement possible, cochez simplement cette case pour que l'équipe principale en soit informée. Cela ne garantit pas que cela sera fait, mais augmente considérablement la probabilité et réduit le temps de retard.<br>Si votre module est inclus dans le noyau, cela signifie que le module sera alors maintenu par la communauté des développeurs de Dolibarr et que le module sera désactivé de Dolistore dès que la version de Dolibarr qui l'inclut sera disponible publiquement
+salePriceExlTax=Prix de vente (hors taxes)
+salePriceFree=(<b>0</b> signifie <b>libre</b>)
+salePriceInfo=Selon le statut de la fondation, un taux de TVA de 20 sera ajouté à ce prix, si le prix n'est pas nul. Votre part de 80 est calculée sur ce montant final.
+currencyEuro=Euro
+contactSupportInfo=Permet de définir comment contacter le support (obligatoire si le module est payant).
+selectCatForProduct=Sélectionnez les catégories liées à votre produit (max 3)
+zipFileModuleField=Paquet distribué (fichier .zip pour un module ou un thème)
+zipFileModuleInfo=Nouveau fichier : La taille maximale du fichier est de : 80 Mo
+agreeTermsWebsite=J'ai lu et j'accepte les conditions générales d'utilisation disponibles sur la page
+suggestToAddWikiPage=Je suis conscient que la fondation Dolibarr me recommande d'ajouter une page dédiée à mon module sur le wiki.dolibarr.org visible sur <a href="https://wiki.dolibarr.org/index.php/Category:Complementary_modules" target="_blank">https://wiki.dolibarr.org/index.php/Catégorie:Modules_complémentaires</a>, Cela augmente la visibilité de mon module et peut augmenter les ventes s'il s'agit d'un module payant
+englishFieldsRequired=Tous les champs en anglais sont obligatoires.
+fieldTooLong=Le champ %s est trop long : %s caractères max (nombre actuel %s).
+requiredCategory=Vous devez choisir une catégorie.
+fileNameLengthError=le nom du fichier ne doit pas dépasser 48 caractères, y compris le préfixe ("module_", "theme_" ou "website_"), le suffixe de version et l'extension (".zip" par exemple) !
+fileSizeHigherServerLimit=La taille du fichier est supérieure à la limite du serveur !
+fileSizeHigherHtmlFormLimit=Taille du fichier si supérieure à la limite sous forme HTML !
+uploadAborted=Le transfert de fichier a été interrompu !
+noFileOrSizeZero=Le nom du fichier n'a pas été défini ou la taille du fichier est nulle !
+packageFileNameExtension=Le nom du fichier du package doit se terminer par l'extension .odt, .pdf, .svg, .zip, .txt ou .apk
+packageRuleViolation=Le package semble ne pas respecter certaines règles :
+packageReadmeTxt=Si le package soumis est simplement un fichier .txt, il doit être nommé README.txt
+packageFileNamePrefix=Le nom du fichier du package doit commencer par « module_ » pour un module Dolibarr, « moduleXxx_ » pour un module pour le logiciel Xxx, « theme_ » pour un thème ou « website_ » pour un site Web.
+packageBuildTool=Essayez de créer votre package avec un outil officiel Dolibarr récent ('htdocs/build/makepack-dolibarrmodule.pl', ou 'htdocs/build/makepack-dolibarrtheme.pl' pour les thèmes, ou utilisez le bouton "Exporter le site Web" pour un modèle de site Web)
+packageFileNameVersion=Le nom du fichier de package doit se terminer par une version après un « - ». Par exemple -x.y.zip
+fileNotAnalyzed=Le fichier ne peut pas être analysé. Est-ce un vrai fichier zip ?
+emailIfError=Si vous pensez qu'il s'agit d'une erreur, envoyez votre colis par mail à dolistore@dolibarr.org
+fileCopyError=copie de fichier impossible pour le moment, merci de réessayer ultérieurement
+validationFail=La validation du fichier zip échoue.
+moduleContents=Désolé, un fichier de module ne peut contenir, dans la racine du zip, que :
+moduleDirectoryRule1=- 1 seul répertoire correspondant au nom de votre module ou thème (recommandé),
+moduleDirectoryRule2=- ou plusieurs répertoires correspondant aux noms suivants : ./htdocs/votrenomdemodule, ./docs, ./scripts, ./test ou ./build.
+directoryFound=Mais nous avons trouvé un répertoire ou un fichier avec le nom :
+rootDirWarning=Attention, un fichier module ne peut contenir qu'un seul répertoire racine portant le même nom que le module (à la racine du zip ou dans le répertoire htdocs). Nous avons trouvé %s fichiers/répertoires à la racine du module. Si ce module est un méta-paquet (un module embarquant plusieurs autres modules), vous devez inclure un fichier metapackage.conf avec la liste de tous les noms de modules embarqués dans le répertoire "%s"
+moduleNameMismatch=Attention, le fichier du module contient un répertoire en racine appelé "%s" mais cela ne correspond pas au nom du module utilisé comme nom de fichier qui est "%s".
+mainIncludeError=L'appel de main.inc.php ou master.inc.php dans le fichier "%s" du module "%s" ne suit pas les bonnes pratiques. Il faut avoir au moins (minimum) 2 tentatives pour inclure le fichier main.inc.php ou master.inc.php :<br>1 si le module est dans le répertoire racine de dolibarr, et 1 pour le support lorsque le module est dans le répertoire "custom". Le mieux est de lire le fichier modulebuilder/template/mymoduleindex.php pour un exemple de séquence pour charger le fichier main/master.inc.php.
+dolIncludeError=L'appel de dol_include_once du fichier "%s" dans le module "%s" est erroné, vous devez corriger la ligne ci-dessous :
+docRootError=L'appel de votre classe de module ne doit pas se faire avec DOL_DOCUMENT_ROOT, le fichier "%s" du module "%s" est erroné, vous devez corriger la ligne ci-dessous avec "dol_include_once" :
+invalidZipFile=Votre fichier zip ne semble pas correspondre aux règles du package Dolibarr.
+seeDocumentation=Voir %s
+contactDolistore=Si vous pensez qu'il s'agit d'une erreur ou ne comprenez pas ce message, envoyez votre colis par email à dolistore@dolibarr.org
+packageFileNameRules=Le nom du fichier du package doit correspondre à (module|moduleXxx|theme|website)_mypackagename-x.y(.z).zip
+coverImage=Image de couverture
+otherImages=Autres images
+multilingualInformation=Informations multilingues
+moduleInformation=Informations sur le module
+attachments=Pièces jointes
+termsAndConditionsOfUse=Conditions générales d'utilisation
+zipProductRequired=Vous devez télécharger un produit
+errorImageFormat=Votre image doit être au format JPG, GIF ou PNG, le format %s n'est pas autorisé
+fieldRequired = <b>%s</b> est requis.
+orderChanged=L'ordre a été modifié
+imageAdded=L'image a été ajoutée
+imageDeleted=L'image a été supprimée
+manageProducts=Gérer mes produits
+noProductToDisplay=Aucun produit à afficher
+exclTax=Hors taxes
+inclTax=TTC
+date=Date
+edit=Modifier
+product=Produit
+amountEarned=Montant gagné (hors taxes)
+actions=Actes
+listOfSells=Liste des ventes
+registredOn=Enregistré le
+incomeAndPayments=Revenus et paiements
+filterDateBetween=Filtrer la date entre
+oneDateEmpty=Une date est remplie et l'autre est vide
+endDateMustBeGreater=La date de fin doit être supérieure à la date de début
+numberOfPaidSells=Nombre de ventes payantes
+totalOfSellsDone=Total des ventes effectuées
+totalValidatedSells=Total des ventes validées
+exclTax=Hors taxes
+amountToClaim=Montant à réclamer
+remainedAmount=Montant restant à réclamer
+minAmountToClaim=Montant minimum pour réclamer des paiements
+minAmountToClaimDesc=Toute vente est validée après un délai de 1 mois
+paymentHistory=Historique des paiements
+amountOrigin=Origine du montant
+downloadAllSales=Téléchargez la liste de toutes les ventes
+welcomeTo=Bienvenue sur
+marketplace=Place de marché
+MARKETPLACE_WELCOME_EMAIL_TEMPLATE=Modèle d'e-mail pour l'e-mail de bienvenue envoyé lors de la création du compte
+MARKETPLACE_fORGOT_PASSWORD_EMAIL_TEMPLATE=Email Mot de passe oublié
+passwordResetRequest=Demande de réinitialisation du mot de passe
+marketplaceWelcomeEmailContent=__(Bonjour)__ __USER_NAME__,<p>Bienvenue sur <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> __(place de marché)__ ! Votre compte a été créé avec succès, vous donnant accès à une variété de produits.</p><p>Connectez-vous maintenant pour explorer notre catalogue complet !</p><p>Cordialement,</p><p>Le <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong>Équipe</p>
+marketplaceResetPasswordEmailContent=__(Bonjour)__ __USER_NAME__,<p>Nous avons reçu une demande de réinitialisation de votre mot de passe pour votre compte sur <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace.</p><p>Si vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail. Aucune modification ne sera apportée à votre compte.</p><p>Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien ci-dessous :</p><p><a href="__PASSWORD__RESET_LINK__">Réinitialiser votre mot de passe</a></p><p>Si vous avez des questions, n'hésitez pas à contacter notre équipe d'assistance.</p><p>Cordialement,</p><p>L'équipe <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong></p>
+emailDoesNotExist =Cet email n'existe pas
+resetPassword= Réinitialiser le mot de passe
+resetPasswordEmailSent=Un e-mail a été envoyé avec des instructions pour réinitialiser votre mot de passe.<br> Veuillez suivre les étapes dans l'e-mail pour terminer le processus.
+reEnterNewPassword=Entrez à nouveau le nouveau mot de passe
+bothFieldsRequired=Les deux champs sont obligatoires
+passwordsAreNotTheSame=Les mots de passe ne sont pas les mêmes
+wrongOrExpiredToken=Jeton erroné ou expiré
+passwordChangedMessage=Votre mot de passe a été modifié, <br> vous pouvez vous connecter maintenant
+marketplaceDesc=Bienvenue sur la place de marché de la société %s
+ifYouNeedAnInvoice=Si vous avez besoin d'une facture, veuillez contacter : %s
+MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Modèle d'email pour l'email "Mot de passe oublié"
+MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Modèle d'e-mail pour l'e-mail « Confirmation de commande de l'acheteur »
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Modèle d'e-mail pour l'e-mail « Confirmation de commande du vendeur »
+BuyerOrderConfirmation=Confirmation de commande
+SellerOrderNotification=Notification de commande
+marketplaceBuyerOrderConfirmationContent=<div><p>Bonjour __BUYER_NAME__,<br /><br />Merci pour votre achat sur la place de marché <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> !<br /><br />Votre commande a été passée avec succès.<br /><u>Référence de commande :</u>&nbsp; __ORDER_REF__<br /><u>Date de la commande :</u> __ORDER_DATE__<br /><u>Commander des produits</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Vous pouvez consulter votre commande et télécharger votre facture à partir de la section <strong>&quot;Historique des commandes&quot;</strong> de votre compte.</span></span></span></p><p>Merci d'avoir effectué vos achats chez nous !<br />Cordialement,<br />L'équipe <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong></p></div>
+marketplaceSellersOrderConfirmationContent=<div>__(Bonjour)__ __SELLER_NAME__,<p>Nous sommes ravis de vous informer que vous avez reçu une nouvelle commande sur la place de marché <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> !<br /><br /><strong>Détails de la commande :</strong><br /><u>Référence de la commande :</u>&nbsp; __ORDER_REF__<br /><u>Nom de l'acheteur :</u>&nbsp; __NOM_ACHETEUR__<br /><u>Date de commande :</u>&nbsp; __DATE_COMMANDE__<br /><br /><u>Produit :</u>&nbsp; __PRODUIT__<br /><u>Quantité :</u>&nbsp; __QTÉ__<br /><br />Merci d'être un vendeur apprécié sur <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace !<br /><br />Cordialement,<br />Le <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Équipe</p>b0d3675 27715b4z0
+pageNotFound=Oups ! Page non trouvée.
+pageNotFoundDesc=Désolé, mais la page que vous recherchez n'existe pas, a été supprimée ou est temporairement indisponible.
+pageNotEditable=Cette page ne peut pas être modifiée ou prévisualisée dans l'éditeur. Vous pouvez la prévisualiser dans un nouvel onglet.
+emailTemplateLoaded= - <b>%s</b> a été %s.
+websitePurged= - Le site Web <b>%s</b> a été purgé.
+templateImported= - Le modèle de marché par défaut a été importé sur le site Web <b>%s</b>.
+websiteCreated= - Le site Web didactique avec la référence <b>%s</b> a été créé.
+DiscountsPreferedCustomers=Réductions pour les prospects/clients « privilégiés »
+marketplaceRewriteRules= Réécrire les règles à inclure dans votre fichier de configuration d'hôte virtuel Apache
+marketplaceGenerateRewriteFile= Vous pouvez également générer un fichier de réécriture Apache avec des règles séparées pour chaque produit (à inclure manuellement dans votre configuration d'hôte virtuel Apache)
+rewriteFileErrorNoProducts=Vous devez d’abord importer des produits.
+rewriteFileErrorUnableToCreateFile=Impossible de créer un fichier temporaire.
+invoicesStatsMarketplace=Statistiques des factures
+customersStatsMarketplace=Statistiques clients
+productsStatsMarketplace=Statistiques sur les produits
+LastThirdPartiesOnMarketplace=Les derniers %s Tierces parties
+LastpreferredThirdPartiesOnMarketplace=Les derniers tiers privilégiés %s
+download=Télécharger
+free=GRATUIT
+indexPageTitle= Place de marché officielle des modules Dolibarr - DoliStore
+indexPageKeywords= boutique, plugins, modules, addons, erp, crm, marché, magasin, vendre, produit, dolibarr
+indexPageDescription=Place de marché officielle des modules Dolibarr - DoliStore
+loginRegisterPageTitle = Connexion/Inscription
+loginRegisterPageKeywords = boutique, plugins, modules, addons, erp, crm, marché, magasin, vendre, produit, dolibarr
+loginRegisterPageDescription = Place de marché officielle des modules Dolibarr - DoliStore
+manageProductsPageTitle = Gérer les produits
+myAccountPageTitle = Mon compte
+orderDetailsPageTitle = Détails de la commande
+orderHistoryPageTitle = Historique des commandes
+paymentPageTitle = Paiement
+paymentOkPageTitle = Paiement Ok
+productStatisticsPageTitle = Statistiques sur les produits
+accountInformationPageTitle = Informations sur le compte
+forgotPasswordPageTitle = Mot de passe oublié
+incomePaymentsPageTitle = Paiements de revenus
+notFoundPageTitle = Non trouvé
