@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[o:dolibarr-association:p:dolibarr-foundation:r:marketplace]
+file_filter = htdocs/marketplace/langs/<lang>/marketplace.lang
+source_file = htdocs/marketplace/langs/en_US/marketplace.lang
+source_lang = en_US
+type        = MOZILLAPROPERTIES
