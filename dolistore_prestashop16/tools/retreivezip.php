@@ -51,6 +51,8 @@ if ($resql) {
 		print 'Failed to find existing files in database.'."\n";
 	}
 
+	dol_mkdir('/home/dolibarr/dolistore.com/archivemodules/');
+
 	print 'Scan dir /home/dolibarr/dolistore.com/httpdocs/download'."\n";
 	$files = scandir('/home/dolibarr/dolistore.com/httpdocs/download');
 	foreach($files as $file) {
@@ -64,7 +66,7 @@ if ($resql) {
 			$nbnotfound++;
 			//unlink('/home/dolibarr/dolistore.com/httpdocs/download/'.$file);
 			if ($mode == 'confirm') {
-				rename('/home/dolibarr/dolistore.com/httpdocs/download/'.$file, '/tmp/old/'.$file);
+				rename('/home/dolibarr/dolistore.com/httpdocs/download/'.$file, '/home/dolibarr/dolistore.com/archivemodules/'.$display_filename);
 				print " -> Done\n";
 			} else {
 				print " -> Disabled in test mode.\n";
