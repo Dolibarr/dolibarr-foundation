@@ -20,13 +20,18 @@ if (substr($sapi_type, 0, 3) == 'cgi') {
 $mode=isset($argv[1])?$argv[1]:'';
 
 if (empty($mode)) {
-	echo "Usage:  cleanfiles.php  test|confirm\n";
+	echo "Usage:  retreivezip.php  test|confirm\n";
 	exit;
 }
 
 $connect = mysqli_connect(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 
-$sql = 'SELECT id_product_download, filename, display_filename FROM ps_product_download';
+$idseller = '21271';
+
+$sql = "SELECT id_product_download, ppd.id_product, display_filename, filename, ppd.date_add, ppd.active, id_supplier
+FROM ps_product_download as ppd, ps_product as pp
+where ppd.id_product = pp.id_product and
+pp.reference like 'c'.$idseller.'%'";
 
 $resql = mysqli_query($connect, $sql);
 
@@ -55,7 +60,7 @@ if ($resql) {
 			print 'File '.$file.' exists in database for module '.$arrayoflabel[$key]."\n";
 			$nbfound++;
 		} elseif (preg_match('/^[a-f0-9]+$/', $file)) {
-			print 'File '.$file.' is not into database, we delete it.';
+			print 'File '.$file.' is not into database, we archive it';
 			$nbnotfound++;
 			//unlink('/home/dolibarr/dolistore.com/httpdocs/download/'.$file);
 			if ($mode == 'confirm') {
