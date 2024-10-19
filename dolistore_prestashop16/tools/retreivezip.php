@@ -26,54 +26,19 @@ if (empty($mode)) {
 
 $connect = mysqli_connect(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 
-$idseller = '21271';
-
-$sql = "SELECT id_product_download, ppd.id_product, display_filename, filename, ppd.date_add, ppd.active, id_supplier
-FROM ps_product_download as ppd, ps_product as pp
-where ppd.id_product = pp.id_product and
-pp.reference like 'c'.$idseller.'%'";
-
 $resql = mysqli_query($connect, $sql);
 
 if ($resql) {
 	$arrayoffiles = array();
 	$arrayoflabel = array();
 
-	$obj = mysqli_fetch_row($resql);
-	while ($obj = mysqli_fetch_row($resql)) {
-		$arrayoffiles[$obj[0]]=$obj[1];
-		$arrayoflabel[$obj[0]]=$obj[2];
-	}
-
-	if (count($arrayoffiles)) {
-		print 'Found '.count($arrayoffiles).' entries of files'."\n";
-	} else {
-		print 'Failed to find existing files in database.'."\n";
-	}
-
-	dol_mkdir('/home/dolibarr/dolistore.com/archivemodules/');
 
 	print 'Scan dir /home/dolibarr/dolistore.com/httpdocs/download'."\n";
 	$files = scandir('/home/dolibarr/dolistore.com/httpdocs/download');
 	foreach($files as $file) {
-		if (in_array($file, $arrayoffiles)) {
-			// Search key
-			$key = array_search($file, $arrayoffiles);
-			print 'File '.$file.' exists in database for module '.$arrayoflabel[$key]."\n";
-			$nbfound++;
-		} elseif (preg_match('/^[a-f0-9]+$/', $file)) {
-			print 'File '.$file.' is not into database, we archive it';
-			$nbnotfound++;
-			//unlink('/home/dolibarr/dolistore.com/httpdocs/download/'.$file);
-			if ($mode == 'confirm') {
-				rename('/home/dolibarr/dolistore.com/httpdocs/download/'.$file, '/home/dolibarr/dolistore.com/archivemodules/'.$display_filename);
-				print " -> Done\n";
-			} else {
-				print " -> Disabled in test mode.\n";
-			}
-		} else {
-			print 'File '.$file.' discarded'."\n";
-		}
+		$ziparchive = new ZipArchive();
+
+
 	}
 }
 
