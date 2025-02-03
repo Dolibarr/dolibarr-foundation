@@ -66,7 +66,8 @@ HowtoContactSupport=Cómo contactar con el soporte técnico
 LastReasonDisabled=Última razón de desactivación
 OldSystemUrl=URL en el sistema antiguo
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Esta página contiene información y estadísticas sobre su mercado.
-newModuleProduct=Enviar o actualizar un módulo o complemento
+newModuleProduct=Agregar o actualizar un módulo o complemento
+submitANewModuleProduct=Enviar un nuevo módulo o complemento
 shortDescription=Descripción breve
 largeDescription=Descripción larga
 keywords=Palabras clave
@@ -181,7 +182,7 @@ marketplaceDesc=Bienvenido al Marketplace de la empresa %s
 ifYouNeedAnInvoice=Para las facturas emitidas antes del 1 de enero de 2025, se pueden descargar desde la tienda antigua: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Plantilla de correo electrónico para el correo electrónico "Contraseña olvidada"
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Plantilla de correo electrónico para el correo electrónico "Confirmación del pedido del comprador"
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Plantilla de correo electrónico para el correo electrónico "Confirmación de pedido del vendedor"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Plantilla de correo electrónico para el correo electrónico "Notificación de pedidos de vendedores"
 BuyerOrderConfirmation=Confirmación de pedido
 SellerOrderNotification=Notificación de pedido
 marketplaceBuyerOrderConfirmationContent=<div><p>Hola __BUYER_NAME__,<br /><br />¡Gracias por tu compra en el mercado de <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong>!<br /><br />Su pedido se ha realizado correctamente.<br /><u>Referencia del pedido:</u>&nbsp; __ORDER_REF__<br /><u>Fecha del pedido:</u> __ORDER_DATE__<br /><u>Pedir productos</u>:<br />__PRODUCTOS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Puede revisar su pedido y descargar su producto o su factura desde el <strong>&quot;Historial de pedidos&quot;</strong></span> de su cuenta.</span></span></span></p><p>¡Gracias por comprar con nosotros!<br />Saludos cordiales,<br />El <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Equipo</p></div>

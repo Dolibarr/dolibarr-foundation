@@ -66,7 +66,8 @@ HowtoContactSupport=Jak skontaktować się z pomocą techniczną
 LastReasonDisabled=Ostatni powód wyłączenia
 OldSystemUrl=Adres URL w starym systemie
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Ta strona zawiera informacje i statystyki dotyczące Twojego rynku
-newModuleProduct=Prześlij lub zaktualizuj moduł lub dodatek
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Krótki opis
 largeDescription=Długi opis
 keywords=Słowa kluczowe
@@ -181,7 +182,7 @@ marketplaceDesc=Witamy na rynku firmy %s
 ifYouNeedAnInvoice=W przypadku faktur wystawionych przed 1 stycznia 2025 r. można je pobrać ze starego sklepu: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Szablon wiadomości e-mail „Zapomniałem hasła”
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Szablon wiadomości e-mail „Potwierdzenie zamówienia kupującego”
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Szablon wiadomości e-mail „Potwierdzenie zamówienia sprzedawcy”
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Potwierdzenie zamówienia
 SellerOrderNotification=Powiadomienie o zamówieniu
 marketplaceBuyerOrderConfirmationContent=<div><p>Hello __BUYER_NAME__,<br /><br />Thank you for your purchase on <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace!<br /><br />Your order has been successfully placed.<br /><u>Order Reference:</u>&nbsp; __ORDER_REF__<br /><u>Order Date:</u> __ORDER_DATE__<br /><u>Order products</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">You can review your order and download your product or your invoice from the <strong>&quot;Order history&quot;</strong> section of your account.</span></span></span></p><p>Thank you for shopping with us!<br />Best regards,<br />The <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>
@@ -303,3 +304,6 @@ MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY=Google reCAPTCHA Secret Key
 MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY_HELP=Enter the private key provided by Google to verify reCAPTCHA responses securely. Ensure this key is kept confidential.
 MARKETPLACE_GOOGLE_RECAPTCHA_REGISTER_FORM=Activate Google Captcha on the registration form
 captchaFail=Captcha failed. Score : %s
+invoiceRef=Invoice Reference
+Refunded=Refunded
+VendorArea=Vendor Area

@@ -66,7 +66,8 @@ HowtoContactSupport=Jak kontaktovat podporu
 LastReasonDisabled=Poslední důvod deaktivace
 OldSystemUrl=URL ve starém systému
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Tato stránka obsahuje informace a statistiky o vašem tržišti
-newModuleProduct=Odešlete nebo aktualizujte modul nebo doplněk
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Krátký popis
 largeDescription=Dlouhý popis
 keywords=Klíčová slova
@@ -181,7 +182,7 @@ marketplaceDesc=Vítejte na tržišti společnosti %s
 ifYouNeedAnInvoice=Faktury vystavené před 1. lednem 2025 si je lze stáhnout ze starého obchodu: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Šablona e-mailu pro e-mail „Zapomenuté heslo“
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Šablona e-mailu pro e-mail „Potvrzení objednávky kupujícího“
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Šablona e-mailu pro e-mail „Potvrzení objednávky prodejce“
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Potvrzení objednávky
 SellerOrderNotification=Upozornění na objednávku
 marketplaceBuyerOrderConfirmationContent=<div><p>Dobrý den, __BUYER_NAME__,<br /><br />Děkujeme vám za váš nákup na <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong><br /><br />Vaše objednávka byla úspěšně odeslána.<br /><u>Reference objednávky:</u>&nbsp; __ORDER_REF__<br /><u>Datum objednávky:</u> __ORDER_DATE__<br /><u>Objednejte si produkty</u>:<br />__PRODUCTS__<br /><br /><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Svou objednávku si můžete prohlédnout a stáhnout si produkt nebo fakturu z <strong>&quot;Historie objednávek&quot;</strong>části vašeho účtu.</span></span><span style="font-size:small"></p><p>Děkujeme, že u nás nakupujete!<br />The <strong>__[MAIN_INFO_SOCIETE_NOM]__ Team</p></div>
@@ -303,3 +304,6 @@ MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY=Tajný klíč Google reCAPTCHA
 MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY_HELP=Chcete-li bezpečně ověřit odpovědi reCAPTCHA, zadejte soukromý klíč poskytnutý společností Google. Zajistěte, aby byl tento klíč důvěrný.
 MARKETPLACE_GOOGLE_RECAPTCHA_REGISTER_FORM=Aktivujte Google Captcha v registračním formuláři
 captchaFail=Captcha se nezdařila. Skóre: %s
+invoiceRef=Invoice Reference
+Refunded=Refunded
+VendorArea=Vendor Area

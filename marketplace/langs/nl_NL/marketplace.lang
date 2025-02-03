@@ -66,7 +66,8 @@ HowtoContactSupport=Hoe u contact kunt opnemen met de ondersteuning
 LastReasonDisabled=Laatste reden voor uitschakeling
 OldSystemUrl=URL in oud systeem
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Deze pagina bevat informatie en statistieken over uw marktplaats
-newModuleProduct=Een module of add-on indienen of bijwerken
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Korte omschrijving
 largeDescription=Lange beschrijving
 keywords=Trefwoorden
@@ -181,7 +182,7 @@ marketplaceDesc=Welkom op de marktplaats van het bedrijf %s
 ifYouNeedAnInvoice=Facturen die vóór 1 januari 2025 zijn uitgegeven, kunnen worden gedownload uit de oude winkel: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=E-mailsjabloon voor de e-mail "Wachtwoord vergeten"
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=E-mailsjabloon voor de e-mail "Bevestiging van kopersorder"
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=E-mailsjabloon voor de e-mail "Bevestiging van verkopersorder"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Orderbevestiging
 SellerOrderNotification=Bestelmelding
 marketplaceBuyerOrderConfirmationContent=<div><p>Hallo __BUYER_NAME__,<br /><br />Bedankt voor uw aankoop op <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marktplaats!<br /><br />Uw bestelling is succesvol geplaatst.<br /><u>Bestelnummer:</u>&nbsp; __ORDER_REF__<br /><u>Besteldatum:</u> __ORDER_DATE__<br /><u>Producten bestellen</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">U kunt uw bestelling bekijken en uw product of factuur downloaden in het gedeelte <strong>&quot;Bestelgeschiedenis&quot;</strong> van uw account.</span></span></span></p><p>Bedankt dat u bij ons winkelt!<br />Met vriendelijke groet,<br />Het <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>

@@ -66,7 +66,8 @@ HowtoContactSupport=Destek ekibiyle nasıl iletişime geçilir
 LastReasonDisabled=Devre dışı bırakmanın son nedeni
 OldSystemUrl=Eski sistemdeki URL
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Bu sayfa pazaryerinizle ilgili bilgi ve istatistikleri içerir
-newModuleProduct=Bir modül veya eklentiyi gönderin veya güncelleyin
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Kısa açıklama
 largeDescription=Uzun açıklama
 keywords=Anahtar kelimeler
@@ -181,7 +182,7 @@ marketplaceDesc=%s Şirketinin Pazar Yerine Hoş Geldiniz
 ifYouNeedAnInvoice=1 Ocak 2025'ten önce düzenlenen faturalar eski mağazadan indirilebilir: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE="Şifre unutuldu" e-postası için e-posta şablonu
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE="Alıcı Sipariş onayı" e-postası için e-posta şablonu
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE="Satıcı Sipariş onayı" e-postası için e-posta şablonu
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Sipariş onayı
 SellerOrderNotification=Sipariş bildirimi
 marketplaceBuyerOrderConfirmationContent=<div><p>Merhaba __BUYER_NAME__,<br /><br /><strong>'dan satın aldığınız için teşekkür ederiz__[MAIN_INFO_SOCIETE_NOM]__</strong> Pazar Yeri!<br /><br />Siparişiniz başarıyla verildi.<br /><u>Sipariş Referansı:</u>&nbsp; __ORDER_REF__<br /><u>Sipariş Tarihi:</u> __ORDER_DATE__<br /><u>Ürün sipariş etme</u>:<br />__ÜRÜNLER__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Siparişinizi inceleyebilir ve ürününüzü veya faturanızı hesabınızın <strong>&quot;Sipariş geçmişi&quot;</strong> bölümünden indirebilirsiniz.</span></span></span></p><p>Bizden alışveriş yaptığınız için teşekkür ederiz!<br />Saygılarımızla,<br /><strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Ekibi</p></div>

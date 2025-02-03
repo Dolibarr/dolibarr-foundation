@@ -66,7 +66,8 @@ HowtoContactSupport=Sådan kontakter du support
 LastReasonDisabled=Sidste årsag til deaktivering
 OldSystemUrl=URL i gammelt system
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Denne side indeholder information og statistik om din markedsplads
-newModuleProduct=Indsend eller opdater et modul eller en tilføjelse
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Kort beskrivelse
 largeDescription=Lang beskrivelse
 keywords=Nøgleord
@@ -181,7 +182,7 @@ marketplaceDesc=Velkommen til markedspladsen for %s Company
 ifYouNeedAnInvoice=For fakturaer udstedt før 1. januar 2025 kan de downloades fra den gamle butik: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=E-mail-skabelon til e-mailen "Glemt adgangskode"
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=E-mail-skabelon til e-mailen "Køberordrebekræftelse"
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=E-mail-skabelon til e-mailen "Sælgers ordrebekræftelse"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Ordrebekræftelse
 SellerOrderNotification=Ordremeddelelse
 marketplaceBuyerOrderConfirmationContent=<div><p>Hej __BUYER_NAME__<br /><br />Tak for dit køb på <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Webshoppen!<br /><br />Din ordre er blevet afgivet.<br /><u>Ordrereference:</u>&nbsp; __ORDER_REF__<br /><u>Ordredato:</u> __ORDER_DATE__<br /><u>Bestil produkter</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Du kan gennemgå din ordre og downloade dit produkt eller din faktura fra <strong>&quot;Ordrehistorik&quot;</strong> af din konto.</span></span></span></p><p>Tak, fordi du handlede hos os!<br />Med venlig hilsen<br /> Den<strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>

@@ -14,8 +14,8 @@ MarketplaceSetup = Marktplatz-Einrichtung
 Settings = Einstellungen
 MarketplaceSetupPage = Seite zur Einrichtung des Marktplatzes
 NewSection=Neuer Abschnitt
-MARKETPLACE_NAME=Marketplace Name
-MARKETPLACE_EMAIL=Marketplace-E-Mail
+MARKETPLACE_NAME=Marktplatz Name
+MARKETPLACE_EMAIL=Marktplatz E-Mail
 MARKETPLACE_ROOT_CATEGORY_ID=Stammkategorie für Produkte, die auf dem Marktplatz verkauft werden sollen
 MARKETPLACE_VERSIONS_CATEGORY_ID=Kategorie für das Widget „Version“ auf der Startseite der Marktplatz-Website
 MARKETPLACE_SPECIAL_CATEGORY_ID=Kategorie für das Widget „Aktionen“ auf der Startseite der Marktplatz-Website
@@ -44,15 +44,15 @@ MarketplaceSetupPaymentPage2Cons=Die öffentlichen Zahlungsseiten Ihrer Backoffi
 
 
 
-About = Um
-MarketplaceAboutPage = Marketplace-Infoseite
+About = Über
+MarketplaceAboutPage = Marketplatz Infoseite
 
 MarketplaceArea = Startseite Marktplatz
-DefaultMarketplaceThirdLabel=Marktplatz-Generikakunde
-DefaultMarketPlaceCatLabel=Marketplace-Produkte
-DefaultPOSProductLabel=Beispiel für ein Marketplace-Produkt
-DefaultMarketPlaceCustomersCatLabel=Marketplace-Kunden
-DefaultMarketPlaceVendorsCatLabel=Marktplatzverkäufer
+DefaultMarketplaceThirdLabel=allgemeiner Kunde
+DefaultMarketPlaceCatLabel=Marketplatz Produkte
+DefaultPOSProductLabel=Beispiel für ein Marktplatz-Produkt
+DefaultMarketPlaceCustomersCatLabel=Marktplatz-Kunden
+DefaultMarketPlaceVendorsCatLabel=Marktplatz-Verkäufer
 DefaultMarketPlacePreferredCustomersCatLabel=Bevorzugte Kunden des Marktplatzes
 DefaultMarketPlaceProductsCatDiscountExcludeLabel=Niemals Rabatt auf diese Produkte
 DefaultMarketPlaceVersions=Marketplace-Versionen
@@ -66,7 +66,8 @@ HowtoContactSupport=So kontaktieren Sie den Support
 LastReasonDisabled=Letzter Grund für die Deaktivierung
 OldSystemUrl=URL im alten System
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Diese Seite enthält Informationen und Statistiken über Ihren Marktplatz
-newModuleProduct=Einreichen oder Aktualisieren eines Moduls oder Add-Ons
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Kurzbeschreibung
 largeDescription=Lange Beschreibung
 keywords=Schlagwörter
@@ -181,7 +182,7 @@ marketplaceDesc=Willkommen auf dem Marktplatz der Firma %s
 ifYouNeedAnInvoice=Rechnungen, die vor dem 1. Januar 2025 ausgestellt wurden, können aus dem alten Store heruntergeladen werden: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=E-Mail-Vorlage für die E-Mail „Passwort vergessen“
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=E-Mail-Vorlage für die E-Mail „Bestellbestätigung für den Käufer“
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=E-Mail-Vorlage für die E-Mail „Bestellbestätigung für den Verkäufer“
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Auftragsbestätigung
 SellerOrderNotification=Bestellbenachrichtigung
 marketplaceBuyerOrderConfirmationContent=<div><p>Hallo __BUYER_NAME__,<br /><br />Vielen Dank für Ihren Einkauf auf dem <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marktplatz!<br /><br />Ihre Bestellung wurde erfolgreich aufgegeben.<br /><u>Bestellreferenz:</u>&nbsp; __ORDER_REF__<br /><u>Bestelldatum:</u> __ORDER_DATE__<br /><u>Produkte bestellen</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Sie können Ihre Bestellung überprüfen und Ihr Produkt oder Ihre Rechnung im Abschnitt <strong>&quot;Bestellverlauf&quot;</strong> Ihres Kontos herunterladen.</span></span></span></p><p>Vielen Dank für Ihren Einkauf bei uns!<br />Mit freundlichen Grüßen<br />Das <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong>-Team</p></div>

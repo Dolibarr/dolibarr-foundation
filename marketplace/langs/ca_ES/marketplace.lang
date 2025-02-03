@@ -66,7 +66,8 @@ HowtoContactSupport=Com contactar amb l'assistència
 LastReasonDisabled=Últim motiu d'inhabilitació
 OldSystemUrl=URL al sistema antic
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Aquesta pàgina conté informació i estadístiques sobre el vostre mercat
-newModuleProduct=Envieu o actualitzeu un mòdul o un complement
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Breu descripció
 largeDescription=Descripció llarga
 keywords=Paraules clau
@@ -181,7 +182,7 @@ marketplaceDesc=Benvingut al mercat de l'empresa %s
 ifYouNeedAnInvoice=Per a les factures emeses abans de l'1 de gener de 2025, es poden descarregar des de la botiga antiga: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Plantilla de correu electrònic per al correu electrònic "Contrasenya oblidada"
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Plantilla de correu electrònic per al correu electrònic "Confirmació de la comanda del comprador"
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Plantilla de correu electrònic per al correu electrònic "Confirmació de la comanda del venedor"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Confirmació de comanda
 SellerOrderNotification=Notificació de comanda
 marketplaceBuyerOrderConfirmationContent=<div><p>Hello __BUYER_NAME__,<br /><br />Thank you for your purchase on <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace!<br /><br />Your order has been successfully placed.<br /><u>Order Reference:</u>&nbsp; __ORDER_REF__<br /><u>Order Date:</u> __ORDER_DATE__<br /><u>Order products</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">You can review your order and download your product or your invoice from the <strong>&quot;Order history&quot;</strong> section of your account.</span></span></span></p><p>Thank you for shopping with us!<br />Best regards,<br />The <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>

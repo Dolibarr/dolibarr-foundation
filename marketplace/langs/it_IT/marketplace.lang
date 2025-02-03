@@ -66,7 +66,8 @@ HowtoContactSupport=Come contattare l'assistenza
 LastReasonDisabled=Ultimo motivo di disabilitazione
 OldSystemUrl=URL nel vecchio sistema
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Questa pagina contiene informazioni e statistiche sul tuo marketplace
-newModuleProduct=Submit or update a module or addon
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Breve descrizione
 largeDescription=Descrizione lunga
 keywords=Parole chiave
@@ -181,7 +182,7 @@ marketplaceDesc=Benvenuti nel Marketplace della società %s
 ifYouNeedAnInvoice=Per le fatture emesse prima del 1° gennaio 2025, è possibile scaricarle dal vecchio store: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Modello di posta elettronica per l'e-mail "Password dimenticata"
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Modello di posta elettronica per l'e-mail "Conferma ordine acquirente"
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Modello di posta elettronica per l'e-mail "Conferma ordine venditori"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Conferma dell'ordine
 SellerOrderNotification=Notifica ordine
 marketplaceBuyerOrderConfirmationContent=<div><p>Hello __BUYER_NAME__,<br /><br />Thank you for your purchase on <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Marketplace!<br /><br />Your order has been successfully placed.<br /><u>Order Reference:</u>&nbsp; __ORDER_REF__<br /><u>Order Date:</u> __ORDER_DATE__<br /><u>Order products</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">You can review your order and download your product or your invoice from the <strong>&quot;Order history&quot;</strong> section of your account.</span></span></span></p><p>Thank you for shopping with us!<br />Best regards,<br />The <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong> Team</p></div>

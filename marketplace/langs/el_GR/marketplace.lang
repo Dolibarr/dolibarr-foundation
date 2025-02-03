@@ -66,7 +66,8 @@ HowtoContactSupport=Πώς να επικοινωνήσετε με την υπο�
 LastReasonDisabled=Τελευταίος λόγος απενεργοποίησης
 OldSystemUrl=URL στο παλιό σύστημα
 ThisPageContainsInformationAndStatisticsAboutYourMarketplace=Αυτή η σελίδα περιέχει πληροφορίες και στατιστικά στοιχεία σχετικά με το marketplace σας
-newModuleProduct=Υποβάλετε ή ενημερώστε μια ενότητα ή ένα πρόσθετο
+newModuleProduct=Add or update a module or addon
+submitANewModuleProduct=Submit a new module or addon
 shortDescription=Σύντομη περιγραφή
 largeDescription=Μεγάλη περιγραφή
 keywords=Λέξεις-κλειδιά
@@ -181,7 +182,7 @@ marketplaceDesc=Καλώς ορίσατε στο Marketplace της εταιρε
 ifYouNeedAnInvoice=Τιμολόγια που εκδόθηκαν πριν από την 1η Ιανουαρίου 2025, μπορείτε να τα κατεβάσετε από το παλιό κατάστημα: <a href="%s" target="new">%s</a>
 MARKETPLACE_FORGOT_PASSWORD_EMAIL_TEMPLATE=Πρότυπο email για το email "Ξεχάσατε τον κωδικό πρόσβασης"
 MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE=Πρότυπο email για το email "Επιβεβαίωση παραγγελίας αγοραστή"
-MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Πρότυπο email για το email "Επιβεβαίωση παραγγελίας πωλητών"
+MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE=Email template for the email "Sellers Order notification"
 BuyerOrderConfirmation=Επιβεβαίωση παραγγελίας
 SellerOrderNotification=Ειδοποίηση παραγγελίας
 marketplaceBuyerOrderConfirmationContent=<div><p>Γεια σας __BUYER_NAME__,<br /><br />Σας ευχαριστούμε για την αγορά σας στο <strong>__[MAIN_INFO_SOCIETE_NOM]__</strong>Marketplace!<br /><br />Η παραγγελία σας πραγματοποιήθηκε με επιτυχία.<br /><u>Αναφορά παραγγελίας:</u>&nbsp; __ORDER_REF__<br /><u>Ημερομηνία παραγγελίας:</u> __ORDER_DATE__<br /><u>Προϊόντα παραγγελίας</u>:<br />__PRODUCTS__<br /><br /><span style="font-size:small"><span style="font-family:Open-sans,sans-serif"><span style="color:#555454">Μπορείτε να ελέγξετε την παραγγελία σας και να πραγματοποιήσετε λήψη του τιμολογίου και του προϊόντος σας απο την ενότητα <strong>&quot;Ιστορικό παραγγελιών&quot;</strong>του λογαριασμού σας.</span></span></span></p><p>Σας ευχαριστούμε για τις αγορές σας!<br />Με εκτίμηση,<br />Η ομάδα του<strong>__[MAIN_INFO_SOCIETE_NOM]__</strong></p></div>
@@ -303,3 +304,6 @@ MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY=Google reCAPTCHA Secret Key
 MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY_HELP=Εισάγετε το ιδιωτικό κλειδί που παρέχεται από την Google για να επαληθεύσετε με ασφάλεια τις απαντήσεις reCAPTCHA. Βεβαιωθείτε ότι αυτό το κλειδί διατηρείται ασφαλές.
 MARKETPLACE_GOOGLE_RECAPTCHA_REGISTER_FORM=Ενεργοποιήστε το Google Captcha στη φόρμα εγγραφής
 captchaFail=Το Captcha απέτυχε. Βαθμολογία : %s
+invoiceRef=Αριθμός παραστατικού
+Refunded=Επιστροφή χρημάτων
+VendorArea=Τομέας προμηθευτή
