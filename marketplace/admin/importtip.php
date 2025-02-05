@@ -68,10 +68,26 @@ if (!$user->admin) {
 $action = GETPOST('action', 'aZ09');
 $backtopage = GETPOST('backtopage', 'alpha');
 
+if (!class_exists('FormSetup')) {
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formsetup.class.php';
+}
+$formSetup = new FormSetup($db);
+
+$formSetup->newItem('MARKETPLACE_SECRET_KEY')->helpText = $langs->trans("MARKETPLACE_SECRET_KEY_HELP");
+
+
 
 /*
  * Actions
  */
+
+// For retrocompatibility Dolibarr < 15.0
+if (versioncompare(explode('.', DOL_VERSION), array(15)) < 0 && $action == 'update' && !empty($user->admin)) {
+	$formSetup->saveConfFromPost();
+}
+
+include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
+
 if ($action == 'generaterewritefile') {
 
 	$root_cat_object = new Categorie($db);
@@ -147,6 +163,14 @@ print dol_get_fiche_head($head, 'importtip', $langs->trans($page_name), -1, 'fa-
 print '<span class="opacitymedium">This is some tips on how to import existing data from a Prestashop 1.6 store...</span>';
 
 print '<br>';
+print '<br>';
+
+
+if (!empty($formSetup->items)) {
+	print $formSetup->generateOutput(true, true);
+	print '<br>';
+}
+
 print '<br>';
 
 $command = 'custom/marketplace/scripts/import-cats.php  db_host  db_name  db_user  db_password  db_port  clean_all_before_import(0|1)';

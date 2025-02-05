@@ -61,13 +61,18 @@ function marketplaceAdminPrepareHead()
 	$h++;
 
 	$head[$h][0] = dol_buildpath("/marketplace/admin/setupcaptchagoogle.php", 1);
-	$head[$h][1] = $langs->trans("MarketPlaceSetupCaptchaCoogle");
+	$head[$h][1] = $langs->trans("MarketPlaceSetupRegistration");
 	$head[$h][2] = 'setupcaptchagoogle';
 	$h++;
-	
+
 	$head[$h][0] = dol_buildpath("/marketplace/admin/importtip.php", 1);
 	$head[$h][1] = $langs->trans("ImportTip");
 	$head[$h][2] = 'importtip';
+	$h++;
+
+	$head[$h][0] = dol_buildpath("/marketplace/admin/setupdolibarr.php", 1);
+	$head[$h][1] = $langs->trans("DolibarrFeatureSetup");
+	$head[$h][2] = 'dolibarr';
 	$h++;
 
 	$head[$h][0] = dol_buildpath("/marketplace/admin/about.php", 1);

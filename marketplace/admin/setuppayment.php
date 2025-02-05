@@ -86,87 +86,25 @@ $type = 'myobject';
 $error = 0;
 $setupnotempty = 0;
 
+/*
+
 // Set this to 1 to use the factory to manage constants. Warning, the generated module will be compatible with version v15+ only
-$useFormSetup = 1;
+$useFormSetup = 0;
 
 if (!class_exists('FormSetup')) {
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formsetup.class.php';
 }
 $formSetup = new FormSetup($db);
 
+$formSetup->newItem('MARKETPLACE_BLOCK_SALES')->setAsYesNo();
 
-// Enter here all parameters in your setup page
+//$item = $formSetup->newItem('MARKETPLACE_PAYMENT_IN_FRAME')->setAsYesNo();
+//$item->nameText = $langs->trans("UseFrameDesc");
+//$item->helpText = $langs->transnoentities('AnHelpMessage');
 
-/*
-// Setup conf for selection of an URL
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM1');
-$item->fieldOverride = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'];
-$item->cssClass = 'minwidth500';
+//$setupnotempty += count($formSetup->items);
 
-// Setup conf for selection of a simple string input
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM2');
-$item->defaultFieldValue = 'default value';
-
-// Setup conf for selection of a simple textarea input but we replace the text of field title
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM3');
-$item->nameText = $item->getNameText().' more html text ';
-
-// Setup conf for a selection of a thirdparty
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM4');
-$item->setAsThirdpartyType();
-
-// Setup conf for a selection of a boolean
-$formSetup->newItem('MARKETPLACE_MYPARAM5')->setAsYesNo();
-
-// Setup conf for a selection of an email template of type thirdparty
-$formSetup->newItem('MARKETPLACE_MYPARAM6')->setAsEmailTemplate('thirdparty');
-
-// Setup conf for a selection of a secured key
-//$formSetup->newItem('MARKETPLACE_MYPARAM7')->setAsSecureKey();
-
-// Setup conf for a selection of a product
-$formSetup->newItem('MARKETPLACE_MYPARAM8')->setAsProduct();
-
-// Add a title for a new section
-$formSetup->newItem('NewSection')->setAsTitle();
-
-$TField = array(
-	'test01' => $langs->trans('test01'),
-	'test02' => $langs->trans('test02'),
-	'test03' => $langs->trans('test03'),
-	'test04' => $langs->trans('test04'),
-	'test05' => $langs->trans('test05'),
-	'test06' => $langs->trans('test06'),
-);
-
-// Setup conf for a simple combo list
-$formSetup->newItem('MARKETPLACE_MYPARAM9')->setAsSelect($TField);
-
-// Setup conf for a multiselect combo list
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
-$item->setAsMultiSelect($TField);
-$item->helpText = $langs->transnoentities('MARKETPLACE_MYPARAM10');
 */
-
-
-
-/*
-// Setup conf MARKETPLACE_MYPARAM10
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
-$item->setAsColor();
-$item->defaultFieldValue = '#FF0000';
-$item->nameText = $item->getNameText().' more html text ';
-$item->fieldInputOverride = '';
-$item->helpText = $langs->transnoentities('AnHelpMessage');
-//$item->fieldValue = '';
-//$item->fieldAttr = array() ; // fields attribute only for compatible fields like input text
-//$item->fieldOverride = false; // set this var to override field output will override $fieldInputOverride and $fieldOutputOverride too
-//$item->fieldInputOverride = false; // set this var to override field input
-//$item->fieldOutputOverride = false; // set this var to override field output
-*/
-
-$setupnotempty += count($formSetup->items);
-
 
 $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 
@@ -180,7 +118,24 @@ if (versioncompare(explode('.', DOL_VERSION), array(15)) < 0 && $action == 'upda
 	$formSetup->saveConfFromPost();
 }
 
+include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
+
 $reg = array();
+if (preg_match('/setMARKETPLACE_BLOCK_SALES/i', $action, $reg)) {
+	if (dolibarr_set_const($db, 'MARKETPLACE_BLOCK_SALES', 1, 'chaine', 0, '', $conf->entity) > 0) {
+		header("Location: ".$_SERVER["PHP_SELF"]);
+		exit;
+	} else {
+		dol_print_error($db);
+	}
+} elseif (preg_match('/delMARKETPLACE_BLOCK_SALES/i', $action, $reg)) {
+	if (dolibarr_del_const($db, 'MARKETPLACE_BLOCK_SALES', $conf->entity) > 0) {
+		header("Location: ".$_SERVER["PHP_SELF"]);
+		exit;
+	} else {
+		dol_print_error($db);
+	}
+}
 if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
 	if (dolibarr_set_const($db, 'MARKETPLACE_PAYMENT_IN_FRAME', 1, 'chaine', 0, '', $conf->entity) > 0) {
 		header("Location: ".$_SERVER["PHP_SELF"]);
@@ -196,8 +151,6 @@ if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
 		dol_print_error($db);
 	}
 }
-
-include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
 
 
 
@@ -229,7 +182,28 @@ $urlwithouturlroot = preg_replace('/'.preg_quote(DOL_URL_ROOT, '/').'$/i', '', t
 $urlwithroot = $urlwithouturlroot.DOL_URL_ROOT; // This is to use external domain name found into config file
 //$urlwithroot=DOL_MAIN_URL_ROOT;					// This is to use same domain name than current
 
-$enabledisablehtml = $langs->trans("UseFrameDesc").' ';
+print '<br>';
+
+print $langs->trans("MARKETPLACE_BLOCK_SALES")." ";
+$enabledisablehtml = '';
+if (!getDolGlobalString('MARKETPLACE_BLOCK_SALES')) {
+	// Button off, click to enable
+	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_BLOCK_SALES&token='.newToken().$param.'">';
+	$enabledisablehtml .= img_picto($langs->trans("Disabled"), 'switch_off');
+	$enabledisablehtml .= '</a>';
+} else {
+	// Button on, click to disable
+	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_BLOCK_SALES&token='.newToken().$param.'">';
+	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on');
+	$enabledisablehtml .= '</a>';
+}
+print $enabledisablehtml;
+print '<input type="hidden" id="MARKETPLACE_BLOCK_SALES" name="MARKETPLACE_BLOCK_SALES" value="'.(!getDolGlobalString('MARKETPLACE_BLOCK_SALES') ? 0 : 1).'">';
+
+print '<br><hr><br>';
+
+print $langs->trans("UseFrameDesc")." ";
+$enabledisablehtml = '';
 if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
 	// Button off, click to enable
 	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_PAYMENT_IN_FRAME&token='.newToken().$param.'">';
@@ -242,9 +216,9 @@ if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
 	$enabledisablehtml .= '</a>';
 }
 print $enabledisablehtml;
-print '<input type="hidden" id="MEMBER_ENABLE_PUBLIC" name="MEMBER_ENABLE_PUBLIC" value="'.(!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME') ? 0 : 1).'">';
+print '<input type="hidden" id="MARKETPLACE_PAYMENT_IN_FRAME" name="MARKETPLACE_PAYMENT_IN_FRAME" value="'.(!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME') ? 0 : 1).'">';
 
-print '<br><br>';
+print '<br>';
 
 // Setup page goes here
 print '<span class="opacitymedium">'."<br>\n";
@@ -256,7 +230,7 @@ print $langs->trans("MarketplaceSetupPaymentPage2")."<br>\n";
 print "* ".$langs->trans("MarketplaceSetupPaymentPage2Pro")."<br>\n";
 print "* ".$langs->trans("MarketplaceSetupPaymentPage2Cons")."<br>\n";
 print '</span>'."<br>\n";
-print '<br><br>';
+print '<br>';
 
 
 if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {

@@ -16,9 +16,9 @@
  */
 
 /**
- * \file    marketplace/admin/setupcaptchagoogle.php
+ * \file    marketplace/admin/setupdolibarr.php
  * \ingroup marketplace
- * \brief   Marketplace setup page for CaptchaGoogle.
+ * \brief   Marketplace setup page for specific Dolibarr features.
  */
 
 // Load Dolibarr environment
@@ -86,97 +86,25 @@ $type = 'myobject';
 $error = 0;
 $setupnotempty = 0;
 
+/*
+
 // Set this to 1 to use the factory to manage constants. Warning, the generated module will be compatible with version v15+ only
-$useFormSetup = 1;
+$useFormSetup = 0;
 
 if (!class_exists('FormSetup')) {
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formsetup.class.php';
 }
 $formSetup = new FormSetup($db);
 
+$formSetup->newItem('MARKETPLACE_BLOCK_SALES')->setAsYesNo();
 
-// Enter here all parameters in your setup page
+//$item = $formSetup->newItem('MARKETPLACE_PAYMENT_IN_FRAME')->setAsYesNo();
+//$item->nameText = $langs->trans("UseFrameDesc");
+//$item->helpText = $langs->transnoentities('AnHelpMessage');
 
-/*
-// Setup conf for selection of an URL
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM1');
-$item->fieldOverride = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'];
-$item->cssClass = 'minwidth500';
+//$setupnotempty += count($formSetup->items);
 
-// Setup conf for selection of a simple string input
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM2');
-$item->defaultFieldValue = 'default value';
-
-// Setup conf for selection of a simple textarea input but we replace the text of field title
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM3');
-$item->nameText = $item->getNameText().' more html text ';
-
-// Setup conf for a selection of a thirdparty
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM4');
-$item->setAsThirdpartyType();
-
-// Setup conf for a selection of a boolean
-$formSetup->newItem('MARKETPLACE_MYPARAM5')->setAsYesNo();
-
-// Setup conf for a selection of an email template of type thirdparty
-$formSetup->newItem('MARKETPLACE_MYPARAM6')->setAsEmailTemplate('thirdparty');
-
-// Setup conf for a selection of a secured key
-//$formSetup->newItem('MARKETPLACE_MYPARAM7')->setAsSecureKey();
-
-// Setup conf for a selection of a product
-$formSetup->newItem('MARKETPLACE_MYPARAM8')->setAsProduct();
-
-// Add a title for a new section
-$formSetup->newItem('NewSection')->setAsTitle();
-
-$TField = array(
-	'test01' => $langs->trans('test01'),
-	'test02' => $langs->trans('test02'),
-	'test03' => $langs->trans('test03'),
-	'test04' => $langs->trans('test04'),
-	'test05' => $langs->trans('test05'),
-	'test06' => $langs->trans('test06'),
-);
-
-// Setup conf for a simple combo list
-$formSetup->newItem('MARKETPLACE_MYPARAM9')->setAsSelect($TField);
-
-// Setup conf for a multiselect combo list
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
-$item->setAsMultiSelect($TField);
-$item->helpText = $langs->transnoentities('MARKETPLACE_MYPARAM10');
 */
-
-
-
-/*
-// Setup conf MARKETPLACE_MYPARAM10
-$item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
-$item->setAsColor();
-$item->defaultFieldValue = '#FF0000';
-$item->nameText = $item->getNameText().' more html text ';
-$item->fieldInputOverride = '';
-$item->helpText = $langs->transnoentities('AnHelpMessage');
-//$item->fieldValue = '';
-//$item->fieldAttr = array() ; // fields attribute only for compatible fields like input text
-//$item->fieldOverride = false; // set this var to override field output will override $fieldInputOverride and $fieldOutputOverride too
-//$item->fieldInputOverride = false; // set this var to override field input
-//$item->fieldOutputOverride = false; // set this var to override field output
-*/
-
-$formSetup->newItem('MARKETPLACE_GOOGLE_RECAPTCHA_REGISTER_FORM')->setAsYesNo();
-
-$item = $formSetup->newItem('MARKETPLACE_GOOGLE_RECAPTCHA_SITE_KEY');
-$item->helpText = $langs->trans("MARKETPLACE_GOOGLE_RECAPTCHA_SITE_KEY_HELP");
-$item->cssClass = 'minwidth500';
-
-$item = $formSetup->newItem('MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY');
-$item->helpText = $langs->trans("MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY_HELP");
-$item->cssClass = 'minwidth500';
-
-$setupnotempty += count($formSetup->items);
-
 
 $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 
@@ -190,24 +118,24 @@ if (versioncompare(explode('.', DOL_VERSION), array(15)) < 0 && $action == 'upda
 	$formSetup->saveConfFromPost();
 }
 
+include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
+
 $reg = array();
-if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
-	if (dolibarr_set_const($db, 'MARKETPLACE_PAYMENT_IN_FRAME', 1, 'chaine', 0, '', $conf->entity) > 0) {
+if (preg_match('/setMARKETPLACE_ENABLE_DOLIBARR_FEATURES/i', $action, $reg)) {
+	if (dolibarr_set_const($db, 'MARKETPLACE_ENABLE_DOLIBARR_FEATURES', 1, 'chaine', 0, '', $conf->entity) > 0) {
 		header("Location: ".$_SERVER["PHP_SELF"]);
 		exit;
 	} else {
 		dol_print_error($db);
 	}
-} elseif (preg_match('/delMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
-	if (dolibarr_del_const($db, 'MARKETPLACE_PAYMENT_IN_FRAME', $conf->entity) > 0) {
+} elseif (preg_match('/delMARKETPLACE_ENABLE_DOLIBARR_FEATURES/i', $action, $reg)) {
+	if (dolibarr_del_const($db, 'MARKETPLACE_ENABLE_DOLIBARR_FEATURES', $conf->entity) > 0) {
 		header("Location: ".$_SERVER["PHP_SELF"]);
 		exit;
 	} else {
 		dol_print_error($db);
 	}
 }
-
-include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
 
 
 
@@ -218,7 +146,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
 $form = new Form($db);
 
 $help_url = '';
-$page_name = "MarketplaceSetup";
+$page_name = "DolibarrFeatureSetup";
 
 llxHeader('', $langs->trans($page_name), $help_url, '', 0, 0, '', '', '', 'mod-marketplace page-admin');
 
@@ -229,19 +157,33 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = marketplaceAdminPrepareHead();
-print dol_get_fiche_head($head, 'setupcaptchagoogle', $langs->trans($page_name), -1, "fa-store");
-
-if (!empty($formSetup->items)) {
-	print $formSetup->generateOutput(true);
-	print '<br>';
-}
-
+print dol_get_fiche_head($head, 'dolibarr', $langs->trans($page_name), -1, "fa-store");
 
 global $dolibarr_main_url_root;
 $param = '';
 
+// Define $urlwithroot
+$urlwithouturlroot = preg_replace('/'.preg_quote(DOL_URL_ROOT, '/').'$/i', '', trim($dolibarr_main_url_root));
+$urlwithroot = $urlwithouturlroot.DOL_URL_ROOT; // This is to use external domain name found into config file
+//$urlwithroot=DOL_MAIN_URL_ROOT;					// This is to use same domain name than current
 
-print "<br>\n";
+print '<br>';
+
+print $langs->trans("MARKETPLACE_ENABLE_DOLIBARR_FEATURES")." ";
+$enabledisablehtml = '';
+if (!getDolGlobalString('MARKETPLACE_ENABLE_DOLIBARR_FEATURES')) {
+	// Button off, click to enable
+	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_ENABLE_DOLIBARR_FEATURES&token='.newToken().$param.'">';
+	$enabledisablehtml .= img_picto($langs->trans("Disabled"), 'switch_off');
+	$enabledisablehtml .= '</a>';
+} else {
+	// Button on, click to disable
+	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_ENABLE_DOLIBARR_FEATURES&token='.newToken().$param.'">';
+	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on');
+	$enabledisablehtml .= '</a>';
+}
+print $enabledisablehtml;
+print '<input type="hidden" id="MARKETPLACE_ENABLE_DOLIBARR_FEATURES" name="MARKETPLACE_ENABLE_DOLIBARR_FEATURES" value="'.(!getDolGlobalString('MARKETPLACE_ENABLE_DOLIBARR_FEATURES') ? 0 : 1).'">';
 
 // Page end
 print dol_get_fiche_end();
