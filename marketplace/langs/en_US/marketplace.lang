@@ -324,3 +324,4 @@ DolibarrFeatureSetup=Dolibarr features
 MARKETPLACE_ENABLE_DOLIBARR_FEATURES=Enable features specific to sell Dolibarr modules
 NoValidityDuration=(<b>0</b> means <b>Lifetime validity</b>)
 lifeTimeAccess=Lifetime access
+previewPage=Preview Page
