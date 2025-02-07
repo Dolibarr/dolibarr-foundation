@@ -89,6 +89,9 @@ body {
   background-color: #fff;
   font: 13px/1.42857 Arial,Helvetica,sans-serif
 }
+.bodywebsite .filterbyversion {
+    height: 40px;
+}
 .bodywebsite section#welcome_section {
   font-size: 1.1em
 }
@@ -5671,9 +5674,11 @@ th {
   word-wrap: break-word;
   overflow-wrap: break-word
 }
+/*
 .box-info-product {
-  border-bottom-width: 3px!important
+  border-bottom-width: 3px !important;
 }
+*/
 @media (max-width:768px) {
   div#content.marketplacelightbox2 {
     width: calc(100% - 8px);
@@ -5912,6 +5917,21 @@ th {
     width: 100%; /* Ensure the image takes up the full width of the container */
     height: 100%; /* Ensure the image takes up the full height of the container */
     object-fit: contain; /* Ensure the image scales to fit while maintaining its aspect ratio */
+}
+
+.preview-banner {
+    background-color: #ffeb3b;
+      color: #333;
+      padding: 10px 10px 3px 10px;
+      font-size: 18px;
+      text-align: center;
+      margin: 2px 15px 31px;
+      border: #000 2px dashed;
+}
+
+.preview-banner p{
+    font-weight: bold;
+    text-transform: uppercase;
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
