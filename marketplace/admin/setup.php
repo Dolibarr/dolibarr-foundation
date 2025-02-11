@@ -215,7 +215,15 @@ $itemlogo->fieldAttr['placeholder'] = 'https://...';
 $itemlogo->cssClass = 'minwidth500';
 
 // User with necessary rights to manage website
-$userList = $formSetup->form->select_dolusers(getDolGlobalInt('MARKETPLACE_USER_MANAGE_WEBSITE'), 'MARKETPLACE_USER_MANAGE_WEBSITE', 1, null, 0, '', '', '0', 0, 0, '', 0, '', '', 1, 2);
+//$userList = $formSetup->form->select_dolusers(getDolGlobalInt('MARKETPLACE_USER_MANAGE_WEBSITE'), 'MARKETPLACE_USER_MANAGE_WEBSITE', 1, null, 0, '', '', '0', 0, 0, '', 0, '', '', 1, 2);
+
+$userModel = new User($db);
+$userListData = $userModel->fetchAll('', '', 0, 0, "(statut:<>:0)");
+
+$userList = ['-1' => ''];
+foreach ($userModel->users as $user) {
+    $userList[$user->id] = $user->login;
+}
 
 $item = $formSetup->newItem('MARKETPLACE_USER_MANAGE_WEBSITE');
 $item->setAsSelect($userList);
