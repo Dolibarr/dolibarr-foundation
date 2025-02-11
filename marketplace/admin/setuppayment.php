@@ -136,6 +136,24 @@ if (preg_match('/setMARKETPLACE_BLOCK_SALES/i', $action, $reg)) {
 		dol_print_error($db);
 	}
 }
+
+if (preg_match('/setMARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT/i', $action, $reg)) {
+	if (dolibarr_set_const($db, 'MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT', 1, 'chaine', 0, '', $conf->entity) > 0) {
+		header("Location: ".$_SERVER["PHP_SELF"]);
+		exit;
+	} else {
+		dol_print_error($db);
+	}
+} elseif (preg_match('/delMARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT/i', $action, $reg)) {
+	if (dolibarr_del_const($db, 'MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT', $conf->entity) > 0) {
+		header("Location: ".$_SERVER["PHP_SELF"]);
+		exit;
+	} else {
+		dol_print_error($db);
+	}
+}
+
+
 if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
 	if (dolibarr_set_const($db, 'MARKETPLACE_PAYMENT_IN_FRAME', 1, 'chaine', 0, '', $conf->entity) > 0) {
 		header("Location: ".$_SERVER["PHP_SELF"]);
@@ -199,6 +217,24 @@ if (!getDolGlobalString('MARKETPLACE_BLOCK_SALES')) {
 }
 print $enabledisablehtml;
 print '<input type="hidden" id="MARKETPLACE_BLOCK_SALES" name="MARKETPLACE_BLOCK_SALES" value="'.(!getDolGlobalString('MARKETPLACE_BLOCK_SALES') ? 0 : 1).'">';
+
+print '<hr>';
+
+print $langs->trans("MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT")." ";
+$enabledisablehtml = '';
+if (!getDolGlobalString('MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT')) {
+	// Button off, click to enable
+	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT&token='.newToken().$param.'">';
+	$enabledisablehtml .= img_picto($langs->trans("Disabled"), 'switch_off');
+	$enabledisablehtml .= '</a>';
+} else {
+	// Button on, click to disable
+	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT&token='.newToken().$param.'">';
+	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on');
+	$enabledisablehtml .= '</a>';
+}
+print $enabledisablehtml;
+print '<input type="hidden" id="MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT" name="MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT" value="'.(!getDolGlobalString('MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT') ? 0 : 1).'">';
 
 print '<br><hr><br>';
 

@@ -49,6 +49,9 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res && file_exists("../../../../main.inc.php")) {
 	$res = @include "../../../../main.inc.php";
 }
+if (!$res && file_exists("../../../../../main.inc.php")) {
+	$res = @include "../../../../../main.inc.php";
+}
 if (!$res) {
 	die("Include of main fails");
 }
@@ -210,6 +213,15 @@ $formSetup->newItem('WebSite')->setAsTitle();
 $itemlogo = $formSetup->newItem('MARKETPLACE_URL_FOR_LOGO');
 $itemlogo->fieldAttr['placeholder'] = 'https://...';
 $itemlogo->cssClass = 'minwidth500';
+
+// User with necessary rights to manage website
+$userList = $formSetup->form->select_dolusers(getDolGlobalInt('MARKETPLACE_USER_MANAGE_WEBSITE'), 'MARKETPLACE_USER_MANAGE_WEBSITE', 1, null, 0, '', '', '0', 0, 0, '', 0, '', '', 1, 2);
+
+$item = $formSetup->newItem('MARKETPLACE_USER_MANAGE_WEBSITE');
+$item->setAsSelect($userList);
+$item->picto = 'user';
+$item->helpText = $langs->transnoentities('MARKETPLACE_USER_MANAGE_WEBSITE_HELP');
+
 
 // Name of template to use
 $website = new Website($db);

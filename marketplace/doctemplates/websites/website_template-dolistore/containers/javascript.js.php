@@ -1309,10 +1309,13 @@ function HoverWatcher(selector) {
 
 
 $(document).ready(function() {
-    var thumbnails = $('.lightbox_trigger img').map(function() {
+    /*var thumbnails = $('.lightbox_trigger img').map(function() {
         return $(this).attr('src');
-    }).get();
-    
+    }).get();*/
+    var thumbnails = [...new Set($('.lightbox_trigger img').map(function() {
+        return $(this).attr('src');
+    }).get())];
+
     var currentIndex = 0;
 
     // Open lightbox when clicking on a thumbnail
