@@ -5933,6 +5933,39 @@ th {
     font-weight: bold;
     text-transform: uppercase;
 }
+.payment-button-link{
+    display: grid;
+    text-align: center;
+}
+.payment-button {
+    background: #a45931;
+    color: white;
+    padding: 24px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+}
+
+.payment-button:hover {
+    background: #000;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.payment-button:active {
+    transform: scale(0.96);
+}
+.bodywebsite .icon-visa:before {
+  content: "\f1f0"
+}
+.bodywebsite .payment-button .icon-visa{
+    margin-left: 20px;
+    font-size: 23px;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
