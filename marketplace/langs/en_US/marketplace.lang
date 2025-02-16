@@ -329,4 +329,4 @@ previewPage=Preview Page
 MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT=Auto close orders on successful payment
 MARKETPLACE_USER_MANAGE_WEBSITE=User with permissions to perform website operations
 MARKETPLACE_USER_MANAGE_WEBSITE_HELP=This user can execute website actions such as adding products, managing third parties, and placing orders.
-ThisModuleOrVersionIsNoMoreAvailable=This module or version is no more available. It may have been discontinued by the author or replaced by another version.
+ThisModuleOrVersionIsNoMoreAvailable=This module or version is no more available. It may have been discontinued by the author or replaced by another module or version.
