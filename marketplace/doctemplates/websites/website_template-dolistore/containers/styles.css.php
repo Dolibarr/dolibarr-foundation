@@ -5966,6 +5966,23 @@ th {
     margin-left: 20px;
     font-size: 23px;
 }
+.disclaimer-message {
+    background-color: #fbfbfb;
+    padding: 6px;
+    display: block;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #a45931;
+    text-align: center;
+    border-left: 4px solid #dbdbdb;
+    border-right: 4px solid #dbdbdb;
+}
+.linked-invoice {
+  display: block;
+  font-size: 12px;
+  color: #a45931;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
