@@ -1499,7 +1499,7 @@ select {
   -ms-transform: rotate(135deg);
   transform: rotate(135deg)
 }
-#my-account .addresses-lists,
+.bodywebsite #my-account .addresses-lists,
 .bodywebsite .block,
 .bodywebsite .pb-center-column {
   margin-bottom: 30px
@@ -2238,7 +2238,7 @@ only screen and (min-device-pixel-ratio:2) {
 .bodywebsite #header #languages-block-top ul li.selected,
 .bodywebsite #header #languages-block-top ul li:hover a,
 .bodywebsite .sale-label {
-  background: #a45931
+  background: #555454;
 }
 .bodywebsite .header_user_info {
   float: right;
@@ -4186,12 +4186,6 @@ div.selector span {
   overflow: hidden;
   line-height: 27px
 }
-*,
-:after,
-:before {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box
-}
 button,
 input,
 select {
@@ -5868,18 +5862,6 @@ th {
     display: none
   }
 }
-
-/*#lightbox {
-    position: relative;
-    width: 80%; 
-    height: 80%;
-    margin: auto;
-    background: rgba(0, 0, 0, 0.8); 
-    color: #fff;
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-}*/
 
 #lightbox-prev, #lightbox-next {
     position: absolute;
