@@ -24,6 +24,7 @@ button {
   text-decoration: inherit;
   -webkit-font-smoothing: antialiased
 }
+
 .truncate3,
 div.selector span {
   text-overflow: ellipsis
@@ -102,8 +103,11 @@ body {
 .bodywebsite .opacitymedium {
   opacity: .5
 }
-.bodywebsite .divhomepage .rte {
+.bodywebsite .divhomepage .rte, .bodywebsite .divhomepage .search {
   margin-top: 20px
+}
+.bodywebsite section#search_info_section {
+    margin-top: 20px;
 }
 .bodywebsite .wordbreak {
   word-break: break-word;
@@ -966,7 +970,7 @@ button {
   -webkit-box-orient: vertical
 }
 .bodywebsite a.product-name.truncate2 {
-  max-height: 45px
+  max-height: 43px;
 }
 .bodywebsite html {
   -webkit-text-size-adjust: 100%;
@@ -1819,6 +1823,7 @@ only screen and (min-device-pixel-ratio:2) {
   box-sizing: border-box;
   width: 100%;
   height: auto;
+  max-height: 82px;
   border: 1px solid #fff
 }
 .bodywebsite span.view_scroll_spacer {
@@ -2333,7 +2338,7 @@ only screen and (min-device-pixel-ratio:2) {
   display: none;
   z-index: 100;
   position: absolute;
-  top: 95px;
+  top: 85px;
   right: 0;
   width: 270px;
   height: auto;
