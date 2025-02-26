@@ -1499,7 +1499,7 @@ select {
   -ms-transform: rotate(135deg);
   transform: rotate(135deg)
 }
-#my-account .addresses-lists,
+.bodywebsite #my-account .addresses-lists,
 .bodywebsite .block,
 .bodywebsite .pb-center-column {
   margin-bottom: 30px
@@ -2238,7 +2238,7 @@ only screen and (min-device-pixel-ratio:2) {
 .bodywebsite #header #languages-block-top ul li.selected,
 .bodywebsite #header #languages-block-top ul li:hover a,
 .bodywebsite .sale-label {
-  background: #a45931
+  background: #555454;
 }
 .bodywebsite .header_user_info {
   float: right;
@@ -4186,12 +4186,6 @@ div.selector span {
   overflow: hidden;
   line-height: 27px
 }
-*,
-:after,
-:before {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box
-}
 button,
 input,
 select {
@@ -5869,18 +5863,6 @@ th {
   }
 }
 
-/*#lightbox {
-    position: relative;
-    width: 80%; 
-    height: 80%;
-    margin: auto;
-    background: rgba(0, 0, 0, 0.8); 
-    color: #fff;
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-}*/
-
 #lightbox-prev, #lightbox-next {
     position: absolute;
     top: 50%;
@@ -5965,6 +5947,23 @@ th {
 .bodywebsite .payment-button .icon-visa{
     margin-left: 20px;
     font-size: 23px;
+}
+.disclaimer-message {
+    background-color: #fbfbfb;
+    padding: 6px;
+    display: block;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #a45931;
+    text-align: center;
+    border-left: 4px solid #dbdbdb;
+    border-right: 4px solid #dbdbdb;
+}
+.linked-invoice {
+  display: block;
+  font-size: 12px;
+  color: #a45931;
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");

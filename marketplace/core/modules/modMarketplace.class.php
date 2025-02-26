@@ -458,7 +458,7 @@ class modMarketplace extends DolibarrModules
 			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 		}
 
-		// Create extrafields for products during init
+		// Create extrafields for Products during init
 		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		$extrafields = new ExtraFields($this->db);
 		$result1=$extrafields->addExtraField('marketplace_separator',            "Marketplace", 'separator', 1,  0, 'product',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
@@ -473,7 +473,8 @@ class modMarketplace extends DolibarrModules
 		$result8=$extrafields->addExtraField('marketplace_php_min_version',      "PhpMin", 'varchar', 90,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result9=$extrafields->addExtraField('marketplace_php_max_version',      "PhpMax", 'varchar', 100,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result10=$extrafields->addExtraField('marketplace_validity_duration',   "ValidityDuration", 'int', 110,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		//$result11=$extrafields->addExtraField('marketplace_discount_text',       "DiscountText", 'varchar', 120,  128, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result11=$extrafields->addExtraField('marketplace_pricecomment',        "PriceComment", 'varchar', 120,  128, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result12=$extrafields->addExtraField('marketplace_disclaimer_message',  "DisclaimerMessage", 'varchar', 130,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		// Permissions
 		$this->remove($options);
