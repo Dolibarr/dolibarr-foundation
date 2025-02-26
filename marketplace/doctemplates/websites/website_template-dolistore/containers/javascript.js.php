@@ -321,7 +321,7 @@ function Display(view) {
                 html += '<span class="availability">' + availability + '</span>';
             }
             html += '</div>';
-            html += '<div class="right-block col-xs-4 col-xs-12 col-md-4"><div class="right-block-content row">';
+            html += '<div class="right-block col-xs-12 col-md-4"><div class="right-block-content row">';
             var price = $(element).find('.content_price').html();
             if (price != null) {
                 html += '<div class="content_price col-xs-5 col-md-12">' + price + '</div>';
@@ -1035,27 +1035,47 @@ $(document).ready(function() {
 /*============================= treeManagement ==================================*/
 $(document).ready(function(){
     $('ul.tree.dhtml').hide();
-    if(!$('ul.tree.dhtml').hasClass('dynamized'))
-    {$('ul.tree.dhtml ul').prev().before("<span class='grower OPEN'> </span>");$('ul.tree.dhtml ul li:last-child, ul.tree.dhtml li:last-child').addClass('last');$('ul.tree.dhtml span.grower.OPEN').addClass('CLOSE').removeClass('OPEN').parent().find('ul:first').hide();$('ul.tree.dhtml').show();
-    $('ul.tree.dhtml .selected').parents().each(function(){if($(this).is('ul'))
-    toggleBranch($(this).prev().prev(),true);});toggleBranch($('ul.tree.dhtml .selected').prev(),true);
-    $('ul.tree.dhtml span.grower').click(function(){
-        console.log("toggleBranch");
-        toggleBranch($(this));
-    });
-    $('ul.tree.dhtml').addClass('dynamized');$('ul.tree.dhtml').removeClass('dhtml');}});
-    function openBranch(jQueryElement,noAnimation)
-    {jQueryElement.addClass('OPEN').removeClass('CLOSE');if(noAnimation)
+    
+    if (!$('ul.tree.dhtml').hasClass('dynamized')) {
+        console.log("make menu dynamic");
+        $('ul.tree.dhtml ul').prev().before("<span class='grower OPEN'> </span>");
+        $('ul.tree.dhtml ul li:last-child, ul.tree.dhtml li:last-child').addClass('last');
+        $('ul.tree.dhtml span.grower.OPEN').addClass('CLOSE').removeClass('OPEN').parent().find('ul:first').hide();
+        $('ul.tree.dhtml').show();
+
+        $('ul.tree.dhtml .selected').parents().each(function(){
+            if ($(this).is('ul'))
+                toggleBranch($(this).prev().prev(),true);
+        });
+    
+        toggleBranch($('ul.tree.dhtml .selected').prev(),true);
+        
+        $('ul.tree.dhtml span.grower').click(function(){
+            console.log("toggleBranch");
+            toggleBranch($(this));
+        });
+        $('ul.tree.dhtml').addClass('dynamized');
+        $('ul.tree.dhtml').removeClass('dhtml');
+    }
+    
+});
+    
+function openBranch(jQueryElement,noAnimation) {
+    jQueryElement.addClass('OPEN').removeClass('CLOSE');if(noAnimation)
     jQueryElement.parent().find('ul:first').show();else
-    jQueryElement.parent().find('ul:first').slideDown();}
-    function closeBranch(jQueryElement,noAnimation)
-    {jQueryElement.addClass('CLOSE').removeClass('OPEN');if(noAnimation)
+    jQueryElement.parent().find('ul:first').slideDown();
+}
+function closeBranch(jQueryElement,noAnimation) {
+    jQueryElement.addClass('CLOSE').removeClass('OPEN');if(noAnimation)
     jQueryElement.parent().find('ul:first').hide();else
-    jQueryElement.parent().find('ul:first').slideUp();}
-    function toggleBranch(jQueryElement,noAnimation)
-    {if(jQueryElement.hasClass('OPEN'))
-    closeBranch(jQueryElement,noAnimation);else
-    openBranch(jQueryElement,noAnimation);}
+    jQueryElement.parent().find('ul:first').slideUp();
+}
+function toggleBranch(jQueryElement,noAnimation) {
+    if (jQueryElement.hasClass('OPEN'))
+        closeBranch(jQueryElement,noAnimation);
+    else
+        openBranch(jQueryElement,noAnimation);
+}
 /*============================= treeManagement ==================================*/
 
 
