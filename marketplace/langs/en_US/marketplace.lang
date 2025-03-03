@@ -338,3 +338,4 @@ productApiHelp=Available parameters for products API:<br>- categorieid: The ID o
 productApiHelpProxy=You can set a proxy routing setup to hide the url of the API behind your store.
 ProductApiInfo=Product API XML Link
 CategoryApiInfo=Category API XML Link
+NotConnected=Not connected
