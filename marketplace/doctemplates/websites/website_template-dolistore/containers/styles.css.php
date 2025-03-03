@@ -383,7 +383,8 @@ ul.step li em {
 .bodywebsite ul.product_list .product-name {
   display: inline-block;
   width: 100%;
-  overflow: hidden
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .bodywebsite ul.product_list .availability span {
   display: inline-block;
