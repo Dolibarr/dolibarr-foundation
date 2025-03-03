@@ -280,26 +280,26 @@ $getentity = ($conf->entity > 1 ? "&entity=".$conf->entity : "");
 // Show message
 $message = '';
 
-$urlvcal = '<a href="'.$urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="_blank" rel="noopener noreferrer">';
-$urlvcal .= $urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : 'KEYNOTDEFINED').'</a>';
-$message .= img_picto('', 'globe').' '.str_replace('{url}', $urlvcal, '<span class="opacitymedium">'.$langs->trans("WebCalUrlForVCalExport", 'vcal', '').'</span>');
+$urlCategoryApi = '<a href="'.$urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="_blank" rel="noopener noreferrer">';
+$urlCategoryApi .= $urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : 'KEYNOTDEFINED').'</a>';
+$message .= img_picto('', 'link').' '.str_replace('{url}', $urlCategoryApi, '<span class="opacitymedium">'.$langs->trans("CategoryApiInfo", 'vcal', '').'</span>');
 $message .= '<div class="urllink">';
 $message .= '<input type="text" id="onlinepaymenturl1" class="quatrevingtpercent" spellcheck="false" value="'.$urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'">';
 if (getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) {
-	$message .= ' <a href="'.$urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="new">'.img_picto('', 'link').'</a>';
+	$message .= ' <a href="'.$urlwithroot.'/api/index.php/marketplace/categories?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="new">'.img_picto('', 'globe').'</a>';
 }
 $message .= '</div>';
 $message .= ajax_autoselect('onlinepaymenturl1');
 $message .= '<br>';
 
 
-$urlvcal = '<a href="'.$urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="_blank" rel="noopener noreferrer">';
-$urlvcal .= $urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : 'KEYNOTDEFINED').'</a>';
-$message .= img_picto('', 'globe').' '.str_replace('{url}', $urlvcal, '<span class="opacitymedium">'.$langs->trans("WebCalUrlForVCalExport", 'vcal', '').'</span>');
+$urlProductApi = '<a href="'.$urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="_blank" rel="noopener noreferrer">';
+$urlProductApi .= $urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : 'KEYNOTDEFINED').'</a>';
+$message .= img_picto('', 'link').' '.str_replace('{url}', $urlProductApi, '<span class="opacitymedium">'.$langs->trans("ProductApiInfo", 'vcal', '').'</span>');
 $message .= '<div class="urllink">';
 $message .= '<input type="text" id="onlinepaymenturl1" class="quatrevingtpercent" spellcheck="false" value="'.$urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'">';
 if (getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) {
-	$message .= ' <a href="'.$urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="new">'.img_picto('', 'link').'</a>';
+	$message .= ' <a href="'.$urlwithroot.'/api/index.php/marketplace/products?apikey='.($conf->global->MARKETPLACE_PUBLIC_API_KEY ? urlencode(getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY')) : '...').'" target="new">'.img_picto('', 'globe').'</a>';
 }
 $message .= '</div>';
 $message .= ajax_autoselect('onlinepaymenturl1');
