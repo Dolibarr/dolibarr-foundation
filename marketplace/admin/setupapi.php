@@ -256,11 +256,10 @@ print "</tr>";
 print '</table>';
 print '</div>';
 
+print $form->buttonsSaveCancel("Save", '');
 
 // Page end
 print dol_get_fiche_end();
-
-print $form->buttonsSaveCancel("Save", '');
 
 print "</form>\n";
 
