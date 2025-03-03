@@ -335,3 +335,5 @@ MarketPlaceSetupApi= Setup of API
 MARKETPLACE_PUBLIC_API_KEY=Public API key
 MARKETPLACE_PUBLIC_API_KEY_HELP=Public API key used to access the API.
 productApiHelp=Available parameters for products API:<br>- categorieid: The ID of the category (default is 0).<br>- limit: The maximum number of items to return (default is 11).<br>- page: The page number to return (default is 1).<br>- search: The search query (default is an empty string).<br>- lang: The language code (default is 'en_US').
+ProductApiInfo=Product API XML Link
+CategoryApiInfo=Category API XML Link
