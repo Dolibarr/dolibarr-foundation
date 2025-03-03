@@ -272,7 +272,7 @@ print '<br>';
 if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
 	print "You are using the payment outside of a frame, no particular setup is required for this module.\n";
 	print "<br>\n";
-	print '<span class="red">This mode is not yet supported. Use the frame mode !!!!!!!!</span><br>'."\n";
+	print '<span class="info">In this mode, you can create a page called "htmlheaderpayment" with the type "banner" to define a header to add to the payment page.</span><br>'."\n";
 }
 
 if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
