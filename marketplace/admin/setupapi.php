@@ -308,8 +308,20 @@ $message .= '<br>';
 print $message;
 
 $message = $langs->trans("productApiHelp");
-
 print info_admin($message);
+
+$message = $langs->trans("productApiHelpProxy");
+
+print "<small>".$message."</small><br>\n";
+print '<textarea class="quatrevingtpercent" rows="8">';
+print "#SSLProxyEngine On\n";
+print "#SSLProxyVerify none\n";
+print "#SSLProxyCheckPeerCN off\n";
+print "#SSLProxyCheckPeerName off\n";
+print "#ProxyPreserveHost Off\n";
+print '#ProxyPass "/api/index.php/marketplace/" "'.$urlwithroot.'/api/index.php/marketplace/'."\n";
+print '#ProxyPassreverse "/api/index.php/marketplace/" "'.$urlwithroot.'/api/index.php/marketplace/'."\n";
+print "</textarea><br>\n";
 
 $constname = 'MARKETPLACE_PUBLIC_API_KEY';
 
