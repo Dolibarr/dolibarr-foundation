@@ -31,7 +31,7 @@ include_once DOL_DOCUMENT_ROOT . '/core/lib/website.lib.php';
 /**
  * API class for product
  *
- * @access protected
+ * @access public
  * @class  DolibarrApiAccess {@requires user,external}
  */
 class Marketplace extends DolibarrApi
@@ -42,6 +42,11 @@ class Marketplace extends DolibarrApi
     public $product;
 
     /**
+     * Fixed key for authentication
+     */
+    private $fixedKey;
+
+    /**
      * Constructor
      *
      * @url     GET /
@@ -50,6 +55,8 @@ class Marketplace extends DolibarrApi
     {
         global $db;
         $this->db = $db;
+
+        $this->fixedKey = getDolGlobalString('MARKETPLACE_PUBLIC_API_KEY');
     }
 
     /**
@@ -74,8 +81,10 @@ class Marketplace extends DolibarrApi
     public function list($categorieid = 0, $sortfield = "datec", $sortorder = 'DESC', $limit = 11, $page = 1, $search = '', $lang = 'en_US')
     {
 
-        if (!DolibarrApiAccess::$user->hasRight('product', 'read')) {
-            throw new RestException(403);
+        $headers = getallheaders();
+        $apiKey = isset($headers['DOLAPIKEY']) ? $headers['DOLAPIKEY'] : (isset($_GET['apikey']) ? $_GET['apikey'] : null);
+        if ($apiKey !== $this->fixedKey) {
+            throw new RestException(403, 'Invalid API key');
         }
 
         if ($categorieid == 0) {
@@ -243,6 +252,12 @@ class Marketplace extends DolibarrApi
      * @throws RestException 503 System error
      */
     public function listCategories($lang = 'en_US') {
+
+        $headers = getallheaders();
+        $apiKey = isset($headers['DOLAPIKEY']) ? $headers['DOLAPIKEY'] : (isset($_GET['apikey']) ? $_GET['apikey'] : null);
+        if ($apiKey !== $this->fixedKey) {
+            throw new RestException(403, 'Invalid API key');
+        }
 
         $mcid = getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID");
         if (!$mcid) {
