@@ -1,5 +1,6 @@
 ## Repository synchronized on NextCloud
----------------------------------------
+
+---
 
 This directory contains files that are produced and edited on the Dolibarr association NextCloud server https://cloud.dolibarr.org
 
