@@ -199,11 +199,7 @@ class Marketplace extends DolibarrApi
                 break;
         }
 
-        if ($page_no == 1) {
-            $offset = 0;
-        }else{
-            $offset = ( $limit * ($page_no-1) )+($page_no - 1);
-        }
+        $offset = ($page_no - 1) * $limit;
 
         // Count SQL - Replaced with a select COUNT()
         $countSql = "SELECT COUNT(DISTINCT c.fk_product) as count";
