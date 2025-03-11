@@ -87,8 +87,21 @@ class Marketplace extends DolibarrApi
             throw new RestException(403, 'Invalid API key');
         }
 
+        // Length of $search must be at least 2 characters
+        if (!empty($search) && strlen(str_replace(' ', '', $search)) < 2) {
+            throw new RestException(503, 'Search string must be at least 2 characters');
+        }
+
         if ($categorieid == 0) {
             $categorieid = getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID");
+        }
+
+        // Check if the category exists and belongs to the marketplace
+        $categstatic = new Categorie($this->db);
+        $fulltree = $categstatic->get_full_arbo(Categorie::TYPE_PRODUCT, getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID"), 1);
+
+        if ($categorieid <= 0 || !is_array($fulltree) || !array_key_exists($categorieid, $fulltree)) {
+            throw new RestException(503, 'Category not found');
         }
 
         $lang_array = array('en_US', 'fr_FR', 'es_ES', 'it_IT', 'de_DE');
@@ -192,6 +205,26 @@ class Marketplace extends DolibarrApi
             $offset = ( $limit * ($page_no-1) )+($page_no - 1);
         }
 
+        // Count SQL - Replaced with a select COUNT()
+        $countSql = "SELECT COUNT(DISTINCT c.fk_product) as count";
+        $countSql .= " FROM llx_categorie_product as c";
+        $countSql .= " INNER JOIN llx_product as o ON c.fk_product = o.rowid";
+        $countSql .= " INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid";
+        $countSql .= " LEFT JOIN llx_product_fournisseur_price as pfp ON pfp.fk_product = o.rowid";
+        $countSql .= " LEFT JOIN llx_societe as s ON pfp.fk_soc = s.rowid";
+        $countSql .= " LEFT JOIN llx_product_extrafields as pe ON pe.fk_object = o.rowid";
+        $countSql .= " WHERE o.entity IN (1) AND c.fk_categorie = " . ((int) $root_category_id);
+        $countSql .= " AND ol.lang = '" . $this->db->escape($current_lang) . "'";
+        $countSql .= " AND " . $filter;
+
+        $resql = $this->db->query($countSql);
+        $count_prods = 0;
+        if ($resql) {
+            $obj = $this->db->fetch_object($resql);
+            $count_prods = $obj->count;
+        }
+
+
         // PRODUCT SQL
         $sql = "SELECT c.fk_product as id, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
         $sql .= "FROM llx_categorie_product as c ";
@@ -239,7 +272,7 @@ class Marketplace extends DolibarrApi
             }
         }
 
-        return $obj_ret;
+        return array('products' => $obj_ret, 'total' => $count_prods);
     }
 
     /**
@@ -254,7 +287,7 @@ class Marketplace extends DolibarrApi
     public function listCategories($lang = 'en_US') {
 
         $headers = getallheaders();
-        $apiKey = isset($headers['DOLAPIKEY']) ? $headers['DOLAPIKEY'] : (isset($_GET['apikey']) ? $_GET['apikey'] : null);
+        $apiKey = $headers['DOLAPIKEY'] ?? $_GET['apikey'] ?? null;
         if ($apiKey !== $this->fixedKey) {
             throw new RestException(403, 'Invalid API key');
         }
