@@ -71,10 +71,9 @@ $WIDTH = DolGraph::getDefaultGraphSizeForStats('width');
 $HEIGHT = DolGraph::getDefaultGraphSizeForStats('height');
 
 // Load translation files required by the page
-$langs->loadLangs(array('bills', 'companies', 'other','marketplace@marketplace'));
+$langs->loadLangs(array('bills', 'categories', 'companies', 'other', 'marketplace@marketplace'));
 
-$mode = GETPOST("mode") ? GETPOST("mode") : 'customer';
-$mode = 'customer';
+$mode = GETPOSTISSET("mode") ? GETPOST("mode", "aZ09") : 'customer';
 
 $hookmanager->initHooks(array('invoicestats', 'globalcard'));
 
@@ -117,10 +116,6 @@ $endyear = $year;
 /*
  * View
  */
-if (isModEnabled('category')) {
-	$langs->load('categories');
-}
-
 
 $form = new Form($db);
 $formcompany = new FormCompany($db);
