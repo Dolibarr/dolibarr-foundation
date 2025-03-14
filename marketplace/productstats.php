@@ -101,15 +101,15 @@ restrictedArea($user, 'produit|service', 0, 'product&product', '', '');
 
  $form = new Form($db);
  $tmpproduct = new Product($db);
- 
+
  $title = $langs->trans("Statistics");
- 
- 
+
+
  llxHeader("", $langs->trans("MarketplaceArea"), '', '', 0, 0, '', '', '', 'mod-marketplace page-index');
 
  print load_fiche_titre($langs->trans("MarketplaceArea"), '', 'fa-store');
- 
- 
+
+
  $param = '';
  $title = $langs->trans("ListProductServiceByPopularity");
  if ((string) $type == '1') {
@@ -118,18 +118,18 @@ restrictedArea($user, 'produit|service', 0, 'product&product', '', '');
  if ((string) $type == '0') {
 	 $title = $langs->trans("ListProductByPopularity");
  }
- 
+
  if ($type != '') {
 	 $param .= '&type='.urlencode($type);
  }
  if ($mode != '') {
 	 $param .= '&mode='.urlencode($mode);
  }
- 
- 
+
+
  $h = 0;
  $head = array();
- 
+
 $head[$h][0] = DOL_URL_ROOT.'/custom/marketplace/marketplaceindex.php';
 $head[$h][1] = $langs->trans("invoicesStatsMarketplace");
 $head[$h][2] = 'invoicesStatsMarketplace';
@@ -149,15 +149,15 @@ $head[$h][0] = DOL_URL_ROOT.'/custom/marketplace/salesstats.php';
 $head[$h][1] = $langs->trans("ListOfSalesMarketplace");
 $head[$h][2] = 'ListOfSalesMarketplace';
 $h++;
- 
- 
+
+
  print dol_get_fiche_head($head, 'productsStatsMarketplace', '', -1);
- 
- 
+
+
  // Array of lines to show
  $infoprod = array();
- 
- 
+
+
  // Add lines for object
  $sql = "SELECT p.rowid, p.label, p.ref, p.fk_product_type as type, p.tobuy, p.tosell, p.tobatch, p.barcode, SUM(pd.qty) as c";
  $textforqty = 'Qty';
@@ -178,30 +178,30 @@ $h++;
 	 $sql .= " AND fk_product_type = ".((int) $type);
  }
  $sql .= " GROUP BY p.rowid, p.label, p.ref, p.fk_product_type, p.tobuy, p.tosell, p.tobatch, p.barcode";
- 
+
  $num = 0;
  $totalnboflines = 0;
- 
+
  if (!empty($mode) && $mode != '-1') {
 	 $result = $db->query($sql);
 	 if ($result) {
 		 $totalnboflines = $db->num_rows($result);
 	 }
- 
+
 	 $sql .= $db->order($sortfield, $sortorder);
 	 $sql .= $db->plimit($limit + 1, $offset);
- 
+
 	 $resql = $db->query($sql);
 	 if ($resql) {
 		 $num = $db->num_rows($resql);
 		 $i = 0;
- 
+
 		 while ($i < $num) {
 			 $objp = $db->fetch_object($resql);
- 
-			 $infoprod[$objp->rowid] = array('type' => $objp->type, 'ref' => $objp->ref, 'label' => $objp->label, 'tobuy' => $objp->tobuy, 'tosell' => $objp->tobuy, 'tobatch' => $objp->tobatch, 'barcode' => $objp->barcode);
+
+			 $infoprod[$objp->rowid] = array('type' => $objp->type, 'ref' => $objp->ref, 'label' => $objp->label, 'tobuy' => $objp->tobuy, 'tosell' => $objp->tosell, 'tobatch' => $objp->tobatch, 'barcode' => $objp->barcode);
 			 $infoprod[$objp->rowid]['nbline'] = $objp->c;
- 
+
 			 $i++;
 		 }
 		 $db->free($resql);
@@ -210,8 +210,8 @@ $h++;
 	 }
  }
  //var_dump($infoprod);
- 
- 
+
+
  /*$arrayofmode = array(
 	 'propal' => 'Proposals',
 	 'commande' => 'Orders',
@@ -219,8 +219,8 @@ $h++;
 	 );
  $title .= ' '.$form->selectarray('mode', $arrayofmode, $mode, 1, 0, 0, '', 1);
  $title .= ' <input type="submit" class="button small" name="refresh" value="'.$langs->trans("Refresh").'">';*/
- 
- 
+
+
  print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
  print '<input type="hidden" name="token" value="'.newToken().'">';
  print '<input type="hidden" name="mode" value="'.$mode.'">';
@@ -232,19 +232,19 @@ $h++;
  if ($backtopageforcancel) {
 	 print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
  }
- 
- 
+
+
  print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, "", $num, $totalnboflines, '', 0, '', '', -1, 0, 0, 1);
- 
+
  print '<table class="noborder centpercent">';
- 
+
  print '<tr class="liste_titre">';
  print_liste_field_titre('Ref', $_SERVER["PHP_SELF"], 'p.ref', '', $param, '', $sortfield, $sortorder);
  print_liste_field_titre('Type', $_SERVER["PHP_SELF"], 'p.fk_product_type', '', $param, '', $sortfield, $sortorder);
  print_liste_field_titre('Label', $_SERVER["PHP_SELF"], 'p.label', '', $param, '', $sortfield, $sortorder);
  print_liste_field_titre($textforqty, $_SERVER["PHP_SELF"], 'c', '', $param, '', $sortfield, $sortorder, 'right ');
  print "</tr>\n";
- 
+
  if ($mode && $mode != '-1') {
 	 foreach ($infoprod as $prodid => $vals) {
 		 // Multilangs
@@ -254,7 +254,7 @@ $h++;
 			 $sql .= " WHERE fk_product = ".((int) $prodid);
 			 $sql .= " AND lang = '".$db->escape($langs->getDefaultLang())."'";
 			 $sql .= " LIMIT 1";
- 
+
 			 $resultp = $db->query($sql);
 			 if ($resultp) {
 				 $objtp = $db->fetch_object($resultp);
@@ -263,7 +263,7 @@ $h++;
 				 }
 			 }
 		 }
- 
+
 		 $tmpproduct->id = $prodid;
 		 $tmpproduct->ref = $vals['ref'];
 		 $tmpproduct->label = $vals['label'];
@@ -272,7 +272,7 @@ $h++;
 		 $tmpproduct->status_buy = $vals['tobuy'];
 		 $tmpproduct->status_batch = $vals['tobatch'];
 		 $tmpproduct->barcode = $vals['barcode'];
- 
+
 		 print "<tr>";
 		 print '<td>';
 		 print $tmpproduct->getNomUrl(1);
@@ -294,11 +294,11 @@ $h++;
 	 print '<tr><td colspan="4"><span class="opacitymedium">'.$langs->trans("SelectTheTypeOfObjectToAnalyze").'</span></td></tr>';
  }
  print "</table>";
- 
+
  print '</form>';
- 
+
  print dol_get_fiche_end();
- 
+
  // End of page
  llxFooter();
  $db->close();
