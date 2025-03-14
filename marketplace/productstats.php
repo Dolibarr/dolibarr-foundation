@@ -277,7 +277,7 @@ $h++;
 		 print '<td>';
 		 print $tmpproduct->getNomUrl(1);
 		 print '</td>';
-		 print '<td>';
+		 print '<td class="center">';
 		 $s = '';
 		 if ($vals['type'] == 1) {
 			 $s .= img_picto($langs->trans("Service"), 'service', 'class="paddingleftonly paddingrightonly colorgrey"');
@@ -286,8 +286,8 @@ $h++;
 		 }
 		 print $s;
 		 print '</td>';
-		 print '<td>'.dol_escape_htmltag($vals['label']).'</td>';
-		 print '<td class="right">'.$vals['nbline'].'</td>';
+		 print '<td>'.dolPrintHTML($vals['label']).'</td>';
+		 print '<td class="right">'.((int) $vals['nbline']).'</td>';
 		 print "</tr>\n";
 	 }
  } else {

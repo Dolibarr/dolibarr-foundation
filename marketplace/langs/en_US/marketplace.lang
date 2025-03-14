@@ -232,7 +232,6 @@ notFoundPageTitle = Not Found
 NoAttachedFileFound=No file attachment is available for this product.
 GroupByCountryAndVatRate=Group by country and VAT rate
 GroupByZoneAndVatRate=Group by zone and VAT rate
-OrderID=Order ID
 LineId=Line ID
 NbOfProducts=Number of products
 IsValid=Is valid

@@ -203,9 +203,9 @@ if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {
         c.rowid AS id_order,
         c.date_commande AS date_add,
         c.date_valid AS date_valid,
-			CASE 
-			WHEN DATEDIFF(NOW(), c.date_commande) > 30 THEN 1 
-			ELSE 0 
+			CASE
+			WHEN DATEDIFF(NOW(), c.date_commande) > 30 THEN 1
+			ELSE 0
 		END AS valid,
     ";
 }
@@ -218,7 +218,7 @@ $sql .= "
 ";
 
 // Calculations for validated quantities and amounts
-$sql .= "   
+$sql .= "
     SUM(GREATEST(0, (CAST(d.qty AS SIGNED) - COALESCE(refund_data.product_quantity_refunded, 0)))) AS qtyvalidated,
     SUM(CASE WHEN (CAST(d.qty AS SIGNED) - COALESCE(refund_data.product_quantity_refunded, 0)) > 0 THEN d.total_ht ELSE 0 END) AS amountvalidatedht,
     SUM(CASE WHEN (CAST(d.qty AS SIGNED) - COALESCE(refund_data.product_quantity_refunded, 0)) > 0 THEN d.total_ttc ELSE 0 END) AS amountvalidatedttc,
@@ -257,20 +257,20 @@ $sql .= "LEFT JOIN " . MAIN_DB_PREFIX . "facture AS f_order ON f_order.rowid = e
 // Subquery to calculate refunded quantities for each product in commandedet
 $sql .= "
     LEFT JOIN (
-        SELECT 
+        SELECT
 			f_credit_source.fk_source,
-			fad.fk_product, 
-			SUM(fad.qty) AS product_quantity_refunded 
-		FROM 
+			fad.fk_product,
+			SUM(fad.qty) AS product_quantity_refunded
+		FROM
 			" . MAIN_DB_PREFIX . "facturedet AS fad
-		INNER JOIN 
-			" . MAIN_DB_PREFIX . "element_element AS f_credit_source 
+		INNER JOIN
+			" . MAIN_DB_PREFIX . "element_element AS f_credit_source
 			ON f_credit_source.fk_target = fad.fk_facture
 			AND f_credit_source.sourcetype = 'commande'
 			AND f_credit_source.targettype = 'facture'
-		LEFT JOIN 
+		LEFT JOIN
 			" . MAIN_DB_PREFIX . "facture as facture_credit_note ON facture_credit_note.rowid = f_credit_source.fk_target
-		WHERE 
+		WHERE
 			fad.fk_facture = f_credit_source.fk_target
 			AND facture_credit_note.type = 2
 		GROUP BY fad.fk_product
@@ -281,16 +281,16 @@ $sql .= "
 $sql .= "
     LEFT JOIN " . MAIN_DB_PREFIX . "paiement_facture AS pf ON pf.fk_facture = f_order.rowid
     LEFT JOIN " . MAIN_DB_PREFIX . "paiement AS pyt ON pf.fk_paiement = pyt.rowid
-    LEFT JOIN " . MAIN_DB_PREFIX . "c_paiement AS cp ON cp.id = 
-			CASE 
-				WHEN pyt.fk_paiement IS NOT NULL THEN pyt.fk_paiement 
-				ELSE c.fk_mode_reglement 
+    LEFT JOIN " . MAIN_DB_PREFIX . "c_paiement AS cp ON cp.id =
+			CASE
+				WHEN pyt.fk_paiement IS NOT NULL THEN pyt.fk_paiement
+				ELSE c.fk_mode_reglement
 			END
 ";
 
 // Filtering conditions for valid orders
 $sql .= "
-    WHERE d.total_ht != 0 
+    WHERE d.total_ht != 0
     AND c.fk_statut IN (1, 3)
     AND (c.facture = 1 OR c.ref_ext IS NOT NULL)
 	AND (f_order.type = 0 OR f_credit.type IS NULL)
@@ -314,10 +314,10 @@ if ($mode == 'groupbyzoneandvatrate' || $mode == 'groupbycountryandvatrate') {
 	$sql .= " GROUP BY cp.libelle, d.tva_tx, sc.code";
 } else {
 	$sql .= "
-		GROUP BY 
-			d.rowid, sp.email, sp.lastname, sp.firstname, sp.datec, 
-			d.tva_tx, d.subprice, d.fk_product, d.total_ht, d.total_ttc, 
-			c.date_commande, d.remise_percent, sr.amount_ht, d.qty, 
+		GROUP BY
+			d.rowid, sp.email, sp.lastname, sp.firstname, sp.datec,
+			d.tva_tx, d.subprice, d.fk_product, d.total_ht, d.total_ttc,
+			c.date_commande, d.remise_percent, sr.amount_ht, d.qty,
 			c.rowid, c.date_commande, c.date_valid, cp.libelle, sc.code_iso
 	";
 }
@@ -502,7 +502,7 @@ print '</tr>' . "\n";
 // --------------------------------------------------------------------
 print '<tr class="liste_titre">';
 // Action column
-if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('OrderID', 0, $_SERVER["PHP_SELF"], 'c.rowid', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
+if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('OrderId', 0, $_SERVER["PHP_SELF"], 'c.rowid', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('LineId', 0, $_SERVER["PHP_SELF"], 'd.rowid', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Customer', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Customer date creation', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
@@ -600,7 +600,7 @@ foreach ($arryofobj as $key => $obj) {
 	print '<td class="right nowraponall">' . vatrate($obj->tax_rate) . '</td>';
 
 	// Payment mode
-	print '<td>' . $obj->module . '</td>';
+	print '<td class="tdoverflowmax75" title="'.dolPrintHTMLForAttribute($obj->module).'">' . dolPrintHTML($obj->module) . '</td>';
 
 	// Is in EEC
 	print '<td>';
