@@ -365,128 +365,6 @@ if ($result) {
 }
 
 
-/*
- * Latest preferred customers
- */
-
-$sql = "SELECT s.rowid, s.nom as name, s.email, s.client, s.fournisseur";
-$sql .= ", s.code_client";
-$sql .= ", s.code_fournisseur";
-if (getDolGlobalString('MAIN_COMPANY_PERENTITY_SHARED')) {
-	$sql .= ", spe.accountancy_code_supplier as code_compta_fournisseur";
-	$sql .= ", spe.accountancy_code_customer as code_compta";
-} else {
-	$sql .= ", s.code_compta_fournisseur";
-	$sql .= ", s.code_compta";
-}
-$sql .= ", s.logo";
-$sql .= ", s.datec";
-$sql .= ", s.entity";
-$sql .= ", s.canvas, s.tms as date_modification, s.status as status";
-$sql .= " FROM ".MAIN_DB_PREFIX."societe as s";
-$sql .= ", ".MAIN_DB_PREFIX."categorie_societe as cs";
-if (getDolGlobalString('MAIN_COMPANY_PERENTITY_SHARED')) {
-	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "societe_perentity as spe ON spe.fk_soc = s.rowid AND spe.entity = " . ((int) $conf->entity);
-}
-// TODO Replace this
-if (!$user->hasRight('societe', 'client', 'voir')) {
-	$sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
-}
-$sql .= ' WHERE s.entity IN ('.getEntity('societe').') AND cs.fk_soc = s.rowid AND cs.fk_categorie = '.((int) getDolGlobalString('MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID'));
-if (!$user->hasRight('societe', 'client', 'voir')) {
-	$sql .= " AND s.rowid = sc.fk_soc AND sc.fk_user = ".((int) $user->id);
-}
-if (!$user->hasRight('fournisseur', 'lire')) {
-	$sql .= " AND (s.fournisseur != 1 OR s.client != 0)";
-}
-// Add where from hooks
-$parameters = array('socid' => $socid);
-$reshook = $hookmanager->executeHooks('printFieldListWhere', $parameters, $thirdparty_static); // Note that $action and $object may have been modified by hook
-if (empty($reshook)) {
-	if ($socid > 0) {
-		$sql .= " AND s.rowid = ".((int) $socid);
-	}
-}
-$sql .= $hookmanager->resPrint;
-$sql .= $db->order("s.datec", "DESC");
-$sql .= $db->plimit($max, 0);
-
-//print $sql;
-$lastmodifiedpreferred="";
-$result = $db->query($sql);
-if ($result) {
-	$num = $db->num_rows($result);
-
-	$i = 0;
-
-	if ($num > 0) {
-		$transRecordedType = $langs->trans("LastpreferredThirdPartiesOnMarketplace", $max);
-
-		$lastmodifiedpreferred = "\n<!-- last thirdparties modified -->\n";
-		$lastmodifiedpreferred .= '<div class="div-table-responsive-no-min">';
-		$lastmodifiedpreferred .= '<table class="noborder centpercent">';
-
-		$lastmodifiedpreferred .= '<tr class="liste_titre"><th colspan="2">';
-		//$lastmodified .= img_picto('', 'company', 'class="pictofixedwidth"');
-		$lastmodifiedpreferred .= '<span class="valignmiddle">'.$transRecordedType.'</span>';
-		$lastmodifiedpreferred .= '<a class="marginleftonlyshort" href="'.DOL_URL_ROOT.'/societe/list.php?sortfield=s.tms&sortorder=DESC&search_category_customer_list[]='.getDolGlobalString("MARKETPLACE_PROSPECTCUSTOMER_PREFERRED_ID").'" title="'.$langs->trans("FullList").'">';
-		$lastmodifiedpreferred .= '<span class="badge marginleftonlyshort">...</span>';
-		$lastmodifiedpreferred .= '</a>';
-		$lastmodifiedpreferred .= '</th>';
-		$lastmodifiedpreferred .= '<th>&nbsp;</th>';
-		$lastmodifiedpreferred .= '<th class="right">';
-		$lastmodifiedpreferred .= '</th>';
-		$lastmodifiedpreferred .= '</tr>'."\n";
-
-		while ($i < $num) {
-			$objp = $db->fetch_object($result);
-
-			$thirdparty_static->id = $objp->rowid;
-			$thirdparty_static->name = $objp->name;
-			$thirdparty_static->client = $objp->client;
-			$thirdparty_static->fournisseur = $objp->fournisseur;
-			$thirdparty_static->logo = $objp->logo;
-			$thirdparty_static->date_modification = $db->jdate($objp->date_modification);
-			$thirdparty_static->status = $objp->status;
-			$thirdparty_static->code_client = $objp->code_client;
-			$thirdparty_static->code_fournisseur = $objp->code_fournisseur;
-			$thirdparty_static->canvas = $objp->canvas;
-			$thirdparty_static->email = $objp->email;
-			$thirdparty_static->entity = $objp->entity;
-			$thirdparty_static->code_compta_fournisseur = $objp->code_compta_fournisseur;
-			$thirdparty_static->code_compta_client = $objp->code_compta;
-
-			$lastmodifiedpreferred .= '<tr class="oddeven">';
-			// Name
-			$lastmodifiedpreferred .= '<td class="nowrap tdoverflowmax200">';
-			$lastmodifiedpreferred .= $thirdparty_static->getNomUrl(1);
-			$lastmodifiedpreferred .= "</td>\n";
-			// Type
-			$lastmodifiedpreferred .= '<td class="center">';
-			$lastmodifiedpreferred .= $thirdparty_static->getTypeUrl();
-			$lastmodifiedpreferred .= '</td>';
-			// Last modified date
-			$lastmodifiedpreferred .= '<td class="right tddate" title="'.dol_escape_htmltag($langs->trans("DateModification").' '.dol_print_date($thirdparty_static->date_modification, 'dayhour', 'tzuserrel')).'">';
-			$lastmodifiedpreferred .= dol_print_date($thirdparty_static->date_modification, 'day', 'tzuserrel');
-			$lastmodifiedpreferred .= "</td>";
-			$lastmodifiedpreferred .= '<td class="right nowrap">';
-			$lastmodifiedpreferred .= $thirdparty_static->getLibStatut(3);
-			$lastmodifiedpreferred .= "</td>";
-			$lastmodifiedpreferred .= "</tr>\n";
-			$i++;
-		}
-
-		$db->free($result);
-
-		$lastmodifiedpreferred .= "</table>\n";
-		$lastmodifiedpreferred .= '</div>';
-		$lastmodifiedpreferred .= "<!-- End last thirdparties modified -->\n";
-	}
-} else {
-	dol_print_error($db);
-}
-
-
 // boxes
 print '<div class="clearboth"></div>';
 print '<div class="fichecenter fichecenterbis">';
@@ -495,18 +373,10 @@ $boxlist = '<div class="twocolumns">';
 
 $boxlist .= '<div class="firstcolumn fichehalfleft boxhalfleft" id="boxhalfleft">';
 $boxlist .= $thirdpartygraph;
-$boxlist .= '<br>';
-$boxlist .= $thirdpartycateggraph;
-$boxlist .= '<br>';
-$boxlist .= $resultboxes['boxlista'];
 $boxlist .= '</div>'."\n";
 
 $boxlist .= '<div class="secondcolumn fichehalfright boxhalfright" id="boxhalfright">';
 $boxlist .= $lastmodified;
-$boxlist .= '<br>';
-$boxlist .= $lastmodifiedpreferred;
-$boxlist .= '<br>';
-$boxlist .= $resultboxes['boxlistb'];
 $boxlist .= '</div>'."\n";
 
 $boxlist .= '</div>';
