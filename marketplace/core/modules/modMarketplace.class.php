@@ -472,7 +472,7 @@ class modMarketplace extends DolibarrModules
 		$result7=$extrafields->addExtraField('marketplace_module_keywords',    	 "ModuleKeywords", 'varchar', 80,  2555, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result8=$extrafields->addExtraField('marketplace_php_min_version',      "PhpMin", 'varchar', 90,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result9=$extrafields->addExtraField('marketplace_php_max_version',      "PhpMax", 'varchar', 100,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result10=$extrafields->addExtraField('marketplace_validity_duration',   "ValidityDuration", 'int', 110,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result10=$extrafields->addExtraField('marketplace_validity_duration',   "MarketplaceValidityDuration", 'int', 110,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result11=$extrafields->addExtraField('marketplace_pricecomment',        "PriceComment", 'varchar', 120,  128, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result12=$extrafields->addExtraField('marketplace_disclaimer_message',  "DisclaimerMessage", 'varchar', 130,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
