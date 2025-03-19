@@ -371,17 +371,28 @@ foreach ($supplierList as $supplier) {
 		if (!empty($filterOrders)) {
 			$sum_all_sells_period_orders .=  $filterOrders;
 		}
+		dol_syslog("SQL Query for sum_all_sells_period_orders: " . $sum_all_sells_period_orders, LOG_DEBUG);
 		$resql = $db->query($sum_all_sells_period_orders);
+		if (!$resql) {
+			dol_syslog("Error in sum_all_sells_period_orders query: " . $db->lasterror(), LOG_ERR);
+		}
 		$sum_all_sells_period_orders = $db->fetch_object($resql);
+		dol_syslog("Result for sum_all_sells_period_orders: " . json_encode($sum_all_sells_period_orders), LOG_DEBUG);
 
 		$sum_all_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.datef > '2025-01-01'";
 		if (!empty($filterInvoices)) {
 			$sum_all_sells_period_invoices .=  $filterInvoices;
 		}
+		dol_syslog("SQL Query for sum_all_sells_period_invoices: " . $sum_all_sells_period_invoices, LOG_DEBUG);
 		$resql = $db->query($sum_all_sells_period_invoices);
+		if (!$resql) {
+			dol_syslog("Error in sum_all_sells_period_invoices query: " . $db->lasterror(), LOG_ERR);
+		}
 		$sum_all_sells_period_invoices = $db->fetch_object($resql);
+		dol_syslog("Result for sum_all_sells_period_invoices: " . json_encode($sum_all_sells_period_invoices), LOG_DEBUG);
 
 		$sum_all_sells_period = $sum_all_sells_period_orders->total + $sum_all_sells_period_invoices->total;
+		dol_syslog("Total sum_all_sells_period: " . $sum_all_sells_period, LOG_DEBUG);
 
 		// Total of all validated sells OR for a period
 		$sum_all_validated_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
@@ -590,10 +601,10 @@ foreach ($supplierList as $supplier) {
 			'country' => $supplier->country_label,
 			'numberOfProducts' => count($products_ids),
 			'numberOfPaidSells' => $all_sells_period,
-			'totalOfSellsDone' => price(($sum_all_sells_period - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80, 0, '', 1, -1, 2),
-			'totalValidatedSells' => price(($sum_all_validated_sells_period - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80, 0, '', 1, -1, 2),
-			'remainedAmountInOneMonth' => price((($sum_all_sells - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80) - $sum_payment_done, 0, '', 1, -1, 2),
-			'remainedAmountToday' => price((($sells_done_validated - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80) - $sum_payment_done, 0, '', 1, -1, 2),
+			'totalOfSellsDone' => (($sum_all_sells_period - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80),
+			'totalValidatedSells' => (($sum_all_validated_sells_period - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80),
+			'remainedAmountInOneMonth' => ((($sum_all_sells - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80) - $sum_payment_done),
+			'remainedAmountToday' => ((($sells_done_validated - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80) - $sum_payment_done),
 			'discounts' => $TOTAL_DISCOUNTS,
 			'totalPaymentsDone' => $sum_payment_done,
 			'numberOfSupplierInvoices' => count($dolistoreinvoices),
@@ -781,13 +792,13 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	print '<td class="right">'.((int) $supplier['numberOfPaidSells']).'</td>';
 	print '<td class="right">'.$supplier['qtyRefunds'].'</td>';
 	print '<td class="right">'.((int) $supplier['numberOfSupplierInvoices']).'</td>';
-	print '<td class="right">'.price($supplier['totalOfSellsDone']).'</td>';
-	print '<td class="right">'.price($supplier['sumRefunds']).'</td>';
-	print '<td class="right">'.price($supplier['discounts']).'</td>';
-	print '<td class="right">'.price($supplier['totalValidatedSells']).'</td>';
-	print '<td class="right">'.price($supplier['remainedAmountInOneMonth']).'</td>';
-	print '<td class="right">'.price($supplier['remainedAmountToday']).'</td>';
-	print '<td class="right">'.price($supplier['totalPaymentsDone']).'</td>';
+	print '<td class="right">'.price($supplier['totalOfSellsDone'], 0, '', 1, -1, 2).'</td>';
+	print '<td class="right">'.price($supplier['sumRefunds'], 0, '', 1, -1, 2).'</td>';
+	print '<td class="right">'.price($supplier['discounts'], 0, '', 1, -1, 2).'</td>';
+	print '<td class="right">'.price($supplier['totalValidatedSells'], 0, '', 1, -1, 2).'</td>';
+	print '<td class="right">'.price($supplier['remainedAmountInOneMonth'], 0, '', 1, -1, 2).'</td>';
+	print '<td class="right">'.price($supplier['remainedAmountToday'], 0, '', 1, -1, 2).'</td>';
+	print '<td class="right">'.price($supplier['totalPaymentsDone'], 0, '', 1, -1, 2).'</td>';
 	print '<td class="right"></td>';
 	print "</tr>\n";
 }
