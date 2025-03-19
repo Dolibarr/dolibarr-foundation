@@ -44,7 +44,7 @@ require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
 include_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array('commande', 'propal', 'bills', 'other', 'products','marketplace@marketplace'));
+$langs->loadLangs(array('commande', 'propal', 'bills', 'other', 'products', 'marketplace@marketplace'));
 
 $backtopage = GETPOST('backtopage', 'alpha');
 $backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
@@ -307,6 +307,7 @@ foreach ($supplierList as $supplier) {
 	$customer_id = $supplier->rowid;
 
 	// Get account info
+	/*
 	$accounts = array();
 	$sql = "SELECT rowid, login ";
 	$sql .= "FROM ".MAIN_DB_PREFIX."societe_account ";
@@ -318,6 +319,7 @@ foreach ($supplierList as $supplier) {
 		$accounts[] = array('id' => $objsql->rowid, 'login' => $objsql->login);
 	}
 	$logins = implode('<br>', array_column($accounts, 'login'));
+	*/
 
 	// Get liste of products
 	$products_ids = array();
@@ -328,7 +330,7 @@ foreach ($supplierList as $supplier) {
 	if ($customer_id != "all") {
 		$sql .= " AND pf.fk_soc = ".((int) $customer_id);
 	}
-	$sql .= " AND cp.fk_categorie = ".getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID");
+	$sql .= " AND cp.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID"));
 	$sql .= " GROUP BY pf.fk_product ";
 	$sql .= " ORDER BY first_date DESC";
 
@@ -341,14 +343,14 @@ foreach ($supplierList as $supplier) {
 
 	if (!empty($products_ids_str)) {
 		// Number of all paid sells OR for a period
-		$all_sells_period_orders = "SELECT SUM(d.qty) AS sells FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and d.total_ht != 0 and c.fk_statut IN (1,3) and (c.facture = 1 OR c.ref_ext IS NOT NULL) and c.module_source = 'Marketplace' and c.date_commande < '2025-01-01'";
+		$all_sells_period_orders = "SELECT SUM(d.qty) AS sells FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and d.total_ht != 0 and c.fk_statut IN (1,3) and (c.facture = 1 OR c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01'";
 		if (!empty($filterOrders)) {
 			$all_sells_period_orders .=  $filterOrders;
 		}
 		$resql = $db->query($all_sells_period_orders);
 		$all_sells_period_orders = $db->fetch_object($resql);
 
-		$all_sells_period_invoices = "SELECT SUM(fd.qty) AS sells FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.module_source = 'Marketplace' and f.datef > '2025-01-01'";
+		$all_sells_period_invoices = "SELECT SUM(fd.qty) AS sells FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.module_source = 'marketplace' and f.datef > '2025-01-01'";
 		if (!empty($filterInvoices)) {
 			$all_sells_period_invoices .=  $filterInvoices;
 		}
@@ -365,7 +367,7 @@ foreach ($supplierList as $supplier) {
 		$all_sells_period = $all_sells_period_orders->sells + $all_sells_period_invoices->sells;
 
 		// Total of all sells done OR for a period
-		$sum_all_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and c.fk_statut IN (1,3) and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'Marketplace' and c.date_commande < '2025-01-01'";
+		$sum_all_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and c.fk_statut IN (1,3) and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01'";
 		if (!empty($filterOrders)) {
 			$sum_all_sells_period_orders .=  $filterOrders;
 		}
@@ -382,7 +384,7 @@ foreach ($supplierList as $supplier) {
 		$sum_all_sells_period = $sum_all_sells_period_orders->total + $sum_all_sells_period_invoices->total;
 
 		// Total of all validated sells OR for a period
-		$sum_all_validated_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'Marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterOrders)) {
 			$sum_all_validated_sells_period_orders .=  $filterOrders;
 		}
@@ -406,7 +408,7 @@ foreach ($supplierList as $supplier) {
 		$sum_all_validated_sells_period = $sum_all_validated_sells_period_orders->total + $sum_all_validated_sells_period_invoices->total + $sum_all_refunds_period_invoices->total;
 
 		// Remaining amount to claim in one month
-		$sum_all_sells_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and c.fk_statut IN (1,3) and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'Marketplace' and c.date_commande < '2025-01-01'";
+		$sum_all_sells_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and c.fk_statut IN (1,3) and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01'";
 		if (!empty($filterOrders)) {
 			$sum_all_sells_orders .=  $filterOrders;
 		}
@@ -423,7 +425,7 @@ foreach ($supplierList as $supplier) {
 		$sum_all_sells = $sum_all_sells_orders->total + $sum_all_sells_invoices->total;
 
 		// Remaining amount to claim today
-		$sum_all_validated_sells_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'Marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterOrders)) {
 			$sum_all_validated_sells_orders .=  $filterOrders;
 		}
@@ -450,11 +452,11 @@ foreach ($supplierList as $supplier) {
 		$TOTAL_DISCOUNTS = 0;
 		$like_conditions = [];
 		foreach ($products_ids as $product_id) {
-			$like_conditions[] = "d.description LIKE '" . $product_id . "# %'";
+			$like_conditions[] = "d.description LIKE '" . $db->escape($product_id) . "# %'";
 		}
 		$like_clause = implode(' OR ', $like_conditions);
 
-		$sum_all_discounts = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande AND (" . $like_clause . ") AND (c.facture = 1 OR c.ref_ext IS NOT NULL) AND c.module_source = 'Marketplace'";
+		$sum_all_discounts = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande AND (" . $like_clause . ") AND (c.facture = 1 OR c.ref_ext IS NOT NULL) AND c.module_source = 'marketplace'";
 		if (!empty($filterOrders)) {
 			$sum_all_discounts .=  $filterOrders;
 		}
@@ -706,6 +708,7 @@ if ($backtopageforcancel) {
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, "", count($supplier_stats), count($supplier_stats), '', 0, '', '', 0, 0, 0, 1);
 
+print '<div class="div-table-responsive">';
 print '<table class="noborder centpercent">';
 
 print '<tr class="liste_titre_filter">';
@@ -713,8 +716,8 @@ print '<td class="liste_titre"><input type="text" class="flat searchstring maxwi
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_name" value="'.dol_escape_htmltag($search_name).'"></td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_alias" value="'.dol_escape_htmltag($search_alias).'"></td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_ref_ext" value="'.dol_escape_htmltag($search_ref_ext).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_logins" value="'.dol_escape_htmltag($search_logins).'"></td>';
-print "<td class=\"liste_titre\">&nbsp;</td>";
+//print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_logins" value="'.dol_escape_htmltag($search_logins).'"></td>';
+print '<td class="liste_titre">&nbsp;</td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_country" value="'.dol_escape_htmltag($search_country).'"></td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_numberOfProducts" value="'.dol_escape_htmltag($search_numberOfProducts).'"></td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_numberOfPaidSells" value="'.dol_escape_htmltag($search_numberOfPaidSells).'"></td>';
@@ -744,7 +747,7 @@ print_liste_field_titre($langs->trans('TechnicalID'), $_SERVER["PHP_SELF"], 's.r
 print_liste_field_titre($langs->trans('ThirdPartyName'), $_SERVER["PHP_SELF"], 's.nom', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('AliasNameShort'), $_SERVER["PHP_SELF"], 's.name_alias', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('RefExt'), $_SERVER["PHP_SELF"], 's.ref_ext', '', $param, '', $sortfield, $sortorder);
-print_liste_field_titre($langs->trans('WebSiteAccounts'), $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder);
+//print_liste_field_titre($langs->trans('WebSiteAccounts'), $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('DateCreation'), $_SERVER["PHP_SELF"], 's.datec', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('Country'), $_SERVER["PHP_SELF"], 'country.label', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('numberOfProducts'), $_SERVER["PHP_SELF"], 'numberOfProducts', '', $param, '', $sortfield, $sortorder, 'right ');
@@ -768,10 +771,10 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	$supplierObject->fetch($supplier['id']);
 	print "<tr>";
 	print '<td>'.$supplier['id'].'</td>';
-	print '<td class="minwidth300imp">'.$supplierObject->getNomUrl(1).'</td>';
-	print '<td>'.$supplier['alias'].'</td>';
+	print '<td class="tdoverflowmax125">'.$supplierObject->getNomUrl(1).'</td>';
+	print '<td class="tdoverflowmax125" title="'.dolPrintHtmlForAttribute($supplier['alias']).'">'.$supplier['alias'].'</td>';
 	print '<td>'.$supplier['ref_ext'].'</td>';
-	print '<td>'.$supplier['logins'].'</td>';
+	//print '<td>'.$supplier['logins'].'</td>';
 	print '<td>'.dol_print_date($supplier['date_creation'], 'day').'</td>';
 	print '<td>'.$supplier['country'].'</td>';
 	print '<td class="right">'.((int) $supplier['numberOfProducts']).'</td>';
@@ -789,7 +792,12 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	print "</tr>\n";
 }
 
+if (empty($supplier_stats)) {
+	print '<tr><td colspan="18"><span class="opacitymedium">'.$langs->trans("NoRecordFound").'</span></td></tr>';
+}
+
 print "</table>";
+print '</div>';
 
 print '</form>';
 
