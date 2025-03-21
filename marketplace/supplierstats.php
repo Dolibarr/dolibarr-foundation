@@ -778,6 +778,18 @@ print "</tr>\n";
 // Static object
 $supplierObject = new Societe($db);
 
+$totalNumberOfProducts = 0;
+$totalNumberOfPaidSells = 0;
+$totalQtyRefunds = 0;
+$totalNumberOfSupplierInvoices = 0;
+$totalOfSellsDone = 0;
+$totalSumRefunds = 0;
+$totalDiscounts = 0;
+$totalValidatedSells = 0;
+$totalRemainedAmountInOneMonth = 0;
+$totalRemainedAmountToday = 0;
+$totalPaymentsDone = 0;
+
 foreach ($supplier_stats as $supplier_id => $supplier) {
 	$supplierObject->fetch($supplier['id']);
 	print "<tr>";
@@ -801,11 +813,40 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	print '<td class="right">'.price($supplier['totalPaymentsDone'], 0, '', 1, -1, 2).'</td>';
 	print '<td class="right"></td>';
 	print "</tr>\n";
+
+	$totalNumberOfProducts += $supplier['numberOfProducts'];
+	$totalNumberOfPaidSells += $supplier['numberOfPaidSells'];
+	$totalQtyRefunds += $supplier['qtyRefunds'];
+	$totalNumberOfSupplierInvoices += $supplier['numberOfSupplierInvoices'];
+	$totalOfSellsDone += $supplier['totalOfSellsDone'];
+	$totalSumRefunds += $supplier['sumRefunds'];
+	$totalDiscounts += $supplier['discounts'];
+	$totalValidatedSells += $supplier['totalValidatedSells'];
+	$totalRemainedAmountInOneMonth += $supplier['remainedAmountInOneMonth'];
+	$totalRemainedAmountToday += $supplier['remainedAmountToday'];
+	$totalPaymentsDone += $supplier['totalPaymentsDone'];
 }
 
 if (empty($supplier_stats)) {
 	print '<tr><td colspan="18"><span class="opacitymedium">'.$langs->trans("NoRecordFound").'</span></td></tr>';
 }
+
+// Total row
+print '<tr class="liste_total">';
+print '<td colspan="6" class="right">'.$langs->trans("Total").'</td>';
+print '<td class="right">'.((int) $totalNumberOfProducts).'</td>';
+print '<td class="right">'.((int) $totalNumberOfPaidSells).'</td>';
+print '<td class="right">'.$totalQtyRefunds.'</td>';
+print '<td class="right">'.((int) $totalNumberOfSupplierInvoices).'</td>';
+print '<td class="right">'.price($totalOfSellsDone, 0, '', 1, -1, 2).'</td>';
+print '<td class="right">'.price($totalSumRefunds, 0, '', 1, -1, 2).'</td>';
+print '<td class="right">'.price($totalDiscounts, 0, '', 1, -1, 2).'</td>';
+print '<td class="right">'.price($totalValidatedSells, 0, '', 1, -1, 2).'</td>';
+print '<td class="right">'.price($totalRemainedAmountInOneMonth, 0, '', 1, -1, 2).'</td>';
+print '<td class="right">'.price($totalRemainedAmountToday, 0, '', 1, -1, 2).'</td>';
+print '<td class="right">'.price($totalPaymentsDone, 0, '', 1, -1, 2).'</td>';
+print '<td class="right"></td>';
+print '</tr>';
 
 print "</table>";
 print '</div>';
