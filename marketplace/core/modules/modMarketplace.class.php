@@ -762,7 +762,7 @@ class modMarketplace extends DolibarrModules
 			<p>__(emailTemplateRegards)__</p>
 			<p>__(emailTemplateTeam)__</p>';
 
-			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(resetPasswordMarketplace)', '', 'marketplace', 'thirdparty', null, 0, 120, '__(passwordResetRequest)__ [__[MARKETPLACE_NAME]__]', null, 0, 0, '" . $email_content . "' , ".((int) $conf->entity).", 1, 1);";
+			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(resetPasswordMarketplace)', '', 'marketplace', 'thirdparty', null, 0, 120, '[__[MARKETPLACE_NAME]__] __(passwordResetRequest)__ (__USER_REMOTE_IP__)', null, 0, 0, '" . $email_content . "' , ".((int) $conf->entity).", 1, 1);";
 			$result = $this->db->query($email_sql);
 			if ($result) {
 				$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
@@ -796,7 +796,7 @@ class modMarketplace extends DolibarrModules
 			__(emailTemplateTeam)__</p>
 			</div>';
 
-			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(BuyerOrderConfirmation)', '', 'marketplace', 'order_send', null, 0, 140, '__(BuyerOrderConfirmation)__ __[MARKETPLACE_NAME]__', null, 0, 0, '" . $email_content . "', ".((int) $conf->entity).", 1, 1);";
+			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(BuyerOrderConfirmation)', '', 'marketplace', 'order_send', null, 0, 140, '__[MARKETPLACE_NAME]__ __(BuyerOrderConfirmation)__', null, 0, 0, '" . $email_content . "', ".((int) $conf->entity).", 1, 1);";
 			$result = $this->db->query($email_sql);
 			if ($result) {
 				$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
@@ -839,7 +839,7 @@ class modMarketplace extends DolibarrModules
 			</div>
 			';
 
-			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(SellerOrderNotification)', '', 'marketplace', 'order_send', null, 0, 130, '__(SellerOrderNotification)__ __[MARKETPLACE_NAME]__', null, 0, 0, '" . $email_content . "', ".((int) $conf->entity).", 1, 1);";
+			$email_sql = "INSERT INTO ".MAIN_DB_PREFIX."c_email_templates (label, lang, module, type_template, fk_user, private, position, topic, email_from, joinfiles, defaultfortype, content, entity, active, enabled) VALUES ('(SellerOrderNotification)', '', 'marketplace', 'order_send', null, 0, 130, '__[MARKETPLACE_NAME]__ __(SellerOrderNotification)__', null, 0, 0, '" . $email_content . "', ".((int) $conf->entity).", 1, 1);";
 			$result = $this->db->query($email_sql);
 			if ($result) {
 				$id_template = $this->db->last_insert_id(MAIN_DB_PREFIX."c_email_templates");
