@@ -150,7 +150,6 @@ $sql .= "where lsa.fk_website = " . $websiteId;
 $sql .= " and ls.ref_ext is not null";
 $sql .= " and ls.ref_ext != ''";
 $sql .= " group by lsa.fk_soc ";
-$sql .= " limit 200";
 //print $query = $sql . "\n";
 //exit;
 
