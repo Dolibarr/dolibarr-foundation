@@ -395,7 +395,7 @@ foreach ($supplierList as $supplier) {
 		dol_syslog("Total sum_all_sells_period: " . $sum_all_sells_period, LOG_DEBUG);
 
 		// Total of all validated sells OR for a period
-		$sum_all_validated_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.fk_statut IN (1, 3) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterOrders)) {
 			$sum_all_validated_sells_period_orders .=  $filterOrders;
 		}
@@ -436,7 +436,7 @@ foreach ($supplierList as $supplier) {
 		$sum_all_sells = $sum_all_sells_orders->total + $sum_all_sells_invoices->total;
 
 		// Remaining amount to claim today
-		$sum_all_validated_sells_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.fk_statut IN (1, 3) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01' AND c.date_commande < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterOrders)) {
 			$sum_all_validated_sells_orders .=  $filterOrders;
 		}
