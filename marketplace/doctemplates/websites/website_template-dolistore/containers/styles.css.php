@@ -5971,6 +5971,13 @@ th {
   font-size: 12px;
   color: #a45931;
 }
+.subscribeToNewsletterLabel{
+    font-weight: 400 !important;
+    margin-left: 3px;
+    font-size: 14px !important;
+    font-weight: lighter !important;
+    line-height: 0 !important;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
