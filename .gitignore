@@ -3,3 +3,4 @@
 /video_jingle
 .DS_Store
 /.buildpath
+/.phpunit.result.cache
