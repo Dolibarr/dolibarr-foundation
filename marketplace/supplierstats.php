@@ -265,14 +265,14 @@ $supplierListSql .= "LEFT JOIN llx_c_effectif as staff on (staff.id = s.fk_effec
 $supplierListSql .= "LEFT JOIN llx_c_departements as state on (state.rowid = s.fk_departement) ";
 $supplierListSql .= "LEFT JOIN llx_c_regions as region on (region.code_region = state.fk_region) ";
 $supplierListSql .= "LEFT JOIN llx_c_stcomm as st ON s.fk_stcomm = st.id ";
-$supplierListSql .= "WHERE s.entity IN (1) ";
-$supplierListSql .= "AND ( EXISTS (SELECT ck.fk_soc FROM llx_categorie_societe as ck WHERE s.rowid = ck.fk_soc AND ck.fk_categorie IN (" . getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID") . "))) ";
+$supplierListSql .= "WHERE s.entity = ".((int) $conf->entity);
+$supplierListSql .= "AND ( EXISTS (SELECT ck.fk_soc FROM llx_categorie_societe as ck WHERE s.rowid = ck.fk_soc AND ck.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID")). ")) ";
 $supplierListSql .= "AND s.fournisseur = 1 ";
-$supplierListSql .= "AND (s.status IN (1)) ";
+$supplierListSql .= "AND s.status = 1 ";
 
 // Apply filters
 if (!empty($search_id)) {
-	$supplierListSql .= " AND s.rowid = " . $db->escape($search_id);
+	$supplierListSql .= " AND s.rowid = " . ((int) $search_id);
 }
 if (!empty($search_name)) {
 	$supplierListSql .= " AND s.nom LIKE '%" . $db->escape($search_name) . "%'";
@@ -321,7 +321,7 @@ foreach ($supplierList as $supplier) {
 	$logins = implode('<br>', array_column($accounts, 'login'));
 	*/
 
-	// Get liste of products
+	// Get list of products for the current supplier
 	$products_ids = array();
 
 	$sql = "SELECT pf.fk_product, MIN(pf.datec) AS first_date ";
@@ -350,7 +350,7 @@ foreach ($supplierList as $supplier) {
 		$resql = $db->query($all_sells_period_orders);
 		$all_sells_period_orders = $db->fetch_object($resql);
 
-		$all_sells_period_invoices = "SELECT SUM(fd.qty) AS sells FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.module_source = 'marketplace' and f.datef > '2025-01-01'";
+		$all_sells_period_invoices = "SELECT SUM(fd.qty) AS sells FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01'";
 		if (!empty($filterInvoices)) {
 			$all_sells_period_invoices .=  $filterInvoices;
 		}
@@ -358,6 +358,7 @@ foreach ($supplierList as $supplier) {
 		$all_sells_period_invoices = $db->fetch_object($resql);
 
 		$all_refunds_period_invoices = "SELECT SUM(fd.qty) AS refunds FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef > '2025-01-01'";
+		$all_refunds_period_invoices .= " AND EXISTS (SELECT rowid FROM ".MAIN_DB_PREFIX."facture as fs WHERE fs.rowid = f.fk_facture_source and fs.module_source = 'marketplace') ";
 		if (!empty($filterInvoices)) {
 			$all_refunds_period_invoices .=  $filterInvoices;
 		}
@@ -379,7 +380,7 @@ foreach ($supplierList as $supplier) {
 		$sum_all_sells_period_orders = $db->fetch_object($resql);
 		dol_syslog("Result for sum_all_sells_period_orders: " . json_encode($sum_all_sells_period_orders), LOG_DEBUG);
 
-		$sum_all_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.datef > '2025-01-01'";
+		$sum_all_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01'";
 		if (!empty($filterInvoices)) {
 			$sum_all_sells_period_invoices .=  $filterInvoices;
 		}
@@ -402,14 +403,15 @@ foreach ($supplierList as $supplier) {
 		$resql = $db->query($sum_all_validated_sells_period_orders);
 		$sum_all_validated_sells_period_orders = $db->fetch_object($resql);
 
-		$sum_all_validated_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.datef > '2025-01-01' AND f.datef < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01' AND f.datef < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterInvoices)) {
 			$sum_all_validated_sells_period_invoices .=  $filterInvoices;
 		}
 		$resql = $db->query($sum_all_validated_sells_period_invoices);
 		$sum_all_validated_sells_period_invoices = $db->fetch_object($resql);
 
-		$sum_all_refunds_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef > '2025-01-01'";
+		$sum_all_refunds_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef >= '2025-01-01'";
+		$sum_all_refunds_period_invoices .= " AND EXISTS (SELECT rowid FROM ".MAIN_DB_PREFIX."facture as fs WHERE fs.rowid = f.fk_facture_source and fs.module_source = 'marketplace') ";
 		if (!empty($filterInvoices)) {
 			$sum_all_refunds_period_invoices .=  $filterInvoices;
 		}
@@ -426,7 +428,7 @@ foreach ($supplierList as $supplier) {
 		$resql = $db->query($sum_all_sells_orders);
 		$sum_all_sells_orders = $db->fetch_object($resql);
 
-		$sum_all_sells_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.datef > '2025-01-01'";
+		$sum_all_sells_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01'";
 		if (!empty($filterInvoices)) {
 			$sum_all_sells_invoices .=  $filterInvoices;
 		}
@@ -443,14 +445,15 @@ foreach ($supplierList as $supplier) {
 		$resql = $db->query($sum_all_validated_sells_orders);
 		$sells_done_validated_orders = $db->fetch_object($resql);
 
-		$sum_all_validated_sells_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.datef > '2025-01-01' AND f.datef < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.datef >= '2025-01-01' AND f.datef < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterInvoices)) {
 			$sum_all_validated_sells_invoices .=  $filterInvoices;
 		}
 		$resql = $db->query($sum_all_validated_sells_invoices);
 		$sells_done_validated_invoices = $db->fetch_object($resql);
 
-		$sum_all_refunds_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef > '2025-01-01'";
+		$sum_all_refunds_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef >= '2025-01-01'";
+		$sum_all_refunds_invoices .= " AND EXISTS (SELECT rowid FROM ".MAIN_DB_PREFIX."facture as fs WHERE fs.rowid = f.fk_facture_source and fs.module_source = 'marketplace') ";
 		if (!empty($filterInvoices)) {
 			$sum_all_refunds_invoices .=  $filterInvoices;
 		}
@@ -582,7 +585,7 @@ foreach ($supplierList as $supplier) {
 
 		$sum_payment_done = $alreadyreceived;
 
-		// Check if there is an amount of coupons for this customer
+		// Check if there is an amount of coupons for this thirdparty
 		$TOTAL_REDUC_OLD_SYSTEM = 0;
 		if (getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM_" . $customer_id)) {
 			$TOTAL_REDUC_OLD_SYSTEM = getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM_" . $customer_id);
