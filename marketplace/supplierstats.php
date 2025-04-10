@@ -265,10 +265,9 @@ $supplierListSql .= "LEFT JOIN llx_c_effectif as staff on (staff.id = s.fk_effec
 $supplierListSql .= "LEFT JOIN llx_c_departements as state on (state.rowid = s.fk_departement) ";
 $supplierListSql .= "LEFT JOIN llx_c_regions as region on (region.code_region = state.fk_region) ";
 $supplierListSql .= "LEFT JOIN llx_c_stcomm as st ON s.fk_stcomm = st.id ";
-$supplierListSql .= "WHERE s.entity = ".((int) $conf->entity);
+$supplierListSql .= "WHERE s.entity = ".((int) $conf->entity)." ";
 $supplierListSql .= "AND ( EXISTS (SELECT ck.fk_soc FROM llx_categorie_societe as ck WHERE s.rowid = ck.fk_soc AND ck.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID")). ")) ";
 $supplierListSql .= "AND s.fournisseur = 1 ";
-$supplierListSql .= "AND s.status = 1 ";
 
 // Apply filters
 if (!empty($search_id)) {
