@@ -47,7 +47,8 @@ body.bodywebsite {
 .bodywebsite h1 {
   padding: 10px
 }
-.bodywebsite a,
+
+/*.bodywebsite a,
 .bodywebsite b,
 .bodywebsite body,
 .bodywebsite footer,
@@ -66,6 +67,8 @@ body.bodywebsite {
 .bodywebsite section,
 .bodywebsite strong,
 .bodywebsite ul {
+*/
+.bodywebsite :where(a, b, a, b, body, footer, form, h2, h3, h4, h5, header, html, i, img, li, nav, p,section,strong, ul) {
   margin: 0;
   padding: 0;
   border: 0;
@@ -3883,7 +3886,7 @@ p {
 .bodywebsite h3 {
   margin-top: 2px;
   margin-bottom: 9px;
-  font-family: "Open Sans",sans-serif!important;
+  font-family: "Open Sans",sans-serif;
   font-weight: 500;
   line-height: 1.1
 }
@@ -3892,6 +3895,9 @@ p {
 }
 .bodywebsite h3 {
   font-size: 23px
+}
+.bodywebsite h3 {
+  font: 500 23px/1.1 "Open Sans",sans-serif;
 }
 .bodywebsite label,
 label {
@@ -4199,11 +4205,6 @@ select {
   font-size: 100%;
   font-size: inherit;
   line-height: inherit
-}
-h3 {
-  margin-top: 2px;
-  margin-bottom: 9px;
-  font: 500 23px/1.1 "Open Sans",sans-serif!important
 }
 .col-xs-4 {
   float: left;
@@ -5977,6 +5978,58 @@ th {
     font-size: 14px !important;
     font-weight: lighter !important;
     line-height: 0 !important;
+}
+
+/* Addition from John suggestion */
+
+.bodywebsite .page-product-box :is(h1,h2,h3,h4,h5,h6) {
+	margin: 1em 0;
+	line-height: 1.4;
+    font-weight: 200;
+}
+
+body.bodywebsite .page-product-box {
+    font: 14px / 1.5 'Open Sans', Arial, Helvetica, sans-serif;
+ }
+
+.bodywebsite .page-product-box a:link {
+  color: #a45931;
+}
+
+.bodywebsite .page-product-box a:visited {
+  color: #a43159;
+}
+
+.bodywebsite .page-product-box a:where(:hover,:active) {
+  color: #003781;
+}
+
+.bodywebsite .page-product-box .infos-module a:is(:link,:visited) {
+  color: #363636;
+}
+.bodywebsite .page-product-box .infos-module a:is(:hover,:active) {
+  color: #004aaf;
+}
+
+.bodywebsite .page-product-box .button{
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  text-shadow: 1px 1px #0003d;
+  color: #fff;
+  background: #4f66ad
+}
+
+.bodywebsite .page-product-box .button.button-small{
+  font-size: 1em;
+  padding: 5px 10px;
+}
+
+.bodywebsite .page-product-box .button:hover{
+  background: #4070ff
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
