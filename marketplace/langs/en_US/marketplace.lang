@@ -345,5 +345,5 @@ numberOfSupplierInvoices=Number supplier invoices
 totalDiscounts=Total discounts < 01/01/2025
 statisticsListMarketplace=List of marketplace suppliers
 SupplierStatsMarketplace=Supplier statistics
-subscribeToNewsletter=I want to receive the mailing list
+subscribeToNewsletter=I agree to receive the newsletter
 subscribeToNewsletterError=An error occurred while updating the newsletter subscription
