@@ -347,3 +347,5 @@ statisticsListMarketplace=List of marketplace suppliers
 SupplierStatsMarketplace=Supplier statistics
 subscribeToNewsletter=I agree to receive the newsletter
 subscribeToNewsletterError=An error occurred while updating the newsletter subscription
+paymentIsNotCompleted=Payment hasn’t been completed
+notYetAvailable=Not yet available
