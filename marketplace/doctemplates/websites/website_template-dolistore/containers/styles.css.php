@@ -4073,10 +4073,13 @@ label {
   padding: 0 0 17px;
   border-bottom: 1px solid #d6d4d4;
   overflow: hidden;
-  text-transform: uppercase;
   font: 600 18px/22px "Open Sans",sans-serif;
   color: #555454
 }
+.bodywebsite .page-heading .cat-name {
+  text-transform: uppercase;
+}
+
 .bodywebsite .page-subheading,
 .page-subheading {
   margin-bottom: 12px;
@@ -5992,22 +5995,22 @@ body.bodywebsite .page-product-box {
     font: 14px / 1.5 'Open Sans', Arial, Helvetica, sans-serif;
  }
 
-.bodywebsite .page-product-box a:link {
+.bodywebsite .page-product-box a:not(.btn):link {
   color: #a45931;
 }
 
-.bodywebsite .page-product-box a:visited {
+.bodywebsite .page-product-box a:not(.btn):visited {
   color: #a43159;
 }
 
-.bodywebsite .page-product-box a:where(:hover,:active) {
+.bodywebsite .page-product-box a:not(.btn):where(:hover,:active) {
   color: #003781;
 }
 
-.bodywebsite .page-product-box .infos-module a:is(:link,:visited) {
+.bodywebsite .page-product-box .infos-module a:not(.btn):is(:link,:visited) {
   color: #363636;
 }
-.bodywebsite .page-product-box .infos-module a:is(:hover,:active) {
+.bodywebsite .page-product-box .infos-module a:not(.btn):is(:hover,:active) {
   color: #004aaf;
 }
 
@@ -6030,6 +6033,9 @@ body.bodywebsite .page-product-box {
 
 .bodywebsite .page-product-box .button:hover{
   background: #4070ff
+}
+.bodywebsite .page-product-box a.button:visited {
+    color: #fff;
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
