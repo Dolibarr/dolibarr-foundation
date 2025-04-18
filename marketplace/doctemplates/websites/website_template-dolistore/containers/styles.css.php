@@ -5218,7 +5218,8 @@ ul.step li.step_done a {
   border-radius: 5px;
   text-align: center;
   background-color: #f5f5f5;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1)
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  height: 100%;
 }
 .clearfix.payment_accepted h1 {
   margin-bottom: 25px;
