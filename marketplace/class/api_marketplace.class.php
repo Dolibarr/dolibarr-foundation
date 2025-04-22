@@ -138,15 +138,18 @@ class Marketplace extends DolibarrApi
                             ol.note LIKE '% " . $value . "' OR
                             ol.note LIKE '%>" . $value . " %' OR
                             ol.note LIKE '% " . $value . "<%' OR
-                            pe.marketplace_module_keywords LIKE '%" . $value . "%' OR 
+                            o.ref LIKE '%" . $value . "%' OR 
+                            pe.marketplace_module_keywords REGEXP '(^|, )" . $value . "(,|$)' OR 
                             s.nom LIKE '%" . $value . "%' OR
                             s.name_alias LIKE '%" . $value . "%')";
 
                 // Define the order of results based on matching criteria
                 // Level 1: Full match in the label
+                $order .= "WHEN ol.label = '" . $value . "' THEN 0 ";
                 $order .= "WHEN ol.label LIKE '" . $value . " %' THEN 1 ";
                 $order .= "WHEN ol.label LIKE '% " . $value . " %' THEN 1 ";
                 $order .= "WHEN ol.label LIKE '% " . $value . "' THEN 1 ";
+                $order .= "WHEN o.ref LIKE '" . $value . "%' THEN 1 ";
 
                 // Level 2: Partial match in the label or vendor name
                 $order .= "WHEN ol.label LIKE '%" . $value . "%' THEN 2 ";
