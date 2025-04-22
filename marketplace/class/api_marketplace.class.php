@@ -117,18 +117,33 @@ class Marketplace extends DolibarrApi
         $search_words = $search;
         $orderway = $sortorder;
 
+        // Check the filter on version and clean the $search_words.
+        // First check into the search field
+        $tag = "";
+        $reg = array();
+        if (preg_match('/(^|\s)(V\d+)(\s|$)/i', $search_words, $reg)) {
+            $tag = $reg[2];
+            $search_words = preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words);
+        }
+        // Now check on the forced parameter $tag
+        if ($tag && $tag != 'Specials') {
+            $search_words .= ($search_words ? " " : "") . $tag;
+        }
+
         $obj_ret = array();
 
+        $filter = 'o.tosell = 1';
         if (!empty($search_words)) {
             $keywords = explode(" ", $search_words);
             $request = '';
-            $order = 'ORDER BY CASE ';
+            $order = '';
 
             foreach ($keywords as $key => $value) {
-                if ($key != 0) {
-                    $request .= " AND ";
+                if (preg_match('/(^|\s)(V\d+)(\s|$)/i', $value, $reg)) {
+                    continue;
                 }
 
+                $request .= " AND ";
                 $value = $this->db->escape($this->db->escapeforlike($value));
 
                 // Build the search conditions for labels, notes, and vendor names
@@ -168,10 +183,10 @@ class Marketplace extends DolibarrApi
             }
 
             // Finalize filter and order
-            $filter = "($request) AND (o.tosell = 1) ";
-            $order .= " END, o.datec DESC";  // Complete the order clause
-        } else {
-            $filter = 'o.tosell = 1';
+            $filter .= $request;
+            if ($order) {
+                $order = "ORDER BY CASE ".$order." END, o.datec DESC";  // Complete the order clause
+            }
         }
 
 
@@ -237,7 +252,8 @@ class Marketplace extends DolibarrApi
         $sql .= $filter;
         $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
 
-        if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($search_words)) {
+        $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', GETPOST('search_query')));
+        if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($searchwithouttag)) {
             $sql .= " " . $order;
         } else {
             if ($isHomePage) {
