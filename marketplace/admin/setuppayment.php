@@ -212,7 +212,7 @@ if (!getDolGlobalString('MARKETPLACE_BLOCK_SALES')) {
 } else {
 	// Button on, click to disable
 	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_BLOCK_SALES&token='.newToken().$param.'">';
-	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on');
+	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on', 'class="warning"');
 	$enabledisablehtml .= '</a>';
 }
 print $enabledisablehtml;
@@ -248,7 +248,7 @@ if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
 } else {
 	// Button on, click to disable
 	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_PAYMENT_IN_FRAME&token='.newToken().$param.'">';
-	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on');
+	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on', '');
 	$enabledisablehtml .= '</a>';
 }
 print $enabledisablehtml;
