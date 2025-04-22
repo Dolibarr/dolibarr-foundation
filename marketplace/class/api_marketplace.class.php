@@ -240,9 +240,9 @@ class Marketplace extends DolibarrApi
 
 
         // PRODUCT SQL
-        $sql = "SELECT c.fk_product as id, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
-        $sql .= "FROM llx_categorie_product as c ";
-        $sql .= "INNER JOIN llx_product as o ON c.fk_product = o.rowid ";
+        $sql = "SELECT c.fk_product as id, o.ref, o.ref_ext, o.datec, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
+        $sql .= "FROM llx_product as o ";
+        $sql .= "INNER JOIN llx_categorie_product as c ON c.fk_product = o.rowid ";
         $sql .= "INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid ";
         $sql .= "LEFT JOIN llx_product_fournisseur_price as pfp ON pfp.fk_product = o.rowid ";
         $sql .= "LEFT JOIN llx_societe as s ON pfp.fk_soc = s.rowid ";
@@ -250,9 +250,9 @@ class Marketplace extends DolibarrApi
         $sql .= "WHERE o.entity IN (1) AND c.fk_categorie = " . ((int) $root_category_id) . " AND ";
         $sql .= "ol.lang = '" . $this->db->escape($current_lang) . "' AND ";
         $sql .= $filter;
-        $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
+        $sql .= " GROUP BY c.fk_product, o.ref, o.ref_ext, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
 
-        $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', GETPOST('search_query')));
+        $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words));
         if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($searchwithouttag)) {
             $sql .= " " . $order;
         } else {
