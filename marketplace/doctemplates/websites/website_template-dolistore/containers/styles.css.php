@@ -1306,7 +1306,7 @@ select {
 .bodywebsite header {
   z-index: 1;
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: 25px;
   background: #fff
 }
 .bodywebsite header .banner {
@@ -1344,6 +1344,12 @@ select {
 @media (min-width:767px) {
   .bodywebsite header .row #header_logo + .col-sm-4 + .col-sm-4 {
     float: right
+  }
+
+  .bodywebsite .header-container {
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 }
 .bodywebsite .button.button-small span {
@@ -3538,12 +3544,6 @@ ul.footer_links li + li {
   }
 }
 @media (max-width:767px) {
-  .bodywebsite header .row #header_logo {
-    padding-top: 15px
-  }
-  .bodywebsite header .row #header_logo img {
-    margin: 0 auto
-  }
   .bodywebsite .bottom-pagination-content ul.pagination li.pagination_next > a b,
   .bodywebsite .bottom-pagination-content ul.pagination li.pagination_next > span b,
   .bodywebsite .bottom-pagination-content ul.pagination li.pagination_previous > a b,
