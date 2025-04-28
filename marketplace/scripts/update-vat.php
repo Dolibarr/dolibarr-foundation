@@ -197,8 +197,8 @@ if ($resultSql = $db->query($sql)) {
 				$count_updated++;
 				print "Updated VAT for company: " . $obj->company . " with VAT: " . $obj->tva_intra . "\n";
 			} else {
-				$error++;
-				$error_messages[] = "Error updating VAT for company: " . $obj->company . " - " . $db->error;
+				//$error++;
+				$error_messages[] = "Error updating VAT for company: " . $obj->company . " - " . $db->lasterror();
 			}
 		}
 
@@ -215,6 +215,8 @@ if (!$error) {
 	$db->commit();
 	print $count_updated . ' Society updated' . "\n";
 	print '--- end ok' . "\n";
+	print "\n";
+	print implode("\n", $error_messages);
 } else {
 	print '--- end error nb=' . $error . "\n";
 	print implode("\n", $error_messages);
