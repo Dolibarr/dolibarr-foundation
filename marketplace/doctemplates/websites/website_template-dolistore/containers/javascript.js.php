@@ -237,7 +237,8 @@ function blockHover(status) {
             //alert($(this).parent().find('.button-container').outerHeight());
             $(this).parent().addClass('hovered').css({
                 'height': pcHeight + pcPHeight,
-                'margin-bottom': pcPHeight * (-1)
+                'margin-bottom': pcPHeight * (-1),
+                'z-index': 1
             });
         }
     });
@@ -248,7 +249,8 @@ function blockHover(status) {
         if ($('body').find('.container').width() == 1170)
             $(this).parent().removeClass('hovered').css({
                 'height': 'auto',
-                'margin-bottom': '0'
+                'margin-bottom': '0',
+                'z-index': 0
             });
     });
 }
