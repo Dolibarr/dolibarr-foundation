@@ -1170,12 +1170,16 @@ $(document).ready(function(){
                 $('.ajax_cart_product_txt').addClass( "unvisible" );
             }
             $('.ajax_block_products_total').html(data.items);
-            var n = parseInt($(window).scrollTop()) + 'px';
+            //var n = parseInt($(window).scrollTop()) + 'px';
+            var top = parseInt(125) + 'px';
             $('.layer_cart_overlay').css('width', '100%');
             $('.layer_cart_overlay').css('height', '100%');
             $('.layer_cart_overlay').show();
-            $('#layer_cart').css({
+            /*$('#layer_cart').css({
                 'top': n
+            }).fadeIn('fast');*/
+            $('#layer_cart').css({
+                'top': top
             }).fadeIn('fast');
             $("#layer_cart").css("display", "block");
 
