@@ -117,18 +117,33 @@ class Marketplace extends DolibarrApi
         $search_words = $search;
         $orderway = $sortorder;
 
+        // Check the filter on version and clean the $search_words.
+        // First check into the search field
+        $tag = "";
+        $reg = array();
+        if (preg_match('/(^|\s)(V\d+)(\s|$)/i', $search_words, $reg)) {
+            $tag = $reg[2];
+            $search_words = preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words);
+        }
+        // Now check on the forced parameter $tag
+        if ($tag && $tag != 'Specials') {
+            $search_words .= ($search_words ? " " : "") . $tag;
+        }
+
         $obj_ret = array();
 
+        $filter = 'o.tosell = 1';
         if (!empty($search_words)) {
             $keywords = explode(" ", $search_words);
             $request = '';
-            $order = 'ORDER BY CASE ';
+            $order = '';
 
             foreach ($keywords as $key => $value) {
-                if ($key != 0) {
-                    $request .= " AND ";
+                if (preg_match('/(^|\s)(V\d+)(\s|$)/i', $value, $reg)) {
+                    continue;
                 }
 
+                $request .= " AND ";
                 $value = $this->db->escape($this->db->escapeforlike($value));
 
                 // Build the search conditions for labels, notes, and vendor names
@@ -138,15 +153,18 @@ class Marketplace extends DolibarrApi
                             ol.note LIKE '% " . $value . "' OR
                             ol.note LIKE '%>" . $value . " %' OR
                             ol.note LIKE '% " . $value . "<%' OR
-                            pe.marketplace_module_keywords LIKE '%" . $value . "%' OR 
+                            o.ref LIKE '%" . $value . "%' OR 
+                            pe.marketplace_module_keywords REGEXP '(^|, )" . $value . "(,|$)' OR 
                             s.nom LIKE '%" . $value . "%' OR
                             s.name_alias LIKE '%" . $value . "%')";
 
                 // Define the order of results based on matching criteria
                 // Level 1: Full match in the label
+                $order .= "WHEN ol.label = '" . $value . "' THEN 0 ";
                 $order .= "WHEN ol.label LIKE '" . $value . " %' THEN 1 ";
                 $order .= "WHEN ol.label LIKE '% " . $value . " %' THEN 1 ";
                 $order .= "WHEN ol.label LIKE '% " . $value . "' THEN 1 ";
+                $order .= "WHEN o.ref LIKE '" . $value . "%' THEN 1 ";
 
                 // Level 2: Partial match in the label or vendor name
                 $order .= "WHEN ol.label LIKE '%" . $value . "%' THEN 2 ";
@@ -165,10 +183,10 @@ class Marketplace extends DolibarrApi
             }
 
             // Finalize filter and order
-            $filter = "($request) AND (o.tosell = 1) ";
-            $order .= " END, o.datec DESC";  // Complete the order clause
-        } else {
-            $filter = 'o.tosell = 1';
+            $filter .= $request;
+            if ($order) {
+                $order = "ORDER BY CASE ".$order." END, o.datec DESC";  // Complete the order clause
+            }
         }
 
 
@@ -222,9 +240,9 @@ class Marketplace extends DolibarrApi
 
 
         // PRODUCT SQL
-        $sql = "SELECT c.fk_product as id, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
-        $sql .= "FROM llx_categorie_product as c ";
-        $sql .= "INNER JOIN llx_product as o ON c.fk_product = o.rowid ";
+        $sql = "SELECT c.fk_product as id, o.ref, o.ref_ext, o.datec, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
+        $sql .= "FROM llx_product as o ";
+        $sql .= "INNER JOIN llx_categorie_product as c ON c.fk_product = o.rowid ";
         $sql .= "INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid ";
         $sql .= "LEFT JOIN llx_product_fournisseur_price as pfp ON pfp.fk_product = o.rowid ";
         $sql .= "LEFT JOIN llx_societe as s ON pfp.fk_soc = s.rowid ";
@@ -232,9 +250,10 @@ class Marketplace extends DolibarrApi
         $sql .= "WHERE o.entity IN (1) AND c.fk_categorie = " . ((int) $root_category_id) . " AND ";
         $sql .= "ol.lang = '" . $this->db->escape($current_lang) . "' AND ";
         $sql .= $filter;
-        $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
+        $sql .= " GROUP BY c.fk_product, o.ref, o.ref_ext, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
 
-        if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($search_words)) {
+        $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words));
+        if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($searchwithouttag)) {
             $sql .= " " . $order;
         } else {
             if ($isHomePage) {

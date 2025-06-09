@@ -42,7 +42,6 @@ div.selector span {
 }
 body.bodywebsite {
   margin: 0;
-  font-family: 'Open Sans',sans-serif
 }
 .bodywebsite h1 {
   padding: 10px
@@ -85,7 +84,6 @@ body.bodywebsite {
 .bodywebsite h3,
 .bodywebsite h4,
 .bodywebsite h5 {
-  font-family: 'Open Sans',sans-serif!important
 }
 body {
   margin: 0;
@@ -257,7 +255,7 @@ input.button_large_disabled {
   height: 450px
 }
 .bodywebsite .price.product-price {
-  font: 600 21px/26px "Open Sans",sans-serif
+  font: 600 21px/26px sans-serif
 }
 .bodywebsite .rte ul {
   padding-left: 15px;
@@ -1067,7 +1065,6 @@ ul.step li.step_current_end {
 .bodywebsite h3,
 .bodywebsite h4,
 .bodywebsite h5 {
-  font-family: open sans,sans-serif!important;
   font-weight: 500;
   line-height: 1.1
 }
@@ -1306,7 +1303,7 @@ select {
 .bodywebsite header {
   z-index: 1;
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: 25px;
   background: #fff
 }
 .bodywebsite header .banner {
@@ -1344,6 +1341,12 @@ select {
 @media (min-width:767px) {
   .bodywebsite header .row #header_logo + .col-sm-4 + .col-sm-4 {
     float: right
+  }
+
+  .bodywebsite .header-container {
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 }
 .bodywebsite .button.button-small span {
@@ -1467,7 +1470,7 @@ select {
   display: inline-block;
   padding: 0 5px 0 3px;
   border: 1px solid #d02a2c;
-  font: 600 21px/24px "Open Sans",sans-serif;
+  font: 600 21px/24px sans-serif;
   color: #fff
 }
 .bodywebsite .sale-box {
@@ -1518,7 +1521,7 @@ select {
   padding: 14px 5px 17px 20px;
   border-top: 5px solid #333;
   text-transform: uppercase;
-  font: 600 18px/22px "Open Sans",sans-serif;
+  font: 600 18px/22px sans-serif;
   color: #555454;
   background: #f6f6f6
 }
@@ -1560,7 +1563,7 @@ select {
   text-transform: uppercase;
   color: #555454;
   background: #fbfbfb;
-  font: 600 18px/20px "open sans",sans-serif
+  font: 600 18px/20px sans-serif
 }
 .bodywebsite #page .rte {
   padding: 0!important;
@@ -1666,7 +1669,7 @@ select {
 }
 .bodywebsite .footer-container #footer h4 {
   margin: 0 0 13px;
-  font: 600 18px/22px "Open Sans",sans-serif;
+  font: 600 18px/22px sans-serif;
   color: #fff;
   cursor: pointer
 }
@@ -2112,13 +2115,13 @@ only screen and (min-device-pixel-ratio:2) {
 }
 .bodywebsite .our_price_display {
   color: #333;
-  font: 600 18px/22px "open sans",sans-serif
+  font: 600 18px/22px sans-serif
 }
 .bodywebsite #old_price {
   display: inline-block;
   padding-bottom: 15px;
   text-decoration: line-through;
-  font: 17px/23px "open sans",sans-serif
+  font: 17px/23px sans-serif
 }
 .bodywebsite #reduction_amount,
 .bodywebsite #reduction_percent {
@@ -2128,7 +2131,7 @@ only screen and (min-device-pixel-ratio:2) {
   border: 1px solid #d02a2c;
   color: #fff;
   background: #f13340;
-  font: 600 21px/23px "open sans",sans-serif
+  font: 600 21px/23px sans-serif
 }
 .bodywebsite .buttons_bottom_block {
   clear: both;
@@ -2511,7 +2514,7 @@ only screen and (min-device-pixel-ratio:2) {
 }
 .bodywebsite .content_scene_cat span.category-name {
   margin-bottom: 12px;
-  font: 600 42px/51px "Open Sans",sans-serif;
+  font: 600 42px/51px sans-serif;
   color: #fff
 }
 @media (max-width:1199px) {
@@ -3538,12 +3541,6 @@ ul.footer_links li + li {
   }
 }
 @media (max-width:767px) {
-  .bodywebsite header .row #header_logo {
-    padding-top: 15px
-  }
-  .bodywebsite header .row #header_logo img {
-    margin: 0 auto
-  }
   .bodywebsite .bottom-pagination-content ul.pagination li.pagination_next > a b,
   .bodywebsite .bottom-pagination-content ul.pagination li.pagination_next > span b,
   .bodywebsite .bottom-pagination-content ul.pagination li.pagination_previous > a b,
@@ -3886,7 +3883,7 @@ p {
 .bodywebsite h3 {
   margin-top: 2px;
   margin-bottom: 9px;
-  font-family: "Open Sans",sans-serif;
+  font-family: sans-serif;
   font-weight: 500;
   line-height: 1.1
 }
@@ -3897,7 +3894,7 @@ p {
   font-size: 23px
 }
 .bodywebsite h3 {
-  font: 500 23px/1.1 "Open Sans",sans-serif;
+  font: 500 23px/1.1 sans-serif;
 }
 .bodywebsite label,
 label {
@@ -4073,7 +4070,7 @@ label {
   padding: 0 0 17px;
   border-bottom: 1px solid #d6d4d4;
   overflow: hidden;
-  font: 600 18px/22px "Open Sans",sans-serif;
+  font: 600 18px/22px sans-serif;
   color: #555454
 }
 .bodywebsite .page-heading .cat-name {
@@ -4087,7 +4084,7 @@ label {
   border-bottom: 1px solid #d6d4d4;
   text-transform: uppercase;
   color: #555454;
-  font: 600 18px "Open Sans",sans-serif
+  font: 600 18px sans-serif
 }
 #authentication .box,
 .bodywebsite #authentication .box {
@@ -4446,7 +4443,7 @@ div.radio {
   text-decoration: none;
   text-shadow: 0 1px #fff;
   text-transform: uppercase;
-  font: 600 16px/20px "Open Sans",sans-serif;
+  font: 600 16px/20px sans-serif;
   color: #555454;
   -ms-border-radius: 4px;
   -o-border-radius: 4px
@@ -4611,8 +4608,8 @@ div.radio {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,.7)!important
+  /*height: 100%;*/
+  /*background-color: rgba(0,0,0,.7)!important*/
 }
 .countdown-container,
 .lightbox3 #content3,
@@ -4652,7 +4649,7 @@ a.price_discount_delete {
 #cart_summary tfoot td.total_price_container span,
 .cart_voucher h4 {
   text-transform: uppercase;
-  font: 600 18px/22px "Open Sans",sans-serif;
+  font: 600 18px/22px sans-serif;
   color: #555454
 }
 .cart_delete a.cart_quantity_delete:hover,
@@ -4670,7 +4667,7 @@ a.price_discount_delete:hover {
   text-decoration: line-through
 }
 #cart_summary tfoot td#total_price_container {
-  font: 600 21px/25px "Open Sans",sans-serif;
+  font: 600 21px/25px sans-serif;
   color: #333;
   background: #fff
 }
@@ -5218,7 +5215,8 @@ ul.step li.step_done a {
   border-radius: 5px;
   text-align: center;
   background-color: #f5f5f5;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1)
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  height: 100%;
 }
 .clearfix.payment_accepted h1 {
   margin-bottom: 25px;
@@ -5504,7 +5502,7 @@ div.uploader {
   border-bottom: 1px solid #dbdbdb!important;
   text-transform: uppercase;
   color: #555454;
-  font: 600 15px "Open Sans",sans-serif!important
+  font: 600 15px sans-serif !important
 }
 .image-cover-preview,
 .image-preview {
@@ -5992,7 +5990,7 @@ th {
 }
 
 body.bodywebsite .page-product-box {
-    font: 14px / 1.5 'Open Sans', Arial, Helvetica, sans-serif;
+    font: 14px / 1.5 Arial, Helvetica, sans-serif;
  }
 
 .bodywebsite .page-product-box a:not(.btn):link {
