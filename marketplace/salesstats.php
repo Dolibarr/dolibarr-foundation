@@ -520,8 +520,8 @@ else print getTitleFieldOfList('', 0, $_SERVER["PHP_SELF"], 'c.date_commande', '
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Product id', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 //if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Product label', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ')."\n";
 //if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Product ref', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ')."\n";
-if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('IsValid', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
-print getTitleFieldOfList('NbOfProducts',       0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
+if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('OrderConfirmed', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
+print getTitleFieldOfList('QtyShort',      0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('UnitPriceHT',    0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
 print getTitleFieldOfList('TotalHTShort',  0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
 print getTitleFieldOfList('TotalVAT', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
@@ -589,8 +589,8 @@ foreach ($arryofobj as $key => $obj) {
 
 	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td class="tdoverflowmax150"><span title="' . $obj->email . '">' . $obj->email . '</span></td>';
 
-	// Country code
-	print '<td class="nowraponall">';
+	// Country
+	print '<td class="nowraponall tdoverflowmax100">';
 	if ($mode == 'groupbyzoneandvatrate') {
 		if (strpos($key, '1_1') === 0) print $langs->trans("Country" . $mysoc->country_code);
 		elseif (strpos($key, '1_0') === 0) print $langs->trans("RestOfEurope");
@@ -604,7 +604,7 @@ foreach ($arryofobj as $key => $obj) {
 	print '<td class="right nowraponall">' . vatrate($obj->tax_rate) . '</td>';
 
 	// Payment mode
-	print '<td class="tdoverflowmax75" title="'.dolPrintHTMLForAttribute($obj->module).'">' . dolPrintHTML($obj->module) . '</td>';
+	print '<td class="tdoverflowmax60" title="'.dolPrintHTMLForAttribute($obj->module).'">' . dolPrintHTML($obj->module) . '</td>';
 
 	// Is in EEC
 	print '<td>';
@@ -615,12 +615,16 @@ foreach ($arryofobj as $key => $obj) {
 	print '<td class="nowraponall">' . dol_print_date($db->jdate($obj->order_date_add), 'dayhour') . '</td>';
 
 	// Product ID
-	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td>' . $obj->product_id . '</td>';
+	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {
+		print '<td>' . $obj->product_id . '</td>';
+	}
 	//if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td>'.$arraylistofproducts[$obj->product_id]['name'].'</td>';
 	//if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td>'.$arraylistofproducts[$obj->product_id]['reference'].'</td>';
 
 	// Valid ?
-	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td>' . yn($obj->valid) . '</td>';
+	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {
+		print '<td>' . yn($obj->valid) . '</td>';
+	}
 
 	// Qty validated
 	print '<td>' . $qtyvalidated . '</td>';
