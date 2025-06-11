@@ -85,6 +85,7 @@ $search_ref_ext = GETPOST('search_ref_ext');
 $search_logins = GETPOST('search_logins');
 $search_country = GETPOST('search_country');
 $search_numberOfProducts = GETPOST('search_numberOfProducts');
+$search_numberOfProductsOnSale = GETPOST('search_numberOfProductsOnSale');
 $search_numberOfPaidSells = GETPOST('search_numberOfPaidSells');
 $search_qtyRefunds = GETPOST('search_qtyRefunds');
 $search_sumRefunds = GETPOST('search_sumRefunds');
@@ -148,6 +149,9 @@ if (!empty($search_country)) {
 }
 if (!empty($search_numberOfProducts)) {
 	$param .= "&search_numberOfProducts=" . ((int) $search_numberOfProducts);
+}
+if (!empty($search_numberOfProductsOnSale)) {
+	$param .= "&search_numberOfProductsOnSale=" . ((int) $search_numberOfProductsOnSale);
 }
 if (!empty($search_numberOfPaidSells)) {
 	$param .= "&search_numberOfPaidSells=" . ((int) $search_numberOfPaidSells);
@@ -268,7 +272,6 @@ $supplierListSql .= "LEFT JOIN llx_c_stcomm as st ON s.fk_stcomm = st.id ";
 $supplierListSql .= "WHERE s.entity = ".((int) $conf->entity)." ";
 $supplierListSql .= "AND ( EXISTS (SELECT ck.fk_soc FROM llx_categorie_societe as ck WHERE s.rowid = ck.fk_soc AND ck.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID")). ")) ";
 $supplierListSql .= "AND s.fournisseur = 1 ";
-
 // Apply filters
 if (!empty($search_id)) {
 	$supplierListSql .= " AND s.rowid = " . ((int) $search_id);
@@ -305,37 +308,26 @@ $supplier_stats = array();
 foreach ($supplierList as $supplier) {
 	$customer_id = $supplier->rowid;
 
-	// Get account info
-	/*
-	$accounts = array();
-	$sql = "SELECT rowid, login ";
-	$sql .= "FROM ".MAIN_DB_PREFIX."societe_account ";
-	$sql .= "WHERE fk_soc = ".((int) $customer_id)." ";
-	//$sql .= "AND fk_website = " . getDolGlobalInt("MARKETPLACE_WEBSITE_ID") . " ";
-	$sql .= "LIMIT 100";
-	$resql = $db->query($sql);
-	while ($objsql = $db->fetch_object($resql)) {
-		$accounts[] = array('id' => $objsql->rowid, 'login' => $objsql->login);
-	}
-	$logins = implode('<br>', array_column($accounts, 'login'));
-	*/
-
 	// Get list of products for the current supplier
 	$products_ids = array();
+	$products_ids_onsale = array();
 
-	$sql = "SELECT pf.fk_product, MIN(pf.datec) AS first_date ";
-	$sql .= "FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pf, ".MAIN_DB_PREFIX."categorie_product AS cp ";
-	$sql .= "WHERE pf.fk_product = cp.fk_product";
-	if ($customer_id != "all") {
-		$sql .= " AND pf.fk_soc = ".((int) $customer_id);
+	$sql = "SELECT pf.fk_product, p.tosell, MIN(pf.datec) AS first_date ";
+	$sql .= "FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pf";
+	$sql .= " JOIN ".MAIN_DB_PREFIX."categorie_product AS cp ON pf.fk_product = cp.fk_product AND cp.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID"));
+	$sql .= " JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = pf.fk_product";
+	if ($customer_id !== "all") {
+		$sql .= " WHERE pf.fk_soc = ".((int) $customer_id);
 	}
-	$sql .= " AND cp.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID"));
-	$sql .= " GROUP BY pf.fk_product ";
+	$sql .= " GROUP BY pf.fk_product, p.tosell ";
 	$sql .= " ORDER BY first_date DESC";
 
 	if ($result_products = $db->query($sql)) {
 		while ($product_id = $result_products->fetch_object()) {
-			$products_ids[] = $product_id->fk_product;
+			$products_ids[$product_id->fk_product] = $product_id->fk_product;
+			if ($product_id->tosell) {
+				$products_ids_onsale[$product_id->fk_product] = $product_id->fk_product;
+			}
 		}
 	}
 	$products_ids_str = implode(',', $products_ids);
@@ -367,7 +359,7 @@ foreach ($supplierList as $supplier) {
 		$all_sells_period = $all_sells_period_orders->sells + $all_sells_period_invoices->sells;
 
 		// Total of all sells done OR for a period
-		$sum_all_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and c.fk_statut IN (1,3) and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01'";
+		$sum_all_sells_period_orders = "SELECT SUM(d.total_ht) as total FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande AND d.fk_product IN (" . $products_ids_str . ") and c.fk_statut IN (1,3) and (c.facture = 1 || c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01'";
 		if (!empty($filterOrders)) {
 			$sum_all_sells_period_orders .=  $filterOrders;
 		}
@@ -379,7 +371,7 @@ foreach ($supplierList as $supplier) {
 		$sum_all_sells_period_orders = $db->fetch_object($resql);
 		dol_syslog("Result for sum_all_sells_period_orders: " . json_encode($sum_all_sells_period_orders), LOG_DEBUG);
 
-		$sum_all_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01'";
+		$sum_all_sells_period_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture AND fd.fk_product IN (" . $products_ids_str . ") and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01'";
 		if (!empty($filterInvoices)) {
 			$sum_all_sells_period_invoices .=  $filterInvoices;
 		}
@@ -602,6 +594,7 @@ foreach ($supplierList as $supplier) {
 			'date_creation' => $supplier->date_creation,
 			'country' => $supplier->country_label,
 			'numberOfProducts' => count($products_ids),
+			'numberOfProductsOnSale' => count($products_ids_onsale),
 			'numberOfPaidSells' => $all_sells_period,
 			'totalOfSellsDone' => (($sum_all_sells_period - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80),
 			'totalValidatedSells' => (($sum_all_validated_sells_period - $TOTAL_REDUC_OLD_SYSTEM + $TOTAL_DISCOUNTS) * 0.80),
@@ -624,6 +617,11 @@ foreach ($supplierList as $supplier) {
 if (!empty($search_numberOfProducts)) {
 	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_numberOfProducts) {
 		return $supplier['numberOfProducts'] == (int)$search_numberOfProducts;
+	});
+}
+if (!empty($search_numberOfProductsOnSale)) {
+	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_numberOfProductsOnSale) {
+		return $supplier['numberOfProductsOnSale'] == (int)$search_numberOfProductsOnSale;
 	});
 }
 if (!empty($search_numberOfPaidSells)) {
@@ -693,6 +691,7 @@ function sort_supplier_stats(&$supplier_stats, $sortfield, $sortorder) {
 
 if (in_array($sortfield, [
 	'numberOfProducts',
+	'numberOfProductsOnSale',
 	'numberOfPaidSells',
 	'qtyRefunds',
 	'numberOfSupplierInvoices',
@@ -802,7 +801,7 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	//print '<td>'.$supplier['logins'].'</td>';
 	print '<td>'.dol_print_date($supplier['date_creation'], 'day').'</td>';
 	print '<td>'.$supplier['country'].'</td>';
-	print '<td class="right">'.((int) $supplier['numberOfProducts']).'</td>';
+	print '<td class="right">'.((int) $supplier['numberOfProducts']).' ('.((int) $supplier['numberOfProductsOnSale']).')</td>';
 	print '<td class="right">'.((int) $supplier['numberOfPaidSells']).'</td>';
 	print '<td class="right">'.$supplier['qtyRefunds'].'</td>';
 	print '<td class="right">'.((int) $supplier['numberOfSupplierInvoices']).'</td>';
