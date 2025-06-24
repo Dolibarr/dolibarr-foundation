@@ -87,6 +87,10 @@ class Marketplace extends DolibarrApi
             throw new RestException(403, 'Invalid API key');
         }
 
+        if ($limit > 21) {
+        	    throw new RestException(403, 'Too high value for limit');
+        }
+
         // Length of $search must be at least 2 characters
         if (!empty($search) && strlen(str_replace(' ', '', $search)) < 2) {
             throw new RestException(503, 'Search string must be at least 2 characters');
@@ -147,14 +151,14 @@ class Marketplace extends DolibarrApi
                 $value = $this->db->escape($this->db->escapeforlike($value));
 
                 // Build the search conditions for labels, notes, and vendor names
-                $request .= "(ol.label LIKE '%" . $value . "%' OR 
-                            ol.note LIKE '" . $value . " %'  OR 
-                            ol.note LIKE '% " . $value . " %'  OR 
+                $request .= "(ol.label LIKE '%" . $value . "%' OR
+                            ol.note LIKE '" . $value . " %'  OR
+                            ol.note LIKE '% " . $value . " %'  OR
                             ol.note LIKE '% " . $value . "' OR
                             ol.note LIKE '%>" . $value . " %' OR
                             ol.note LIKE '% " . $value . "<%' OR
-                            o.ref LIKE '%" . $value . "%' OR 
-                            pe.marketplace_module_keywords REGEXP '(^|, )" . $value . "(,|$)' OR 
+                            o.ref LIKE '%" . $value . "%' OR
+                            pe.marketplace_module_keywords REGEXP '(^|, )" . $value . "(,|$)' OR
                             s.nom LIKE '%" . $value . "%' OR
                             s.name_alias LIKE '%" . $value . "%')";
 
