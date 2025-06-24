@@ -88,7 +88,7 @@ class Marketplace extends DolibarrApi
         }
 
         if ($limit > 21) {
-        	    throw new RestException(403, 'Too high value for limit');
+            throw new RestException(403, 'Too high value for limit');
         }
 
         // Length of $search must be at least 2 characters
