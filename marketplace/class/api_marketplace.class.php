@@ -62,7 +62,7 @@ class Marketplace extends DolibarrApi
     /**
      * List products
      *
-     * Get a list of products
+     * Get a list of products (limited to $limit) and the total number in database.
      *
      * @param int              $categorieid          Category ID
      * @param string           $sortfield            Sort field
@@ -148,42 +148,40 @@ class Marketplace extends DolibarrApi
                 }
 
                 $request .= " AND ";
-                $value = $this->db->escape($this->db->escapeforlike($value));
+                $valueescaped = $this->db->escape($this->db->escapeforlike($value));
 
                 // Build the search conditions for labels, notes, and vendor names
-                $request .= "(ol.label LIKE '%" . $value . "%' OR
-                            ol.note LIKE '" . $value . " %'  OR
-                            ol.note LIKE '% " . $value . " %'  OR
-                            ol.note LIKE '% " . $value . "' OR
-                            ol.note LIKE '%>" . $value . " %' OR
-                            ol.note LIKE '% " . $value . "<%' OR
-                            o.ref LIKE '%" . $value . "%' OR
-                            pe.marketplace_module_keywords REGEXP '(^|, )" . $value . "(,|$)' OR
-                            s.nom LIKE '%" . $value . "%' OR
-                            s.name_alias LIKE '%" . $value . "%')";
+                $request .= "(ol.label LIKE '%" . $valueescaped . "%' OR
+                            ol.note LIKE '" . $valueescaped . " %'  OR
+                            ol.note LIKE '% " . $valueescaped . " %'  OR
+                            ol.note LIKE '% " . $valueescaped . "' OR
+                            ol.note LIKE '%>" . $valueescaped . " %' OR
+                            ol.note LIKE '% " . $valueescaped . "<%' OR
+                            o.ref LIKE '%" . $valueescaped . "%' OR
+                            pe.marketplace_module_keywords REGEXP '(^|, )" . $valueescaped . "(,|$)' OR
+                            s.nom LIKE '%" . $valueescaped . "%' OR
+                            s.name_alias LIKE '%" . $valueescaped . "%')";
 
                 // Define the order of results based on matching criteria
                 // Level 1: Full match in the label
-                $order .= "WHEN ol.label = '" . $value . "' THEN 0 ";
-                $order .= "WHEN ol.label LIKE '" . $value . " %' THEN 1 ";
-                $order .= "WHEN ol.label LIKE '% " . $value . " %' THEN 1 ";
-                $order .= "WHEN ol.label LIKE '% " . $value . "' THEN 1 ";
-                $order .= "WHEN o.ref LIKE '" . $value . "%' THEN 1 ";
+                $order .= "WHEN ol.label = '" . $valueescaped . "' THEN 0 ";
+                $order .= "WHEN ol.label LIKE '" . $valueescaped . " %' THEN 1 ";
+                $order .= "WHEN ol.label LIKE '% " . $valueescaped . " %' THEN 1 ";
+                $order .= "WHEN ol.label LIKE '% " . $valueescaped . "' THEN 1 ";
+                $order .= "WHEN o.ref LIKE '" . $valueescaped . "%' THEN 1 ";
 
                 // Level 2: Partial match in the label or vendor name
-                $order .= "WHEN ol.label LIKE '%" . $value . "%' THEN 2 ";
-                $order .= "WHEN pe.marketplace_module_keywords LIKE '%" . $value . "%' THEN 2 ";
-                $order .= "WHEN s.nom LIKE '%" . $value . "%' THEN 2 ";
-                $order .= "WHEN s.name_alias LIKE '%" . $value . "%' THEN 2 ";
+                $order .= "WHEN ol.label LIKE '%" . $valueescaped . "%' THEN 2 ";
+                $order .= "WHEN pe.marketplace_module_keywords LIKE '%" . $valueescaped . "%' THEN 2 ";
+                $order .= "WHEN s.nom LIKE '%" . $valueescaped . "%' THEN 2 ";
+                $order .= "WHEN s.name_alias LIKE '%" . $valueescaped . "%' THEN 2 ";
 
                 // Level 3: Full Match in the notes(Long description) field
-                $order .= "WHEN ol.note LIKE '" . $value . " %' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '% " . $value . " %' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '% " . $value . "' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '%>" . $value . " %' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '% " . $value . "<%' THEN 3 ";
-
-                //$order .= "WHEN ol.description LIKE '%" . $value . "%' THEN 4 ";
+                $order .= "WHEN ol.note LIKE '" . $valueescaped . " %' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '% " . $valueescaped . " %' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '% " . $valueescaped . "' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '%>" . $valueescaped . " %' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '% " . $valueescaped . "<%' THEN 3 ";
             }
 
             // Finalize filter and order
@@ -223,7 +221,7 @@ class Marketplace extends DolibarrApi
 
         $offset = ($page_no - 1) * $limit;
 
-        // Count SQL - Replaced with a select COUNT()
+        // Count total of products SQL - Replaced with a select COUNT()
         $countSql = "SELECT COUNT(DISTINCT c.fk_product) as count";
         $countSql .= " FROM llx_categorie_product as c";
         $countSql .= " INNER JOIN llx_product as o ON c.fk_product = o.rowid";
@@ -244,7 +242,7 @@ class Marketplace extends DolibarrApi
 
 
         // PRODUCT SQL
-        $sql = "SELECT c.fk_product as id, o.ref, o.ref_ext, o.datec, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
+        $sql = "SELECT c.fk_product as id, o.ref, o.datec, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
         $sql .= "FROM llx_product as o ";
         $sql .= "INNER JOIN llx_categorie_product as c ON c.fk_product = o.rowid ";
         $sql .= "INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid ";
@@ -254,7 +252,7 @@ class Marketplace extends DolibarrApi
         $sql .= "WHERE o.entity IN (1) AND c.fk_categorie = " . ((int) $root_category_id) . " AND ";
         $sql .= "ol.lang = '" . $this->db->escape($current_lang) . "' AND ";
         $sql .= $filter;
-        $sql .= " GROUP BY c.fk_product, o.ref, o.ref_ext, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
+        $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
 
         $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words));
         if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($searchwithouttag)) {
