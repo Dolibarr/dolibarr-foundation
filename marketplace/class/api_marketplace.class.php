@@ -24,7 +24,7 @@ include_once DOL_DOCUMENT_ROOT . '/core/lib/website.lib.php';
 
 /**
  * \file    dolibarr-foundation/marketplace/class/api_marketplace.class.php
- * \ingroup product
+ * \ingroup marketplace
  * \brief   File for API management of products.
  */
 
@@ -84,7 +84,7 @@ class Marketplace extends DolibarrApi
         $headers = getallheaders();
         $apiKey = isset($headers['DOLAPIKEY']) ? $headers['DOLAPIKEY'] : (isset($_GET['apikey']) ? $_GET['apikey'] : null);
         if ($apiKey !== $this->fixedKey) {
-            throw new RestException(403, 'Invalid API key');
+            throw new RestException(401, 'Invalid API key');
         }
 
         if ($limit > 21) {
@@ -297,10 +297,12 @@ class Marketplace extends DolibarrApi
     /**
      * List products categories
      *
-     * Get a list of product categories
+     * Get a list of all product categories
      *
      * @url GET /categories/
-     * @return array Array of organized categories
+     *
+     * @param 	string           $lang          Language
+     * @return 	array 							Array of organized categories
      * @throws RestException 503 System error
      */
     public function listCategories($lang = 'en_US') {
@@ -308,8 +310,12 @@ class Marketplace extends DolibarrApi
         $headers = getallheaders();
         $apiKey = $headers['DOLAPIKEY'] ?? $_GET['apikey'] ?? null;
         if ($apiKey !== $this->fixedKey) {
-            throw new RestException(403, 'Invalid API key');
+            throw new RestException(401, 'Invalid API key');
         }
+
+        /*if ($limit > 21) {
+            throw new RestException(403, 'Too high value for limit');
+        }*/
 
         $mcid = getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID");
         if (!$mcid) {
@@ -328,13 +334,12 @@ class Marketplace extends DolibarrApi
     /**
      * Get organized tree of categories
      *
-     * @param int       $id Root category ID
-     * @param string    $sort Sort field
-     * @param string    $lang Language
-     * @return array Organized tree of categories
+     * @param int       $id 		Root category ID
+     * @param string    $sort 		Sort field
+     * @param string    $lang 		Language
+     * @return array 				Organized tree of categories
      */
     private function getOrganizedTree($id, $sort = 'position', $lang = 'en_US') {
-
         $root_cat_object = new Categorie($this->db);
         $result = $root_cat_object->fetch($id);
         if (!$result) {
@@ -343,33 +348,38 @@ class Marketplace extends DolibarrApi
 
         $root_category_id = $root_cat_object->id;
         $root_category_type = $root_cat_object->type;
-        $cats = $root_cat_object->get_filles();
-        if (count($cats) < 1) {
-            return array();
-        } else {
-            $categstatic = new Categorie($this->db);
-            $fulltree = $categstatic->get_full_arbo($root_category_type, $root_category_id, 1, $lang);
-            $organized_tree = $this->buildTree($fulltree, $root_category_id);
-            usort($organized_tree, $this->buildSorter($sort));
-            return $organized_tree;
+
+        $categstatic = new Categorie($this->db);
+        $fulltree = $categstatic->get_full_arbo($root_category_type, $root_category_id, 1, $lang);
+        if (empty($fulltree)) {
+          	return array();
         }
+
+        // Set $organized_tree that is a hierarchic array
+        $organized_tree = $this->buildTree($fulltree, $root_category_id);
+
+        // Now sort it
+		usort($organized_tree, $this->buildSorter($sort));
+
+    	return $organized_tree;
     }
 
     /**
-     * Build tree of categories
+     * Build tree of categories. Recursive method.
      *
-     * @param array $elements Elements to organize
-     * @param int $parentId Parent ID
-     * @return array Organized tree
+     * @param 	array 	$elements 	Elements to organize
+     * @param 	int 	$parentId 	Parent ID
+     * @param	int		$depth		Depth counter
+     * @return 	array 				Organized tree
      */
-    private function buildTree(array &$elements, $parentId = 0) {
+    private function buildTree(array &$elements, $parentId = 0, $depth = 0) {
         $branch = array();
         foreach ($elements as $element) {
             // Remove usefull fields
             unset($element['visible'], $element['picto'], $element['fullpath'], $element['fulllabel'], $element['ref_ext']);
 
             if ($element['fk_parent'] == $parentId) {
-                $children = $this->buildTree($elements, $element['id']);
+                $children = $this->buildTree($elements, $element['id'], $depth + 1);
                 if ($children) {
                     $element['children'] = $children;
                 }
