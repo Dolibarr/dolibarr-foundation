@@ -44,7 +44,8 @@ body.bodywebsite {
   margin: 0;
 }
 .bodywebsite h1 {
-  padding: 10px
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 /*.bodywebsite a,
@@ -114,6 +115,11 @@ body {
   word-break: break-word;
   word-wrap: break-word
 }
+
+.bodywebsite .fulldescription p {
+    text-align: justify;
+}
+
 .bodywebsite .valignmiddle,
 .table tbody > tr > td,
 .table tfoot > tr > td,
@@ -5300,6 +5306,11 @@ ul.footer_links {
 .tag_version {
   width: 40px;
   text-align: center
+}
+.tag_version.tag_selected {
+    border: 1px solid #000;
+    color: #000;
+    background-color: #f6f6f6;
 }
 .nav-link {
   padding: 5px 20px;
