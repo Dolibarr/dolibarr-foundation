@@ -24,7 +24,7 @@ include_once DOL_DOCUMENT_ROOT . '/core/lib/website.lib.php';
 
 /**
  * \file    dolibarr-foundation/marketplace/class/api_marketplace.class.php
- * \ingroup product
+ * \ingroup marketplace
  * \brief   File for API management of products.
  */
 
@@ -62,7 +62,7 @@ class Marketplace extends DolibarrApi
     /**
      * List products
      *
-     * Get a list of products
+     * Get a list of products (limited to $limit) and the total number in database.
      *
      * @param int              $categorieid          Category ID
      * @param string           $sortfield            Sort field
@@ -84,7 +84,11 @@ class Marketplace extends DolibarrApi
         $headers = getallheaders();
         $apiKey = isset($headers['DOLAPIKEY']) ? $headers['DOLAPIKEY'] : (isset($_GET['apikey']) ? $_GET['apikey'] : null);
         if ($apiKey !== $this->fixedKey) {
-            throw new RestException(403, 'Invalid API key');
+            throw new RestException(401, 'Invalid API key');
+        }
+
+        if ($limit > 21) {
+            throw new RestException(403, 'Too high value for limit');
         }
 
         // Length of $search must be at least 2 characters
@@ -144,42 +148,40 @@ class Marketplace extends DolibarrApi
                 }
 
                 $request .= " AND ";
-                $value = $this->db->escape($this->db->escapeforlike($value));
+                $valueescaped = $this->db->escape($this->db->escapeforlike($value));
 
                 // Build the search conditions for labels, notes, and vendor names
-                $request .= "(ol.label LIKE '%" . $value . "%' OR 
-                            ol.note LIKE '" . $value . " %'  OR 
-                            ol.note LIKE '% " . $value . " %'  OR 
-                            ol.note LIKE '% " . $value . "' OR
-                            ol.note LIKE '%>" . $value . " %' OR
-                            ol.note LIKE '% " . $value . "<%' OR
-                            o.ref LIKE '%" . $value . "%' OR 
-                            pe.marketplace_module_keywords REGEXP '(^|, )" . $value . "(,|$)' OR 
-                            s.nom LIKE '%" . $value . "%' OR
-                            s.name_alias LIKE '%" . $value . "%')";
+                $request .= "(ol.label LIKE '%" . $valueescaped . "%' OR
+                            ol.note LIKE '" . $valueescaped . " %'  OR
+                            ol.note LIKE '% " . $valueescaped . " %'  OR
+                            ol.note LIKE '% " . $valueescaped . "' OR
+                            ol.note LIKE '%>" . $valueescaped . " %' OR
+                            ol.note LIKE '% " . $valueescaped . "<%' OR
+                            o.ref LIKE '%" . $valueescaped . "%' OR
+                            pe.marketplace_module_keywords REGEXP '(^|, )" . $valueescaped . "(,|$)' OR
+                            s.nom LIKE '%" . $valueescaped . "%' OR
+                            s.name_alias LIKE '%" . $valueescaped . "%')";
 
                 // Define the order of results based on matching criteria
                 // Level 1: Full match in the label
-                $order .= "WHEN ol.label = '" . $value . "' THEN 0 ";
-                $order .= "WHEN ol.label LIKE '" . $value . " %' THEN 1 ";
-                $order .= "WHEN ol.label LIKE '% " . $value . " %' THEN 1 ";
-                $order .= "WHEN ol.label LIKE '% " . $value . "' THEN 1 ";
-                $order .= "WHEN o.ref LIKE '" . $value . "%' THEN 1 ";
+                $order .= "WHEN ol.label = '" . $valueescaped . "' THEN 0 ";
+                $order .= "WHEN ol.label LIKE '" . $valueescaped . " %' THEN 1 ";
+                $order .= "WHEN ol.label LIKE '% " . $valueescaped . " %' THEN 1 ";
+                $order .= "WHEN ol.label LIKE '% " . $valueescaped . "' THEN 1 ";
+                $order .= "WHEN o.ref LIKE '" . $valueescaped . "%' THEN 1 ";
 
                 // Level 2: Partial match in the label or vendor name
-                $order .= "WHEN ol.label LIKE '%" . $value . "%' THEN 2 ";
-                $order .= "WHEN pe.marketplace_module_keywords LIKE '%" . $value . "%' THEN 2 ";
-                $order .= "WHEN s.nom LIKE '%" . $value . "%' THEN 2 ";
-                $order .= "WHEN s.name_alias LIKE '%" . $value . "%' THEN 2 ";
+                $order .= "WHEN ol.label LIKE '%" . $valueescaped . "%' THEN 2 ";
+                $order .= "WHEN pe.marketplace_module_keywords LIKE '%" . $valueescaped . "%' THEN 2 ";
+                $order .= "WHEN s.nom LIKE '%" . $valueescaped . "%' THEN 2 ";
+                $order .= "WHEN s.name_alias LIKE '%" . $valueescaped . "%' THEN 2 ";
 
                 // Level 3: Full Match in the notes(Long description) field
-                $order .= "WHEN ol.note LIKE '" . $value . " %' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '% " . $value . " %' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '% " . $value . "' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '%>" . $value . " %' THEN 3 ";
-                $order .= "WHEN ol.note LIKE '% " . $value . "<%' THEN 3 ";
-
-                //$order .= "WHEN ol.description LIKE '%" . $value . "%' THEN 4 ";
+                $order .= "WHEN ol.note LIKE '" . $valueescaped . " %' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '% " . $valueescaped . " %' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '% " . $valueescaped . "' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '%>" . $valueescaped . " %' THEN 3 ";
+                $order .= "WHEN ol.note LIKE '% " . $valueescaped . "<%' THEN 3 ";
             }
 
             // Finalize filter and order
@@ -219,7 +221,7 @@ class Marketplace extends DolibarrApi
 
         $offset = ($page_no - 1) * $limit;
 
-        // Count SQL - Replaced with a select COUNT()
+        // Count total of products SQL - Replaced with a select COUNT()
         $countSql = "SELECT COUNT(DISTINCT c.fk_product) as count";
         $countSql .= " FROM llx_categorie_product as c";
         $countSql .= " INNER JOIN llx_product as o ON c.fk_product = o.rowid";
@@ -240,7 +242,7 @@ class Marketplace extends DolibarrApi
 
 
         // PRODUCT SQL
-        $sql = "SELECT c.fk_product as id, o.ref, o.ref_ext, o.datec, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
+        $sql = "SELECT c.fk_product as id, o.ref, o.datec, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
         $sql .= "FROM llx_product as o ";
         $sql .= "INNER JOIN llx_categorie_product as c ON c.fk_product = o.rowid ";
         $sql .= "INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid ";
@@ -250,7 +252,7 @@ class Marketplace extends DolibarrApi
         $sql .= "WHERE o.entity IN (1) AND c.fk_categorie = " . ((int) $root_category_id) . " AND ";
         $sql .= "ol.lang = '" . $this->db->escape($current_lang) . "' AND ";
         $sql .= $filter;
-        $sql .= " GROUP BY c.fk_product, o.ref, o.ref_ext, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
+        $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
 
         $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words));
         if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($searchwithouttag)) {
@@ -293,10 +295,12 @@ class Marketplace extends DolibarrApi
     /**
      * List products categories
      *
-     * Get a list of product categories
+     * Get a list of all product categories
      *
      * @url GET /categories/
-     * @return array Array of organized categories
+     *
+     * @param 	string           $lang          Language
+     * @return 	array 							Array of organized categories
      * @throws RestException 503 System error
      */
     public function listCategories($lang = 'en_US') {
@@ -304,8 +308,12 @@ class Marketplace extends DolibarrApi
         $headers = getallheaders();
         $apiKey = $headers['DOLAPIKEY'] ?? $_GET['apikey'] ?? null;
         if ($apiKey !== $this->fixedKey) {
-            throw new RestException(403, 'Invalid API key');
+            throw new RestException(401, 'Invalid API key');
         }
+
+        /*if ($limit > 21) {
+            throw new RestException(403, 'Too high value for limit');
+        }*/
 
         $mcid = getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID");
         if (!$mcid) {
@@ -324,13 +332,12 @@ class Marketplace extends DolibarrApi
     /**
      * Get organized tree of categories
      *
-     * @param int       $id Root category ID
-     * @param string    $sort Sort field
-     * @param string    $lang Language
-     * @return array Organized tree of categories
+     * @param int       $id 		Root category ID
+     * @param string    $sort 		Sort field
+     * @param string    $lang 		Language
+     * @return array 				Organized tree of categories
      */
     private function getOrganizedTree($id, $sort = 'position', $lang = 'en_US') {
-
         $root_cat_object = new Categorie($this->db);
         $result = $root_cat_object->fetch($id);
         if (!$result) {
@@ -339,33 +346,41 @@ class Marketplace extends DolibarrApi
 
         $root_category_id = $root_cat_object->id;
         $root_category_type = $root_cat_object->type;
-        $cats = $root_cat_object->get_filles();
-        if (count($cats) < 1) {
-            return array();
-        } else {
-            $categstatic = new Categorie($this->db);
-            $fulltree = $categstatic->get_full_arbo($root_category_type, $root_category_id, 1, $lang);
-            $organized_tree = $this->buildTree($fulltree, $root_category_id);
-            usort($organized_tree, $this->buildSorter($sort));
-            return $organized_tree;
+
+        $categstatic = new Categorie($this->db);
+        $fulltree = $categstatic->get_full_arbo($root_category_type, $root_category_id, 1, $lang);
+        if (empty($fulltree)) {
+          	return array();
         }
+
+        // Set $organized_tree that is a hierarchic array
+        $organized_tree = $this->buildTree($fulltree, $root_category_id);
+        if (empty($organized_tree)) {
+          	return array();
+        }
+
+        // Now sort it
+		usort($organized_tree, $this->buildSorter($sort));
+
+    	return $organized_tree;
     }
 
     /**
-     * Build tree of categories
+     * Build tree of categories. Recursive method.
      *
-     * @param array $elements Elements to organize
-     * @param int $parentId Parent ID
-     * @return array Organized tree
+     * @param 	array 	$elements 	Elements to organize
+     * @param 	int 	$parentId 	Parent ID
+     * @param	int		$depth		Depth counter
+     * @return 	array 				Organized tree
      */
-    private function buildTree(array &$elements, $parentId = 0) {
+    private function buildTree(array &$elements, $parentId = 0, $depth = 0) {
         $branch = array();
         foreach ($elements as $element) {
             // Remove usefull fields
             unset($element['visible'], $element['picto'], $element['fullpath'], $element['fulllabel'], $element['ref_ext']);
 
             if ($element['fk_parent'] == $parentId) {
-                $children = $this->buildTree($elements, $element['id']);
+                $children = $this->buildTree($elements, $element['id'], $depth + 1);
                 if ($children) {
                     $element['children'] = $children;
                 }
