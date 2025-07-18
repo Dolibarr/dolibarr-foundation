@@ -47,7 +47,7 @@ class modMarketplace extends DolibarrModules
 
 		// Id for module (must be unique).
 		// Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
-		$this->numero = 110000; // TODO Go on page https://wiki.dolibarr.org/index.php/List_of_modules_id to reserve an id number for your module
+		$this->numero = 110000;
 
 		// Key text used to identify module (for permissions, menus, etc...)
 		$this->rights_class = 'marketplace';
@@ -463,20 +463,20 @@ class modMarketplace extends DolibarrModules
 		// Create extrafields for Products during init
 		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		$extrafields = new ExtraFields($this->db);
-		$result1=$extrafields->addExtraField('marketplace_separator',            "Marketplace", 'separator', 1,  0, 'product',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result2=$extrafields->addExtraField('marketplace_module_version',       "ModuleVersion", 'varchar', 10,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result3=$extrafields->addExtraField('marketplace_min_version',          "DolibarrMin", 'varchar', 20,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result4=$extrafields->addExtraField('marketplace_max_version',          "DolibarrMax", 'varchar', 30,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result5=$extrafields->addExtraField('marketplace_allow_source_in_core', "WantToIncludeSourceInCore", 'boolean', 40,  3, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result6=$extrafields->addExtraField('marketplace_contact_support',      "HowtoContactSupport", 'varchar', 50,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result6=$extrafields->addExtraField('marketplace_reason_disabled',      "LastReasonDisabled", 'varchar', 60,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result6=$extrafields->addExtraField('marketplace_old_url',              "OldSystemUrl", 'varchar', 70,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result7=$extrafields->addExtraField('marketplace_module_keywords',    	 "ModuleKeywords", 'varchar', 80,  2555, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result8=$extrafields->addExtraField('marketplace_php_min_version',      "PhpMin", 'varchar', 90,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result9=$extrafields->addExtraField('marketplace_php_max_version',      "PhpMax", 'varchar', 100,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result10=$extrafields->addExtraField('marketplace_validity_duration',   "MarketplaceValidityDuration", 'int', 110,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result11=$extrafields->addExtraField('marketplace_pricecomment',        "PriceComment", 'varchar', 120,  128, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result12=$extrafields->addExtraField('marketplace_disclaimer_message',  "DisclaimerMessage", 'varchar', 130,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result1=$extrafields->addExtraField('marketplace_separator',            "Marketplace", 'separator', 110001,  0, 'product',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result2=$extrafields->addExtraField('marketplace_module_version',       "ModuleVersion", 'varchar', 110010,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result3=$extrafields->addExtraField('marketplace_min_version',          "DolibarrMin",   'varchar', 110020,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result4=$extrafields->addExtraField('marketplace_max_version',          "DolibarrMax",   'varchar', 110030,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result5=$extrafields->addExtraField('marketplace_allow_source_in_core', "WantToIncludeSourceInCore", 'boolean', 110040,  3, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result6=$extrafields->addExtraField('marketplace_contact_support',      "HowtoContactSupport", 'varchar', 110050,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result7=$extrafields->addExtraField('marketplace_reason_disabled',      "LastReasonDisabled",  'varchar', 110060,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result8=$extrafields->addExtraField('marketplace_old_url',              "OldSystemUrl",   'varchar', 110070,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result9=$extrafields->addExtraField('marketplace_module_keywords',    	 "ModuleKeywords", 'varchar', 110080,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result10=$extrafields->addExtraField('marketplace_php_min_version',      "PhpMin", 'varchar', 110090,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result11=$extrafields->addExtraField('marketplace_php_max_version',      "PhpMax", 'varchar', 110100,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result12=$extrafields->addExtraField('marketplace_validity_duration',   "MarketplaceValidityDuration", 'int', 110,  12, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result13=$extrafields->addExtraField('marketplace_pricecomment',        "PriceComment",      'varchar', 110120,  128, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result14=$extrafields->addExtraField('marketplace_disclaimer_message',  "DisclaimerMessage", 'varchar', 110130,  255, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		// Permissions
 		$this->remove($options);
