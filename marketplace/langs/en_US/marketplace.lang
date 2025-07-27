@@ -349,3 +349,4 @@ subscribeToNewsletter=I agree to receive the newsletter
 subscribeToNewsletterError=An error occurred while updating the newsletter subscription
 paymentIsNotCompleted=Payment hasn’t been completed
 notYetAvailable=Not yet available
+TheDomainNameOfTheEmailIsForbidden=The domain name %s ot the email is not an allowed domain.
