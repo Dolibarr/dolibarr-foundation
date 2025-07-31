@@ -796,7 +796,7 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	print "<tr>";
 	print '<td>'.$supplier['id'].'</td>';
 	print '<td class="tdoverflowmax125">'.$supplierObject->getNomUrl(1).'</td>';
-	print '<td class="tdoverflowmax125" title="'.dolPrintHtmlForAttribute($supplier['alias']).'">'.$supplier['alias'].'</td>';
+	print '<td class="tdoverflowmax125" title="'.dolPrintHTMLForAttribute($supplier['alias']).'">'.$supplier['alias'].'</td>';
 	print '<td>'.$supplier['ref_ext'].'</td>';
 	//print '<td>'.$supplier['logins'].'</td>';
 	print '<td>'.dol_print_date($supplier['date_creation'], 'day').'</td>';
