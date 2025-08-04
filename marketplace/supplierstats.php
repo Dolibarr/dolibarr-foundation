@@ -535,14 +535,17 @@ foreach ($supplierList as $supplier) {
 				$dateinvoice = substr($invoice['date_invoice'], 0, 10);
 
 				$isfordolistore = 0;
-				if ((preg_match('/dolistore/i', $invoice['note_private']) || preg_match('/dolistore/i', $invoice['label'])) && !preg_match('/agios/i', $invoice['ref_supplier']) && !preg_match('/frais/i', $invoice['ref_supplier']) && !preg_match('/comDolistore/i', $invoice['ref_supplier'])) {
+				// When there is "agios..." in ref_supplier, it is an invoice to store bank fees
+				// When there is "frais ..." or "comDolistore", it is an invoice to refund expense report of an association member
+				if ((preg_match('/dolistore/i', $invoice['note_private']) || preg_match('/dolistore/i', $invoice['label'])) && !preg_match('/^agios/i', $invoice['ref_supplier']) && !preg_match('/frais/i', $invoice['ref_supplier']) && !preg_match('/comDolistore/i', $invoice['ref_supplier'])) {
 					$isfordolistore = 1;
 				}
 
 				if (!$isfordolistore) {
 					foreach ($invoice['lines'] as $line) {
-						if (preg_match('/dolistore/i', $line['desc']) && !preg_match('/Remboursement certificat|Remboursement domaine/i', $line['desc']) && !preg_match('/agios/i', $invoice['ref_supplier']) && !preg_match('/frais/i', $invoice['ref_supplier']) && !preg_match('/comDolistore/i', $invoice['ref_supplier'])) {
+						if (preg_match('/dolistore/i', $line['desc']) && !preg_match('/agios/i', $invoice['ref_supplier']) && !preg_match('/frais/i', $invoice['ref_supplier']) && !preg_match('/comDolistore/i', $invoice['ref_supplier'])) {
 							$isfordolistore++;
+							break;
 						}
 					}
 				}
