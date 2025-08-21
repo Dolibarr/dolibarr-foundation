@@ -221,8 +221,8 @@ $userModel = new User($db);
 $userListData = $userModel->fetchAll('', '', 0, 0, "(statut:<>:0)");
 
 $userList = ['-1' => ''];
-foreach ($userModel->users as $user) {
-    $userList[$user->id] = $user->login;
+foreach ($userModel->users as $u) {
+	$userList[$u->id] = $u->login;
 }
 
 $item = $formSetup->newItem('MARKETPLACE_USER_MANAGE_WEBSITE');
