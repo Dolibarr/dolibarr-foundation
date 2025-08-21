@@ -803,8 +803,8 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	print '<td>'.$supplier['ref_ext'].'</td>';
 	//print '<td>'.$supplier['logins'].'</td>';
 	print '<td>'.dol_print_date($supplier['date_creation'], 'day').'</td>';
-	print '<td>'.$supplier['country'].'</td>';
-	print '<td class="right">'.((int) $supplier['numberOfProducts']).' ('.((int) $supplier['numberOfProductsOnSale']).')</td>';
+	print '<td class="tdoverflowmax100">'.$supplier['country'].'</td>';
+	print '<td class="right">'.((int) $supplier['numberOfProducts']).' <span class="opacitymedium" title="'.dolPrintHTMLForAttribute($langs->trans("OnSale")).'">('.((int) $supplier['numberOfProductsOnSale']).')</span></td>';
 	print '<td class="right">'.((int) $supplier['numberOfPaidSells']).'</td>';
 	print '<td class="right">'.$supplier['qtyRefunds'].'</td>';
 	print '<td class="right">'.((int) $supplier['numberOfSupplierInvoices']).'</td>';
