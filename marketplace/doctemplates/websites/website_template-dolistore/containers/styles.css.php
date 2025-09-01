@@ -4290,7 +4290,6 @@ select {
   border: 1px solid #74d578
 }
 .button.button-medium:hover {
-  border-color: #196f28 #399a49 #399a49 #258033;
   background: #3aa04c;
   background: -moz-linear-gradient(top,#3aa04c 0,#3aa04a 100%);
   background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#3aa04c),color-stop(100%,#3aa04a));
