@@ -350,3 +350,5 @@ subscribeToNewsletterError=An error occurred while updating the newsletter subsc
 paymentIsNotCompleted=Payment hasn’t been completed
 notYetAvailable=Not yet available
 TheDomainNameOfTheEmailIsForbidden=The domain name %s ot the email is not an allowed domain.
+MentionOnVATAdded=Your account is defined with the following information: %s. So a VAT rate was added according to the european directives on VAT ecommerce.
+    						
