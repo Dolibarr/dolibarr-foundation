@@ -47,27 +47,10 @@ body.bodywebsite {
   padding-top: 20px;
   padding-bottom: 10px;
 }
+.bodywebsite h2 {
+    color: #a45931;
+}
 
-/*.bodywebsite a,
-.bodywebsite b,
-.bodywebsite body,
-.bodywebsite footer,
-.bodywebsite form,
-.bodywebsite h2,
-.bodywebsite h3,
-.bodywebsite h4,
-.bodywebsite h5,
-.bodywebsite header,
-.bodywebsite html,
-.bodywebsite i,
-.bodywebsite img,
-.bodywebsite li,
-.bodywebsite nav,
-.bodywebsite p,
-.bodywebsite section,
-.bodywebsite strong,
-.bodywebsite ul {
-*/
 .bodywebsite :where(a, b, a, b, body, footer, form, h2, h3, h4, h5, header, html, i, img, li, nav, p,section,strong, ul) {
   margin: 0;
   padding: 0;
@@ -79,6 +62,23 @@ body.bodywebsite {
   font-size: 100%;
   vertical-align: baseline
 }
+
+.bodywebsite blockquote {
+    font-style: italic;
+    /* font-family: Georgia, Times, "Times New Roman", serif; */
+    padding: 2px 0;
+    border-style: solid;
+    border-color: #ccc;
+    border-width: 0;
+    padding-left: 20px;
+    padding-right: 8px;
+    border-left-width: 5px;
+}
+.bodywebsite blockquote p {
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+}
+
 #product-creation-form,
 #product-creation-form label,
 .bodywebsite h2,
@@ -592,7 +592,8 @@ ul.footer_links li {
 }
 .bodywebsite .block .products-block .product-description,
 .bodywebsite ul.product_list.grid > li .product-container .button-container {
-  margin-bottom: 14px
+  margin-top: 10px;
+  margin-bottom: 14px;
 }
 .bodywebsite ul.product_list.grid > li .product-container .button-container .ajax_add_to_cart_button,
 .bodywebsite ul.product_list.grid > li .product-container .button-container .lnk_view,
@@ -975,7 +976,8 @@ button {
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical
+  -webkit-box-orient: vertical;
+  color: #555;
 }
 .bodywebsite a.product-name.truncate2 {
   max-height: 43px;
