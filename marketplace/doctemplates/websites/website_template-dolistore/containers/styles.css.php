@@ -6047,6 +6047,18 @@ body.bodywebsite .page-product-box {
 .bodywebsite .page-product-box a.button:visited {
     color: #fff;
 }
+
+.bodywebsite .cart_block .cart-additional-info {
+    line-height: 1.2;
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+.bodywebsite .cart_block .cart-additional-info hr {
+    border: none;
+    border-top: 1px solid currentColor;
+    margin: 5px 0;
+    opacity: 0.5;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
