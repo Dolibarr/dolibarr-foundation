@@ -254,6 +254,17 @@ $formSetup->newItem('MARKETPLACE_BUYER_ORDER_CONFIRMATION_TEMPLATE')->setAsEmail
 
 $formSetup->newItem('MARKETPLACE_SELLERS_ORDER_CONFIRMATION_TEMPLATE')->setAsEmailTemplate('order_send');
 
+// Setup conf for additional product in cart
+$formSetup->newItem('additionalProductInCard')->setAsTitle();
+
+$additionalProductInCard = $formSetup->newItem('MARKETPLACE_ADDITIONAL_PRODUCT_IN_CART_ID')->setAsProduct();
+
+$additionalProductPricePercent = $formSetup->newItem('MARKETPLACE_ADDITIONAL_PRODUCT_TOTAL_PERCENT');
+$additionalProductPricePercent->fieldAttr['placeholder'] = '%';
+
+$additionalProductCountries = $formSetup->newItem('MARKETPLACE_ADDITIONAL_PRODUCT_APPLICABLE_COUNTRIES');
+$additionalProductCountries->fieldAttr['placeholder'] = 'fr,es,be,it,...';
+
 // Setup conf others
 $formSetup->newItem('otherSetups')->setAsTitle();
 $itemMinimumAmountForPayment = $formSetup->newItem('MARKETPLACE_MINIMUM_PAYOUT_AMOUNT');

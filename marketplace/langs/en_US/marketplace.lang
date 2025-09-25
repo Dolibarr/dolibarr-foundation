@@ -252,6 +252,7 @@ TotalProductsInCart=Total products (tax incl.)
 ContinueShopping=Continue shopping
 ProceedToCheckout=Proceed to checkout
 priceDependCountry=Prices may vary depending on your country.
+additionalContributionMayAdded=Additional contribution may be added
 cartCheckout=Check out
 PhotoViewLarger=View larger
 moreInfo=More info
@@ -351,4 +352,7 @@ paymentIsNotCompleted=Payment hasn’t been completed
 notYetAvailable=Not yet available
 TheDomainNameOfTheEmailIsForbidden=The domain name %s ot the email is not an allowed domain.
 MentionOnVATAdded=Your account is defined with the following information: %s. So a VAT rate was added according to the european directives on VAT ecommerce.
-    						
+additionalProductInCard = Additional product in cart
+MARKETPLACE_ADDITIONAL_PRODUCT_IN_CART_ID = Additional product
+MARKETPLACE_ADDITIONAL_PRODUCT_TOTAL_PERCENT = Additional product price (% of total)
+MARKETPLACE_ADDITIONAL_PRODUCT_APPLICABLE_COUNTRIES = Country codes where the additional product applies
