@@ -1,4 +1,4 @@
-Replace into 
+Replace into file extensions/MetaMaster/MetaMasterHooks.php
 
         public static function onOutputPageParserOutput( OutputPage &$out, ParserOutput $parseroutput ) {
                 for ( $i = 0; $i < self::$num; $i++ ) {
@@ -14,7 +14,6 @@ with
                 $i = 0;
                 while ($i == 0 || !empty($meta)) {
                         $meta = $parseroutput->getExtensionData( 'metaMaster-' . $i );
-                        var_dump($meta);
                         if (!empty($meta)) {
                                 $out->addMeta( $meta['name'], $meta['content'] );
                         }
