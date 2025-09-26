@@ -6059,6 +6059,9 @@ body.bodywebsite .page-product-box {
     margin: 5px 0;
     opacity: 0.5;
 }
+.text-right {
+    text-align: right !important;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
