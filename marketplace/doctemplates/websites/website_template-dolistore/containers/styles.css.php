@@ -6059,6 +6059,15 @@ body.bodywebsite .page-product-box {
     margin: 5px 0;
     opacity: 0.5;
 }
+.bodywebsite .text-right {
+    text-align: right !important;
+}
+.bodywebsite .cart_summary-payment img {
+    max-height:200px;
+}
+.bodywebsite .cart_summary-order img {
+    max-height:200px;
+}
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
 // END PHP
