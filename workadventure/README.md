@@ -1,3 +1,7 @@
+--- Workadventure ---
+
+Tutorial to test an online virtual congress
+
 
 mkdir /home/workadventure
 cd /home/workadventure

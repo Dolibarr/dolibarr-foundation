@@ -3,6 +3,5 @@ README (english)
 Tshirts
 --------------------------------
 
-See goodies at https://goodies.dolibarr.org
-
+Tshirts and other goodies can be found at https://goodies.dolibarr.org
 
