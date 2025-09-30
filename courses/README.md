@@ -1,4 +1,4 @@
-Files used for the Dolibarr Academy MOOC.
+Files used for the Dolibarr Academy MOOC in Universal SCAR format.
 
 To edit a course:
 -----------------
