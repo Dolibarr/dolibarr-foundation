@@ -10,27 +10,21 @@ header('Content-type: text/css');
 }
 // END PHP ?>
 @charset "UTF-8";
-.bodywebsite button,
-button,
-select {
+.bodywebsite button, button, select {
   text-transform: none
 }
-.bodywebsite button,
-button {
+.bodywebsite button, button {
   -webkit-appearance: button
 }
-.bodywebsite [class^=icon-],
-[class^=icon-] {
+.bodywebsite [class^=icon-], [class^=icon-] {
   text-decoration: inherit;
   -webkit-font-smoothing: antialiased
 }
 
-.truncate3,
-div.selector span {
+.truncate3, div.selector span {
   text-overflow: ellipsis
 }
-.bodywebsite table,
-table {
+.bodywebsite table, table {
   background-color: transparent
 }
 .bodywebsite .nowraponall,
@@ -78,14 +72,6 @@ body.bodywebsite {
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;
 }
-
-#product-creation-form,
-#product-creation-form label,
-.bodywebsite h2,
-.bodywebsite h3,
-.bodywebsite h4,
-.bodywebsite h5 {
-}
 body {
   margin: 0;
   color: #111;
@@ -101,6 +87,9 @@ body {
 .bodywebsite img.image-preview {
   max-height: 100px;
   max-width: 200px
+}
+.bodywebsite img.img-logo-welcome {
+    opacity: 0.7;
 }
 .bodywebsite .opacitymedium {
   opacity: .5
@@ -269,8 +258,8 @@ input.button_large_disabled {
 }
 .bodywebsite .editorial_block .img-responsive {
   display: unset;
-  width: 250px;
-  height: 69px;
+  width: 200px;
+  height: 50px;
 }
 .bodywebsite .editorial_block {
   margin-bottom: 4em!important;
@@ -6067,6 +6056,9 @@ body.bodywebsite .page-product-box {
 }
 .bodywebsite .cart_summary-order img {
     max-height:200px;
+}
+.bodywebsite .text-secondary {
+    color: #a45931;
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
