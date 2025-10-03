@@ -356,3 +356,7 @@ additionalProductInCard = Additional product in cart
 MARKETPLACE_ADDITIONAL_PRODUCT_IN_CART_ID = Additional product
 MARKETPLACE_ADDITIONAL_PRODUCT_TOTAL_PERCENT = Additional product price (% of total)
 MARKETPLACE_ADDITIONAL_PRODUCT_APPLICABLE_COUNTRIES = Country codes where the additional product applies
+MARKETPLACE_MIN_PRODUCT_PRICE=Minimum product price
+errMinSalePrice=The minimum sale price is %s
+MARKETPLACE_SHIPPING_FEES_PRODUCT=Shipping fees product
+MARKETPLACE_SHIPPING_FEES_PRODUCT_ID=Shipping fees product

@@ -1267,12 +1267,33 @@ function updateOrderTable(formData) {
 }
 
 function calc_total() {
+    
     var sum = 0;
     $(".total_line").each(function(){
-      sum += parseFloat($(this).text());
+        var id = $(this).attr("id");
+        if (id !== "total_additional_line" && id !== "total_shipping_fees_line") {
+            var val = parseFloat($(this).text());
+            if (!isNaN(val)) {
+                sum += val;
+            }
+        }
     });
-    $('#total_product').text(sum.toFixed(2));
-    $('#total_price').text(sum.toFixed(2));
+    
+    if (sum === 0) {
+        $("#cart_summary").fadeOut(400, function() {
+            $(this).remove();
+        });
+        return;
+    }
+    
+    var percent = parseFloat($('#total_additional_line').data('percent')) || 0;
+    var additional = sum * (percent / 100);
+    
+    var shippingFees = parseFloat($('#total_shipping_fees_line').data('shipping-fees')) || 0;
+
+    $('#total_additional_line').text(additional.toFixed(2));
+    $('#total_product').text((sum + additional + shippingFees).toFixed(2));
+    $('#total_price').text((sum + additional + shippingFees).toFixed(2));
 }
 
 
