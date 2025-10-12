@@ -194,7 +194,7 @@ class Marketplace extends DolibarrApi
 
         switch ($orderby) {
             case 'price':
-                $sortfield = 'price_ht';
+                $sortfield = 'price';
                 break;
             case 'name':
                 $sortfield = 'label';
@@ -242,7 +242,7 @@ class Marketplace extends DolibarrApi
 
 
         // PRODUCT SQL
-        $sql = "SELECT c.fk_product as id, o.ref, o.datec, o.price_ht, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
+        $sql = "SELECT c.fk_product as id, o.ref, o.datec, o.price as price_ht, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
         $sql .= "FROM llx_product as o ";
         $sql .= "INNER JOIN llx_categorie_product as c ON c.fk_product = o.rowid ";
         $sql .= "INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid ";
@@ -252,7 +252,7 @@ class Marketplace extends DolibarrApi
         $sql .= "WHERE o.entity IN (1) AND c.fk_categorie = " . ((int) $root_category_id) . " AND ";
         $sql .= "ol.lang = '" . $this->db->escape($current_lang) . "' AND ";
         $sql .= $filter;
-        $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price_ht, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
+        $sql .= " GROUP BY c.fk_product, o.ref, ol.label, ol.description, o.datec, o.tms, o.price, o.price_ttc, s.nom, s.name_alias"; // Added GROUP BY clause to handle multiple supplier prices
 
         $searchwithouttag = trim(preg_replace('/(^|\s)(V\d+)(\s|$)/i', '', $search_words));
         if ($sortfield == 'datec' && $sortorder == 'DESC' && !empty($searchwithouttag)) {
