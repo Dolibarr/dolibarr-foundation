@@ -170,6 +170,9 @@ $formSetup->newItem('MARKETPLACE_VERSIONS_CATEGORY_ID')->setAsCategory('product'
 // Setup conf for category Promotions
 $formSetup->newItem('MARKETPLACE_SPECIAL_CATEGORY_ID')->setAsCategory('product');
 
+// Setup conf for minimum price for products
+$itemminprice = $formSetup->newItem('MARKETPLACE_MIN_PRODUCT_PRICE');
+
 // Setup conf for category New
 $itemdelay = $formSetup->newItem('MARKETPLACE_DELAY_FOR_NEW');
 $itemdelay->defaultFieldValue = '30';
@@ -264,6 +267,10 @@ $additionalProductPricePercent->fieldAttr['placeholder'] = '%';
 
 $additionalProductCountries = $formSetup->newItem('MARKETPLACE_ADDITIONAL_PRODUCT_APPLICABLE_COUNTRIES');
 $additionalProductCountries->fieldAttr['placeholder'] = 'fr,es,be,it,...';
+
+// Setup configuration for "Product for Shipping Fees"
+$formSetup->newItem('MARKETPLACE_SHIPPING_FEES_PRODUCT')->setAsTitle();
+$formSetup->newItem('MARKETPLACE_SHIPPING_FEES_PRODUCT_ID')->setAsProduct();
 
 // Setup conf others
 $formSetup->newItem('otherSetups')->setAsTitle();
