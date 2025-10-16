@@ -355,7 +355,7 @@ ul.step li em {
   position: absolute;
   top: -17px;
   left: 70px;
-  width: 54px;
+  width: 58px;
   height: 16px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
@@ -366,7 +366,7 @@ ul.step li em {
   display: block;
   z-index: 1;
   position: absolute;
-  width: 54px;
+  width: 58px;
   height: 16px;
   padding-top: 1px;
   padding-left: 2px;
@@ -712,6 +712,7 @@ button {
 .bodywebsite ul.product_list.list > li .right-block .right-block-content .functional-buttons .compare a:before {
   margin-right: 10px
 }
+
 @media (min-width:1200px) {
   .bodywebsite ul.product_list .product-image-container .quick-view,
   .bodywebsite ul.product_list.grid > li .product-container .button-container,
@@ -746,6 +747,7 @@ button {
     padding-bottom: 85px
   }
 }
+
 .bodywebsite #index ul.product_list.tab-pane > li {
   margin-bottom: 10px;
   padding-bottom: 10px
@@ -889,6 +891,7 @@ button {
   color: #fff;
   background: #845931
 }
+
 @media (max-width:1200px) {
   .bodywebsite .shopping_cart {
     float: none;
@@ -896,6 +899,7 @@ button {
     margin: 0 auto
   }
 }
+
 .bodywebsite #layer_cart .layer_cart_product {
   position: static;
   padding: 30px!important;
@@ -1272,12 +1276,14 @@ select {
 .bodywebsite .icon-puzzle-piece:before {
   content: "\f12e"
 }
+
 @media only screen and (min-width:1200px) {
   .bodywebsite .container {
     padding-right: 0;
     padding-left: 0
   }
 }
+
 .bodywebsite body {
   height: 100%;
   min-width: 320px;
@@ -2426,6 +2432,7 @@ only screen and (min-device-pixel-ratio:2) {
   -ms-border-radius: 0 4px 4px 0;
   -o-border-radius: 0 4px 4px 0
 }
+
 @media (min-width:1200px) {
   .bodywebsite .container {
     max-width: 1170px
@@ -2434,6 +2441,8 @@ only screen and (min-device-pixel-ratio:2) {
     min-height: 318px
   }
 }
+
+
 .bodywebsite #layer_cart .layer_cart_cart h2 {
   margin-bottom: 17px;
   padding-bottom: 13px;
@@ -3408,6 +3417,15 @@ ul.footer_links li + li {
     padding-bottom: 85px
   }
 }
+
+/*
+@media (min-width:1600px) {
+  .bodywebsite .container {
+    max-width: 1270px
+  }
+}
+*/
+
 .bodywebsite .alert h4 {
   margin-top: 0;
   color: inherit
