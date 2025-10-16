@@ -478,7 +478,7 @@ class modMarketplace extends DolibarrModules
 		$result13=$extrafields->addExtraField('marketplace_pricecomment',        "PriceComment",      'varchar', 110120,  128, 'product',   0, 0, '', '', 1, '', -1, 0, '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result14=$extrafields->addExtraField('marketplace_disclaimer_message',  "DisclaimerMessage", 'varchar', 110130,  255, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result15=$extrafields->addExtraField('marketplace_submitted',           "DateRequestToBeOnline", 'datetime', 110140,    0, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
-		$result16=$extrafields->addExtraField('marketplace_complementary_price', "ComplementaryPriceHT", 'string', 110150,    640, 'product',   0, 0, '', '', 1, '', -1, 'ComplementaryPriceHTDesc', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result16=$extrafields->addExtraField('marketplace_complementary_price', "ComplementaryPriceHT", 'string', 110150,    64, 'product',   0, 0, '', '', 1, '', -1, 'ComplementaryPriceHTDesc', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		// Permissions
 		$this->remove($options);
