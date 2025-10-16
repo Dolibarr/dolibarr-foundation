@@ -366,3 +366,4 @@ MARKETPLACE_MATOMO_SITE_KEY=ID du site Matomo
 MARKETPLACE_MATOMO_SITE_KEY_HELP=Saisissez l’ID de site fourni par votre instance Matomo.
 MARKETPLACE_MATOMO_SERVER_URL=URL du serveur Matomo
 MARKETPLACE_MATOMO_SERVER_URL_HELP=Saisissez l'URL complète de votre serveur Matomo (par exemple, //matomo.example.com/).
+RequestToBeOnline=Soumettre pour approbation
