@@ -369,4 +369,4 @@ MARKETPLACE_MATOMO_SERVER_URL_HELP=Enter the full URL of your Matomo server (e.g
 RequestToBeOnline=Submit for approbation
 DateRequestToBeOnline=Date request for approval
 ComplementaryPriceHT=Related price
-ComplementaryPriceHTDesc=If the module requires to pay or subscribe to an external service, enter here the minimum price of it (for example "5 euros/month for the ABC subscription", "Need to buy the ABC hardware at 99 dollars").
+ComplementaryPriceHTDesc=If the module requires to pay or subscribe to an external service, enter here the minimum price of it (for example "5 dollars/month for the ABC subscription", "Need to buy the ABC hardware at 99 euros").
