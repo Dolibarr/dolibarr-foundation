@@ -55,8 +55,12 @@ if (!$res && file_exists("../../../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
-global $langs, $user;
+/**
+ * @var DoliDb $db
+ * @var Hookmanager $hookmanager
+ * @var User $user
+ * @var Translate $langs
+ */
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
@@ -157,7 +161,10 @@ $formSetup->newItem('Miscellaneous')->setAsTitle();
 $formSetup->newItem('MARKETPLACE_NAME');
 
 // Setup conf for the email of the Market place
-$formSetup->newItem('MARKETPLACE_EMAIL');
+$itememail = $formSetup->newItem('MARKETPLACE_EMAIL');
+if (method_exists($itememail, 'setAsPrice')) {
+	$itememail->setAsEmail();
+}
 
 $formSetup->newItem('Products')->setAsTitle();
 
@@ -172,6 +179,10 @@ $formSetup->newItem('MARKETPLACE_SPECIAL_CATEGORY_ID')->setAsCategory('product')
 
 // Setup conf for minimum price for products
 $itemminprice = $formSetup->newItem('MARKETPLACE_MIN_PRODUCT_PRICE');
+if (method_exists($itemminprice, 'setAsPrice')) {
+	$itemminprice->setAsPrice();
+}
+$itemminprice->helpText = $langs->trans("IfNotFree");
 
 // Setup conf for category New
 $itemdelay = $formSetup->newItem('MARKETPLACE_DELAY_FOR_NEW');
@@ -214,6 +225,9 @@ $formSetup->newItem('WebSite')->setAsTitle();
 
 // Setup conf for URL of logo
 $itemlogo = $formSetup->newItem('MARKETPLACE_URL_FOR_LOGO');
+if (method_exists($itemminprice, 'setAsUrl')) {
+	$itemlogo->setAsUrl();
+}
 $itemlogo->fieldAttr['placeholder'] = 'https://...';
 $itemlogo->cssClass = 'minwidth500';
 
@@ -275,6 +289,9 @@ $formSetup->newItem('MARKETPLACE_SHIPPING_FEES_PRODUCT_ID')->setAsProduct();
 // Setup conf others
 $formSetup->newItem('otherSetups')->setAsTitle();
 $itemMinimumAmountForPayment = $formSetup->newItem('MARKETPLACE_MINIMUM_PAYOUT_AMOUNT');
+if (method_exists($itemminprice, 'setAsPrice')) {
+	$itemMinimumAmountForPayment->setAsPrice();
+}
 $itemMinimumAmountForPayment->defaultFieldValue = '50';
 
 /*
