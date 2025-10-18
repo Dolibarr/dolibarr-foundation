@@ -55,14 +55,14 @@ function marketplaceAdminPrepareHead()
 	$h++;
 	*/
 
-	$head[$h][0] = dol_buildpath("/marketplace/admin/setuppayment.php", 1);
-	$head[$h][1] = $langs->trans("MarketPlaceSetupPayment");
-	$head[$h][2] = 'setuppayment';
-	$h++;
-
 	$head[$h][0] = dol_buildpath("/marketplace/admin/setupcaptchagoogle.php", 1);
 	$head[$h][1] = $langs->trans("MarketPlaceSetupRegistration");
 	$head[$h][2] = 'setupcaptchagoogle';
+	$h++;
+
+	$head[$h][0] = dol_buildpath("/marketplace/admin/setuppayment.php", 1);
+	$head[$h][1] = $langs->trans("MarketPlaceSetupPayment");
+	$head[$h][2] = 'setuppayment';
 	$h++;
 
 	$head[$h][0] = dol_buildpath("/marketplace/admin/setupapi.php", 1);
