@@ -28,25 +28,16 @@ LEFT JOIN llx_element_element as dt ON
 INNER JOIN llx_digiquali_question as ldq ON t.fk_question = ldq.rowid 
 INNER JOIN llx_digiquali_questiongroup as ldq2 ON t.fk_question_group = ldq2.rowid 
 WHERE
-	1 = 1
+	1 = 1 and t.fk_control = 1
 GROUP BY
-	t.fk_control,
 	t.fk_question_group,
 	t.fk_question,
 	t.rowid,
 	t.ref,
-	t.ref_ext,
-	t.date_creation,
 	t.tms,
 	t.type,
 	t.answer,
-	t.answer_photo,
 	t.comment,
-	t.fk_user_creat,
-	t.fk_user_modif,
-	t.status,
-	t.import_key,
-	da.value
+	t.status
 ORDER BY
 	t.rowid ASC
-LIMIT 21
