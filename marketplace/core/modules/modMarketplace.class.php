@@ -326,35 +326,52 @@ class modMarketplace extends DolibarrModules
 		);
 		/* END MODULEBUILDER TOPMENU */
 		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
-		/*$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=marketplace',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Left menu entry
-			'titre'=>'MyObject',
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Statistics',
 			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
-			'leftmenu'=>'myobject',
+			'leftmenu'=>'marketplace_statistics',
 			'url'=>'/marketplace/marketplaceindex.php',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
-			'perms'=>'$user->hasRight("marketplace", "myobject", "read")',
+			'perms'=>'1',
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
 		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=marketplace,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>'List_MyObject',
+			'fk_menu'=>'fk_mainmenu=marketplace',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',                          // This is a Left menu entry
+			'titre'=>'ShoppingCart',
+			'prefix' => img_picto('', 'order', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
-			'leftmenu'=>'marketplace_myobject_list',
-			'url'=>'/marketplace/myobject_list.php',
+			'leftmenu'=>'marketplace_order_list',
+			'url'=>'/commande/list.php?search_module_source=marketplace',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
-			'perms'=>'$user->hasRight("marketplace", "myobject", "read")'
+			'perms'=>'$user->hasRight("order", "read")',
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Invoices',
+			'prefix' => img_picto('', 'bill', 'class="pictofixedwidth valignmiddle paddingright"'),
+			'mainmenu'=>'marketplace',
+			'leftmenu'=>'marketplace_invoice_list',
+			'url'=>'/compta/facture/list.php?search_module_source=marketplace',
+			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
+			'perms'=>'$user->hasRight("invoice", "read")',
+			'target'=>'',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
+		/*
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=marketplace,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry

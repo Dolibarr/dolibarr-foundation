@@ -371,3 +371,4 @@ DateRequestToBeOnline=Date of request for approval
 ComplementaryPriceHT=Related price
 ComplementaryPriceHTDesc=If the module requires to pay or subscribe to an external service, enter here the minimum price of it (for example "5 dollars/month for the ABC subscription", "Need to buy the ABC hardware at 99 euros").
 IfNotFree=If product is not free
+ShoppingCart=Shopping cart
