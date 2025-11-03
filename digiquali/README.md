@@ -4,13 +4,15 @@ This README contains specific information and tips around DigiQuali.
 
 --- Sql request to extract a control with label of question, answers and tasks to do.
 SELECT
-	t.fk_question_group,
-	ldq2.ref,
-	t.fk_question,
-	ldq.ref,
+	-- t.fk_question_group,
+	ldq2.ref as Groupe,
+	ldq2.label as 'Label Groupe',
+	-- t.fk_question,
+	ldq.ref as RefCheck,
 	ldq.description,
-	t.rowid,
-	t.ref,
+	ldq.type,
+	-- t.rowid,
+	t.ref as RefResult,
 	t.tms,
 	t.answer,
 	t.comment,
@@ -31,11 +33,14 @@ WHERE
 	1 = 1 and t.fk_control = 1
 GROUP BY
 	t.fk_question_group,
+	ldq2.ref,
 	t.fk_question,
+	ldq.ref,
+	ldq.description,
+	ldq.type,
 	t.rowid,
 	t.ref,
 	t.tms,
-	t.type,
 	t.answer,
 	t.comment,
 	t.status
