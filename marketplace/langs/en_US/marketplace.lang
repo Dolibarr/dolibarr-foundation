@@ -41,7 +41,6 @@ MarketplaceSetupPaymentPage1Cons=The payment public pages of your backoffice app
 MarketplaceSetupPaymentPage2=When using the payment into a frame, the payment page of you backoffice is called using an url of your markeplace shop. A setup of your web server will make the request to be redirected from server side to your backoffice payment public pages.
 MarketplaceSetupPaymentPage2Pro=Need to add proxy rules on the payment URL to reach your Dolibarr application
 MarketplaceSetupPaymentPage2Cons=The payment public pages of your backoffice application are not visible and can be blocked from any externall access.
-
   
 
 About = About
@@ -372,3 +371,4 @@ ComplementaryPriceHT=Related price
 ComplementaryPriceHTDesc=If the module requires to pay or subscribe to an external service, enter here the minimum price of it (for example "5 dollars/month for the ABC subscription", "Need to buy the ABC hardware at 99 euros").
 IfNotFree=If product is not free
 ShoppingCart=Shopping cart
+SeeDescription==See description
