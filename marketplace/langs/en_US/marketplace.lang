@@ -372,4 +372,4 @@ ComplementaryPriceHTDesc=If the module requires to pay or subscribe to an extern
 IfNotFree=If product is not free
 ShoppingCart=Shopping cart
 SeeDescription==See description
-WarningThisProductHasAnIndirectPrice=Warning, this module is useless if you don't pay or subscribe to an additional external service (see below)
+WarningThisProductHasAnIndirectPrice=Warning, this module requires that you pay or subscribe to an additional external third-party service (see below)
