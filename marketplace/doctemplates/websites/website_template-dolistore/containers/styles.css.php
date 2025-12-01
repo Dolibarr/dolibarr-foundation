@@ -2118,7 +2118,8 @@ only screen and (min-device-pixel-ratio:2) {
 }
 .bodywebsite .our_price_display {
   color: #333;
-  font: 600 18px/22px sans-serif
+  font: 600 18px/22px sans-serif;
+  text-wrap: auto;
 }
 .bodywebsite #old_price {
   display: inline-block;
