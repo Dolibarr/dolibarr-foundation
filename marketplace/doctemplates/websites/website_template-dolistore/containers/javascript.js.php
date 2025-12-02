@@ -1120,8 +1120,13 @@ $(document).ready(function(){
             $('input[name=' + fieldName + ']').val(currentVal - 1).trigger('keyup');
             var qtyProduct = currentVal - 1;
         }else{
-            $('input[name=' + fieldName + ']').val(1);
-            var qtyProduct = 1;
+            if(!$(this).data('additionalproduct')){
+                $('input[name=' + fieldName + ']').val(1);
+                var qtyProduct = 1;
+            } else {
+                $('input[name=' + fieldName + ']').val(0);
+                var qtyProduct = 0;
+            }
         }
         if($(this).data('ref')){
             var refProduct = $(this).data('ref');
@@ -1157,6 +1162,17 @@ $(document).ready(function(){
             dataType:"json", //expect json value from server
             data: form_data
         }).done(function(data){ //on Ajax success
+            // If additional product we ignore all other actions and only we set qty
+            if (data.additional_product_id && data.additional_product_qty) {
+
+                $('input[name="quantity_' + data.additional_product_id + '"]').val(data.additional_product_qty);
+                $('input[name="quantity_' + data.additional_product_id + '_hidden"]').val(data.additional_product_qty);
+
+                button_content.html(button_content.data('original-text'));
+
+                return;
+            }
+
             $('.ajax_cart_no_product').html(data.items); //total items in cart-info element
             $('.cart_block_list').load( shopping_cart_url, { load_cart : 1});
 
@@ -1287,13 +1303,16 @@ function calc_total() {
     }
     
     var percent = parseFloat($('#total_additional_line').data('percent')) || 0;
-    var additional = sum * (percent / 100);
+    var qty = parseFloat($('#additionalProductQty').val()) || 0;
+    var unitPriceOfAdditionalProduct = sum * (percent / 100);
+    var additional = unitPriceOfAdditionalProduct * qty;
     
     var shippingFees = parseFloat($('#total_shipping_fees_line').data('shipping-fees')) || 0;
 
     $('#total_additional_line').text(additional.toFixed(2));
     $('#total_product').text((sum + additional + shippingFees).toFixed(2));
     $('#total_price').text((sum + additional + shippingFees).toFixed(2));
+    $('#price_additional_product').text(unitPriceOfAdditionalProduct.toFixed(2));
 }
 
 
