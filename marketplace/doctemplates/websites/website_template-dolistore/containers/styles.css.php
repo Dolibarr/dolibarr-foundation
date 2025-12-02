@@ -5972,6 +5972,11 @@ th {
 .bodywebsite .icon-visa:before {
   content: "\f1f0"
 }
+.bodywebsite .icon-credit-card:before {
+  content: "\f09d";
+  font-size: 22px;
+  margin-left: 7px;
+}
 .bodywebsite .payment-button .icon-visa{
     margin-left: 20px;
     font-size: 23px;
