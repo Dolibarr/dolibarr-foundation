@@ -133,6 +133,7 @@ zipProductRequired=You have to upload a product
 errorImageFormat=Your picture must be in JPG, GIF or PNG format, the %s format is not supported
 fieldRequired = <b>%s</b> is required.
 orderChanged=The order has been changed
+OrderConfirmed=Sale definitely validated
 imageAdded=Image has been added
 imageDeleted=Image has been deleted
 manageProducts=Manage my products

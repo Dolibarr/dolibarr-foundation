@@ -240,7 +240,7 @@ $sql .= "
     LEFT JOIN " . MAIN_DB_PREFIX . "societe_remise_except AS sr ON sr.rowid = d.fk_remise_except
     LEFT JOIN " . MAIN_DB_PREFIX . "product AS p ON p.rowid = d.fk_product
     LEFT JOIN " . MAIN_DB_PREFIX . "societe AS s ON s.rowid = c.fk_soc
-    LEFT JOIN " . MAIN_DB_PREFIX . "societe_account AS sa ON s.rowid = sa.fk_soc AND sa.fk_website = ".getDolGlobalString("MARKETPLACE_WEBSITE_ID") ."
+    LEFT JOIN " . MAIN_DB_PREFIX . "societe_account AS sa ON s.rowid = sa.fk_soc AND sa.fk_website = ".((int) getDolGlobalInt("MARKETPLACE_WEBSITE_ID"))."
     LEFT JOIN " . MAIN_DB_PREFIX . "socpeople AS sp ON sp.fk_soc = s.rowid AND sp.ref_ext = sa.rowid
     LEFT JOIN " . MAIN_DB_PREFIX . "c_country AS sc ON sp.fk_pays = sc.rowid
 ";
@@ -252,7 +252,7 @@ $sql .= "LEFT JOIN " . MAIN_DB_PREFIX . "element_element AS ee ON ee.fk_source =
 $sql .= "LEFT JOIN " . MAIN_DB_PREFIX . "facture AS f_credit ON f_credit.rowid = ee.fk_target AND f_credit.type = 2 ";
 
 // Join with orders to get payment mode from linked invoices
-$sql .= "LEFT JOIN " . MAIN_DB_PREFIX . "facture AS f_order ON f_order.rowid = ee.fk_target AND f_order.type = 0  ";
+$sql .= "LEFT JOIN " . MAIN_DB_PREFIX . "facture AS f_order ON f_order.rowid = ee.fk_target AND f_order.type = 0 ";
 
 // Subquery to calculate refunded quantities for each product in commandedet
 $sql .= "
@@ -310,7 +310,7 @@ if ($search_vatrate) $sql .= natural_search('d.tva_tx', $search_vatrate, 1);
 
 // Grouping by key fields to avoid duplicates
 if ($mode == 'groupbyzoneandvatrate' || $mode == 'groupbycountryandvatrate') {
-	$sql .= " AND DATEDIFF(NOW(), c.date_commande) > 30 ";
+	$sql .= " AND DATEDIFF(NOW(), c.date_commande) > 30";
 	$sql .= " GROUP BY cp.libelle, d.tva_tx, sc.code";
 } else {
 	$sql .= "
@@ -515,13 +515,13 @@ print getTitleFieldOfList('Customer country', 0, $_SERVER["PHP_SELF"], 'sc.code'
 print getTitleFieldOfList('VATRate',   0, $_SERVER["PHP_SELF"], 'd.tva_tx', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
 print getTitleFieldOfList('PaymentMode', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 print getTitleFieldOfList('InEEC', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
-if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Date sale', 0, $_SERVER["PHP_SELF"], 'c.date_commande', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
+if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('DateValid', 0, $_SERVER["PHP_SELF"], 'c.date_commande', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 else print getTitleFieldOfList('', 0, $_SERVER["PHP_SELF"], 'c.date_commande', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Product id', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 //if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Product label', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ')."\n";
 //if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('Product ref', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ')."\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('OrderConfirmed', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
-print getTitleFieldOfList('QtyShort',      0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
+print getTitleFieldOfList('Qty',      0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch ') . "\n";
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print getTitleFieldOfList('UnitPriceHT',    0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
 print getTitleFieldOfList('TotalHTShort',  0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
 print getTitleFieldOfList('TotalVAT', 0, $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder, 'maxwidthsearch right ') . "\n";
@@ -611,8 +611,8 @@ foreach ($arryofobj as $key => $obj) {
 	print yn($obj->isineec);
 	print '</td>';
 
-	// Date
-	print '<td class="nowraponall">' . dol_print_date($db->jdate($obj->order_date_add), 'dayhour') . '</td>';
+	// Date validation
+	print '<td class="nowraponall">' . dol_print_date($db->jdate($obj->order_valid), 'dayhour') . '</td>';
 
 	// Product ID
 	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {
