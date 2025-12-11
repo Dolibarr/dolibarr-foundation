@@ -377,3 +377,4 @@ WarningThisProductHasAnIndirectPrice=Warning, this module requires that you pay 
 UnitPriceHTIncDiscount=Unit price (excl. tax, incl. discounts)
 PartiallyRefundedSeeCreditNote=Partially refunded, see credit note
 TheIntraCommZeroVATWontBeAppliedIfNotFilled=The zero intracommunautary VAT won't be used if this information is not filled
+NoSubCat=No sub-categories defined
