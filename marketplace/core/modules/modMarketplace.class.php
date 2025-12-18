@@ -155,7 +155,7 @@ class modMarketplace extends DolibarrModules
 		$this->need_javascript_ajax = 0;
 
 		// Messages at activation
-		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','MX'='textmx'...)
+		$this->warnings_activation = array('always' => 'ModuleNeedMultiLanguageSupport'); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','MX'='textmx'...)
 		$this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','MX'='textmx'...)
 		//$this->automatic_activation = array('FR'=>'MarketplaceWasAutomaticallyActivatedBecauseOfYourCountryChoice');
 		//$this->always_enabled = true;								// If true, can't be disabled
@@ -169,7 +169,8 @@ class modMarketplace extends DolibarrModules
 			1 => array('PRODUCT_USE_OTHER_FIELD_IN_TRANSLATION', 'chaine', '1', 'Constant to support multiple translation of private notes on products', 1),
 			2 => array('WEBSITE_PHP_ALLOW_WRITE', 'chaine', '1', 'Allow the PHP web site to write content on disks', 1),
 			3 => array('INVOICE_ALLOW_POS_SOURCE_EDIT', 'chaine', '1', 'Force to allow to edit the POS module and source on invoices even if not POS modules are enabled', 1),
-			4 => array('ORDER_ALLOW_POS_SOURCE_EDIT', 'chaine', '1', 'force to allow to edit the POS module and source on orders even if not POS modules are enabled', 1),
+			4 => array('ORDER_ALLOW_POS_SOURCE_EDIT', 'chaine', '1', 'Force to allow to edit the POS module and source on orders even if not POS modules are enabled', 1),
+			5 => array('MAIN_MULTILANGS', 'chaine', '1', 'Enable the multilanguage support', 0),
 		);
 
 		// Some keys to add into the overwriting translation tables

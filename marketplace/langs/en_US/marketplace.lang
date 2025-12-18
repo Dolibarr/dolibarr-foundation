@@ -378,3 +378,4 @@ UnitPriceHTIncDiscount=Unit price (excl. tax, incl. discounts)
 PartiallyRefundedSeeCreditNote=Partially refunded, see credit note
 TheIntraCommZeroVATWontBeAppliedIfNotFilled=The zero intracommunautary VAT won't be used if this information is not filled
 NoSubCat=No sub-categories defined
+ModuleNeedMultiLanguageSupport=This module needs to have the multi-language support enabled. If this is not the case, it will be automatically enabled.
