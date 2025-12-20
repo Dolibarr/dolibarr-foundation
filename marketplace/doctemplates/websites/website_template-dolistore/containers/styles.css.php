@@ -963,7 +963,9 @@ button {
   }
 }
 .bodywebsite .width98 {
-  width: 98px!important
+  width: 98px !important;
+  height: 98px !important;
+  object-fit: contain;
 }
 .bodywebsite .truncate2 {
   display: -webkit-box;
@@ -1059,7 +1061,7 @@ ul.step li.step_current_end {
 .bodywebsite .img-responsive {
   display: block;
   height: auto;
-  max-width: 100%
+  max-width: 100%;
 }
 .bodywebsite h1,
 .bodywebsite h2,
