@@ -373,7 +373,7 @@ ComplementaryPriceHTDesc=If the module requires to pay or subscribe to an extern
 IfNotFree=If product is not free
 ShoppingCart=Shopping cart
 SeeDescription==See description
-WarningThisProductHasAnIndirectPrice=Warning, this module requires that you pay or subscribe to an additional external third-party service (see below)
+WarningThisProductHasAnIndirectPrice=Warning, this module may require you to pay for or subscribe to an additional external third-party service (see below)
 UnitPriceHTIncDiscount=Unit price (excl. tax, incl. discounts)
 PartiallyRefundedSeeCreditNote=Partially refunded, see credit note
 TheIntraCommZeroVATWontBeAppliedIfNotFilled=The zero intracommunautary VAT won't be used if this information is not filled
