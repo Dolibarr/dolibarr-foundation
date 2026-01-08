@@ -40,7 +40,7 @@ sort /tmp/php1.txt > /tmp/php1s.txt
 sort /tmp/php1.txt > /tmp/php2s.txt
 
 # Lignes communes
-COMMON=$(comm </tmp/php1s.txt </tmp/php2s.txt | wc -l)
+COMMON=$(comm /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 TOTAL=$(cat /tmp/php1.txt /tmp/php2.txt | sort | uniq | wc -l)
 
