@@ -38,11 +38,11 @@ XXXX2=$(basename "$ZIP2" | sed -E 's/^module_([^ -]+)-.*\.zip$/\1/i')
 echo "Process module 1: $ZIP1 = $XXXX1 and module 2: $ZIP2 = $XXXX2"
 
 # Extraction des lignes PHP
-find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/php1.tmp
-find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/php2.tmp
+find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/php1.php
+find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/php2.php
 
-cloc --strip-comments=txt /tmp/php1.tmp
-cloc --strip-comments=txt /tmp/php2.tmp
+cloc --strip-comments=txt /tmp/php1.php
+cloc --strip-comments=txt /tmp/php2.php
 
 dos2unix /tmp/php1.txt
 dos2unix /tmp/php2.txt
