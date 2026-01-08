@@ -49,10 +49,10 @@ UNIQ=$(comm -3 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 TOTAL=$(cat /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
-PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON / $TOTAL) * 100 }")
+PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON * 2 / $TOTAL) * 100 }")
 
 echo "Code PHP total : $TOTAL"
-echo "Code PHP commun : $COMMON"
+echo "Code PHP commun : $COMMON x2"
 echo "Code PHP unique : $UNIQ"
 echo "Percent : $PERCENT %"
 
