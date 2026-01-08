@@ -30,3 +30,5 @@ echo "Code PHP commun : $PERCENT %"
 
 # Nettoyage
 rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
+
+echo
