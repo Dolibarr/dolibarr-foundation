@@ -1,11 +1,18 @@
 #!/bin/bash
 
 
-echo "Compare 2 Dolibarr modules"
+echo "----- Compare 2 Dolibarr modules -----"
 
 ZIP1="$1"
 ZIP2="$2"
 
+if [ "x$ZIP2" == "x" ];
+then
+	echo "Example:"
+	echo "htdocs/custom/marketplace/scripts/comp.sh ../dolibarr_documents/product/c21271d20230204164353/aaa.ip  ../dolibarr_documents/product/c21271d20230204164353/bbb.zip"
+	echo
+	exit
+fi
 
 
 TMP1=$(mktemp -d)
