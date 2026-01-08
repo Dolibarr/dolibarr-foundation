@@ -3,20 +3,30 @@
 
 echo "----- Compare 2 Dolibarr modules -----"
 
-ZIP1="$1"
-ZIP2="$2"
+DIR1="$1"
+DIR2="$2"
 
-if [ "x$ZIP2" == "x" ];
-then
+if [ ! -d "$DIR1" ] || [ ! -d "$DIR2" ]; then
+    echo "Usage: $0 <dir1> <dir2>"
+    echo
 	echo "Example:"
-	echo "htdocs/custom/marketplace/scripts/comp.sh ../dolibarr_documents/product/c21271d20230204164353/aaa.ip  ../dolibarr_documents/product/c21271d20230204164353/bbb.zip"
+	echo "htdocs/custom/marketplace/scripts/comp.sh ../dolibarr_documents/produit/c21271d20230204164353  ../dolibarr_documents/produit/c21271d20230204164353"
 	echo
 	exit
 fi
 
+ZIP1=$(ls -t "$DIR1"/*.zip 2>/dev/null | head -n 1)
+ZIP2=$(ls -t "$DIR2"/*.zip 2>/dev/null | head -n 1)
 
-TMP1=$(mktemp -d)
-TMP2=$(mktemp -d)
+if [ -z "$ZIP1" ] || [ -z "$ZIP2" ]; then
+    echo "Erreur : fichier zip introuvable dans un des répertoires"
+    exit 1
+fi
+
+TMP1="/tmp/dir1"
+TMP2="/tmp/dir2"
+
+rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
 
 # Décompression
 unzip -qq "$ZIP1" -d "$TMP1"
@@ -36,6 +46,6 @@ PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON / $TOTAL) * 100 }")
 echo "Code PHP commun : $PERCENT %"
 
 # Nettoyage
-rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
+#rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
 
 echo
