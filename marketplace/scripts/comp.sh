@@ -26,7 +26,7 @@ fi
 TMP1="/tmp/dir1"
 TMP2="/tmp/dir2"
 
-rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
+rm -rf "$TMP1" "$TMP2" /tmp/php1.php /tmp/php2.php /tmp/php1.txt /tmp/php2.txt /tmp/php1s.txt /tmp/php2s.txt
 
 # Décompression
 unzip -qq "$ZIP1" -d "$TMP1"
@@ -43,6 +43,8 @@ find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$
 
 cloc --strip-comments=txt /tmp/php1.php
 cloc --strip-comments=txt /tmp/php2.php
+mv php1.php.txt /tmp/php1.txt
+mv php2.php.txt /tmp/php2.txt
 
 dos2unix /tmp/php1.txt
 dos2unix /tmp/php2.txt
