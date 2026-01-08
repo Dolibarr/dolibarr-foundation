@@ -37,13 +37,15 @@ find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' > /tmp/php1.t
 find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' > /tmp/php2.txt
 
 # Lignes communes
-COMMON=$(comm -12 <(sort /tmp/php1.txt) <(sort /tmp/php2.txt) | wc -l)
+COMMON=$(comm <(sort /tmp/php1.txt) <(sort /tmp/php2.txt) | wc -l)
 
 TOTAL=$(cat /tmp/php1.txt /tmp/php2.txt | sort | uniq | wc -l)
 
 PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON / $TOTAL) * 100 }")
 
-echo "Code PHP commun : $PERCENT %"
+echo "Code PHP total : $TOTAL"
+echo "Code PHP total : $COMMON"
+echo "Percent : $PERCENT %"
 
 # Nettoyage
 #rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
