@@ -40,14 +40,14 @@ sort /tmp/php1.txt > /tmp/php1s.txt
 sort /tmp/php1.txt > /tmp/php2s.txt
 
 # Lignes communes
-COMMON=$(comm /tmp/php1s.txt /tmp/php2s.txt | wc -l)
+COMMON=$(comm -12 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 TOTAL=$(cat /tmp/php1.txt /tmp/php2.txt | sort | uniq | wc -l)
 
 PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON / $TOTAL) * 100 }")
 
 echo "Code PHP total : $TOTAL"
-echo "Code PHP total : $COMMON"
+echo "Code PHP commun : $COMMON"
 echo "Percent : $PERCENT %"
 
 # Nettoyage
