@@ -52,8 +52,6 @@ dos2unix /tmp/php2.txt
 sort /tmp/php1.txt > /tmp/php1s.txt
 sort /tmp/php2.txt > /tmp/php2s.txt
 
-# TODO Replace module name with a generic key
-
 
 # Lignes communes
 COMMON=$(comm -12 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
