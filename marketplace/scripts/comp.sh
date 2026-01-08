@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# Script to compare 2 zip modules. Return a percentage of similarity.
+#
 
 echo "----- Compare 2 Dolibarr modules -----"
 
@@ -10,13 +11,13 @@ if [ ! -d "$DIR1" ] || [ ! -d "$DIR2" ]; then
     echo "Usage: $0 <dir1> <dir2>"
     echo
 	echo "Example:"
-	echo "htdocs/custom/marketplace/scripts/comp.sh ../dolibarr_documents/produit/c21271d20230204164353  ../dolibarr_documents/produit/c21271d20230204164353"
+	echo "comp.sh  mpxxxxxxxxx  mpzzzzzzzz"
 	echo
 	exit
 fi
 
-ZIP1=$(ls -t "$DIR1"/*.zip 2>/dev/null | head -n 1)
-ZIP2=$(ls -t "$DIR2"/*.zip 2>/dev/null | head -n 1)
+ZIP1=$(ls -t "/home/dolibarr/asso.dolibarr.org/dolibarr_documents/produit/$DIR1"/*.zip 2>/dev/null | head -n 1)
+ZIP2=$(ls -t "/home/dolibarr/asso.dolibarr.org/dolibarr_documents/produit/$DIR2"/*.zip 2>/dev/null | head -n 1)
 
 if [ -z "$ZIP1" ] || [ -z "$ZIP2" ]; then
     echo "Erreur : fichier zip introuvable dans un des répertoires"
