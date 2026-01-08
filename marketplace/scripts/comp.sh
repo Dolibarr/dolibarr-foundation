@@ -63,8 +63,8 @@ TOTAL=$(cat /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 COMMON=$(comm -12 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
-UNIQ1=$(comm -3 /tmp/php1s.txt | wc -l)
-UNIQ2=$(comm -3 /tmp/php2s.txt | wc -l)
+UNIQ1=$(comm -23 /tmp/php1s.txt | wc -l)
+UNIQ2=$(comm -12 /tmp/php2s.txt | wc -l)
 UNIQ=$(comm -3 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 
