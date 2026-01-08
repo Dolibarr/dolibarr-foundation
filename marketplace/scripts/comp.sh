@@ -32,15 +32,22 @@ rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
 unzip -qq "$ZIP1" -d "$TMP1"
 unzip -qq "$ZIP2" -d "$TMP2"
 
+XXXX1=$(basename "$ZIP1" | sed -E 's/^module_([^ -]+)-.*\.zip$/\1/i')
+XXXX2=$(basename "$ZIP2" | sed -E 's/^module_([^ -]+)-.*\.zip$/\1/i')
+
+echo "Process module 1: $ZIP1 = $XXXX1 and module 2: $ZIP2 = $XXXX2"
+
 # Extraction des lignes PHP
-find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' > /tmp/php1.txt
-find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' > /tmp/php2.txt
+find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" \> /tmp/php1.txt
+find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" \> /tmp/php2.txt
 
 dos2unix /tmp/php1.txt
 dos2unix /tmp/php2.txt
 
 sort /tmp/php1.txt > /tmp/php1s.txt
 sort /tmp/php2.txt > /tmp/php2s.txt
+
+# TODO Replace module name with a generic key
 
 
 # Lignes communes
@@ -51,9 +58,9 @@ TOTAL=$(cat /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON * 2 / $TOTAL) * 100 }")
 
-echo "Code PHP total : $TOTAL"
-echo "Code PHP commun : $COMMON x2"
-echo "Code PHP unique : $UNIQ"
+echo "Lines of code PHP total : $TOTAL"
+echo "Lines of code PHP commun : $COMMON x2"
+echo "Lines of code PHP unique : $UNIQ"
 echo "Percent : $PERCENT %"
 
 # Nettoyage
