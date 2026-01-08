@@ -57,17 +57,23 @@ sort /tmp/php2.txt > /tmp/php2s.txt
 
 
 # Lignes communes
+LINEF1=$(cat /tmp/php1s.txt | wc -l)
+LINEF2=$(cat /tmp/php2s.txt | wc -l)
+TOTAL=$(cat /tmp/php1s.txt /tmp/php2s.txt | wc -l)
+
 COMMON=$(comm -12 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
+
+UNIQ1=$(comm -3 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
+UNIQ2=$(comm -3 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 UNIQ=$(comm -3 /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
-TOTAL=$(cat /tmp/php1s.txt /tmp/php2s.txt | wc -l)
 
 PERCENT=$(awk "BEGIN { printf \"%.2f\", ($COMMON * 2 / $TOTAL) * 100 }")
 
-echo "Lines of code PHP total : $TOTAL"
+echo "Lines of code PHP total : $LINEF1 + $LINEF2 = $TOTAL"
 echo "Lines of code PHP commun : $COMMON x2"
-echo "Lines of code PHP unique : $UNIQ"
-echo "Percent : $PERCENT %"
+echo "Lines of code PHP unique : $UNIQ1 + $UNIQ2 = $UNIQ"
+echo "Percent similarity: $PERCENT %"
 
 # Nettoyage
 #rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
