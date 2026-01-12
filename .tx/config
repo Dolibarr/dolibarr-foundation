@@ -6,3 +6,10 @@ file_filter = marketplace/langs/<lang>/marketplace.lang
 source_file = marketplace/langs/en_US/marketplace.lang
 source_lang = en_US
 type        = MOZILLAPROPERTIES
+
+
+[o:dolibarr-association:p:dolibarr-resources-foundation:r:captureserver]
+file_filter = captureserver/langs/<lang>/captureserver.lang
+source_file = captureserver/langs/en_US/captureserver.lang
+source_lang = en_US
+type        = MOZILLAPROPERTIES
