@@ -185,6 +185,16 @@ if (!getDolGlobalString('MARKETPLACE_ENABLE_DOLIBARR_FEATURES')) {
 print $enabledisablehtml;
 print '<input type="hidden" id="MARKETPLACE_ENABLE_DOLIBARR_FEATURES" name="MARKETPLACE_ENABLE_DOLIBARR_FEATURES" value="'.(!getDolGlobalString('MARKETPLACE_ENABLE_DOLIBARR_FEATURES') ? 0 : 1).'">';
 
+
+if (getDolGlobalString('MARKETPLACE_ENABLE_DOLIBARR_FEATURES')) {
+	print "<br><br><br>\n";
+	print 'The following features are available:<br>'."\n";
+	print ' - Add warning about forks on product submission'."<br>\n";
+	print ' - Add the check box "accept to be included into core on product submission"'."<br>\n";
+	print '...'."<br>\n";
+}
+
+
 // Page end
 print dol_get_fiche_end();
 
