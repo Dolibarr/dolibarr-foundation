@@ -481,7 +481,7 @@ class modMarketplace extends DolibarrModules
 		// Create extrafields for Products during init
 		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		$extrafields = new ExtraFields($this->db);
-		$result1=$extrafields->addExtraField('marketplace_separator',            "Marketplace", 'separator', 110001,  0, 'product',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+		$result1=$extrafields->addExtraField('marketplace_separator',            "Marketplace", 'separator', 110000,  0, 'product',   0, 0, '', array('options'=>array(1=>1)), 1, '', 1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result2=$extrafields->addExtraField('marketplace_module_version',       "ModuleVersion", 'varchar', 110010,  12, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result3=$extrafields->addExtraField('marketplace_min_version',          "DolibarrMin",   'varchar', 110020,  12, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result4=$extrafields->addExtraField('marketplace_max_version',          "DolibarrMax",   'varchar', 110030,  12, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
@@ -497,6 +497,10 @@ class modMarketplace extends DolibarrModules
 		$result14=$extrafields->addExtraField('marketplace_disclaimer_message',  "DisclaimerMessage", 'varchar', 110130,  255, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result15=$extrafields->addExtraField('marketplace_submitted',           "DateRequestToBeOnline", 'datetime', 110140,    0, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result16=$extrafields->addExtraField('marketplace_complementary_price', "ComplementaryPriceHT", 'varchar', 110150,    64, 'product',   0, 0, '', '', 1, '', -1, 'ComplementaryPriceHTDesc', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
+
+		$param=array('options'=>array('Product:product/class/product.class.php' => null));
+		$result17=$extrafields->addExtraField('marketplace_fork_of', "ForkOf", 'link', 110155, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsAForOfAnother', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
+
 
 		// Permissions
 		$this->remove($options);
