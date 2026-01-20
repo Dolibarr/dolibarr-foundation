@@ -56,7 +56,6 @@ body.bodywebsite {
   font-size: 100%;
   vertical-align: baseline
 }
-
 .bodywebsite blockquote {
     font-style: italic;
     /* font-family: Georgia, Times, "Times New Roman", serif; */
@@ -94,6 +93,10 @@ body {
 .bodywebsite .opacitymedium {
   opacity: .5
 }
+.bodywebsite section.page-product-box.small {
+    font-size: 0.9em;
+}
+
 .bodywebsite .divhomepage .rte, .bodywebsite .divhomepage .search {
   margin-top: 20px
 }
@@ -107,6 +110,14 @@ body {
 
 .bodywebsite .fulldescription p {
     text-align: justify;
+}
+.bodywebsite .small {
+    font-size: 50%;
+    opacity: 0.5;
+}
+.bodywebsite .version-box.small {
+    font-size: 1em;
+    opacity: 1;
 }
 
 .bodywebsite .valignmiddle,
@@ -241,7 +252,7 @@ input.button_large_disabled {
 }
 .bodywebsite .product-name {
   margin-bottom: 0;
-  font-size: 15px;
+  font-size: 1.3em;
   line-height: 21px;
   color: #3a3939
 }
