@@ -499,7 +499,7 @@ class modMarketplace extends DolibarrModules
 		$result16=$extrafields->addExtraField('marketplace_complementary_price', "ComplementaryPriceHT", 'varchar', 110150,    64, 'product',   0, 0, '', '', 1, '', -1, 'ComplementaryPriceHTDesc', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
 		$param=array('options'=>array('Product:product/class/product.class.php' => null));
-		$result17=$extrafields->addExtraField('marketplace_fork_of', "ForkOf", 'link', 110155, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsAForOfAnother', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
+		$result17=$extrafields->addExtraField('marketplace_fork_of', "ForkOf", 'link', 110155, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsAForkOfAnother', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 
 
 		// Permissions
