@@ -380,3 +380,4 @@ TheIntraCommZeroVATWontBeAppliedIfNotFilled=The zero intracommunautary VAT won't
 NoSubCat=No sub-categories defined
 ModuleNeedMultiLanguageSupport=This module needs to have the multi-language support enabled. If this is not the case, it will be automatically enabled.
 IfYouThinkthisModuleIsAForkSendEmail=If you think this module is a fork of another one (published after the first one) or violates some terms or conditions of use (for users or vendors), you can make a report at %s
+ForkOf=Fork of
