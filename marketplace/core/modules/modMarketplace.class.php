@@ -500,6 +500,8 @@ class modMarketplace extends DolibarrModules
 
 		$param=array('options'=>array('Product:product/class/product.class.php' => null));
 		$result17=$extrafields->addExtraField('marketplace_fork_of', "ForkOf", 'link', 110155, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsAForkOfAnother', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
+		$result18=$extrafields->addExtraField('marketplace_duplicate_of', "DuplicateOf", 'link', 110160, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsACopyOfOriginal', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
+		$result19=$extrafields->addExtraField('marketplace_law_violation', "LawViolation", 'varchar', 110165, '255', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleViolatesRules', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 
 
 		// Permissions
