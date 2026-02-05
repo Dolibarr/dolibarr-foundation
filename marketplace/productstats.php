@@ -55,9 +55,14 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
+/**
+ * @var Conf $conf
+ */
 
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 
+$search_ref = GETPOST('search_ref');
+$search_label = GETPOST('search_label');
 
 // Load translation files required by the page
 $langs->loadLangs(array('commande', 'propal', 'bills', 'other', 'products','marketplace@marketplace'));
@@ -93,6 +98,15 @@ $pagenext = $page + 1;
 
 restrictedArea($user, 'produit|service', 0, 'product&product', '', '');
 
+/*
+ * Actions
+ */
+
+// Purge search criteria
+if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) { // All tests are required to be compatible with all browsers
+	$search_ref = '';
+	$search_label = '';
+}
 
 
 /*
@@ -163,7 +177,7 @@ $h++;
 
 
  // Add lines for object
- $sql = "SELECT p.rowid, p.label, p.ref, p.fk_product_type as type, p.tobuy, p.tosell, p.tobatch, p.barcode, SUM(pd.qty) as c";
+ $sql = "SELECT p.rowid, p.ref, p.label, p.fk_product_type as type, p.tobuy, p.tosell, p.tobatch, p.barcode, SUM(pd.qty) as c";
  $textforqty = 'Qty';
  if ($mode == 'facture') {
 	 $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as pd";
@@ -180,6 +194,12 @@ $h++;
  $sql .= " AND p.rowid = pd.fk_product";
  if ($type !== '') {
 	 $sql .= " AND fk_product_type = ".((int) $type);
+ }
+ if ($search_ref) {
+ 	$sql .= natural_search("p.ref", $search_ref);
+ }
+ if ($search_label) {
+ 	$sql .= natural_search("p.label", $search_label);
  }
  $sql .= " GROUP BY p.rowid, p.label, p.ref, p.fk_product_type, p.tobuy, p.tosell, p.tobatch, p.barcode";
 
@@ -238,18 +258,40 @@ $h++;
  }
 
 
- print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, "", $num, $totalnboflines, '', 0, '', '', -1, 0, 0, 1);
+print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, "", $num, $totalnboflines, '', 0, '', '', -1, 0, 0, 1);
 
- print '<table class="noborder centpercent">';
+print '<table class="noborder centpercent">';
 
- print '<tr class="liste_titre">';
- print_liste_field_titre('Ref', $_SERVER["PHP_SELF"], 'p.ref', '', $param, '', $sortfield, $sortorder);
- print_liste_field_titre('Type', $_SERVER["PHP_SELF"], 'p.fk_product_type', '', $param, '', $sortfield, $sortorder, 'center ');
- print_liste_field_titre('Label', $_SERVER["PHP_SELF"], 'p.label', '', $param, '', $sortfield, $sortorder);
- print_liste_field_titre($textforqty, $_SERVER["PHP_SELF"], 'c', '', $param, '', $sortfield, $sortorder, 'right ');
- print "</tr>\n";
+print '<tr class="liste_titre">';
+print '<td></td>';
+print '<td><input type="input" name="search_ref" class="maxwidth100" value="'.$search_ref.'"></td>';
+print '<td></td>';
+print '<td><input type="input" name="search_label" class="maxwidth150" value="'.$search_label.'"></td>';
+print '<td></td>';
+print "</tr>\n";
 
- if ($mode && $mode != '-1') {
+print '<tr class="liste_titre">';
+// Action column
+if ($conf->main_checkbox_left_column) {
+	print '<td class="liste_titre center maxwidthsearch">';
+	$searchpicto = $form->showFilterButtons('left');
+	print $searchpicto;
+	print '</td>';
+}
+print_liste_field_titre('Ref', $_SERVER["PHP_SELF"], 'p.ref', '', $param, '', $sortfield, $sortorder);
+print_liste_field_titre('Type', $_SERVER["PHP_SELF"], 'p.fk_product_type', '', $param, '', $sortfield, $sortorder, 'center ');
+print_liste_field_titre('Label', $_SERVER["PHP_SELF"], 'p.label', '', $param, '', $sortfield, $sortorder);
+print_liste_field_titre($textforqty, $_SERVER["PHP_SELF"], 'c', '', $param, '', $sortfield, $sortorder, 'right ');
+// Action column
+if (!$conf->main_checkbox_left_column) {
+	print '<td class="liste_titre center maxwidthsearch">';
+	$searchpicto = $form->showFilterButtons();
+	print $searchpicto;
+	print '</td>';
+}
+print "</tr>\n";
+
+if ($mode && $mode != '-1') {
 	 foreach ($infoprod as $prodid => $vals) {
 		 // Multilangs
 		 if (getDolGlobalInt('MAIN_MULTILANGS')) { // si l'option est active
@@ -278,6 +320,7 @@ $h++;
 		 $tmpproduct->barcode = $vals['barcode'];
 
 		 print "<tr>";
+		print '<td></td>';		// Checkbox
 		 print '<td>';
 		 print $tmpproduct->getNomUrl(1);
 		 print '</td>';
@@ -295,7 +338,7 @@ $h++;
 		 print "</tr>\n";
 	 }
  } else {
-	 print '<tr><td colspan="4"><span class="opacitymedium">'.$langs->trans("SelectTheTypeOfObjectToAnalyze").'</span></td></tr>';
+	 print '<tr><td colspan="5"><span class="opacitymedium">'.$langs->trans("SelectTheTypeOfObjectToAnalyze").'</span></td></tr>';
  }
  print "</table>";
 
