@@ -3674,10 +3674,6 @@ ul.footer_links li + li {
   #order-detail-content #cart_summary tfoot td:before {
     display: inline
   }
-  #order-detail-content #cart_summary td:before {
-    content: attr(data-title);
-    display: block
-  }
   #order-detail-content #cart_summary tfoot td {
     float: none;
     width: 100%
