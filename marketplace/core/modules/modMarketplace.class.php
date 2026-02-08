@@ -345,7 +345,7 @@ class modMarketplace extends DolibarrModules
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=marketplace',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',                          // This is a Left menu entry
-			'titre'=>'ShoppingCart',
+			'titre'=>'ShoppingCarts',
 			'prefix' => img_picto('', 'order', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_order_list',
