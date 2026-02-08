@@ -228,7 +228,7 @@ RewriteCond %{REQUEST_URI} ^/([a-z]{2})/([0-9]{1,2})-([a-z\-]+)$ [NC]
 RewriteRule ^ /index.php?extcat=%2 [L,R=301]
 ';
 print $langs->trans("marketplaceRewriteRules");;
-print '<div class="urllink">';
+print '<div class="urllink unsetheight">';
 print '<textarea class="flat" cols="80" rows="10">'.$command.'</textarea>';
 print '</div>';
 print $langs->trans("marketplaceGenerateRewriteFile");
