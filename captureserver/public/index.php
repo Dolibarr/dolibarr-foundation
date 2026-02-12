@@ -100,6 +100,8 @@ if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")
 
 header("Access-Control-Allow-Origin: *");
 
+dol_syslog('Capture server was called with action='.$action, LOG_NOTICE, 0, '_captureserver');
+
 print 'Capture server was called with action='.$action;
 
 if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
@@ -117,11 +119,15 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$contenttoinsert = json_encode($_POST);
 		}
 
+		dol_syslog('content received: '.$_POST, LOG_DEBUG, 0, '_captureserver');
+
 		// Insert into database using implicit Transactions
 		$captureserver = new CaptureServer($db);
 		$result = $captureserver->fetch(0, $action.'_'.$hash_unique_id);	// Unique key is on $action.'_'.$hash_unique_id
 
 		if ($result > 0) {
+			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
+
 			$captureserver->comment = 'Ping received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
 			$captureserver->content = $contenttoinsert;
 			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
@@ -155,6 +161,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			print "<br>\n".'Event updated';
 		} elseif ($result == 0) {
+			dol_syslog('No record found for key '.$action.'_'.$hash_unique_id.' so we will create it', LOG_DEBUG, 0, '_captureserver');
+
 			$captureserver->type = $action;
 			$captureserver->ref = $action.'_'.$hash_unique_id;
 			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
@@ -183,7 +191,6 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			$result = $captureserver->create($user);
 
-			// Send to DataDog (metric + event)
 			if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
 				try {
 					dol_include_once('/captureserver/core/includes/php-datadogstatsd/src/DogStatsd.php');
@@ -233,7 +240,11 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			http_response_code(500);
 		}
 	}
+
+	dol_syslog('Process complete', LOG_DEBUG, 0, '_captureserver');
 } else {
+	dol_syslog('Action not supported', LOG_NOTICE, 0, '_captureserver');
+
 	print "<br>\n".'Action not supported';
 	http_response_code(400);
 }
