@@ -138,7 +138,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->registerid = $hash_unique_id;
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
-				$tmparray = json_decode($contenttoinsert, null, 2);
+				$tmparray = json_decode($contenttoinsert, true, 2);
 				dol_syslog('content after jsondecode: '.var_export($tmparray, true), LOG_DEBUG, 0, '_captureserver');
 
 				if (is_array($tmparray)) {
@@ -198,7 +198,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->registerid = $hash_unique_id;
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
-				$tmparray = json_decode($contenttoinsert, null, 2);
+				$tmparray = json_decode($contenttoinsert, true, 2);
 				dol_syslog('content after jsondecode: '.var_export($tmparray, true), LOG_DEBUG, 0, '_captureserver');
 
 				if (is_array($tmparray)) {
