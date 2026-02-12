@@ -75,7 +75,8 @@ if (!isModEnabled("captureserver")) {
 // currency (iso code)
 
 if (! $action) {
-	print "ErrorBadParameters - action missing";
+	dol_syslog('ErrorBadParameters - action missing', LOG_NOTICE, 0, '_captureserver');
+	print "ERROR ErrorBadParameters - action missing";
 	exit;
 }
 
@@ -83,7 +84,7 @@ if (! $action) {
 // Complete urls for post treatment
 $SECUREKEY = GETPOST("securekey", 'alpha');	        // Secure key
 if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")) {
-	accessforbidden("Acces not alloaed. Bad value of securekey parameter");
+	accessforbidden("ERROR Acces not allowed. Bad value of securekey parameter");
 }
 
 
@@ -243,7 +244,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 	dol_syslog('Process complete', LOG_DEBUG, 0, '_captureserver');
 } else {
-	dol_syslog('Action not supported', LOG_NOTICE, 0, '_captureserver');
+	dol_syslog('ERROR Action '.$action.' not supported', LOG_NOTICE, 0, '_captureserver');
 
 	print "<br>\n".'Action not supported';
 	http_response_code(400);
