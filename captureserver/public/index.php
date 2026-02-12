@@ -60,6 +60,8 @@ if (! $res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once '../class/captureserver.class.php';
 
+header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
+
 $action = GETPOST('action', 'aZ09');
 
 // Security check
