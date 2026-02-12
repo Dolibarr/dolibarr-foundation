@@ -75,7 +75,7 @@ if (!isModEnabled("captureserver")) {
 // currency (iso code)
 
 if (! $action) {
-	dol_syslog('ErrorBadParameters - action missing', LOG_NOTICE, 0, '_captureserver');
+	dol_syslog('ERROR ErrorBadParameters - action missing', LOG_WARNING, 0, '_captureserver');
 	print "ERROR ErrorBadParameters - action missing";
 	exit;
 }
@@ -84,6 +84,7 @@ if (! $action) {
 // Complete urls for post treatment
 $SECUREKEY = GETPOST("securekey", 'alpha');	        // Secure key
 if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")) {
+	dol_syslog('ERROR ErrorBadParameters - action missing', LOG_WARNING, 0, '_captureserver');
 	accessforbidden("ERROR Acces not allowed. Bad value of securekey parameter");
 }
 
