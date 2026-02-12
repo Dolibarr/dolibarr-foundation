@@ -60,8 +60,6 @@ if (! $res) die("Include of main fails");
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once '../class/captureserver.class.php';
 
-header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
-
 $action = GETPOST('action', 'aZ09');
 
 // Security check
@@ -102,11 +100,12 @@ if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")
  * View
  */
 
+header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
 header("Access-Control-Allow-Origin: *");
 
 dol_syslog('Capture server was called with action='.$action, LOG_NOTICE, 0, '_captureserver');
 
-print 'Capture server was called with action='.$action;
+print '----- Capture server was called with action='.$action;
 
 if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 	$hash_algo = GETPOST('hash_algo', 'aZ09');
@@ -123,7 +122,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$contenttoinsert = json_encode($_POST);
 		}
 
-		dol_syslog('content received: '.$_POST, LOG_DEBUG, 0, '_captureserver');
+		dol_syslog('content received: '.var_export($_POST, true), LOG_DEBUG, 0, '_captureserver');
 
 		// Insert into database using implicit Transactions
 		$captureserver = new CaptureServer($db);
