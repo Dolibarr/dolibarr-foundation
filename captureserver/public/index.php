@@ -132,8 +132,28 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
 
 			$captureserver->comment = 'Ping received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
-			$captureserver->content = $contenttoinsert;
 			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
+			$captureserver->content = $contenttoinsert;
+
+			$captureserver->registerid = $hash_unique_id;
+
+			if ($action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
+				$tmparray = json_decode($contenttoinsert, null, 2);
+				dol_syslog('content after jsondecode: '.var_export($tmparray, true), LOG_DEBUG, 0, '_captureserver');
+
+				if (is_array($tmparray)) {
+					if ($action == 'dolibarrregistration') {
+						$captureserver->registername = $tmparray['company_name'] ?? 'unknown';
+						$captureserver->registeremail = $tmparray['company_email'] ?? 'unknown';
+						$captureserver->registerprofid = $tmparray['company_idprof1'] ?? 'unknown';
+					}
+
+					if ($action == 'dolibarrpushcounter') {
+						$captureserver->lastrowid = $tmparray[''] ?? 'email';
+						$captureserver->lastsignature = $tmparray[''] ?? 'email';
+					}
+				}
+			}
 
 			$captureserver->update($user);
 
@@ -168,16 +188,19 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			$captureserver->type = $action;
 			$captureserver->ref = $action.'_'.$hash_unique_id;
-			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
-			$captureserver->content = $contenttoinsert;
 			$captureserver->qty = 1;
 			$captureserver->status = 1;
+
 			$captureserver->comment = 'Ping received at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
+			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
+			$captureserver->content = $contenttoinsert;
 
 			$captureserver->registerid = $hash_unique_id;
 
-			if ($action == 'dolibarrregistration' || 'dolibarrtrack') {
+			if ($action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
 				$tmparray = json_decode($contenttoinsert, null, 2);
+				dol_syslog('content after jsondecode: '.var_export($tmparray, true), LOG_DEBUG, 0, '_captureserver');
+
 				if (is_array($tmparray)) {
 					if ($action == 'dolibarrregistration') {
 						$captureserver->registername = $tmparray['company_name'] ?? 'unknown';
