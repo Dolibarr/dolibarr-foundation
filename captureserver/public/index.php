@@ -102,7 +102,7 @@ header("Access-Control-Allow-Origin: *");
 
 print 'Capture server was called with action='.$action;
 
-if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
+if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 	$hash_algo = GETPOST('hash_algo', 'aZ09');
 	$hash_unique_id = GETPOST('hash_unique_id', 'aZ09');
 	$version = GETPOST('version', 'aZ09');
@@ -162,6 +162,25 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->qty = 1;
 			$captureserver->status = 1;
 			$captureserver->comment = 'Ping received at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
+
+			$captureserver->registerid = $hash_unique_id;
+
+			if ($action == 'dolibarrregistration' || 'dolibarrtrack') {
+				$tmparray = json_decode($contenttoinsert, null, 2);
+				if (is_array($tmparray)) {
+					if ($action == 'dolibarrregistration') {
+						$captureserver->registername = $tmparray['company_name'] ?? 'unknown';
+						$captureserver->registeremail = $tmparray['company_email'] ?? 'unknown';
+						$captureserver->registerprofid = $tmparray['company_idprof1'] ?? 'unknown';
+					}
+
+					if ($action == 'dolibarrpushcounter') {
+						$captureserver->lastrowid = $tmparray[''] ?? 'email';
+						$captureserver->lastsignature = $tmparray[''] ?? 'email';
+					}
+				}
+			}
+
 			$result = $captureserver->create($user);
 
 			// Send to DataDog (metric + event)

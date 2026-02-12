@@ -105,6 +105,13 @@ class CaptureServer extends CommonObject
 		'comment' => array('type'=>'text', 'label'=>'Comment', 'enabled'=>1, 'visible'=>0, 'position'=>600, 'notnull'=>-1, 'help'=>"Comment", 'css'=>''),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>1, 'visible'=>-2, 'position'=>1000, 'notnull'=>-1,),
 		'status' => array('type'=>'integer', 'label'=>'Status', 'enabled'=>1, 'visible'=>1, 'position'=>1000, 'notnull'=>1, 'index'=>1, 'arrayofkeyval'=>array('0'=>'Draft', '1'=>'Done', '9'=>'Canceled')),
+
+		'registerid' => array('type'=>'varchar(255)', 'label'=>'RegistrationID', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax200'),
+		'registername'=> array('type'=>'varchar(255)', 'label'=>'Name', 'enabled'=>1, 'visible'=>1, 'position'=>810, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax150'),
+		'registeremail'=> array('type'=>'varchar(255)', 'label'=>'Email', 'enabled'=>1, 'visible'=>1, 'position'=>815, 'searchall'=>1, 'help'=>"Email", 'csslist'=>'tdoverflowmax150'),
+		'registerprofid'=> array('type'=>'varchar(255)', 'label'=>'ProfID', 'enabled'=>1, 'visible'=>1, 'position'=>820, 'searchall'=>1, 'help'=>"ProfID", 'csslist'=>'tdoverflowmax150'),
+		'lastrowid' => array('type'=>'integer', 'label'=>'LastRowID', 'enabled'=>1, 'visible'=>1, 'position'=>825),
+		'lastsignature'=> array('type'=>'varchar(255)', 'label'=>'LastSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>830, 'searchall'=>1, 'help'=>"LastSignatureHash", 'csslist'=>'tdoverflowmax100'),
 	);
 	public $rowid;
 	public $entity;

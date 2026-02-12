@@ -28,7 +28,14 @@ CREATE TABLE llx_captureserver_captureserver(
 	date_creation DATETIME NOT NULL,
 	tms TIMESTAMP,
 	comment varchar(255),
-	import_key VARCHAR(14)
+	import_key VARCHAR(14),
+	
+	registerid VARCHAR(128),
+	registeremail VARCHAR(128),
+	lastrowid INTEGER,
+	lastsignature VARCHAR(128),
+	registername VARCHAR(128),
+	registerprofid VARCHAR(128),
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
 
