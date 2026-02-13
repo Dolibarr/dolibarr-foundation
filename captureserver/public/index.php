@@ -131,13 +131,13 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 		if ($result > 0) {
 			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
 
-			$captureserver->comment = 'Ping received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
-			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
+			$captureserver->comment = 'Message received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
+			$captureserver->label = 'Message received by version '.$version;
 			$captureserver->content = $contenttoinsert;
 
 			$captureserver->registerid = $hash_unique_id;
 
-			if ($action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
+			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 				$tmparray = json_decode($contenttoinsert, true, 2);
 				dol_syslog('content after jsondecode: '.var_export($tmparray, true), LOG_DEBUG, 0, '_captureserver');
 
@@ -149,8 +149,26 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 					}
 
 					if ($action == 'dolibarrpushcounter') {
-						$captureserver->lastrowid = $tmparray[''] ?? 'email';
-						$captureserver->lastsignature = $tmparray[''] ?? 'email';
+						$oldrowid = $captureserver->lastrowid;
+
+						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
+						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
+
+						if ((int) $oldrowid && (int) $captureserver->lastrowid && $oldrowid >= $captureserver->lastrowid) {
+							// Alert a record was deleted or a backup was restored
+							$captureserver2 = new CaptureServer($db);
+							$captureserver2->type = 'deletion_or_backup_restoration';
+
+							$captureserver2->ref = 'deletion_or_backup_restoration_'.$hash_unique_id;
+							$captureserver2->qty = 1;
+							$captureserver2->status = 1;
+
+							$captureserver->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (old rowid was '.$oldrowid.' and new one is not higher '.$captureserver->lastrowid.') - from hash '.$hash_unique_id.' - version '.$version;
+							$captureserver->label = 'Anomaly detected';
+							$captureserver->content = $contenttoinsert;
+
+							$captureserver->registerid = $hash_unique_id;
+						}
 					}
 				}
 			}
@@ -191,13 +209,13 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->qty = 1;
 			$captureserver->status = 1;
 
-			$captureserver->comment = 'Ping received at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
-			$captureserver->label = $action.' '.$hash_unique_id.' '.$version;
+			$captureserver->comment = 'Message received at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
+			$captureserver->label = 'Message received by version '.$version;
 			$captureserver->content = $contenttoinsert;
 
 			$captureserver->registerid = $hash_unique_id;
 
-			if ($action == 'dolibarrregistration' || $action == 'dolibarrtrack') {
+			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 				$tmparray = json_decode($contenttoinsert, true, 2);
 				dol_syslog('content after jsondecode: '.var_export($tmparray, true), LOG_DEBUG, 0, '_captureserver');
 
@@ -209,8 +227,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 					}
 
 					if ($action == 'dolibarrpushcounter') {
-						$captureserver->lastrowid = $tmparray[''] ?? 'email';
-						$captureserver->lastsignature = $tmparray[''] ?? 'email';
+						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
+						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
 					}
 				}
 			}
