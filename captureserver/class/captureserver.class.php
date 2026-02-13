@@ -102,7 +102,7 @@ class CaptureServer extends CommonObject
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>1, 'visible'=>-1, 'position'=>500, 'notnull'=>1, 'noteditable'=>1, 'csslist' => 'nowraponall'),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>1, 'visible'=>1, 'position'=>501, 'notnull'=>-1, 'noteditable'=>1, 'csslist' => 'nowraponall'),
 		'content' => array('type'=>'text', 'label'=>'Content', 'enabled'=>1, 'visible'=>3, 'position'=>550, 'notnull'=>-1, 'searchall'=>1, 'help'=>"ContentOfMessageReceived", 'css'=>"wordbreak"),
-		'comment' => array('type'=>'text', 'label'=>'Comment', 'enabled'=>1, 'visible'=>0, 'position'=>600, 'notnull'=>-1, 'help'=>"Comment", 'css'=>''),
+		'comment' => array('type'=>'text', 'label'=>'Comment', 'enabled'=>1, 'visible'=>-1, 'position'=>600, 'notnull'=>-1, 'help'=>"Comment", 'css'=>'', 'csslist'=>'tdoverflowmax200'),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>1, 'visible'=>-2, 'position'=>1000, 'notnull'=>-1,),
 		'status' => array('type'=>'integer', 'label'=>'Status', 'enabled'=>1, 'visible'=>1, 'position'=>1000, 'notnull'=>1, 'index'=>1, 'arrayofkeyval'=>array('0'=>'Draft', '1'=>'Done', '9'=>'Canceled')),
 

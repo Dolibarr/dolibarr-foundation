@@ -132,7 +132,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
 
 			$captureserver->comment = 'Message received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
-			$captureserver->label = 'Message received by version '.$version;
+			$captureserver->label = 'Message by v'.$version;
 			$captureserver->content = $contenttoinsert;
 
 			$captureserver->registerid = $hash_unique_id;
@@ -210,7 +210,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->status = 1;
 
 			$captureserver->comment = 'Message received at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
-			$captureserver->label = 'Message received by version '.$version;
+			$captureserver->label = 'Message by v'.$version;
 			$captureserver->content = $contenttoinsert;
 
 			$captureserver->registerid = $hash_unique_id;
