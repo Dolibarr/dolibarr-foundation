@@ -134,8 +134,9 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->comment = 'Message received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
 			$captureserver->label = 'Message by v'.$version;
 			$captureserver->content = $contenttoinsert;
-
 			$captureserver->registerid = $hash_unique_id;
+
+			$captureserver->qty++;
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 				$tmparray = json_decode($contenttoinsert, true, 2);
