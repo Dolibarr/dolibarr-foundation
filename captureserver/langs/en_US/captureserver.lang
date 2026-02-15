@@ -41,7 +41,7 @@ ContentOfMessageReceived=Content of message received
 
 PreviousRowID=Previous RowID
 PreviousSignatureHash=Previous signature Hash
-LastRowID=Last rowid
-LastSignatueHas=Last signature Hash
+LastRowID=Last RowID
+LastSignatureHash=Last signature Hash
 
 UseAVirtualHostOn=Add a virtual host with your own domain name, pointing to the directory: <b>%s</b>
