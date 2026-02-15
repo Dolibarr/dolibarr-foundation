@@ -32,6 +32,8 @@ CREATE TABLE llx_captureserver_captureserver(
 	
 	registerid VARCHAR(128),
 	registeremail VARCHAR(128),
+	previousrowid INTEGER,
+	previoussignature VARCHAR(128),
 	lastrowid INTEGER,
 	lastsignature VARCHAR(128),
 	registername VARCHAR(128),

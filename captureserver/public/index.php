@@ -177,27 +177,29 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->update($user);
 
 			// Send to DataDog (metric + event)
-			if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
-				try {
-					dol_include_once('/captureserver/core/includes/php-datadogstatsd/src/DogStatsd.php');
+			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
+				if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
+					try {
+						dol_include_once('/captureserver/core/includes/php-datadogstatsd/src/DogStatsd.php');
 
-					$arrayconfig=array();
-					if (getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY')) {
-						$arrayconfig=array('apiKey'=>getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY'), 'app_key' => getDolGlobalString('CAPTURESERVER_DATADOG_APPKEY'));
+						$arrayconfig=array();
+						if (getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY')) {
+							$arrayconfig=array('apiKey'=>getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY'), 'app_key' => getDolGlobalString('CAPTURESERVER_DATADOG_APPKEY'));
+						}
+
+						$statsd = new DataDog\DogStatsd($arrayconfig);
+
+						$phpversion = join('.', array_slice(explode('.', GETPOST('php_version', 'alphanohtml')), 0, 2));
+						$dolversion = GETPOST('version', 'alphanohtml');
+
+						$arraytags = array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion);
+
+						dol_syslog("Send info to datadog");
+
+						$statsd->increment('captureserver.'.$action.'-update', 1, $arraytags);
+					} catch (Exception $e) {
+						dol_syslog("Error in sending info to datadog", LOG_WARNING);
 					}
-
-					$statsd = new DataDog\DogStatsd($arrayconfig);
-
-					$phpversion = join('.', array_slice(explode('.', GETPOST('php_version', 'alphanohtml')), 0, 2));
-					$dolversion = GETPOST('version', 'alphanohtml');
-
-					$arraytags=array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion);
-
-					dol_syslog("Send info to datadog");
-
-					$statsd->increment('captureserver.dolibarrping-update', 1, $arraytags);
-				} catch (Exception $e) {
-					dol_syslog("Error in sending info to datadog", LOG_WARNING);
 				}
 			}
 
@@ -230,50 +232,54 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 					if ($action == 'dolibarrpushcounter') {
 						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
 						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
+						$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
+						$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
 					}
 				}
 			}
 
 			$result = $captureserver->create($user);
 
-			if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
-				try {
-					dol_include_once('/captureserver/core/includes/php-datadogstatsd/src/DogStatsd.php');
+			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
+				if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
+					try {
+						dol_include_once('/captureserver/core/includes/php-datadogstatsd/src/DogStatsd.php');
 
-					$arrayconfig=array();
-					if (getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY')) {
-						$arrayconfig=array('apiKey'=>getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY'), 'app_key' => getDolGlobalString('CAPTURESERVER_DATADOG_APPKEY'));
-					}
-
-					$statsd = new DataDog\DogStatsd($arrayconfig);
-
-					$phpversion = join('.', array_slice(explode('.', GETPOST('php_version', 'alphanohtml')), 0, 2));
-					$dolversion = GETPOST('version', 'alphanohtml');
-					$dbversion = GETPOST('db_version', 'alphanohtml');
-					$distrib = GETPOST('distrib', 'alphanohtml');
-
-					// Protection against too accurate versions
-					$dbversion = preg_replace('/[\.\-]\d*ubuntu.*/i', '', $dbversion);
-					$dbversion = preg_replace('/([\.\-]\d*mariadb).*/i', '\1', $dbversion);
-
-					// Protection against too accurate versions
-					$osversionarray = preg_split('/\.\-/', GETPOST('os_version', 'alphanohtml'));
-					$osversion = '';
-					$i = 0;
-					foreach($osversionarray as $osversioncursor) {
-						if ($i >= 4) {
-							break;
+						$arrayconfig=array();
+						if (getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY')) {
+							$arrayconfig=array('apiKey'=>getDolGlobalString('CAPTURESERVER_DATADOG_APIKEY'), 'app_key' => getDolGlobalString('CAPTURESERVER_DATADOG_APPKEY'));
 						}
-						$osversion .= (($i > 1) ? '.' : '').$osversioncursor;
-						$i++;
+
+						$statsd = new DataDog\DogStatsd($arrayconfig);
+
+						$phpversion = join('.', array_slice(explode('.', GETPOST('php_version', 'alphanohtml')), 0, 2));
+						$dolversion = GETPOST('version', 'alphanohtml');
+						$dbversion = GETPOST('db_version', 'alphanohtml');
+						$distrib = GETPOST('distrib', 'alphanohtml');
+
+						// Protection against too accurate versions
+						$dbversion = preg_replace('/[\.\-]\d*ubuntu.*/i', '', $dbversion);
+						$dbversion = preg_replace('/([\.\-]\d*mariadb).*/i', '\1', $dbversion);
+
+						// Protection against too accurate versions
+						$osversionarray = preg_split('/\.\-/', GETPOST('os_version', 'alphanohtml'));
+						$osversion = '';
+						$i = 0;
+						foreach($osversionarray as $osversioncursor) {
+							if ($i >= 4) {
+								break;
+							}
+							$osversion .= (($i > 1) ? '.' : '').$osversioncursor;
+							$i++;
+						}
+						$arraytags=array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion, 'db_version'=>$dbversion, 'os_version'=>$osversion, 'distrib'=>$distrib);
+
+						dol_syslog("Send info to datadog");
+
+						$statsd->increment('captureserver.'.$action.'-add', 1, $arraytags);
+					} catch (Exception $e) {
+						dol_syslog("Error in sending info to datadog", LOG_WARNING);
 					}
-					$arraytags=array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion, 'db_version'=>$dbversion, 'os_version'=>$osversion, 'distrib'=>$distrib);
-
-					dol_syslog("Send info to datadog");
-
-					$statsd->increment('captureserver.dolibarrping-add', 1, $arraytags);
-				} catch (Exception $e) {
-					dol_syslog("Error in sending info to datadog", LOG_WARNING);
 				}
 			}
 
