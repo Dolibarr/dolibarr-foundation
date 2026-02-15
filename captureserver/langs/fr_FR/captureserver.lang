@@ -38,9 +38,3 @@ About = À propos
 CaptureServerAbout = À propos de CaptureServer
 CaptureServerAboutPage = Page à propos de CaptureServer
 
-
-#
-# Box d'exemple
-#
-MyWidget = Mon widget
-MyWidgetDescription = Description de mon widget

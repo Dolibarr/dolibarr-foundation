@@ -39,4 +39,9 @@ ListOfCapturedEvents=List of captured events
 EndPointOfCaptureServer=Endpoint provided by CaptureServer module:<br>%s
 ContentOfMessageReceived=Content of message received
 
+PreviousRowID=Previous RowID
+PreviousSignatureID=Previous signature ID
+LastRowID=Last rowid
+LastSignatueID=Last signature ID
+
 UseAVirtualHostOn=Add a virtual host with your own domain name, pointing to the directory: <b>%s</b>
