@@ -111,7 +111,7 @@ class CaptureServer extends CommonObject
 		'registeremail'=> array('type'=>'varchar(255)', 'label'=>'Email', 'enabled'=>1, 'visible'=>1, 'position'=>815, 'searchall'=>1, 'help'=>"Email", 'csslist'=>'tdoverflowmax150'),
 		'registerprofid'=> array('type'=>'varchar(255)', 'label'=>'ProfID', 'enabled'=>1, 'visible'=>1, 'position'=>820, 'searchall'=>1, 'help'=>"ProfID", 'csslist'=>'tdoverflowmax150'),
 		'previousrowid' => array('type'=>'integer', 'label'=>'PreviousRowID', 'enabled'=>1, 'visible'=>1, 'position'=>825),
-		'previoussignature'=> array('type'=>'varchar(255)', 'label'=>'PreviousSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>830, 'searchall'=>1, 'help'=>"LastSignatureHash", 'csslist'=>'tdoverflowmax100'),
+		'previoussignature'=> array('type'=>'varchar(255)', 'label'=>'PreviousSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>830, 'searchall'=>1, 'help'=>"PreviousSignatureHash", 'csslist'=>'tdoverflowmax100'),
 		'lastrowid' => array('type'=>'integer', 'label'=>'LastRowID', 'enabled'=>1, 'visible'=>1, 'position'=>835),
 		'lastsignature'=> array('type'=>'varchar(255)', 'label'=>'LastSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>840, 'searchall'=>1, 'help'=>"LastSignatureHash", 'csslist'=>'tdoverflowmax100'),
 	);
