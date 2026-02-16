@@ -154,6 +154,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
 						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
+						$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
+						$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
 
 						if ((int) $oldrowid && (int) $captureserver->lastrowid && $oldrowid >= $captureserver->lastrowid) {
 							// Alert a record was deleted or a backup was restored
