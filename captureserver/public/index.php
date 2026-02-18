@@ -150,14 +150,17 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 					}
 
 					if ($action == 'dolibarrpushcounter') {
-						$oldrowid = $captureserver->lastrowid;
+						$currentpreviousrowid = $captureserver->previousrowid;		// For example i have 432 in db  and i receive  432  instead of  433
+						$currentlastrowid = $captureserver->lastrowid;				// For example i have 433 in db  and i receive  434  instead of  434
 
+						// I received a new message with
 						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
 						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
 						$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
 						$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
 
-						if ((int) $oldrowid && (int) $captureserver->lastrowid && $oldrowid >= $captureserver->lastrowid) {
+						if ((int) $currentlastrowid && (int) $captureserver->previousrowid
+							&& $captureserver->previousrowid < $currentlastrowid) {
 							// Alert a record was deleted or a backup was restored
 							$captureserver2 = new CaptureServer($db);
 							$captureserver2->type = 'deletion_or_backup_restoration';
@@ -166,7 +169,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 							$captureserver2->qty = 1;
 							$captureserver2->status = 1;
 
-							$captureserver->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (old rowid was '.$oldrowid.' and new one is not higher '.$captureserver->lastrowid.') - from hash '.$hash_unique_id.' - version '.$version;
+							$captureserver->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (old rowid was '.$currentlastrowid.' and new message say previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
 							$captureserver->label = 'Anomaly detected';
 							$captureserver->content = $contenttoinsert;
 
