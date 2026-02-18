@@ -169,11 +169,15 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 							$captureserver2->qty = 1;
 							$captureserver2->status = 1;
 
-							$captureserver->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (old rowid was '.$currentlastrowid.' and new message say previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
-							$captureserver->label = 'Anomaly detected';
-							$captureserver->content = $contenttoinsert;
+							$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (old rowid was '.$currentlastrowid.' and new message say previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
+							$captureserver2->label = 'Anomaly detected';
+							$captureserver2->content = $contenttoinsert;
 
-							$captureserver->registerid = $hash_unique_id;
+							$captureserver2->registerid = $hash_unique_id;
+
+							dol_syslog($captureserver2->comment, LOG_NOTICE, 0, '_captureserver');
+
+							$captureserver2->create($user);
 						}
 					}
 				}
@@ -199,11 +203,11 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 						$arraytags = array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion);
 
-						dol_syslog("Send info to datadog");
+						dol_syslog("Send info to datadog", LOG_DEBUG, 0, '_captureserver');
 
 						$statsd->increment('captureserver.'.$action.'-update', 1, $arraytags);
 					} catch (Exception $e) {
-						dol_syslog("Error in sending info to datadog", LOG_WARNING);
+						dol_syslog("Error in sending info to datadog", LOG_WARNING, 0, '_captureserver');
 					}
 				}
 			}
@@ -279,11 +283,11 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 						}
 						$arraytags=array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion, 'db_version'=>$dbversion, 'os_version'=>$osversion, 'distrib'=>$distrib);
 
-						dol_syslog("Send info to datadog");
+						dol_syslog("Send info to datadog", LOG_DEBUG, 0, '_captureserver');
 
 						$statsd->increment('captureserver.'.$action.'-add', 1, $arraytags);
 					} catch (Exception $e) {
-						dol_syslog("Error in sending info to datadog", LOG_WARNING);
+						dol_syslog("Error in sending info to datadog", LOG_WARNING, 0, '_captureserver');
 					}
 				}
 			}
