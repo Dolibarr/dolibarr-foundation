@@ -30,6 +30,8 @@ CREATE TABLE llx_captureserver_captureserver(
 	comment varchar(255),
 	import_key VARCHAR(14),
 	
+	versiondolibarr VARCHAR(128),
+	versionblockedlog VARCHAR(128),
 	registerid VARCHAR(128),
 	registeremail VARCHAR(128),
 	previousrowid INTEGER,

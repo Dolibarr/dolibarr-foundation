@@ -1,3 +1,5 @@
+ALTER TABLE llx_captureserver_captureserver ADD COLUMN versiondolibarr VARCHAR(128);
+ALTER TABLE llx_captureserver_captureserver ADD COLUMN versionblockedlog VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registerid VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registeremail VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN previousrowid INTEGER;
