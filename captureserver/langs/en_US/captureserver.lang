@@ -43,5 +43,8 @@ PreviousRowID=Previous RowID
 PreviousSignatureHash=Previous signature Hash
 LastRowID=Last RowID
 LastSignatureHash=Last signature Hash
-
+RegistrationID=Registration number
+VersionDolibarr=Version Dolibarr
+VersionBlockedLog=Version module BlockedLog
+ProfID=Professional ID (SIREN, ...)
 UseAVirtualHostOn=Add a virtual host with your own domain name, pointing to the directory: <b>%s</b>

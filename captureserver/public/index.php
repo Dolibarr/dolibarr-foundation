@@ -147,6 +147,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 						$captureserver->registername = $tmparray['company_name'] ?? 'unknown';
 						$captureserver->registeremail = $tmparray['company_email'] ?? 'unknown';
 						$captureserver->registerprofid = $tmparray['company_idprof1'] ?? 'unknown';
+						$captureserver->versiondolibarr = $tmparray['versiondolibarr'] ?? 'unknown';
+						$captureserver->versionblockedlog = $tmparray['versionblockedlog'] ?? 'unknown';
 					}
 
 					if ($action == 'dolibarrpushcounter') {
