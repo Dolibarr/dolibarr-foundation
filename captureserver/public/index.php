@@ -191,7 +191,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			// Send to DataDog (metric + event)
 			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
-				if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
+				if (getDolGlobalString('CAPTURESERVER_DATADOG_UPDATE_ENABLED')) {
 					try {
 						dol_include_once('/captureserver/core/includes/php-datadogstatsd/src/DogStatsd.php');
 
