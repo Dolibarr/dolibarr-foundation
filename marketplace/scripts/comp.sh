@@ -47,7 +47,7 @@ find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$
 
 cloc --strip-comments=txt --original-dir /tmp/php1.php
 cloc --strip-comments=txt --original-dir /tmp/php2.php
-rm /tmp/php1.txt /tmp/php2.txt
+rm /tmp/php1.txt /tmp/php2.txt 2>/dev/null
 mv /tmp/php1.php.txt /tmp/php1.txt
 mv /tmp/php2.php.txt /tmp/php2.txt
 
@@ -77,8 +77,8 @@ echo "Lines of code PHP unique : $UNIQ1 + $UNIQ2 = $UNIQ"
 echo "Lines of code PHP commun : $COMMON x2"
 echo "Percent similarity: $PERCENT %"
 
-chmod 666 /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 
-chown dolibarr:www-data /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 
+chmod 666 /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 2>/dev/null
+chown dolibarr:www-data /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 2>/dev/null
 
 # Nettoyage
 #rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
