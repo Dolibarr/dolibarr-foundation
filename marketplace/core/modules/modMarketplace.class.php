@@ -372,6 +372,22 @@ class modMarketplace extends DolibarrModules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'Compare',
+			'prefix' => img_picto('', 'bill', 'class="pictofixedwidth valignmiddle paddingright"'),
+			'mainmenu'=>'marketplace',
+			'leftmenu'=>'marketplace_compare_tool',
+			'url'=>'/marketplace/compare.php',
+			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'isModEnabled("marketplace") && getDolGlobalString("MARKETPLACE_ENABLE_DOLIBARR_FEATURES")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
+			'perms'=>'$user->hasRight("product", "read")',
+			'target'=>'',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
+
 		/*
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=marketplace,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
