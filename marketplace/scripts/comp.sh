@@ -45,8 +45,9 @@ echo "And     module 2: $ZIP2 = $XXXX2"
 find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/php1.php
 find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/php2.php
 
-cloc --strip-comments=txt --original-dir /tmp/php1.php 2>&1
-cloc --strip-comments=txt --original-dir /tmp/php2.php 2>&1
+cloc --strip-comments=txt --original-dir /tmp/php1.php
+cloc --strip-comments=txt --original-dir /tmp/php2.php
+rm /tmp/php1.txt /tmp/php2.txt
 mv /tmp/php1.php.txt /tmp/php1.txt
 mv /tmp/php2.php.txt /tmp/php2.txt
 
@@ -77,6 +78,7 @@ echo "Lines of code PHP commun : $COMMON x2"
 echo "Percent similarity: $PERCENT %"
 
 chmod 666 /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 
+chown dolibarr:www-data /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 
 
 # Nettoyage
 #rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
