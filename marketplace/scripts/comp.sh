@@ -44,6 +44,7 @@ echo "Process module 1: $ZIP1 = $XXXX1 and module 2: $ZIP2 = $XXXX2"
 find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/php1.php
 find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/php2.php
 
+cd /tmp
 cloc --strip-comments=txt /tmp/php1.php --out=/tmp/php1.php.txt
 cloc --strip-comments=txt /tmp/php2.php --out=/tmp/php2.php.txt
 mv php1.php.txt /tmp/php1.txt
