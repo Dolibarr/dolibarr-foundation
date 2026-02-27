@@ -62,6 +62,7 @@ if (!$res) {
  * @var Societe $mysoc
  */
 require_once DOL_DOCUMENT_ROOT.'/core/class/utils.class.php';
+require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 
 
 // Sécurité : restreindre l'accès
@@ -81,8 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($ref1) || empty($ref2)) {
         $error = "Both product references are required.";
     } else {
+		$tmpproduct = new Product($db);
+		$tmpproduct->fetch(0, $ref1);
+    	$ref1 = $tmpproduct->ref;
 
-        // Sécurisation des arguments shell
+		$tmpproduct = new Product($db);
+		$tmpproduct->fetch(0, $ref2);
+    	$ref2 = $tmpproduct->ref;
+
+        // Secure arguments shell
         $ref1_safe = escapeshellarg($ref1);
         $ref2_safe = escapeshellarg($ref2);
 
@@ -157,7 +165,7 @@ if ($error) {
 if ($output) {
     print '<h3>Result</h3>';
     print '<pre style="background:#f4f4f4;padding:10px;">';
-    print dol_escape_htmltag($output);
+    print dol_nl2br($output);
     print '</pre>';
 }
 
