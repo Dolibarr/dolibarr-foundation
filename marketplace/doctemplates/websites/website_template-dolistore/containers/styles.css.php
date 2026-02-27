@@ -1945,7 +1945,7 @@ only screen and (min-device-pixel-ratio:2) {
 }
 .bodywebsite .box-cart-bottom,
 .bodywebsite .product_attributes {
-  padding: 19px 19px 17px;
+  padding: 10px 19px 10px;
   text-align: center;
   -webkit-box-shadow: inset 0 6px 6px #0000d;
   -moz-box-shadow: inset 0 6px 6px #0000d;
