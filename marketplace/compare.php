@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $outputfile = '/tmp/comp.txt';
             $resexec = $util->executeCLI($cmd, $outputfile);
 
-            if ($output['result'] !== 0) {
+            if ($resexec['result'] !== 0) {
                 $error = "Execution failed.";
             }else {
             	$output = $resexec['output'];
