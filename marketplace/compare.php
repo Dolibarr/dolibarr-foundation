@@ -83,11 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Both product references are required.";
     } else {
 		$tmpproduct = new Product($db);
-		$tmpproduct->fetch(0, $ref1);
+		$tmpproduct->fetch($ref1);
     	$ref1 = $tmpproduct->ref;
 
 		$tmpproduct = new Product($db);
-		$tmpproduct->fetch(0, $ref2);
+		$tmpproduct->fetch($ref2);
     	$ref2 = $tmpproduct->ref;
 
         // Secure arguments shell
