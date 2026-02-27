@@ -71,23 +71,23 @@ if (!$user->hasRight('product', 'read')) {
 }
 
 // Récupération des paramètres POST
-$ref1 = GETPOST('ref1', 'alphanohtml');
-$ref2 = GETPOST('ref2', 'alphanohtml');
+$id1 = GETPOST('id1', 'alphanohtml');
+$id2 = GETPOST('id2', 'alphanohtml');
 
 $output = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (empty($ref1) || empty($ref2)) {
+    if (empty($id1) || empty($id2)) {
         $error = "Both product references are required.";
     } else {
 		$tmpproduct = new Product($db);
-		$tmpproduct->fetch($ref1);
+		$tmpproduct->fetch($id1);
     	$ref1 = $tmpproduct->ref;
 
 		$tmpproduct = new Product($db);
-		$tmpproduct->fetch($ref2);
+		$tmpproduct->fetch($id2);
     	$ref2 = $tmpproduct->ref;
 
         // Secure arguments shell
@@ -139,7 +139,7 @@ print load_fiche_titre("Product Comparison Tool");
             <td>Product Ref 1</td>
             <td>
 <?php
-            print $form->select_produits($ref1, 'ref1', '', 0, 0, -1);
+            print $form->select_produits($id1, 'id1', '', 0, 0, -1);
 ?>
             </td>
         </tr>
@@ -147,7 +147,7 @@ print load_fiche_titre("Product Comparison Tool");
             <td>Product Ref 2</td>
             <td>
 <?php
-            print $form->select_produits($ref2, 'ref2', '', 0, 0, -1);
+            print $form->select_produits($id2, 'id2', '', 0, 0, -1);
 ?>
         </tr>
     </table>
