@@ -108,6 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  * View
  */
 
+$form = new Form($db);
+
 llxHeader('', 'Comparison Tool');
 
 print load_fiche_titre("Product Comparison Tool");
@@ -115,14 +117,23 @@ print load_fiche_titre("Product Comparison Tool");
 ?>
 
 <form method="POST">
+	<input type="hidden" name="token" value="<?php echo newToken(); ?>">
+	<input type="hidden" name="action" value="compare">
     <table class="border centpercent">
         <tr>
             <td>Product Ref 1</td>
-            <td><input type="text" name="ref1" value="<?php echo dol_escape_htmltag($ref1); ?>"></td>
+            <td>
+<?php
+            print $form->select_produits($ref1, 'ref1', 1, '', 0, 0, '', '', 1);
+?>
+            </td>
         </tr>
         <tr>
             <td>Product Ref 2</td>
-            <td><input type="text" name="ref2" value="<?php echo dol_escape_htmltag($ref2); ?>"></td>
+            <td>
+<?php
+            print $form->select_produits($ref2, 'ref2', 1, '', 0, 0, '', '', 1);
+?>
         </tr>
     </table>
 
