@@ -45,11 +45,10 @@ echo "And     module 2: $ZIP2 = $XXXX2"
 find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/php1.php
 find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/php2.php
 
-cd /tmp
-cloc --strip-comments=txt /tmp/php1.php --out=/tmp/php1.php.txt 2>&1
-cloc --strip-comments=txt /tmp/php2.php --out=/tmp/php2.php.txt 2>&1
-mv php1.php.txt /tmp/php1.txt
-mv php2.php.txt /tmp/php2.txt
+cloc --strip-comments=txt --original-dir /tmp/php1.php 2>&1
+cloc --strip-comments=txt --original-dir /tmp/php2.php 2>&1
+mv /tmp/php1.php.txt /tmp/php1.txt
+mv /tmp/php2.php.txt /tmp/php2.txt
 
 dos2unix /tmp/php1.txt
 dos2unix /tmp/php2.txt
