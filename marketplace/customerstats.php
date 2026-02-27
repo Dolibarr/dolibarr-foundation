@@ -55,8 +55,15 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
-
+/**
+ * The main.inc.php has been included so the following variable are now defined:
+ * @var Conf $conf
+ * @var DoliDB $db
+ * @var HookManager $hookmanager
+ * @var Translate $langs
+ * @var User $user
+ * @var Societe $mysoc
+ */
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 
 // Load translation files required by the page
