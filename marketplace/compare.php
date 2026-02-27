@@ -124,7 +124,7 @@ print load_fiche_titre("Product Comparison Tool");
             <td>Product Ref 1</td>
             <td>
 <?php
-            print $form->select_produits($ref1, 'ref1', 1, '', 0, 0, '', '', 1);
+            print $form->select_produits($ref1, 'ref1', '', 0, 0, -1);
 ?>
             </td>
         </tr>
@@ -132,7 +132,7 @@ print load_fiche_titre("Product Comparison Tool");
             <td>Product Ref 2</td>
             <td>
 <?php
-            print $form->select_produits($ref2, 'ref2', 1, '', 0, 0, '', '', 1);
+            print $form->select_produits($ref2, 'ref2', '', 0, 0, -1);
 ?>
         </tr>
     </table>
