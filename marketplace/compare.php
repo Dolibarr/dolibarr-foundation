@@ -61,6 +61,9 @@ if (!$res) {
  * @var User $user
  * @var Societe $mysoc
  */
+require_once DOL_DOCUMENT_ROOT.'/core/class/utils.class.php';
+
+
 // Sécurité : restreindre l'accès
 if (!$user->hasRight('product', 'read')) {
     accessforbidden();
@@ -93,10 +96,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cmd = $script . " $ref1_safe $ref2_safe 2>&1";
 
             // Exécution
-            $output = shell_exec($cmd);
+            $util = new Utils($db);
+            $outputfile = '/tmp/comp.txt';
+            $resexec = $util->executeCLI($cmd, $outputfile);
 
-            if ($output === null) {
+            if ($output['result'] !== 0) {
                 $error = "Execution failed.";
+            }else {
+            	$output = $resexec['output'];
             }
         }
     }
