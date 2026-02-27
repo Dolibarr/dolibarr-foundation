@@ -38,15 +38,16 @@ unzip -qq "$ZIP2" -d "$TMP2"
 XXXX1=$(basename "$ZIP1" | sed -E 's/^module_([^ -]+)-.*\.zip$/\1/i')
 XXXX2=$(basename "$ZIP2" | sed -E 's/^module_([^ -]+)-.*\.zip$/\1/i')
 
-echo "Process module 1: $ZIP1 = $XXXX1 and module 2: $ZIP2 = $XXXX2"
+echo "Process module 1: $ZIP1 = $XXXX1"
+echo "And     module 2: $ZIP2 = $XXXX2"
 
 # Extraction des lignes PHP
 find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/php1.php
 find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/php2.php
 
 cd /tmp
-cloc --strip-comments=txt /tmp/php1.php --out=/tmp/php1.php.txt
-cloc --strip-comments=txt /tmp/php2.php --out=/tmp/php2.php.txt
+cloc --strip-comments=txt /tmp/php1.php --out=/tmp/php1.php.txt 2>&1
+cloc --strip-comments=txt /tmp/php2.php --out=/tmp/php2.php.txt 2>&1
 mv php1.php.txt /tmp/php1.txt
 mv php2.php.txt /tmp/php2.txt
 
@@ -75,6 +76,8 @@ echo "Lines of code PHP total : $LINEF1 + $LINEF2 = $TOTAL"
 echo "Lines of code PHP unique : $UNIQ1 + $UNIQ2 = $UNIQ"
 echo "Lines of code PHP commun : $COMMON x2"
 echo "Percent similarity: $PERCENT %"
+
+chmod 666 /tmp/php1.txt /tmp/php2.txt /tmp/php1.php /tmp/php2.php /tmp/php1s.txt /tmp/php2s.txt 
 
 # Nettoyage
 #rm -rf "$TMP1" "$TMP2" /tmp/php1.txt /tmp/php2.txt
