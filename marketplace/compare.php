@@ -71,17 +71,85 @@ if (!$user->hasRight('product', 'read')) {
 }
 
 // Récupération des paramètres POST
-$id1 = GETPOST('id1', 'alphanohtml');
-$id2 = GETPOST('id2', 'alphanohtml');
+$id1 = GETPOST('id1', 'int');
+$id1 = $id1 < 0 ? 0 : $id1;
+$id2 = GETPOST('id2', 'int');
+$id2 = $id2 < 0 ? 0 : $id2;
 
 $output = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (empty($id1) || empty($id2)) {
-        $error = "Both product references are required.";
-    } else {
+    if (empty($id1) && empty($id2)) {
+        $error = "At least one product reference is required.";
+    } else if (empty($id1) || empty($id2)) {
+		$idToTest = $id1 ?? $id2;
+		$tmpproduct = new Product($db);
+		$tmpproduct->fetch($idToTest);
+		$ref1 = $tmpproduct->ref;
+		$refstart = substr($ref1, 0, strpos($ref1, 'd'));
+
+		$sql = "SELECT rowid, ref, label FROM ".$db->prefix()."product WHERE tosell = 1 AND ref NOT LIKE '".$refstart."%' AND rowid != $idToTest LIMIT 10";
+		$res = $db->query($sql);
+
+		if($res) {
+			$out = "Compare module ".$tmpproduct->label." (".$tmpproduct->ref.") with others :".PHP_EOL;
+			$resArray = [];
+			while($obj = $db->fetch_object($res)) {
+				$ref2 = $obj->ref;
+				$lab2 = $obj->label;
+				$resArray[$obj->rowid]['label'] = $lab2." (".$ref2.")";
+
+				// Secure arguments shell
+				$ref1_safe = escapeshellarg($ref1);
+				$ref2_safe = escapeshellarg($ref2);
+
+				// Chemin absolu recommandé
+				$script = dol_buildpath('/marketplace/scripts/comp.sh', 0);
+
+				if (!file_exists($script)) {
+					$error = "Script not found.";
+					$out .= $error;
+				} else {
+
+					$cmd = $script . " $ref1_safe $ref2_safe 2>&1";
+
+					// Exécution
+					$util = new Utils($db);
+					$outputfile = '/tmp/comp.txt';
+					$resexec = $util->executeCLI($cmd, $outputfile);
+
+					if ($resexec['result'] !== 0) {
+						$error = "Execution failed. ".$cmd;
+						$out .= $error;
+						$resArray[$obj->rowid]['percent'] = $error;
+					}else {
+						$output = $resexec['output'];
+						$percent = '';
+						if (preg_match('/Percent similarity:\s*(\d+(?:[.,]\d+)?)\s*%/i', $output, $m)) {
+							$percent = (float) str_replace(',', '.', $m[1]); // 87.5
+						} else {
+							$percent = null;
+						}
+						$resArray[$obj->rowid]['percent'] = $percent;
+					}
+				}
+			}
+
+			uasort($resArray, static function (array $a, array $b): int {
+				return ($b['percent'] ?? 0) <=> ($a['percent'] ?? 0); // DESC
+			});
+
+			foreach($resArray as $item) {
+				$out .= $item['label']. " : ".$item['percent'] . PHP_EOL;
+			}
+
+			$output = $out;
+		} else {
+			$error = $db->error();
+		}
+	} else {
 		$tmpproduct = new Product($db);
 		$tmpproduct->fetch($id1);
     	$ref1 = $tmpproduct->ref;
@@ -109,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $resexec = $util->executeCLI($cmd, $outputfile);
 
             if ($resexec['result'] !== 0) {
-                $error = "Execution failed.";
+                $error = "Execution failed. ".$cmd;
             }else {
             	$output = $resexec['output'];
             }
