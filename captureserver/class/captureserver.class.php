@@ -116,6 +116,7 @@ class CaptureServer extends CommonObject
 		'previoussignature'=> array('type'=>'varchar(255)', 'label'=>'PreviousSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>830, 'searchall'=>1, 'help'=>"PreviousSignatureHash", 'csslist'=>'tdoverflowmax100'),
 		'lastrowid' => array('type'=>'integer', 'label'=>'LastRowID', 'enabled'=>1, 'visible'=>1, 'position'=>835),
 		'lastsignature'=> array('type'=>'varchar(255)', 'label'=>'LastSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>840, 'searchall'=>1, 'help'=>"LastSignatureHash", 'csslist'=>'tdoverflowmax100'),
+		'datesys' => array('type'=>'varchar(32)', 'label'=>'DateSys', 'enabled'=>1, 'visible'=>1, 'position'=>850, 'notnull'=>1, 'noteditable'=>1, 'csslist' => 'tdoverflowmax100'),
 	);
 	public $rowid;
 	public $entity;
@@ -140,6 +141,7 @@ class CaptureServer extends CommonObject
 	public $previoussignature;
 	public $lastrowid;
 	public $lastsignature;
+	public $datesys;
 
 	// END MODULEBUILDER PROPERTIES
 

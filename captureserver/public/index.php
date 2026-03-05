@@ -152,36 +152,42 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 					}
 
 					if ($action == 'dolibarrpushcounter') {
-						$currentpreviousrowid = $captureserver->previousrowid;		// For example i have 432 in db  and i receive  432  instead of  433
-						$currentlastrowid = $captureserver->lastrowid;				// For example i have 433 in db  and i receive  434  instead of  434
+						if (!empty($captureserver->datesys) && $captureserver->datesys >= $tmparray['datesys']) {
+							// We discard event, it is a deprecated event that arrived too late
+							dol_syslog("The event arrived with datesys=".$tmparray['datesys']." that is before the last event recorded for ".$captureserver->datesys.", so we discard it", LOG_WARNING, 0, '_captureserver');
+						} else {
+							$currentpreviousrowid = $captureserver->previousrowid;		// For example i have 432 in db  and i receive  432  instead of  433
+							$currentlastrowid = $captureserver->lastrowid;				// For example i have 433 in db  and i receive  434  instead of  434
 
-						// I received a new message with
-						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
-						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
-						$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
-						$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
+							// I received a new message with
+							$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
+							$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
+							$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
+							$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
+							$captureserver->datesys = $tmparray['datesys'] ?? null;
 
-						if ((int) $currentlastrowid && (int) $captureserver->previousrowid
-							&& $captureserver->previousrowid < $currentlastrowid) {
-							// Alert a record was deleted or a backup was restored
-							$captureserver2 = new CaptureServer($db);
-							$captureserver2->type = 'deletion_or_backup_restoration';
+							if ((int) $currentlastrowid && (int) $captureserver->previousrowid
+								&& $captureserver->previousrowid < $currentlastrowid) {
+								// Alert a record was deleted or a backup was restored
+								$captureserver2 = new CaptureServer($db);
+								$captureserver2->type = 'deletion_or_backup_restoration';
 
-							$captureserver2->ref = 'deletion_or_backup_restoration_'.$hash_unique_id;
-							$captureserver2->qty = 1;
-							$captureserver2->status = 1;
+								$captureserver2->ref = 'deletion_or_backup_restoration_'.$hash_unique_id;
+								$captureserver2->qty = 1;
+								$captureserver2->status = 1;
 
-							$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (first case: we got a rowid of '.$currentlastrowid.' and a new message said previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
-							$captureserver2->label = 'Anomaly detected';
-							$captureserver2->content = $contenttoinsert;
+								$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (first case: we got a rowid of '.$currentlastrowid.' and a new message said previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
+								$captureserver2->label = 'Anomaly detected';
+								$captureserver2->content = $contenttoinsert;
 
-							$captureserver2->registerid = $hash_unique_id;
+								$captureserver2->registerid = $hash_unique_id;
 
-							dol_syslog($captureserver2->comment, LOG_NOTICE, 0, '_captureserver');
+								dol_syslog($captureserver2->comment, LOG_NOTICE, 0, '_captureserver');
 
-							// Test if entry already exists, if yes, increase qty, if not create a new one.
-							// TODO
-							$captureserver2->create($user);
+								// Test if entry already exists for the same day, increase qty, if not create a new one (so we limit problem tracking to 1 per day).
+								// TODO
+								$captureserver2->create($user);
+							}
 						}
 					}
 				}
