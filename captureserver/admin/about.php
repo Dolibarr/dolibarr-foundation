@@ -37,17 +37,25 @@ if (! $res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i+1)))."/main.inc.
 if (! $res && file_exists("../../main.inc.php")) $res=@include "../../main.inc.php";
 if (! $res && file_exists("../../../main.inc.php")) $res=@include "../../../main.inc.php";
 if (! $res) die("Include of main fails");
+/**
+ * @var Conf $conf
+ * @var DoliDB $db
+ * @var HookManager $hookmanager
+ * @var Translate $langs
+ * @var User $user
+ *
+ * @var string $dolibarr_main_url_root
+ */
 
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/captureserver.lib.php';
 
+$backtopage = GETPOST('backtopage');
 
 if (!$user->admin) accessforbidden();
 
 
-$langs->load("admin");
-$langs->load("other");
-$langs->load("captureserver@captureserver");
+$langs->loadLangs(array("admin", "other", "captureserver@captureserver"));
 
 
 /**
@@ -57,7 +65,8 @@ $langs->load("captureserver@captureserver");
 $help_url='';
 llxHeader('', '', $help_url);
 
-$linkback='<a href="'.DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1">'.$langs->trans("BackToModuleList").'</a>';
+$linkback = '<a href="'.($backtopage ? $backtopage : DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1').'">'.img_picto($langs->trans("BackToModuleList"), 'back', 'class="pictofixedwidth"').'<span class="hideonsmartphone">'.$langs->trans("BackToModuleList").'</span></a>';
+
 print_fiche_titre($langs->trans("CaptureServerSetup"), $linkback, 'object_captureserver@captureserver');
 
 // Configuration header
