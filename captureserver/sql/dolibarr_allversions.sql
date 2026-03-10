@@ -9,3 +9,5 @@ ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastsignature VARCHAR(128
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registername VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registerprofid VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN datesys VARCHAR(32);
+
+ALTER TABLE llx_captureserver_captureserver ADD INDEX idx_captureserver_caputreserver(registerid);
