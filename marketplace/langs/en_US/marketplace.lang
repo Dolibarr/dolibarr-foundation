@@ -385,3 +385,5 @@ ForkOf=Fork of
 DuplicateOf=Duplicate of
 LawViolation=Critical law violation
 WhenModuleIsAForkOfAnother=When module is a fork of another module (enter here name of original module). You can compare code from page Marketplace - Compare.<br>When a module is a "Fork of", there is no revenue earned on sells.
+WhenModuleIsACopyOfOriginal=When a module provides the same features than another one, enter the first product (Priority is on first published module when there is duplicate features)
+WhenModuleViolatesRules=When a module violates a law or terms of use, there is no revenue earned on sells.
