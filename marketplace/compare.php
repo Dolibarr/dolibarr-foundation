@@ -80,7 +80,6 @@ $output = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (empty($id1) && empty($id2)) {
         $error = "At least one product reference is required.";
     } else if (empty($id1) || empty($id2)) {
@@ -90,7 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$ref1 = $tmpproduct->ref;
 		$refstart = substr($ref1, 0, strpos($ref1, 'd'));
 
-		$sql = "SELECT rowid, ref, label FROM ".$db->prefix()."product WHERE tosell = 1 AND ref NOT LIKE '".$refstart."%' AND rowid != $idToTest LIMIT 10";
+		$sql = "SELECT rowid, ref, label FROM ".$db->prefix()."product";
+		$sql .= " WHERE tosell = 1 AND ref NOT LIKE '".$db->escape($refstart)."%' AND rowid <> ".((int) $idToTest)." LIMIT 10";
+
 		$res = $db->query($sql);
 
 		if($res) {
@@ -112,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$error = "Script not found.";
 					$out .= $error;
 				} else {
-
 					$cmd = $script . " $ref1_safe $ref2_safe 2>&1";
 
 					// Exécution
@@ -127,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					}else {
 						$output = $resexec['output'];
 						$percent = '';
+						$m = array();
 						if (preg_match('/Percent similarity:\s*(\d+(?:[.,]\d+)?)\s*%/i', $output, $m)) {
 							$percent = (float) str_replace(',', '.', $m[1]); // 87.5
 						} else {
@@ -176,10 +177,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $outputfile = '/tmp/comp.txt';
             $resexec = $util->executeCLI($cmd, $outputfile);
 
+            $output = $cmd."\n";
+            $output .= "\n";
+
             if ($resexec['result'] !== 0) {
                 $error = "Execution failed. ".$cmd;
             }else {
-            	$output = $resexec['output'];
+            	$output .= $resexec['output'];
             }
         }
     }
