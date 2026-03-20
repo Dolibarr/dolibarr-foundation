@@ -5227,7 +5227,7 @@ ul.step li.step_done a {
   text-align: right!important
 }
 #HOOK_PAYMENT {
-  height: 750px;
+  height: 865px;
   border: 1px solid #dbdbdb;
   text-align: center;
   background: #fbfbfb
