@@ -41,8 +41,10 @@ ContentOfMessageReceived=Content of message received
 
 PreviousRowID=Previous RowID
 PreviousSignatureHash=Previous signature Hash
+PreviousDateCreation=Previous date creation
 LastRowID=Last RowID
 LastSignatureHash=Last signature Hash
+LastDateCreation=Last date creation
 RegistrationID=Registration number
 VersionDolibarr=Version Dolibarr
 VersionBlockedLog=Version module BlockedLog
