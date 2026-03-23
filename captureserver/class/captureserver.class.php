@@ -115,11 +115,11 @@ class CaptureServer extends CommonObject
 
 		'previousrowid' => array('type'=>'integer', 'label'=>'PreviousRowID', 'enabled'=>1, 'visible'=>1, 'position'=>825),
 		'previoussignature'=> array('type'=>'varchar(255)', 'label'=>'PreviousSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>830, 'searchall'=>1, 'help'=>"PreviousSignatureHash", 'csslist'=>'tdoverflowmax100'),
-		'previousdatecreation'=> array('type'=>'varchar(32)', 'label'=>'PreviousDateCreation', 'enabled'=>1, 'visible'=>1, 'position'=>832, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
+		'previousdatecreation'=> array('type'=>'varchar(32)', 'label'=>'PreviousDateCreation', 'enabled'=>1, 'visible'=>1, 'position'=>832, 'searchall'=>1, 'help'=>"", 'csslist'=>'smallheight'),
 
 		'lastrowid' => array('type'=>'integer', 'label'=>'LastRowID', 'enabled'=>1, 'visible'=>1, 'position'=>835),
 		'lastsignature'=> array('type'=>'varchar(255)', 'label'=>'LastSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>840, 'searchall'=>1, 'help'=>"LastSignatureHash", 'csslist'=>'tdoverflowmax100'),
-		'lastdatecreation'=> array('type'=>'varchar(32)', 'label'=>'LastDateCreation', 'enabled'=>1, 'visible'=>1, 'position'=>842, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
+		'lastdatecreation'=> array('type'=>'varchar(32)', 'label'=>'LastDateCreation', 'enabled'=>1, 'visible'=>1, 'position'=>842, 'searchall'=>1, 'help'=>"", 'csslist'=>'smallheight'),
 
 		'datesys' => array('type'=>'varchar(32)', 'label'=>'DateSys', 'enabled'=>1, 'visible'=>1, 'position'=>850, 'notnull'=>-1, 'noteditable'=>1, 'csslist' => 'tdoverflowmax100'),
 	);
