@@ -137,10 +137,15 @@ class CaptureServer extends CommonObject
 	public $registerid;
 	public $registername;
 	public $registeremail;
+
 	public $previousrowid;
 	public $previoussignature;
+	public $previousdatecreation;
+
 	public $lastrowid;
 	public $lastsignature;
+	public $lastdatecreation;
+
 	public $datesys;
 
 	// END MODULEBUILDER PROPERTIES

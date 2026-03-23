@@ -131,11 +131,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 		if ($result > 0) {
 			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
 
+			// Update fields
 			$captureserver->comment = 'Message received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;
 			$captureserver->label = 'Message by v'.$version;
 			$captureserver->content = $contenttoinsert;
-			$captureserver->registerid = $hash_unique_id;
-
 			$captureserver->qty++;
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
@@ -156,18 +155,23 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 							// We discard event, it is a deprecated event that arrived too late
 							dol_syslog("The event arrived with datesys=".$tmparray['datesys']." that is before the last event recorded for ".$captureserver->datesys.", so we discard it", LOG_WARNING, 0, '_captureserver');
 						} else {
-							$currentpreviousrowid = $captureserver->previousrowid;		// For example i have 432 in db  and i receive  432  instead of  433
-							$currentlastrowid = $captureserver->lastrowid;				// For example i have 433 in db  and i receive  434  instead of  434
+							$dbpreviousrowid = $captureserver->previousrowid;		// For example i have 432 in db  and i receive  432  instead of  433
+							$dblastrowid = $captureserver->lastrowid;				// For example i have 433 in db  and i receive  434  instead of  434
 
 							// I received a new message with
+
 							$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
 							$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
+							$captureserver->lastcreation = $tmparray['lastcreation'] ?? null;
+
 							$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
 							$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
+							$captureserver->previousdatecreation = $tmparray['previousdatecreation'] ?? null;
+
 							$captureserver->datesys = $tmparray['datesys'] ?? null;
 
-							if ((int) $currentlastrowid && (int) $captureserver->previousrowid
-								&& $captureserver->previousrowid < $currentlastrowid) {
+							if ((int) $dblastrowid && (int) $captureserver->previousrowid
+								&& $captureserver->previousrowid < $dblastrowid) {
 								// Alert a record was deleted or a backup was restored
 								$captureserver2 = new CaptureServer($db);
 								$captureserver2->type = 'deletion_or_backup_restoration';

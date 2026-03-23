@@ -29,6 +29,7 @@ CREATE TABLE llx_captureserver_captureserver(
 	tms TIMESTAMP,
 	comment varchar(255),
 	import_key VARCHAR(14),
+	datesys VARCHAR(32),
 	
 	versiondolibarr VARCHAR(128),
 	versionblockedlog VARCHAR(128),
@@ -36,8 +37,10 @@ CREATE TABLE llx_captureserver_captureserver(
 	registeremail VARCHAR(128),
 	previousrowid INTEGER,
 	previoussignature VARCHAR(128),
+	previousdatecreation VARCHAR(32),
 	lastrowid INTEGER,
 	lastsignature VARCHAR(128),
+	lastdatecreation VARCHAR(32),
 	registername VARCHAR(128),
 	registerprofid VARCHAR(128),
 	-- END MODULEBUILDER FIELDS

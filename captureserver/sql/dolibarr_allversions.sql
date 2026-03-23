@@ -8,6 +8,9 @@ ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastrowid INTEGER;
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastsignature VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registername VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registerprofid VARCHAR(128);
+
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN datesys VARCHAR(32);
+ALTER TABLE llx_captureserver_captureserver ADD COLUMN previousdatecreation VARCHAR(32) after previoussignature;
+ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastdatecreation VARCHAR(32) after lastsignature;
 
 ALTER TABLE llx_captureserver_captureserver ADD INDEX idx_captureserver_caputreserver(registerid);
