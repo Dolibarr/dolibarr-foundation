@@ -174,11 +174,11 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 							$captureserver->datesys = $tmparray['datesys'] ?? null;
 
-							dol_syslog($captureserver->pevioussignature." ".$dbprevioussignature." ".$captureserver->lastsignature." ".$dblastsignature, LOG_DEBUG, 0, '_captureserver');
+							//dol_syslog($captureserver->previoussignature." ".$dbprevioussignature." ".$captureserver->lastsignature." ".$dblastsignature, LOG_DEBUG, 0, '_captureserver');
 
 							// Check if date of previous record received in message is higher then last one in db
 							$pbindaterangedetected  = 0;
-							if ($captureserver->pevioussignature == $dbprevioussignature && $captureserver->lastsignature == $dblastsignature) {
+							if ($captureserver->previoussignature == $dbprevioussignature && $captureserver->lastsignature == $dblastsignature) {
 								// Duplicate send, we ignore
 								dol_syslog("Received record is exactly the same than current in db, so we ignore this duplicate message", LOG_DEBUG, 0, '_captureserver');
 							} elseif (!empty($dblastdatecreation) && !empty($captureserver->previousdatecreation)
