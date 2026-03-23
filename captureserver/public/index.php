@@ -155,8 +155,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 							// We discard event, it is a deprecated event that arrived too late
 							dol_syslog("The event arrived with datesys=".$tmparray['datesys']." that is before the last event recorded for ".$captureserver->datesys.", so we discard it", LOG_WARNING, 0, '_captureserver');
 						} else {
-							$dbpreviousrowid = $captureserver->previousrowid;		// For example i have 432 in db  and i receive  432  instead of  433
-							$dblastrowid = $captureserver->lastrowid;				// For example i have 433 in db  and i receive  434  instead of  434
+							$dbpreviousrowid = $captureserver->previousrowid;					// For example i have 432 in db  and i receive  432  instead of  433
+							$dbpreviousdatecreation = $captureserver->previousdatecreation;
+							$dblastrowid = $captureserver->lastrowid;							// For example i have 433 in db  and i receive  433  instead of  434
+							$dblastdatecreation = $captureserver->lastdatecreation;
 
 							// I received a new message with
 
@@ -170,27 +172,58 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 							$captureserver->datesys = $tmparray['datesys'] ?? null;
 
-							if ((int) $dblastrowid && (int) $captureserver->previousrowid
-								&& $captureserver->previousrowid < $dblastrowid) {
+							// Check if date of previous record received in message is higher then last one in db
+							$pbindaterangedetected  = 0;
+							if (!empty($dblastdatecreation) && !empty($captureserver->previousdatecreation)
+								&& $captureserver->previousdatecreation < $dblastdatecreation) {
+								$pbindaterangedetected = 1;
+							}
+
+							if ($pbindaterangedetected) {
 								// Alert a record was deleted or a backup was restored
 								$captureserver2 = new CaptureServer($db);
-								$captureserver2->type = 'deletion_or_backup_restoration';
 
 								$captureserver2->ref = 'deletion_or_backup_restoration_'.$hash_unique_id;
-								$captureserver2->qty = 1;
-								$captureserver2->status = 1;
-
-								$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (first case: we got a rowid of '.$dblastrowid.' and a new message said previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
-								$captureserver2->label = 'Anomaly detected';
-								$captureserver2->content = $contenttoinsert;
-
-								$captureserver2->registerid = $hash_unique_id;
-
-								dol_syslog($captureserver2->comment, LOG_NOTICE, 0, '_captureserver');
+								$captureserver2->type = 'deletion_or_backup_restoration';
 
 								// Test if entry already exists for the same day, increase qty, if not create a new one (so we limit problem tracking to 1 per day).
-								// TODO
-								$captureserver2->create($user);
+								$sql2 = "SELECT rowid FROM ".MAIN_DB_PREFIX."captureserver";
+								//$sql2 .= " WHERE registerid = '".$db->escape()."'";
+								//$sql2 .= " AND type = 'deletion_or_backup_restoration' AND ";
+								$sql2 .= " WHERE ref = '".$db->escape($captureserver2->ref)."'";
+								$sql2 .= " AND lastdatecreation = '".$db->escape($dblastdatecreation)."'";	// $dblastdatecreation is a gmt string, not a date
+
+								$resql2 = $db->query($sql2);
+								if ($resql2) {
+									$obj2 = $db->fetch_object($resql2);
+									if ($obj2) {
+										$captureserver2->fetch($obj2->rowid);
+										if ($captureserver2->qty == 1) {
+											$captureserver2->content = $captureserver2->content."\nSeveral anomalies detected, we keep the first one in comment";
+										}
+
+										$captureserver2->qty++;
+
+										$captureserver2->update($user);
+									} else {
+										$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record we know in db was: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying it preceding one was rowid='.$captureserver->previousrowid.' and creationdate='.$captureserver->previousdatecreation.' (see field content) - from hash '.$hash_unique_id.' - version '.$version;
+										$captureserver2->comment .= 'We suspect deletion of end of chain or restauration of backup between '.$captureserver->previousdatecreation.' and '.$dblastdatecreation;
+
+										$captureserver2->qty = 1;
+										$captureserver2->status = 1;
+
+										$captureserver2->label = 'Anomaly detected';
+										$captureserver2->content = $contenttoinsert;
+
+										$captureserver2->registerid = $hash_unique_id;
+
+										dol_syslog($captureserver2->comment, LOG_NOTICE, 0, '_captureserver');
+
+										$captureserver2->create($user);
+									}
+								} else {
+									dol_syslog('SQL error ', LOG_ERR, 0, '_captureserver');
+								}
 							}
 						}
 					}
