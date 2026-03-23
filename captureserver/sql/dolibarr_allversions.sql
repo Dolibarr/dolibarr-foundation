@@ -14,3 +14,5 @@ ALTER TABLE llx_captureserver_captureserver ADD COLUMN previousdatecreation VARC
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastdatecreation VARCHAR(32) after lastsignature;
 
 ALTER TABLE llx_captureserver_captureserver ADD INDEX idx_captureserver_caputreserver(registerid);
+
+ALTER TABLE llx_captureserver_captureserver MODIFY COLUMN comment varchar(1024) NULL;

@@ -225,7 +225,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$captureserver2->fetch($obj2->rowid);
 										if ($captureserver2->qty == 1) {
-											$captureserver2->content = $captureserver2->content."\nSeveral anomalies detected, we keep the first one in comment";
+											$captureserver2->content = $captureserver2->content."\nSeveral anomalies catched on ".$dblastdatecreation.", we keep the first one in comment";
 										}
 
 										$captureserver2->qty++;
@@ -238,7 +238,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 									} else {
 										dol_syslog("We insert a record for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
 
-										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
+										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.', previous rowid='.$dbpreviousrowid.' - precious creationdate='.$dbpreviousdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
 										$captureserver2->comment .= "\n".'We suspect end of chain deletion or backup restoration between '.$captureserver->previousdatecreation.' and '.$captureserver->datesys;
 
 										$captureserver2->qty = 1;

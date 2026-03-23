@@ -27,7 +27,7 @@ CREATE TABLE llx_captureserver_captureserver(
 	status INTEGER,
 	date_creation DATETIME NOT NULL,
 	tms TIMESTAMP,
-	comment varchar(255),
+	comment varchar(1024) NULL,
 	import_key VARCHAR(14),
 	datesys VARCHAR(32),
 	
