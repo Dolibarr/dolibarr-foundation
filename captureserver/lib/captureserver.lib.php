@@ -21,6 +21,9 @@
  * \brief   Library files with common functions for CaptureServer
  */
 
+dol_include_once('/captureserver/class/captureserver.class.php');
+
+
 /**
  * Prepare admin pages header
  *
@@ -28,7 +31,7 @@
  */
 function captureserverAdminPrepareHead()
 {
-	global $langs, $conf;
+	global $langs, $conf, $db;
 
 	$langs->load("captureserver@captureserver");
 
@@ -52,6 +55,8 @@ function captureserverAdminPrepareHead()
 	//$this->tabs = array(
 	//	'entity:-tabname:Title:@captureserver:/captureserver/mypage.php?id=__ID__'
 	//); // to remove a tab
+	$object = new CaptureServer($db);
+
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'captureserver');
 
 	return $head;
