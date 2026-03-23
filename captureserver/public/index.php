@@ -208,6 +208,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 								if ($resql2) {
 									$obj2 = $db->fetch_object($resql2);
 									if ($obj2) {
+										dol_syslog("We update the record ID='.$obj2->rowid.' for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
+
 										$captureserver2->fetch($obj2->rowid);
 										if ($captureserver2->qty == 1) {
 											$captureserver2->content = $captureserver2->content."\nSeveral anomalies detected, we keep the first one in comment";
@@ -217,8 +219,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$captureserver2->update($user);
 									} else {
-										$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record we know in db was: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' and creationdate='.$captureserver->previousdatecreation.' (see field content) - for hash '.$hash_unique_id.' - version '.$version;
-										$captureserver2->comment .= "\n".'We suspect deletion of end of chain or restauration of backup between '.$captureserver->previousdatecreation.' and '.$dblastdatecreation;
+										dol_syslog("We insert a record for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
+
+										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
+										$captureserver2->comment .= "\n".'We suspect end of chain deletion or backup restoration between '.$captureserver->previousdatecreation.' and '.$dblastdatecreation;
 
 										$captureserver2->qty = 1;
 										$captureserver2->status = 1;
@@ -233,7 +237,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 										$captureserver2->create($user);
 									}
 								} else {
-									dol_syslog('SQL error ', LOG_ERR, 0, '_captureserver');
+									dol_syslog('SQL error '.$db->lasterror(), LOG_ERR, 0, '_captureserver');
 								}
 							}
 						}
@@ -241,7 +245,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 				}
 			}
 
-			dol_syslog("Update record", LOG_DEBUG, 0, '_captureserver');
+			dol_syslog("Update record ".$captureserver->ref, LOG_DEBUG, 0, '_captureserver');
 			$captureserver->update($user);
 
 			// Send to DataDog (metric + event)
