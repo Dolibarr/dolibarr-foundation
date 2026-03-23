@@ -162,7 +162,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 							$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
 							$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
-							$captureserver->lastcreation = $tmparray['lastdatecreation'] ?? null;
+							$captureserver->lastdatecreation = $tmparray['lastdatecreation'] ?? null;
 
 							$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
 							$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
