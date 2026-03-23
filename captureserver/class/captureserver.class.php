@@ -95,8 +95,9 @@ class CaptureServer extends CommonObject
 		'rowid' => array('type'=>'integer', 'label'=>'TechnicalID', 'enabled'=>1, 'visible'=>-1, 'position'=>1, 'notnull'=>1, 'index'=>1, 'comment'=>"Id",),
 		'entity' => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>1, 'visible'=>-1, 'position'=>20, 'notnull'=>1, 'default'=>'1', 'index'=>1,),
 		'ref' => array('type'=>'varchar(255)', 'label'=>'Ref', 'enabled'=>1, 'visible'=>1, 'position'=>30, 'notnull'=>-1, 'searchall'=>1, 'help'=>"Ref", 'csslist'=>'tdoverflowmax200'),
-		'type' => array('type'=>'varchar(32)', 'label'=>'Type', 'enabled'=>1, 'visible'=>1, 'position'=>31, 'notnull'=>1, 'searchall'=>1, 'help'=>"Type", ),
-		'label' => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>1, 'visible'=>1, 'position'=>32, 'notnull'=>-1, 'searchall'=>1, 'help'=>"Label", 'css'=>'minwidth300', 'csslist'=>'tdoverflowmax200', 'cssview'=>'wordbreak'),
+		'registerid' => array('type'=>'varchar(255)', 'label'=>'RegistrationID', 'enabled'=>1, 'visible'=>1, 'position'=>32, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax200'),
+		'type' => array('type'=>'varchar(32)', 'label'=>'Type', 'enabled'=>1, 'visible'=>1, 'position'=>35, 'notnull'=>1, 'searchall'=>1, 'help'=>"Type", ),
+		'label' => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>1, 'visible'=>1, 'position'=>36, 'notnull'=>-1, 'searchall'=>1, 'help'=>"Label", 'css'=>'minwidth300', 'csslist'=>'tdoverflowmax200', 'cssview'=>'wordbreak'),
 		'qty' => array('type'=>'real', 'label'=>'Qty', 'enabled'=>1, 'visible'=>1, 'position'=>45, 'notnull'=>-1, 'isameasure'=>'1', 'help'=>"Quantity",),
 		'ip' => array('type'=>'varchar(255)', 'label'=>'IPCreation', 'enabled'=>1, 'visible'=>1, 'position'=>400, 'notnull'=>-1, 'csslist' => 'tdoverflowmax150'),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>1, 'visible'=>-1, 'position'=>500, 'notnull'=>1, 'noteditable'=>1, 'csslist' => 'nowraponall'),
@@ -108,14 +109,16 @@ class CaptureServer extends CommonObject
 
 		'versiondolibarr' => array('type'=>'varchar(255)', 'label'=>'VersionDolibarr', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
 		'versionblockedlog' => array('type'=>'varchar(255)', 'label'=>'VersionBlockedLog', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
-		'registerid' => array('type'=>'varchar(255)', 'label'=>'RegistrationID', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax200'),
 		'registername'=> array('type'=>'varchar(255)', 'label'=>'Name', 'enabled'=>1, 'visible'=>1, 'position'=>810, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax150'),
 		'registeremail'=> array('type'=>'varchar(255)', 'label'=>'Email', 'enabled'=>1, 'visible'=>1, 'position'=>815, 'searchall'=>1, 'help'=>"Email", 'csslist'=>'tdoverflowmax150'),
 		'registerprofid'=> array('type'=>'varchar(255)', 'label'=>'ProfID', 'enabled'=>1, 'visible'=>1, 'position'=>820, 'searchall'=>1, 'help'=>"ProfID", 'csslist'=>'tdoverflowmax150'),
+
 		'previousrowid' => array('type'=>'integer', 'label'=>'PreviousRowID', 'enabled'=>1, 'visible'=>1, 'position'=>825),
 		'previoussignature'=> array('type'=>'varchar(255)', 'label'=>'PreviousSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>830, 'searchall'=>1, 'help'=>"PreviousSignatureHash", 'csslist'=>'tdoverflowmax100'),
+		'previousdatecreation'=> array('type'=>'varchar(32)', 'label'=>'PreviousSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>832, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
 		'lastrowid' => array('type'=>'integer', 'label'=>'LastRowID', 'enabled'=>1, 'visible'=>1, 'position'=>835),
 		'lastsignature'=> array('type'=>'varchar(255)', 'label'=>'LastSignatureHash', 'enabled'=>1, 'visible'=>1, 'position'=>840, 'searchall'=>1, 'help'=>"LastSignatureHash", 'csslist'=>'tdoverflowmax100'),
+		'previousdatecreation'=> array('type'=>'varchar(32)', 'label'=>'LastDateCreation', 'enabled'=>1, 'visible'=>1, 'position'=>842, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
 		'datesys' => array('type'=>'varchar(32)', 'label'=>'DateSys', 'enabled'=>1, 'visible'=>1, 'position'=>850, 'notnull'=>1, 'noteditable'=>1, 'csslist' => 'tdoverflowmax100'),
 	);
 	public $rowid;
