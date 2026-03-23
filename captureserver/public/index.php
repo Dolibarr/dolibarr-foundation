@@ -217,7 +217,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$captureserver2->qty++;
 
-										$captureserver2->update($user);
+										$resupdate = $captureserver2->update($user);
+										if ($resupdate < 0) {
+											dol_syslog('Error '.$captureserver2->error, LOG_ERR, 0, '_captureserver');
+										}
 									} else {
 										dol_syslog("We insert a record for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
 
@@ -234,7 +237,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										dol_syslog($captureserver2->comment, LOG_NOTICE, 0, '_captureserver');
 
-										$captureserver2->create($user);
+										$rescreate = $captureserver2->create($user);
+										if ($rescreate < 0) {
+											dol_syslog('Error '.$captureserver2->error, LOG_ERR, 0, '_captureserver');
+										}
 									}
 								} else {
 									dol_syslog('SQL error '.$db->lasterror(), LOG_ERR, 0, '_captureserver');
