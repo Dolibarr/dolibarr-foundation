@@ -128,6 +128,15 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 		$captureserver = new CaptureServer($db);
 		$result = $captureserver->fetch(0, $action.'_'.$hash_unique_id);	// Unique key is on $action.'_'.$hash_unique_id
 
+		if ($result < 0) {
+			print "<br>\n".'Error during try to fetch record';
+			http_response_code(500);
+
+			$db->close();
+
+			exit;
+		}
+
 		if ($result > 0) {
 			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
 
@@ -136,6 +145,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->label = 'Message by v'.$version;
 			$captureserver->content = $contenttoinsert;
 			$captureserver->qty++;
+
+			$db->begin();
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 				$tmparray = json_decode($contenttoinsert, true, 2);
@@ -225,7 +236,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 										dol_syslog("We insert a record for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
 
 										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
-										$captureserver2->comment .= "\n".'We suspect end of chain deletion or backup restoration between '.$captureserver->previousdatecreation.' and '.$dblastdatecreation;
+										$captureserver2->comment .= "\n".'We suspect end of chain deletion or backup restoration between '.$captureserver->previousdatecreation.' and '.$captureserver->datesys;
 
 										$captureserver2->qty = 1;
 										$captureserver2->status = 1;
@@ -253,6 +264,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			dol_syslog("Update record ".$captureserver->ref, LOG_DEBUG, 0, '_captureserver');
 			$captureserver->update($user);
+
+			$db->commit();
 
 			// Send to DataDog (metric + event)
 			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
@@ -282,7 +295,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			}
 
 			print "<br>\n".'Event updated';
-		} elseif ($result == 0) {
+		} else {
 			dol_syslog('No record found for key '.$action.'_'.$hash_unique_id.' so we will create it', LOG_DEBUG, 0, '_captureserver');
 
 			$captureserver->type = $action;
@@ -295,6 +308,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->content = $contenttoinsert;
 
 			$captureserver->registerid = $hash_unique_id;
+
+			$db->begin();
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
 				$tmparray = json_decode($contenttoinsert, true, 2);
@@ -316,7 +331,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 				}
 			}
 
+			dol_syslog("Create record ".$captureserver->ref, LOG_DEBUG, 0, '_captureserver');
 			$result = $captureserver->create($user);
+
+			$db->commit();
 
 			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
 				if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
@@ -350,7 +368,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 							$osversion .= (($i > 1) ? '.' : '').$osversioncursor;
 							$i++;
 						}
-						$arraytags=array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion, 'db_version'=>$dbversion, 'os_version'=>$osversion, 'distrib'=>$distrib);
+						$arraytags = array('version'=>$dolversion, 'dbtype'=>GETPOST('dbtype', 'alphanohtml'), 'country_code'=>GETPOST('country_code', 'aZ09'), 'php_version'=>$phpversion, 'db_version'=>$dbversion, 'os_version'=>$osversion, 'distrib'=>$distrib);
 
 						dol_syslog("Send info to datadog", LOG_DEBUG, 0, '_captureserver');
 
@@ -362,12 +380,9 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			}
 
 			print "<br>\n".'Event added';
-
-			// Should return http 200 by default.
-		} else {
-			print "<br>\n".'Error during try to fetch record';
-			http_response_code(500);
 		}
+
+		// Should return http 200 by default.
 	}
 
 	dol_syslog('Process complete', LOG_DEBUG, 0, '_captureserver');
