@@ -187,7 +187,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 								$captureserver2->type = 'deletion_or_backup_restoration';
 
 								// Test if entry already exists for the same day, increase qty, if not create a new one (so we limit problem tracking to 1 per day).
-								$sql2 = "SELECT rowid FROM ".MAIN_DB_PREFIX."captureserver";
+								$sql2 = "SELECT rowid FROM ".MAIN_DB_PREFIX."captureserver_captureserver";
 								//$sql2 .= " WHERE registerid = '".$db->escape()."'";
 								//$sql2 .= " AND type = 'deletion_or_backup_restoration' AND ";
 								$sql2 .= " WHERE ref = '".$db->escape($captureserver2->ref)."'";
