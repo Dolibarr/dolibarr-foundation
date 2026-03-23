@@ -50,3 +50,4 @@ VersionDolibarr=Version Dolibarr
 VersionBlockedLog=Version module BlockedLog
 ProfID=Professional ID (SIREN, ...)
 UseAVirtualHostOn=Add a virtual host with your own domain name, pointing to the directory: <b>%s</b>
+DateSys=Date push
