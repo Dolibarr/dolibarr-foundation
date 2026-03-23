@@ -103,7 +103,7 @@ if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")
 header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
 header("Access-Control-Allow-Origin: *");
 
-dol_syslog('----- Capture server was called with action='.$action.' - '.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES, 'UTF-8'), LOG_NOTICE, 0, '_captureserver');
+dol_syslog('----- Capture server was called with action='.$action, LOG_NOTICE, 0, '_captureserver');
 
 print '----- Capture server was called with action='.$action;
 
