@@ -212,10 +212,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 								// Test if entry already exists for the same day, increase qty, if not create a new one (so we limit problem tracking to 1 per day).
 								$sql2 = "SELECT rowid FROM ".MAIN_DB_PREFIX."captureserver_captureserver";
-								//$sql2 .= " WHERE registerid = '".$db->escape()."'";
-								//$sql2 .= " AND type = 'deletion_or_backup_restoration' AND ";
 								$sql2 .= " WHERE ref = '".$db->escape($captureserver2->ref)."'";
-								$sql2 .= " AND lastdatecreation = '".$db->escape($dblastdatecreation)."'";	// $dblastdatecreation is a gmt string, not a date
 
 								$resql2 = $db->query($sql2);
 								if ($resql2) {
