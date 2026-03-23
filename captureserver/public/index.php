@@ -156,8 +156,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 							dol_syslog("The event arrived with datesys=".$tmparray['datesys']." that is before the last event recorded for ".$captureserver->datesys.", so we discard it", LOG_WARNING, 0, '_captureserver');
 						} else {
 							$dbpreviousrowid = $captureserver->previousrowid;					// For example i have 432 in db  and i receive  432  instead of  433
+							$dbprevioussignature = $captureserver->previoussignature;
 							$dbpreviousdatecreation = $captureserver->previousdatecreation;
 							$dblastrowid = $captureserver->lastrowid;							// For example i have 433 in db  and i receive  433  instead of  434
+							$dblastsignature = $captureserver->lastsignature;
 							$dblastdatecreation = $captureserver->lastdatecreation;
 
 							// I received a new message with
@@ -174,8 +176,15 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 							// Check if date of previous record received in message is higher then last one in db
 							$pbindaterangedetected  = 0;
-							if (!empty($dblastdatecreation) && !empty($captureserver->previousdatecreation)
+							if ($captureserver->pevioussignature == $dbprevioussignature && $captureserver->lastsignature == $dblastsignature) {
+								// Duplicate send, we ignore
+								dol_syslog("Received record is exactly the same than current in db, so we ignore this duplicate message", LOG_DEBUG, 0, '_captureserver');
+							} elseif (!empty($dblastdatecreation) && !empty($captureserver->previousdatecreation)
 								&& $captureserver->previousdatecreation < $dblastdatecreation) {
+								// Pb in date
+								$msg = 'Last record we know in db was: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.', and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' and creationdate='.$captureserver->previousdatecreation.' - for hash '.$hash_unique_id.' - version '.$version;
+
+								dol_syslog($msg, LOG_DEBUG, 0, '_captureserver');
 								$pbindaterangedetected = 1;
 							}
 
@@ -206,8 +215,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$captureserver2->update($user);
 									} else {
-										$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record we know in db was: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying it preceding one was rowid='.$captureserver->previousrowid.' and creationdate='.$captureserver->previousdatecreation.' (see field content) - from hash '.$hash_unique_id.' - version '.$version;
-										$captureserver2->comment .= 'We suspect deletion of end of chain or restauration of backup between '.$captureserver->previousdatecreation.' and '.$dblastdatecreation;
+										$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record we know in db was: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' and creationdate='.$captureserver->previousdatecreation.' (see field content) - for hash '.$hash_unique_id.' - version '.$version;
+										$captureserver2->comment .= "\n".'We suspect deletion of end of chain or restauration of backup between '.$captureserver->previousdatecreation.' and '.$dblastdatecreation;
 
 										$captureserver2->qty = 1;
 										$captureserver2->status = 1;
