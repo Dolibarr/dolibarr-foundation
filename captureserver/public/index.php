@@ -207,7 +207,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 								// Alert a record was deleted or a backup was restored
 								$captureserver2 = new CaptureServer($db);
 
-								$captureserver2->ref = 'deletion_or_backup_restoration_'.$hash_unique_id;
+								$captureserver2->ref = 'deletion_or_backup_restoration_'.$dblastdatecreation.'_'.$hash_unique_id;
 								$captureserver2->type = 'deletion_or_backup_restoration';
 
 								// Test if entry already exists for the same day, increase qty, if not create a new one (so we limit problem tracking to 1 per day).
@@ -238,7 +238,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 									} else {
 										dol_syslog("We insert a record for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
 
-										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.', previous rowid='.$dbpreviousrowid.' - precious creationdate='.$dbpreviousdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
+										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.', previous rowid='.$dbpreviousrowid.' - previous creationdate='.$dbpreviousdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
 										$captureserver2->comment .= "\n".'We suspect end of chain deletion or backup restoration between '.$captureserver->previousdatecreation.' and '.$captureserver->datesys;
 
 										$captureserver2->qty = 1;
