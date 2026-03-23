@@ -236,7 +236,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 											dol_syslog('Error '.$captureserver2->error, LOG_ERR, 0, '_captureserver');
 										}
 									} else {
-										dol_syslog("We insert a record for type 'deletion_or_backup_restoration'", LOG_DEBUG, 0, '_captureserver');
+										dol_syslog("We insert a record with ref ".$captureserver2->ref, LOG_DEBUG, 0, '_captureserver');
 
 										$captureserver2->comment = 'Problem detected the '.dol_print_date(dol_now(), 'dayhourlog').' (last record in db: rowid='.$dblastrowid.' - creationdate='.$dblastdatecreation.', previous rowid='.$dbpreviousrowid.' - previous creationdate='.$dbpreviousdatecreation.') and we received a new record saying its predecessor was rowid='.$captureserver->previousrowid.' - creationdate='.$captureserver->previousdatecreation;
 										$captureserver2->comment .= "\n".'We suspect end of chain deletion or backup restoration between '.$captureserver->previousdatecreation.' and '.$captureserver->datesys;
