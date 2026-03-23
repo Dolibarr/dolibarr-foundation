@@ -146,6 +146,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			$captureserver->content = $contenttoinsert;
 			$captureserver->qty++;
 
+			$error = 0;
+
 			$db->begin();
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
@@ -230,6 +232,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$resupdate = $captureserver2->update($user);
 										if ($resupdate < 0) {
+											$error++;
 											dol_syslog('Error '.$captureserver2->error, LOG_ERR, 0, '_captureserver');
 										}
 									} else {
@@ -250,6 +253,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$rescreate = $captureserver2->create($user);
 										if ($rescreate < 0) {
+											$error++;
 											dol_syslog('Error '.$captureserver2->error, LOG_ERR, 0, '_captureserver');
 										}
 									}
@@ -262,10 +266,19 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 				}
 			}
 
-			dol_syslog("Update record ".$captureserver->ref, LOG_DEBUG, 0, '_captureserver');
-			$captureserver->update($user);
+			if (!$error) {
+				dol_syslog("Update record ".$captureserver->ref, LOG_DEBUG, 0, '_captureserver');
+				$result = $captureserver->update($user);
+				if ($result < 0) {
+					$error++;
+				}
+			}
 
-			$db->commit();
+			if ($error) {
+				$db->rollback();
+			} else {
+				$db->commit();
+			}
 
 			// Send to DataDog (metric + event)
 			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
@@ -309,6 +322,8 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			$captureserver->registerid = $hash_unique_id;
 
+			$error = 0;
+
 			$db->begin();
 
 			if ($action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
@@ -333,8 +348,15 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 			dol_syslog("Create record ".$captureserver->ref, LOG_DEBUG, 0, '_captureserver');
 			$result = $captureserver->create($user);
+			if ($result < 0) {
+				$error++;
+			}
 
-			$db->commit();
+			if ($error) {
+				$db->rollback();
+			} else {
+				$db->commit();
+			}
 
 			if ($action == 'dolibarrping' || $action == 'dolibarrregistration') {
 				if (getDolGlobalString('CAPTURESERVER_DATADOG_ENABLED')) {
