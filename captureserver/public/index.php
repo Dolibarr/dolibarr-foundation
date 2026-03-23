@@ -180,7 +180,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 								$captureserver2->qty = 1;
 								$captureserver2->status = 1;
 
-								$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (first case: we got a rowid of '.$currentlastrowid.' and a new message said previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
+								$captureserver2->comment = 'Deletion or backup restoration detected the '.dol_print_date(dol_now(), 'dayhourlog').' (first case: we got a rowid of '.$dblastrowid.' and a new message said previous was '.$captureserver->previousrowid.') - from hash '.$hash_unique_id.' - version '.$version;
 								$captureserver2->label = 'Anomaly detected';
 								$captureserver2->content = $contenttoinsert;
 
@@ -197,6 +197,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 				}
 			}
 
+			dol_syslog("Update record", LOG_DEBUG, 0, '_captureserver');
 			$captureserver->update($user);
 
 			// Send to DataDog (metric + event)
