@@ -26,7 +26,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 	public $enabled = 'isModEnabled("captureserver")';
 
 	public $require_module = array();
-	public $picto = 'sellyoursaas@sellyoursaas';
+	public $picto = 'captureserver@captureserver';
 	public $db;
 
 
