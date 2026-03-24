@@ -16,7 +16,7 @@
  */
 
 /**
- * \file    core/triggers/interface_99_modMArketplace_MarketplaceTriggers.class.php
+ * \file    core/triggers/interface_99_modMarketplace_Marketplace.class.php
  * \ingroup sellyoursaas
  * \brief   Trigger for sellyoursaas module.
  */
@@ -25,9 +25,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/triggers/dolibarrtriggers.class.php';
 
 
 /**
- *  Class of triggers for SellYourSaas module
+ *  Class of triggers for Marketplace module
  */
-class InterfaceMarketplaceTriggers extends DolibarrTriggers
+class InterfaceMarketplace extends DolibarrTriggers
 {
 	/**
 	 * @var DoliDB Database handler
@@ -44,11 +44,11 @@ class InterfaceMarketplaceTriggers extends DolibarrTriggers
 		$this->db = $db;
 
 		$this->name = preg_replace('/^Interface/i', '', get_class($this));
-		$this->family = "sellyoursaas";
-		$this->description = "SellYourSaas triggers.";
+		$this->family = "marketplace";
+		$this->description = "Marketplace triggers.";
 		// 'development', 'experimental', 'dolibarr' or version
 		$this->version = 1.0;
-		$this->picto = 'sellyoursaas@sellyoursaas';
+		$this->picto = 'marketplace@marketplace';
 	}
 
 	/**
@@ -86,14 +86,14 @@ class InterfaceMarketplaceTriggers extends DolibarrTriggers
 	 */
 	public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
 	{
-		if (!isModEnabled('sellyoursaas')) {
+		if (!isModEnabled('marketplace')) {
 			return 0;     // Module not active, we do nothing
 		}
 
 		// Put here code you want to execute when a Dolibarr business events occurs.
 		// Data and type of action are stored into $object and $action
 
-		dol_syslog("Trigger InterfaceMarketplaceTriggers");
+		dol_syslog("Trigger InterfaceMarketplace");
 
 		$error = 0;
 
