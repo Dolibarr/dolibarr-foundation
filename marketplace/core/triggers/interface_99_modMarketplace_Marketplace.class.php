@@ -103,15 +103,16 @@ class InterfaceMarketplace extends DolibarrTriggers
 				 var_dump($object->lines);*/
 
 				if (isset($object->oldcopy)) {
-					dol_syslog("We check that we don't try to enable a product or service if ForkOf or LawViolation or DateStopEarning is on");
-					dol_syslog(json_encode($object->oldcopy));
-					dol_syslog(json_encode($object->oldcopy->array_options));
-					dol_syslog("olddata: ".$object->oldcopy->array_options['options_marketplace_law_violation']." ".$object->oldcopy->array_options['options_marketplace_fork_of']." ".$object->oldcopy->array_options['options_marketplace_date_stop_earning']);
-					dol_syslog("data: ".$object->array_options['options_marketplace_law_violation']." ".$object->array_options['options_marketplace_fork_of']." ".$object->array_options['options_marketplace_date_stop_earning']);
+					/** @var Product $object */
+					if ($object->status == 1 && $object->oldcopy->status == 0) {
+						// If we try to enable module
+						dol_syslog("We check that we don't try to enable a product or service if ForkOf or LawViolation or DateStopEarning is on");
+						dol_syslog("data: ".$object->array_options['options_marketplace_law_violation']." ".$object->array_options['options_marketplace_fork_of']." ".$object->array_options['options_marketplace_date_stop_earning']);
 
-					if (1 == 2) {
-						$this->errors[] = "Can't set status to onsell if property forkof or datestopearning is set";
-						$error++;
+						if (!empty($object->array_options['options_marketplace_law_violation']) || !empty($object->array_options['options_marketplace_fork_of']) || !empty($object->array_options['options_marketplace_date_stop_earning'])) {
+							$this->errors[] = "Can't set status to onsell if property forkof or datestopearning is set";
+							$error++;
+						}
 					}
 				}
 		}
