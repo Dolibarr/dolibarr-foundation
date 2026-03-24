@@ -199,7 +199,7 @@ class modMarketplace extends DolibarrModules
 		// 'intervention'     to add a tab in intervention view
 		// 'invoice'          to add a tab in customer invoice view
 		// 'invoice_supplier' to add a tab in supplier invoice view
-		// 'member'           to add a tab in fundation member view
+		// 'member'           to add a tab in foundation member view
 		// 'opensurveypoll'	  to add a tab in opensurvey poll view
 		// 'order'            to add a tab in sale order view
 		// 'order_supplier'   to add a tab in supplier order view
@@ -216,7 +216,7 @@ class modMarketplace extends DolibarrModules
 		/* Example:
 		 $this->dictionaries=array(
 		 'langs'=>'marketplace@marketplace',
-		 // List of tables we want to see into dictonnary editor
+		 // List of tables we want to see into dictionary editor
 		 'tabname'=>array("table1", "table2", "table3"),
 		 // Label of tables
 		 'tablib'=>array("Table1", "Table2", "Table3"),
@@ -518,6 +518,7 @@ class modMarketplace extends DolibarrModules
 		$result17=$extrafields->addExtraField('marketplace_fork_of', "ForkOf", 'link', 110155, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsAForkOfAnother', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 		$result18=$extrafields->addExtraField('marketplace_duplicate_of', "DuplicateOf", 'link', 110160, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsACopyOfOriginal', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 		$result19=$extrafields->addExtraField('marketplace_law_violation', "LawViolation", 'varchar', 110165, '255', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleViolatesRules', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
+		$result20=$extrafields->addExtraField('marketplace_date_stop_earning', "DateStopEarning", 'dater', 110167, '255', 'product', 0, 0, '', $param, 1, '', 1, 'ToStopAllEarningAfterAGivenDate', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 
 
 		// Permissions
@@ -964,7 +965,7 @@ class modMarketplace extends DolibarrModules
 		}
 
 		if (!getDolGlobalInt("MARKETPLACE_MINIMUM_PAYOUT_AMOUNT")) {
-			dolibarr_set_const($this->db, 'MARKETPLACE_MINIMUM_PAYOUT_AMOUNT', '50' , 'chaine', 0, 'Marketplace minimum payout amount for vendors', $conf->entity);
+			dolibarr_set_const($this->db, 'MARKETPLACE_MINIMUM_PAYOUT_AMOUNT', '50', 'chaine', 0, 'Marketplace minimum payout amount for vendors', $conf->entity);
 		}
 
 		/*
