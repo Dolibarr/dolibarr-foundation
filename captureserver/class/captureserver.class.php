@@ -74,7 +74,7 @@ class CaptureServer extends CommonObject
 	 *  'noteditable' says if field is not editable (1 or 0)
 	 *  'default' is a default value for creation (can still be overwrote by the Setup of Default Values if field is editable in creation form). Note: If default is set to '(PROV)' and field is 'ref', the default value will be set to '(PROVid)' where id is rowid when a new record is created.
 	 *  'index' if we want an index in database.
-	 *  'foreignkey'=>'tablename.field' if the field is a foreign key (it is recommanded to name the field fk_...).
+	 *  'foreignkey'=>'tablename.field' if the field is a foreign key (it is recommended to name the field fk_...).
 	 *  'searchall' is 1 if we want to search in this field when making a search from the quick search button.
 	 *  'isameasure' must be set to 1 if you want to have a total on list for this field. Field type must be summable like integer or double(24,8).
 	 *  'css' is the CSS style to use on field. For example: 'maxwidth200'
@@ -96,19 +96,21 @@ class CaptureServer extends CommonObject
 		'entity' => array('type'=>'integer', 'label'=>'Entity', 'enabled'=>1, 'visible'=>-1, 'position'=>20, 'notnull'=>1, 'default'=>'1', 'index'=>1,),
 		'ref' => array('type'=>'varchar(255)', 'label'=>'Ref', 'enabled'=>1, 'visible'=>1, 'position'=>30, 'notnull'=>-1, 'searchall'=>1, 'help'=>"Ref", 'csslist'=>'tdoverflowmax200'),
 		'registerid' => array('type'=>'varchar(255)', 'label'=>'RegistrationID', 'enabled'=>1, 'visible'=>1, 'position'=>32, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax200'),
-		'type' => array('type'=>'varchar(32)', 'label'=>'Type', 'enabled'=>1, 'visible'=>1, 'position'=>35, 'notnull'=>1, 'searchall'=>1, 'help'=>"Type", ),
-		'label' => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>1, 'visible'=>1, 'position'=>36, 'notnull'=>-1, 'searchall'=>1, 'help'=>"Label", 'css'=>'minwidth300', 'csslist'=>'tdoverflowmax200', 'cssview'=>'wordbreak'),
+		'type' => array('type'=>'varchar(32)', 'label'=>'Type', 'enabled'=>1, 'visible'=>1, 'position'=>35, 'notnull'=>1, 'searchall'=>0, 'help'=>"Type", ),
+		'label' => array('type'=>'varchar(255)', 'label'=>'Label', 'enabled'=>1, 'visible'=>1, 'position'=>36, 'notnull'=>-1, 'searchall'=>0, 'help'=>"Label", 'css'=>'minwidth300', 'csslist'=>'tdoverflowmax200', 'cssview'=>'wordbreak'),
 		'qty' => array('type'=>'real', 'label'=>'Qty', 'enabled'=>1, 'visible'=>1, 'position'=>45, 'notnull'=>-1, 'isameasure'=>'1', 'help'=>"Quantity",),
 		'ip' => array('type'=>'varchar(255)', 'label'=>'IPCreation', 'enabled'=>1, 'visible'=>1, 'position'=>400, 'notnull'=>-1, 'csslist' => 'tdoverflowmax150'),
 		'date_creation' => array('type'=>'datetime', 'label'=>'DateCreation', 'enabled'=>1, 'visible'=>-1, 'position'=>500, 'notnull'=>1, 'noteditable'=>1, 'csslist' => 'nowraponall'),
 		'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'enabled'=>1, 'visible'=>1, 'position'=>501, 'notnull'=>-1, 'noteditable'=>1, 'csslist' => 'nowraponall'),
-		'content' => array('type'=>'text', 'label'=>'Content', 'enabled'=>1, 'visible'=>3, 'position'=>550, 'notnull'=>-1, 'searchall'=>1, 'help'=>"ContentOfMessageReceived", 'css'=>"wordbreak"),
+		'content' => array('type'=>'text', 'label'=>'Content', 'enabled'=>1, 'visible'=>3, 'position'=>550, 'notnull'=>-1, 'searchall'=>0, 'help'=>"ContentOfMessageReceived", 'css'=>"wordbreak"),
 		'comment' => array('type'=>'text', 'label'=>'Comment', 'enabled'=>1, 'visible'=>-1, 'position'=>600, 'notnull'=>-1, 'help'=>"Comment", 'css'=>'', 'csslist'=>'tdoverflowmax200'),
 		'import_key' => array('type'=>'varchar(14)', 'label'=>'ImportId', 'enabled'=>1, 'visible'=>-2, 'position'=>1000, 'notnull'=>-1,),
 		'status' => array('type'=>'integer', 'label'=>'Status', 'enabled'=>1, 'visible'=>1, 'position'=>1000, 'notnull'=>1, 'index'=>1, 'arrayofkeyval'=>array('0'=>'Draft', '1'=>'Done', '9'=>'Canceled')),
 
-		'versiondolibarr' => array('type'=>'varchar(255)', 'label'=>'VersionDolibarr', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
-		'versionblockedlog' => array('type'=>'varchar(255)', 'label'=>'VersionBlockedLog', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>1, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
+		'versiondolibarr' => array('type'=>'varchar(255)', 'label'=>'VersionDolibarr', 'enabled'=>1, 'visible'=>1, 'position'=>800, 'searchall'=>0, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
+		'versionblockedlog' => array('type'=>'varchar(255)', 'label'=>'VersionBlockedLog', 'enabled'=>1, 'visible'=>1, 'position'=>801, 'searchall'=>0, 'help'=>"", 'csslist'=>'tdoverflowmax100'),
+		'country_code' => array('type'=>'varchar(8)', 'label'=>'CountryCode', 'enabled'=>1, 'visible'=>1, 'position'=>805, 'searchall'=>0, 'help'=>""),
+
 		'registername'=> array('type'=>'varchar(255)', 'label'=>'Name', 'enabled'=>1, 'visible'=>1, 'position'=>810, 'searchall'=>1, 'help'=>"RegistrationID", 'csslist'=>'tdoverflowmax150'),
 		'registeremail'=> array('type'=>'varchar(255)', 'label'=>'Email', 'enabled'=>1, 'visible'=>1, 'position'=>815, 'searchall'=>1, 'help'=>"Email", 'csslist'=>'tdoverflowmax150'),
 		'registerprofid'=> array('type'=>'varchar(255)', 'label'=>'ProfID', 'enabled'=>1, 'visible'=>1, 'position'=>820, 'searchall'=>1, 'help'=>"ProfID", 'csslist'=>'tdoverflowmax150'),
@@ -139,6 +141,7 @@ class CaptureServer extends CommonObject
 
 	public $versiondolibarr;
 	public $versionblockedlog;
+	public $country_code;
 	public $registerid;
 	public $registername;
 	public $registeremail;
@@ -464,7 +467,7 @@ class CaptureServer extends CommonObject
 	}
 
 	/**
-	 *  Return a link to the object card (with optionaly the picto)
+	 *  Return a link to the object card (with optionally the picto)
 	 *
 	 *  @param  int     $withpicto                  Include picto in link (0=No picto, 1=Include picto into link, 2=Only picto)
 	 *  @param  string  $option                     On what the link point to ('nolink', ...)
@@ -644,7 +647,7 @@ class CaptureServer extends CommonObject
 	 *  Create a document onto disk according to template module.
 	 *
 	 *  @param	    string		$modele			Force template to use ('' to not force)
-	 *  @param		Translate	$outputlangs	objet lang a utiliser pour traduction
+	 *  @param		Translate	$outputlangs	object lang to use for translation
 	 *  @param      int			$hidedetails    Hide details of lines
 	 *  @param      int			$hidedesc       Hide description
 	 *  @param      int			$hideref        Hide ref
