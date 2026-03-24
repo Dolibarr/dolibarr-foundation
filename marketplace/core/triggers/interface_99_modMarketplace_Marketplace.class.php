@@ -110,7 +110,7 @@ class InterfaceMarketplace extends DolibarrTriggers
 						dol_syslog("data: ".$object->array_options['options_marketplace_law_violation']." ".$object->array_options['options_marketplace_fork_of']." ".$object->array_options['options_marketplace_date_stop_earning']);
 
 						if (!empty($object->array_options['options_marketplace_law_violation']) || !empty($object->array_options['options_marketplace_fork_of']) || !empty($object->array_options['options_marketplace_date_stop_earning'])) {
-							$this->errors[] = "Can't set status to onsell if property law_violation or fork_of or date_stop_earning is set";
+							$this->errors[] = "Can't set status to onsell if property forkof or datestopearning is set";
 							$error++;
 						}
 					}
