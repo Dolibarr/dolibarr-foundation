@@ -93,6 +93,8 @@ class InterfaceMarketplaceTriggers extends DolibarrTriggers
 		// Put here code you want to execute when a Dolibarr business events occurs.
 		// Data and type of action are stored into $object and $action
 
+		dol_syslog("Trigger InterfaceMarketplaceTriggers");
+
 		$error = 0;
 
 		switch ($action) {
