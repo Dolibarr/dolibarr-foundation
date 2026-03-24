@@ -93,12 +93,11 @@ class InterfaceMarketplace extends DolibarrTriggers
 		// Put here code you want to execute when a Dolibarr business events occurs.
 		// Data and type of action are stored into $object and $action
 
-		dol_syslog("Trigger InterfaceMarketplace");
-
 		$error = 0;
 
 		switch ($action) {
 			case 'PRODUCT_MODIFY':
+				dol_syslog("Trigger 'InterfaceMarketplace' for action ".$action." launched.");
 				/*var_dump($object->oldcopy->array_options['options_date_endfreeperiod']);
 				 var_dump($object->array_options['options_date_endfreeperiod']);
 				 var_dump($object->lines);*/
@@ -110,7 +109,7 @@ class InterfaceMarketplace extends DolibarrTriggers
 					dol_syslog("data: ".$object->array_options['options_marketplace_law_violation']." ".$object->array_options['options_marketplace_fork_of']." ".$object->array_options['options_marketplace_date_stop_earning']);
 
 					if (1 == 2) {
-						$this->error = "Can't set status to onsell if property forkof or datestopearning is set";
+						$this->errors[] = "Can't set status to onsell if property forkof or datestopearning is set";
 						$error++;
 					}
 				}
