@@ -86,7 +86,4 @@ echo "Lines of code PHP unique : $UNIQ1 + $UNIQ2 = $UNIQ"
 echo "Lines of code PHP common : $COMMON x2"
 echo "Percent similarity: $PERCENT %"
 
-chmod -R 666 $TMPDIR 2>/dev/null
-chown -R dolibarr:www-data $TMPDIR 2>/dev/null
-
 echo
