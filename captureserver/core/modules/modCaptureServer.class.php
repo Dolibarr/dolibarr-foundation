@@ -92,7 +92,7 @@ class modCaptureServer extends DolibarrModules
 			'theme' => 0,                                    	// Set this to 1 if module has its own theme directory (theme)
 			'tpl' => 0,                                      	// Set this to 1 if module overwrite template dir (core/tpl)
 			'barcode' => 0,                                  	// Set this to 1 if module has its own barcode directory (core/modules/barcode)
-			'models' => 0,                                   	// Set this to 1 if module has its own models directory (core/modules/xxx)
+			'models' => 1,                                   	// Set this to 1 if module has its own models directory (core/modules/xxx)
 			'css' => array(),	// Set this to relative path of css file if module has its own css file
 			'js' => array(),          // Set this to relative path of js file if module must load a js on all pages
 			'hooks' => array(), 	// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context 'all'
@@ -155,7 +155,7 @@ class modCaptureServer extends DolibarrModules
 		// 'intervention'     to add a tab in intervention view
 		// 'invoice'          to add a tab in customer invoice view
 		// 'invoice_supplier' to add a tab in supplier invoice view
-		// 'member'           to add a tab in fundation member view
+		// 'member'           to add a tab in foundation member view
 		// 'opensurveypoll'	  to add a tab in opensurvey poll view
 		// 'order'            to add a tab in customer order view
 		// 'order_supplier'   to add a tab in supplier order view
@@ -174,7 +174,7 @@ class modCaptureServer extends DolibarrModules
 		/* Example:
 		$this->dictionaries=array(
 			'langs'=>'mylangfile@captureserver',
-			'tabname'=>array(MAIN_DB_PREFIX."table1",MAIN_DB_PREFIX."table2",MAIN_DB_PREFIX."table3"),		// List of tables we want to see into dictonnary editor
+			'tabname'=>array(MAIN_DB_PREFIX."table1",MAIN_DB_PREFIX."table2",MAIN_DB_PREFIX."table3"),		// List of tables we want to see into dictionary editor
 			'tablib'=>array("Table1","Table2","Table3"),													// Label of tables
 			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table1 as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table2 as f','SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table3 as f'),	// Request to select fields
 			'tabsqlsort'=>array("label ASC","label ASC","label ASC"),																					// Sort order

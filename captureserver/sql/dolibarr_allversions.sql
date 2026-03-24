@@ -9,6 +9,8 @@ ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastsignature VARCHAR(128
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registername VARCHAR(128);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN registerprofid VARCHAR(128);
 
+ALTER TABLE llx_captureserver_captureserver ADD COLUMN country_code VARCHAR(8) after versionblockedlog;
+
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN datesys VARCHAR(32);
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN previousdatecreation VARCHAR(32) after previoussignature;
 ALTER TABLE llx_captureserver_captureserver ADD COLUMN lastdatecreation VARCHAR(32) after lastsignature;

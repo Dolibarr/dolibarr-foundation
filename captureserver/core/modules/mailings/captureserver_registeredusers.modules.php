@@ -15,11 +15,11 @@ include_once DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php';
 
 
 /**
- * mailing_captureserver
+ * mailing_captureserver_registeredusers
  */
-class mailing_captureserver extends MailingTargets
+class mailing_captureserver_registeredusers extends MailingTargets
 {
-	public $name = 'mailing_captureserver';
+	public $name = 'mailing_captureserver_registeredusers';
 	public $desc = 'Email collected by captureserver';
 	public $require_admin = 0;
 
@@ -79,10 +79,10 @@ class mailing_captureserver extends MailingTargets
 
 
 	/**
-	 *  Renvoie url lien vers fiche de la source du destinataire du mailing
+	 *  Return link to the source of the targeted email
 	 *
 	 *  @param		int			$id		ID
-	 *  @return     string      		Url lien
+	 *  @return     string      		Url link
 	 */
 	public function url($id)
 	{
@@ -101,15 +101,13 @@ class mailing_captureserver extends MailingTargets
 	public function add_to_target($mailing_id, $filtersarray = array())
 	{
 		// phpcs:enable
-		global $conf;
 
-		$target = array();
 		$cibles = array();
 		$j = 0;
 
 		$sql = " SELECT s.rowid as id, s.registeremail as email, s.registername as fullname, s.registerprofid as profid, s.country_code";
 		$sql .= " FROM ".MAIN_DB_PREFIX."captureserver_captureserver as s";
-		$sql .= " WHERE email IS NOT NULL AND email <> ''";
+		$sql .= " WHERE registeremail IS NOT NULL AND registeremail <> ''";
 		/*
 		if (GETPOST('status_reseller', 'int') >= 0) {
 			$sql .= " AND s.status = ".((int) GETPOST('status_reseller', 'int'));
@@ -187,7 +185,7 @@ class mailing_captureserver extends MailingTargets
 	 */
 	public function getSqlArrayForStats()
 	{
-		// CHANGE THIS: Optionnal
+		// CHANGE THIS: Optional
 
 		//var $statssql=array();
 		//$this->statssql[0]="SELECT field1 as label, count(distinct(email)) as nb FROM mytable WHERE email IS NOT NULL";
@@ -207,9 +205,9 @@ class mailing_captureserver extends MailingTargets
 	 */
 	public function getNbOfRecipients($filter = 1, $option = '')
 	{
-		$sql = " SELECT COUNT(DISTINCT(email)) as nb";
+		$sql = " SELECT COUNT(DISTINCT(registeremail)) as nb";
 		$sql .= " FROM ".MAIN_DB_PREFIX."captureserver_captureserver as s";
-		$sql .= " WHERE email IS NOT NULL AND email <> ''";
+		$sql .= " WHERE registeremail IS NOT NULL AND registeremail <> ''";
 
 		$a = parent::getNbOfRecipients($sql);
 		if ($a < 0) {

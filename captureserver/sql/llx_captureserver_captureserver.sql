@@ -30,9 +30,10 @@ CREATE TABLE llx_captureserver_captureserver(
 	comment varchar(1024) NULL,
 	import_key VARCHAR(14),
 	datesys VARCHAR(32),
-	
+
 	versiondolibarr VARCHAR(128),
 	versionblockedlog VARCHAR(128),
+	country_code VARCHAR(8),
 	registerid VARCHAR(128),
 	registeremail VARCHAR(128),
 	previousrowid INTEGER,
@@ -45,5 +46,3 @@ CREATE TABLE llx_captureserver_captureserver(
 	registerprofid VARCHAR(128),
 	-- END MODULEBUILDER FIELDS
 ) ENGINE=innodb;
-
-
