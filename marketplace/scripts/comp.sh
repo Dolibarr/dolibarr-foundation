@@ -33,7 +33,7 @@ TMP2="$TMPDIR/dir2"
 
 rm -fr "$TMPDIR"
 mkdir "$TMPDIR"
-chown -R dolibarr:www-data "$TMPDIR" 2>&1
+chown -R dolibarr:www-data "$TMPDIR"  >/dev/null 2>&1
 chmod -R a+rwx "$TMPDIR"
 rm -rf "$TMPDIR/*"
 
@@ -41,7 +41,7 @@ rm -rf "$TMPDIR/*"
 unzip -qq "$ZIP1" -d "$TMP1"
 unzip -qq "$ZIP2" -d "$TMP2"
 
-chown -R dolibarr:www-data "$TMPDIR" 2>&1
+chown -R dolibarr:www-data "$TMPDIR" >/dev/null 2>&1
 chmod -R a+rwx "$TMPDIR"
 
 XXXX1=$(basename "$ZIP1" | sed -E 's/^module_([^ -]+)-.*\.zip$/\1/i')
