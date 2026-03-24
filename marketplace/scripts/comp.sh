@@ -26,12 +26,13 @@ if [ -z "$ZIP1" ] || [ -z "$ZIP2" ]; then
     exit 1
 fi
 
-$TMPDIR="/tmp/comp."`id -un`
+TMPDIR="/tmp/comp."`id -un`
 
 TMP1="$TMPDIR/dir1"
 TMP2="$TMPDIR/dir2"
 
-mkdir $TMPDIR
+rm -fr "$TMPDIR"
+mkdir "$TMPDIR"
 chown -R dolibarr:www-data "$TMPDIR" 2>&1
 chmod -R a+rwx "$TMPDIR"
 rm -rf "$TMPDIR/*"
@@ -50,8 +51,8 @@ echo "Process module 1: $ZIP1 = $XXXX1"
 echo "And     module 2: $ZIP2 = $XXXX2"
 
 # Extraction des lignes PHP
-find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > /tmp/comp/php1.php
-find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > /tmp/comp/php2.php
+find "$TMP1" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX1/MODULENAME/Ig" > $TMPDIR/php1.php
+find "$TMP2" -name "*.php" -type f -exec cat {} + | sed '/^\s*$/d' | sed -E "s/$XXXX2/MODULENAME/Ig" > $TMPDIR/php2.php
 
 cloc --strip-comments=txt --original-dir $TMPDIR/php1.php
 cloc --strip-comments=txt --original-dir $TMPDIR/php2.php
