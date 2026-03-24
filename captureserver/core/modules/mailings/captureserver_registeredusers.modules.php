@@ -107,7 +107,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 
 		$sql = " SELECT s.rowid as id, s.registeremail as email, s.registername as fullname, s.registerprofid as profid, s.country_code";
 		$sql .= " FROM ".MAIN_DB_PREFIX."captureserver_captureserver as s";
-		$sql .= " WHERE registeremail IS NOT NULL AND registeremail <> ''";
+		$sql .= " WHERE type = 'dolibarrregistration' AND registeremail IS NOT NULL AND registeremail <> ''";
 		/*
 		if (GETPOST('status_reseller', 'int') >= 0) {
 			$sql .= " AND s.status = ".((int) GETPOST('status_reseller', 'int'));
@@ -207,7 +207,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 	{
 		$sql = " SELECT COUNT(DISTINCT(registeremail)) as nb";
 		$sql .= " FROM ".MAIN_DB_PREFIX."captureserver_captureserver as s";
-		$sql .= " WHERE registeremail IS NOT NULL AND registeremail <> ''";
+		$sql .= " WHERE type = 'dolibarrregistration' AND registeremail IS NOT NULL AND registeremail <> ''";
 
 		$a = parent::getNbOfRecipients($sql);
 		if ($a < 0) {

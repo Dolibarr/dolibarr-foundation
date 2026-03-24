@@ -36,7 +36,7 @@ define('NOSESSION', '1');
 
 // For MultiCompany module.
 // Do not use GETPOST here, function is not defined and define must be done before including main.inc.php
-// TODO This should be useless. Because entity must be retreive from object ref and not from url.
+// TODO This should be useless. Because entity must be retrieve from object ref and not from url.
 $entity=(! empty($_GET['entity']) ? (int) $_GET['entity'] : (! empty($_POST['entity']) ? (int) $_POST['entity'] : 1));
 if (is_numeric($entity)) define("DOLENTITY", $entity);
 
@@ -85,7 +85,7 @@ if (! $action) {
 $SECUREKEY = GETPOST("securekey", 'alpha');	        // Secure key
 if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")) {
 	dol_syslog('ERROR ErrorBadSecureKey - Bad value of securekey parameter', LOG_WARNING, 0, '_captureserver');
-	accessforbidden("ERROR Acces not allowed. Bad value of securekey parameter");
+	accessforbidden("ERROR Access not allowed. Bad value of securekey parameter");
 }
 
 
@@ -159,8 +159,10 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 						$captureserver->registername = $tmparray['company_name'] ?? 'unknown';
 						$captureserver->registeremail = $tmparray['company_email'] ?? 'unknown';
 						$captureserver->registerprofid = $tmparray['company_idprof1'] ?? 'unknown';
+
 						$captureserver->versiondolibarr = $tmparray['version_full'] ?? 'unknown';
 						$captureserver->versionblockedlog = $tmparray['versionblockedlog_full'] ?? 'unknown';
+						$captureserver->country_code = $tmparray['country_code'] ?? '';
 					}
 
 					if ($action == 'dolibarrpushcounter') {
@@ -222,7 +224,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 										$captureserver2->fetch($obj2->rowid);
 										if ($captureserver2->qty == 1) {
-											$captureserver2->content = $captureserver2->content."\nSeveral anomalies catched on ".$dblastdatecreation.", we keep the first one in comment";
+											$captureserver2->content = $captureserver2->content."\nSeveral anomalies caught on ".$dblastdatecreation.", we keep the first one in comment";
 										}
 
 										$captureserver2->qty++;
@@ -380,7 +382,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 						$osversionarray = preg_split('/\.\-/', GETPOST('os_version', 'alphanohtml'));
 						$osversion = '';
 						$i = 0;
-						foreach($osversionarray as $osversioncursor) {
+						foreach ($osversionarray as $osversioncursor) {
 							if ($i >= 4) {
 								break;
 							}
