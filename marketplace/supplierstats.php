@@ -765,7 +765,7 @@ print '<button type="submit" class="liste_titre button_search reposition" name="
 print '<button type="submit" class="liste_titre button_removefilter reposition" name="button_removefilter_x" value="x"><span class="fas fa-times"></span></button>';
 print '</div>';
 print '</td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_id" value="'.dol_escape_htmltag($search_id).'"></td>';
+//print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_id" value="'.dol_escape_htmltag($search_id).'"></td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_name" value="'.dol_escape_htmltag($search_name).'"></td>';
 print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_alias" value="'.dol_escape_htmltag($search_alias).'"></td>';
 //print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_logins" value="'.dol_escape_htmltag($search_logins).'"></td>';
@@ -786,7 +786,7 @@ print '</tr>';
 
 print '<tr class="liste_titre">';
 print_liste_field_titre('');
-print_liste_field_titre($langs->trans('TechnicalID'), $_SERVER["PHP_SELF"], 's.rowid', '', $param, '', $sortfield, $sortorder);
+//print_liste_field_titre($langs->trans('TechnicalID'), $_SERVER["PHP_SELF"], 's.rowid', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('ThirdPartyName'), $_SERVER["PHP_SELF"], 's.nom', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('AliasNameShort'), $_SERVER["PHP_SELF"], 's.name_alias', '', $param, '', $sortfield, $sortorder);
 //print_liste_field_titre($langs->trans('WebSiteAccounts'), $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder);
@@ -824,12 +824,12 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	$supplierObject->fetch($supplier['id']);
 	print "<tr>";
 	print '<td class="right"></td>';
-	print '<td>'.$supplier['id'].'</td>';
+	//print '<td>'.$supplier['id'].'</td>';
 	print '<td class="tdoverflowmax125">'.$supplierObject->getNomUrl(1).'</td>';
 	print '<td class="tdoverflowmax125" title="'.dolPrintHTMLForAttribute($supplier['alias']).'">'.$supplier['alias'].'</td>';
 	print '<td>'.dol_print_date($supplier['date_creation'], 'day').'</td>';
 	print '<td class="tdoverflowmax100">'.$supplier['country'].'</td>';
-	print '<td class="right">'.((int) $supplier['numberOfProducts']).' <span class="opacitymedium" title="'.dolPrintHTMLForAttribute($langs->trans("OnSale")).'">('.((int) $supplier['numberOfProductsOnSale']).')</span></td>';
+	print '<td class="right nowraponall">'.((int) $supplier['numberOfProducts']).' <span class="opacitymedium" title="'.dolPrintHTMLForAttribute($langs->trans("OnSale")).'">('.((int) $supplier['numberOfProductsOnSale']).')</span></td>';
 	print '<td class="right">'.((int) $supplier['numberOfPaidSells']).'</td>';
 	print '<td class="right">'.$supplier['qtyRefunds'].'</td>';
 	print '<td class="right">'.((int) $supplier['numberOfSupplierInvoices']).'</td>';
@@ -862,7 +862,7 @@ if (empty($supplier_stats)) {
 // Total row
 print '<tr class="liste_total">';
 print '<td class="right"></td>';
-print '<td colspan="5" class="right">'.$langs->trans("Total").'</td>';
+print '<td colspan="4" class="right">'.$langs->trans("Total").'</td>';
 print '<td class="right">'.((int) $totalNumberOfProducts).'</td>';
 print '<td class="right">'.((int) $totalNumberOfPaidSells).'</td>';
 print '<td class="right">'.$totalQtyRefunds.'</td>';
