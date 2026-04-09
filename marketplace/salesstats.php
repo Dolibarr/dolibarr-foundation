@@ -55,7 +55,12 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
+/**
+ * @var Translate $langs
+ * @var DoliDB $db
+ * @var Conf $conf
+ * @var User $user
+ */
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
@@ -110,20 +115,22 @@ if ($mode != 'groupbycountryandvatrate') {
 	if (! $sortfield) $sortfield = "sc.code, cp.libelle";
 	if (! $sortorder) $sortorder = "ASC";
 }
-// Securite acces client
-if (! $user->hasRight('commande', 'read')) accessforbidden();
+
 $socid = GETPOST('socid', 'int');
 if (isset($user->societe_id) && $user->societe_id > 0) {
 	$action = '';
 	$socid = $user->societe_id;
 }
 
-$max = 5;
-$now = dol_now();
-
 $product_id = GETPOST('product_id', 'int');
 
-$arraylistofproducts = array();
+// Security check
+if (!empty($user->socid)) {
+	accessforbidden('Not allowed to external users');
+}
+if (! $user->hasRight('commande', 'read')) {
+	accessforbidden();
+}
 
 
 /*
@@ -162,8 +169,6 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 $form = new Form($db);
 $formfile = new FormFile($db);
 
-$now = dol_now();
-
 $help_url = '';
 $title = $langs->trans("ListOfSalesMarketplace");
 
@@ -180,7 +185,7 @@ $sql = "SELECT ";
 
 // Add customer and order details depending on the mode
 if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {
-    $sql .= "
+	$sql .= "
         d.rowid AS id_order_detail,
         sp.rowid AS socpeople_id,
         sp.ref_ext,
@@ -618,8 +623,6 @@ foreach ($arryofobj as $key => $obj) {
 	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {
 		print '<td>' . $obj->product_id . '</td>';
 	}
-	//if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td>'.$arraylistofproducts[$obj->product_id]['name'].'</td>';
-	//if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') print '<td>'.$arraylistofproducts[$obj->product_id]['reference'].'</td>';
 
 	// Valid ?
 	if ($mode != 'groupbycountryandvatrate' && $mode != 'groupbyzoneandvatrate') {

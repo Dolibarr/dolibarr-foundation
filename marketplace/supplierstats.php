@@ -1,4 +1,26 @@
 <?php
+/* Copyright (C) 2026 Laurent Destailleur  <eldy@users.sourceforge.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ *	\file       marketplace/supplierstats.php
+ *	\ingroup    marketplace
+ *	\brief      Products stats page of marketplace sellers
+ */
+
 // Load Dolibarr environment
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
@@ -33,14 +55,18 @@ if (!$res && file_exists("../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
+/**
+ * @var Translate $langs
+ * @var DoliDB $db
+ * @var Conf $conf
+ * @var User $user
+ */
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/categories.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/categories.lib.php';
 include_once DOL_DOCUMENT_ROOT.'/societe/class/societeaccount.class.php';
 require_once DOL_DOCUMENT_ROOT."/commande/class/commande.class.php";
 require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
-
 include_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 
 // Load translation files required by the page
@@ -52,11 +78,6 @@ $backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
 $type = GETPOST('type', 'intcomma');
 $mode = GETPOST('mode', 'alpha') ? GETPOST('mode', 'alpha') : '';
 $mode = 'commande';
-
-// Security check
-if (!empty($user->socid)) {
-	$socid = $user->socid;
-}
 
 $limit = GETPOSTINT('limit') ? GETPOSTINT('limit') : $conf->liste_limit;
 $sortfield = GETPOST('sortfield', 'aZ09comma');
@@ -97,6 +118,9 @@ $search_discounts = GETPOST('search_discounts');
 $search_totalPaymentsDone = GETPOST('search_totalPaymentsDone');
 $search_numberOfSupplierInvoices = GETPOST('search_numberOfSupplierInvoices');
 
+$datestart = GETPOSTDATE('datestart');
+$dateend = GETPOSTDATE('dateend');
+
 // Purge search criteria
 if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) { // All tests are required to be compatible with all browsers
 	$search_id = '';
@@ -116,14 +140,21 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 	$search_discounts = '';
 	$search_totalPaymentsDone = '';
 	$search_numberOfSupplierInvoices = '';
+	$datestart = '';
+	$dateend = '';
 }
+
+// Security check
+if (!empty($user->socid)) {
+	accessforbidden('Not allowed to external users');
+}
+
 
 /*
  * View
  */
 
 $form = new Form($db);
-$tmpproduct = new Product($db);
 
 llxHeader("", $langs->trans("MarketplaceArea"), '', '', 0, 0, '', '', '', 'mod-marketplace page-index');
 
@@ -218,45 +249,35 @@ $h++;
 
 print dol_get_fiche_head($head, 'SupplierStatsMarketplace', '', -1);
 
-if (!empty(GETPOST('datestart')) || !empty(GETPOST('dateend'))) {
+if ($datestart || $dateend) {
+	$date_start = GETPOST('datestart');
+	$date_end = GETPOST('dateend');
 
-    $date_start = GETPOST('datestart');
-    $date_end = GETPOST('dateend');
+	$date_start_timestamp = dol_mktime(0, 0, 0, GETPOSTINT('datestartmonth'), GETPOSTINT('datestartday'), GETPOSTINT('datestartyear'));
+	$date_end_timestamp = dol_mktime(0, 0, 0, GETPOSTINT('dateendmonth'), GETPOSTINT('dateendday'), GETPOSTINT('dateendyear'));
 
-    $date_start_timestamp = dol_mktime(0, 0, 0, GETPOSTINT('datestartmonth'), GETPOSTINT('datestartday'), GETPOSTINT('datestartyear'));
-    $date_end_timestamp = dol_mktime(0, 0, 0, GETPOSTINT('dateendmonth'), GETPOSTINT('dateendday'), GETPOSTINT('dateendyear'));
+	if (empty($date_start) && !empty($date_end)) {			// If only the end date is provided, set the start date to the earliest possible value
+		$date_start_timestamp = 0; 			// Unix epoch time for 1970-01-01
+	} elseif (!empty($date_start) && empty($date_end)) {	// If only the start date is provided, set the end date to the current date
+		$date_end_timestamp = dol_now(); 	// Current timestamp
+	}
 
-    // If only the end date is provided, set the start date to the earliest possible value
-    if (empty($date_start) && !empty($date_end)) {
-        $date_start_timestamp = 0; // Unix epoch time for 1970-01-01
-    }
-    // If only the start date is provided, set the end date to the current date
-    elseif (!empty($date_start) && empty($date_end)) {
-        $date_end_timestamp = dol_now(); // Current timestamp
-    }
+	$error = 0;
 
-    $error = 0;
-    $error_messages = array();
+	if ($date_end_timestamp < $date_start_timestamp) {
+		$error++;
+		setEventMessages("endDateMustBeGreater", null, 'errors');
+	}
 
-    if ($date_end_timestamp < $date_start_timestamp) {
-        $error++;
-        $error_messages[] = "endDateMustBeGreater";
-    }
+	$filterOrders = '';
+	if ($error == 0 && !empty($date_end_timestamp)) {
+		$filterOrders = " AND c.date_commande BETWEEN '".$db->idate($date_start_timestamp)."' AND '".$db->idate($date_end_timestamp)."'";
+	}
 
-    $filter = '';
-    if ($error == 0 && !empty($date_end_timestamp)) {
-        $filter = " AND c.date_commande BETWEEN '".$db->idate($date_start_timestamp)."' AND '".$db->idate($date_end_timestamp)."'";
-    }
-
-    $filterOrders = '';
-    if ($error == 0 && !empty($date_end_timestamp)) {
-        $filterOrders = " AND c.date_commande BETWEEN '".$db->idate($date_start_timestamp)."' AND '".$db->idate($date_end_timestamp)."'";
-    }
-
-    $filterInvoices = '';
-    if ($error == 0 && !empty($date_end_timestamp)) {
-        $filterInvoices = " AND f.datef BETWEEN '".$db->idate($date_start_timestamp)."' AND '".$db->idate($date_end_timestamp)."'";
-    }
+	$filterInvoices = '';
+	if ($error == 0 && !empty($date_end_timestamp)) {
+		$filterInvoices = " AND f.datef BETWEEN '".$db->idate($date_start_timestamp)."' AND '".$db->idate($date_end_timestamp)."'";
+	}
 }
 
 
@@ -270,7 +291,8 @@ $supplierListSql .= "LEFT JOIN llx_c_departements as state on (state.rowid = s.f
 $supplierListSql .= "LEFT JOIN llx_c_regions as region on (region.code_region = state.fk_region) ";
 $supplierListSql .= "LEFT JOIN llx_c_stcomm as st ON s.fk_stcomm = st.id ";
 $supplierListSql .= "WHERE s.entity = ".((int) $conf->entity)." ";
-$supplierListSql .= "AND ( EXISTS (SELECT ck.fk_soc FROM llx_categorie_societe as ck WHERE s.rowid = ck.fk_soc AND ck.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_PROSPECTCUSTOMER_ID")). ")) ";
+// Condition to be a seller
+$supplierListSql .= "AND ( EXISTS (SELECT ck.fk_soc FROM llx_categorie_fournisseur as ck WHERE s.rowid = ck.fk_soc AND ck.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_VENDOR_ID")). ")) ";
 $supplierListSql .= "AND s.fournisseur = 1 ";
 // Apply filters
 if (!empty($search_id)) {
@@ -303,10 +325,9 @@ if ($result = $db->query($supplierListSql)) {
 	}
 }
 
-
 $supplier_stats = array();
 foreach ($supplierList as $supplier) {
-	$customer_id = $supplier->rowid;
+	$seller_id = $supplier->rowid;
 
 	// Get list of products for the current supplier
 	$products_ids = array();
@@ -316,10 +337,10 @@ foreach ($supplierList as $supplier) {
 	$sql .= "FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pf";
 	$sql .= " JOIN ".MAIN_DB_PREFIX."categorie_product AS cp ON pf.fk_product = cp.fk_product AND cp.fk_categorie = ".((int) getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID"));
 	$sql .= " JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = pf.fk_product";
-	if ($customer_id !== "all") {
-		$sql .= " WHERE pf.fk_soc = ".((int) $customer_id);
+	if ($seller_id !== "all") {
+		$sql .= " WHERE pf.fk_soc = ".((int) $seller_id);
 	}
-	$sql .= " GROUP BY pf.fk_product, p.tosell ";
+	$sql .= " GROUP BY pf.fk_product, p.tosell";
 	$sql .= " ORDER BY first_date DESC";
 
 	if ($result_products = $db->query($sql)) {
@@ -332,6 +353,7 @@ foreach ($supplierList as $supplier) {
 	}
 	$products_ids_str = implode(',', $products_ids);
 
+	// If the seller has at least one product to sell, we calculate the stats
 	if (!empty($products_ids_str)) {
 		// Number of all paid sells OR for a period
 		$all_sells_period_orders = "SELECT SUM(d.qty) AS sells FROM ".MAIN_DB_PREFIX."commande as c, ".MAIN_DB_PREFIX."commandedet as d WHERE c.rowid = d.fk_commande and d.fk_product IN (" . $products_ids_str . ") and d.total_ht != 0 and c.fk_statut IN (1,3) and (c.facture = 1 OR c.ref_ext IS NOT NULL) and c.module_source = 'marketplace' and c.date_commande < '2025-01-01'";
@@ -471,8 +493,8 @@ foreach ($supplierList as $supplier) {
 
 		// Payment History
 		$payment_history = "SELECT f.rowid, f.ref, f.fk_statut, f.fk_soc, f.datec, f.datef, f.date_closing, f.total_ht, f.total_ttc FROM ".MAIN_DB_PREFIX."facture_fourn as f WHERE f.fk_statut = 2 AND f.paye = 1";
-		if ($customer_id != "all") {
-			$payment_history .= " AND f.fk_soc = " . ((int) $customer_id);
+		if ($seller_id != "all") {
+			$payment_history .= " AND f.fk_soc = " . ((int) $seller_id);
 		}
 		if (!empty($filterInvoices)) {
 			$payment_history .=  $filterInvoices;
@@ -552,7 +574,7 @@ foreach ($supplierList as $supplier) {
 
 				if ($isfordolistore) {
 					$dolistoreinvoices[] = array(
-						'dolistore_customer_id' => $customer_id,
+						'dolistore_customer_id' => $seller_id,
 						'id' => $invoice['id'],
 						'ref' => $invoice['ref'],
 						'ref_supplier' => $invoice['ref_supplier'],
@@ -581,19 +603,18 @@ foreach ($supplierList as $supplier) {
 
 		// Check if there is an amount of coupons for this thirdparty
 		$TOTAL_REDUC_OLD_SYSTEM = 0;
-		if (getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM_" . $customer_id)) {
-			$TOTAL_REDUC_OLD_SYSTEM = getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM_" . $customer_id);
+		if (getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM_" . $seller_id)) {
+			$TOTAL_REDUC_OLD_SYSTEM = getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM_" . $seller_id);
 		}
-		if ($customer_id == "all") {
+		if ($seller_id == "all") {
 			$TOTAL_REDUC_OLD_SYSTEM = getDolGlobalString("MARKETPLACE_TOTAL_REDUC_OLD_SYSTEM");
 		}
 
-		$supplier_stats[$customer_id] = array(
-			'id' => $customer_id,
+		$supplier_stats[$seller_id] = array(
+			'id' => $seller_id,
 			'name' => $supplier->name,
 			'alias' => $supplier->name_alias,
 			'ref_ext' => $supplier->ref_ext,
-			'logins' => $logins,
 			'date_creation' => $supplier->date_creation,
 			'country' => $supplier->country_label,
 			'numberOfProducts' => count($products_ids),
@@ -609,79 +630,86 @@ foreach ($supplierList as $supplier) {
 			'paymentsHistory' => $dolistoreinvoices
 		);
 
-		!empty($all_refunds_period_invoices->refunds) ? $supplier_stats[$customer_id]['qtyRefunds'] = $all_refunds_period_invoices->refunds : $supplier_stats[$customer_id]['qtyRefunds'] = 0;
+		!empty($all_refunds_period_invoices->refunds) ? $supplier_stats[$seller_id]['qtyRefunds'] = $all_refunds_period_invoices->refunds : $supplier_stats[$seller_id]['qtyRefunds'] = 0;
 
-		!empty($sum_all_refunds_period_invoices->total) ? $supplier_stats[$customer_id]['sumRefunds'] = $sum_all_refunds_period_invoices->total : $supplier_stats[$customer_id]['sumRefunds'] = 0;
-
+		!empty($sum_all_refunds_period_invoices->total) ? $supplier_stats[$seller_id]['sumRefunds'] = $sum_all_refunds_period_invoices->total : $supplier_stats[$seller_id]['sumRefunds'] = 0;
 	}
 }
 
 // Filter the supplier_stats array based on search criteria
 if (!empty($search_numberOfProducts)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_numberOfProducts) {
-		return $supplier['numberOfProducts'] == (int)$search_numberOfProducts;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_numberOfProducts) {
+		return $supplier['numberOfProducts'] == (int) $search_numberOfProducts;
 	});
 }
 if (!empty($search_numberOfProductsOnSale)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_numberOfProductsOnSale) {
-		return $supplier['numberOfProductsOnSale'] == (int)$search_numberOfProductsOnSale;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_numberOfProductsOnSale) {
+		return $supplier['numberOfProductsOnSale'] == (int) $search_numberOfProductsOnSale;
 	});
 }
 if (!empty($search_numberOfPaidSells)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_numberOfPaidSells) {
-		return $supplier['numberOfPaidSells'] == (int)$search_numberOfPaidSells;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_numberOfPaidSells) {
+		return $supplier['numberOfPaidSells'] == (int) $search_numberOfPaidSells;
 	});
 }
 if (!empty($search_qtyRefunds)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_qtyRefunds) {
-		return $supplier['qtyRefunds'] == (float)$search_qtyRefunds;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_qtyRefunds) {
+		return $supplier['qtyRefunds'] == (float) $search_qtyRefunds;
 	});
 }
 if (!empty($search_sumRefunds)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_sumRefunds) {
-		return $supplier['sumRefunds'] == (float)$search_sumRefunds;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_sumRefunds) {
+		return $supplier['sumRefunds'] == (float) $search_sumRefunds;
 	});
 }
 if (!empty($search_totalOfSellsDone)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_totalOfSellsDone) {
-		return $supplier['totalOfSellsDone'] == (float)$search_totalOfSellsDone;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_totalOfSellsDone) {
+		return $supplier['totalOfSellsDone'] == (float) $search_totalOfSellsDone;
 	});
 }
 if (!empty($search_totalValidatedSells)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_totalValidatedSells) {
-		return $supplier['totalValidatedSells'] == (float)$search_totalValidatedSells;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_totalValidatedSells) {
+		return $supplier['totalValidatedSells'] == (float) $search_totalValidatedSells;
 	});
 }
 if (!empty($search_remainedAmountInOneMonth)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_remainedAmountInOneMonth) {
-		return $supplier['remainedAmountInOneMonth'] == (float)$search_remainedAmountInOneMonth;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_remainedAmountInOneMonth) {
+		return $supplier['remainedAmountInOneMonth'] == (float) $search_remainedAmountInOneMonth;
 	});
 }
 if (!empty($search_remainedAmountToday)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_remainedAmountToday) {
-		return $supplier['remainedAmountToday'] == (float)$search_remainedAmountToday;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_remainedAmountToday) {
+		return $supplier['remainedAmountToday'] == (float) $search_remainedAmountToday;
 	});
 }
 if (!empty($search_discounts)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_discounts) {
-		return $supplier['discounts'] == (float)$search_discounts;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_discounts) {
+		return $supplier['discounts'] == (float) $search_discounts;
 	});
 }
 if (!empty($search_totalPaymentsDone)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_totalPaymentsDone) {
-		return $supplier['totalPaymentsDone'] == (float)$search_totalPaymentsDone;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_totalPaymentsDone) {
+		return $supplier['totalPaymentsDone'] == (float) $search_totalPaymentsDone;
 	});
 }
 if (!empty($search_numberOfSupplierInvoices)) {
-	$supplier_stats = array_filter($supplier_stats, function($supplier) use ($search_numberOfSupplierInvoices) {
-		return $supplier['numberOfSupplierInvoices'] == (int)$search_numberOfSupplierInvoices;
+	$supplier_stats = array_filter($supplier_stats, function ($supplier) use ($search_numberOfSupplierInvoices) {
+		return $supplier['numberOfSupplierInvoices'] == (int) $search_numberOfSupplierInvoices;
 	});
 }
 
 
-// Function to sort the supplier_stats array
-function sort_supplier_stats(&$supplier_stats, $sortfield, $sortorder) {
-	usort($supplier_stats, function($a, $b) use ($sortfield, $sortorder) {
+/**
+ * Function to sort the supplier_stats array based on the sortfield and sortorder
+ *
+ * @param array $supplier_stats The array to be sorted
+ * @param string $sortfield The field to sort by
+ * @param string $sortorder The order to sort by (asc or desc)
+ * @return void
+ */
+function sort_supplier_stats(&$supplier_stats, $sortfield, $sortorder)
+{
+	usort($supplier_stats, function ($a, $b) use ($sortfield, $sortorder) {
 		if ($sortorder == 'asc') {
 			return $a[$sortfield] <=> $b[$sortfield];
 		} else {
@@ -723,45 +751,44 @@ if ($backtopageforcancel) {
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, "", count($supplier_stats), count($supplier_stats), '', 0, '', '', 0, 0, 0, 1);
 
+print $form->selectDate($datestart, 'datestart', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("From"));
+print $form->selectDate($dateend, 'dateend', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("To"));
+print '<br><br>';
+
 print '<div class="div-table-responsive">';
 print '<table class="noborder centpercent">';
 
 print '<tr class="liste_titre_filter">';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_id" value="'.dol_escape_htmltag($search_id).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_name" value="'.dol_escape_htmltag($search_name).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_alias" value="'.dol_escape_htmltag($search_alias).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_ref_ext" value="'.dol_escape_htmltag($search_ref_ext).'"></td>';
-//print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_logins" value="'.dol_escape_htmltag($search_logins).'"></td>';
-print '<td class="liste_titre">&nbsp;</td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_country" value="'.dol_escape_htmltag($search_country).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_numberOfProducts" value="'.dol_escape_htmltag($search_numberOfProducts).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_numberOfPaidSells" value="'.dol_escape_htmltag($search_numberOfPaidSells).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_qtyRefunds" value="'.dol_escape_htmltag($search_qtyRefunds).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_numberOfSupplierInvoices" value="'.dol_escape_htmltag($search_numberOfSupplierInvoices).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_totalOfSellsDone" value="'.dol_escape_htmltag($search_totalOfSellsDone).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_sumRefunds" value="'.dol_escape_htmltag($search_sumRefunds).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_discounts" value="'.dol_escape_htmltag($search_discounts).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_totalValidatedSells" value="'.dol_escape_htmltag($search_totalValidatedSells).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_remainedAmountInOneMonth" value="'.dol_escape_htmltag($search_remainedAmountInOneMonth).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_remainedAmountToday" value="'.dol_escape_htmltag($search_remainedAmountToday).'"></td>';
-print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_totalPaymentsDone" value="'.dol_escape_htmltag($search_totalPaymentsDone).'"></td>';
 print '<td class="liste_titre center">';
-/*print '<input type="image" class="liste_titre" name="button_search" src="'.img_picto($langs->trans("Search"), 'search.png', '', false, 1).'" value="'.$langs->trans("Search").'">';
-print '<input type="image" class="liste_titre" name="button_removefilter" src="'.img_picto($langs->trans("RemoveFilter"), 'searchclear.png', '', false, 1).'" value="'.$langs->trans("RemoveFilter").'">';*/
-
 print '<div class="nowraponall">';
 print '<button type="submit" class="liste_titre button_search reposition" name="button_search_x" value="x"><span class="fas fa-search"></span></button>';
 print '<button type="submit" class="liste_titre button_removefilter reposition" name="button_removefilter_x" value="x"><span class="fas fa-times"></span></button>';
 print '</div>';
-
 print '</td>';
+print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_id" value="'.dol_escape_htmltag($search_id).'"></td>';
+print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_name" value="'.dol_escape_htmltag($search_name).'"></td>';
+print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_alias" value="'.dol_escape_htmltag($search_alias).'"></td>';
+//print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_logins" value="'.dol_escape_htmltag($search_logins).'"></td>';
+print '<td class="liste_titre">&nbsp;</td>';
+print '<td class="liste_titre"><input type="text" class="flat searchstring maxwidth75imp" name="search_country" value="'.dol_escape_htmltag($search_country).'"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
+print '<td class="liste_titre"></td>';
 print '</tr>';
 
 print '<tr class="liste_titre">';
+print_liste_field_titre('');
 print_liste_field_titre($langs->trans('TechnicalID'), $_SERVER["PHP_SELF"], 's.rowid', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('ThirdPartyName'), $_SERVER["PHP_SELF"], 's.nom', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('AliasNameShort'), $_SERVER["PHP_SELF"], 's.name_alias', '', $param, '', $sortfield, $sortorder);
-print_liste_field_titre($langs->trans('RefExt'), $_SERVER["PHP_SELF"], 's.ref_ext', '', $param, '', $sortfield, $sortorder);
 //print_liste_field_titre($langs->trans('WebSiteAccounts'), $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('DateCreation'), $_SERVER["PHP_SELF"], 's.datec', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('Country'), $_SERVER["PHP_SELF"], 'country.label', '', $param, '', $sortfield, $sortorder);
@@ -776,7 +803,6 @@ print_liste_field_titre($langs->trans('totalValidatedSells'), $_SERVER["PHP_SELF
 print_liste_field_titre($langs->trans('remainedAmountInOneMonth'), $_SERVER["PHP_SELF"], 'remainedAmountInOneMonth', '', $param, '', $sortfield, $sortorder, 'right ');
 print_liste_field_titre($langs->trans('remainedAmountToday'), $_SERVER["PHP_SELF"], 'remainedAmountToday', '', $param, '', $sortfield, $sortorder, 'right ');
 print_liste_field_titre($langs->trans('totalPaymentsDone'), $_SERVER["PHP_SELF"], 'totalPaymentsDone', '', $param, '', $sortfield, $sortorder, 'right ');
-print "<td class=\"liste_titre\">&nbsp;</td>";
 print "</tr>\n";
 
 // Static object
@@ -797,11 +823,10 @@ $totalPaymentsDone = 0;
 foreach ($supplier_stats as $supplier_id => $supplier) {
 	$supplierObject->fetch($supplier['id']);
 	print "<tr>";
+	print '<td class="right"></td>';
 	print '<td>'.$supplier['id'].'</td>';
 	print '<td class="tdoverflowmax125">'.$supplierObject->getNomUrl(1).'</td>';
 	print '<td class="tdoverflowmax125" title="'.dolPrintHTMLForAttribute($supplier['alias']).'">'.$supplier['alias'].'</td>';
-	print '<td>'.$supplier['ref_ext'].'</td>';
-	//print '<td>'.$supplier['logins'].'</td>';
 	print '<td>'.dol_print_date($supplier['date_creation'], 'day').'</td>';
 	print '<td class="tdoverflowmax100">'.$supplier['country'].'</td>';
 	print '<td class="right">'.((int) $supplier['numberOfProducts']).' <span class="opacitymedium" title="'.dolPrintHTMLForAttribute($langs->trans("OnSale")).'">('.((int) $supplier['numberOfProductsOnSale']).')</span></td>';
@@ -815,7 +840,6 @@ foreach ($supplier_stats as $supplier_id => $supplier) {
 	print '<td class="right">'.price($supplier['remainedAmountInOneMonth'], 0, '', 1, -1, 2).'</td>';
 	print '<td class="right">'.price($supplier['remainedAmountToday'], 0, '', 1, -1, 2).'</td>';
 	print '<td class="right">'.price($supplier['totalPaymentsDone'], 0, '', 1, -1, 2).'</td>';
-	print '<td class="right"></td>';
 	print "</tr>\n";
 
 	$totalNumberOfProducts += $supplier['numberOfProducts'];
@@ -837,7 +861,8 @@ if (empty($supplier_stats)) {
 
 // Total row
 print '<tr class="liste_total">';
-print '<td colspan="6" class="right">'.$langs->trans("Total").'</td>';
+print '<td class="right"></td>';
+print '<td colspan="5" class="right">'.$langs->trans("Total").'</td>';
 print '<td class="right">'.((int) $totalNumberOfProducts).'</td>';
 print '<td class="right">'.((int) $totalNumberOfPaidSells).'</td>';
 print '<td class="right">'.$totalQtyRefunds.'</td>';
@@ -849,7 +874,6 @@ print '<td class="right">'.price($totalValidatedSells, 0, '', 1, -1, 2).'</td>';
 print '<td class="right">'.price($totalRemainedAmountInOneMonth, 0, '', 1, -1, 2).'</td>';
 print '<td class="right">'.price($totalRemainedAmountToday, 0, '', 1, -1, 2).'</td>';
 print '<td class="right">'.price($totalPaymentsDone, 0, '', 1, -1, 2).'</td>';
-print '<td class="right"></td>';
 print '</tr>';
 
 print "</table>";

@@ -57,8 +57,10 @@ if (!$res) {
 }
 /**
  * @var Conf $conf
+ * @var DoliDB $db
+ * @var User $user
+ * @var Translate $langs
  */
-
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 
 $search_ref = GETPOST('search_ref');
@@ -96,7 +98,14 @@ $offset = $limit * $page;
 $pageprev = $page - 1;
 $pagenext = $page + 1;
 
+// Security check
+if (!empty($user->socid)) {
+	accessforbidden('Not allowed to external users');
+}
+
 restrictedArea($user, 'produit|service', 0, 'product&product', '', '');
+
+
 
 /*
  * Actions
@@ -126,19 +135,19 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 
  $param = '';
  $title = $langs->trans("ListProductServiceByPopularity");
- if ((string) $type == '1') {
-	 $title = $langs->trans("ListServiceByPopularity");
- }
- if ((string) $type == '0') {
-	 $title = $langs->trans("ListProductByPopularity");
- }
+if ((string) $type == '1') {
+	$title = $langs->trans("ListServiceByPopularity");
+}
+if ((string) $type == '0') {
+	$title = $langs->trans("ListProductByPopularity");
+}
 
- if ($type != '') {
-	 $param .= '&type='.urlencode($type);
- }
- if ($mode != '') {
-	 $param .= '&mode='.urlencode($mode);
- }
+if ($type != '') {
+	$param .= '&type='.urlencode($type);
+}
+if ($mode != '') {
+	$param .= '&mode='.urlencode($mode);
+}
 
 
  $h = 0;
@@ -179,60 +188,60 @@ $h++;
  // Add lines for object
  $sql = "SELECT p.rowid, p.ref, p.label, p.fk_product_type as type, p.tobuy, p.tosell, p.tobatch, p.barcode, SUM(pd.qty) as c";
  $textforqty = 'Qty';
- if ($mode == 'facture') {
-	 $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as pd";
- } elseif ($mode == 'commande') {
-	 $textforqty = 'NbOfQtyInOrders';
-	 $sql .= " FROM ".MAIN_DB_PREFIX."commandedet as pd";
- } elseif ($mode == 'propal') {
-	 $textforqty = 'NbOfQtyInProposals';
-	 $sql .= " FROM ".MAIN_DB_PREFIX."propaldet as pd";
- }
+if ($mode == 'facture') {
+	$sql .= " FROM ".MAIN_DB_PREFIX."facturedet as pd";
+} elseif ($mode == 'commande') {
+	$textforqty = 'NbOfQtyInOrders';
+	$sql .= " FROM ".MAIN_DB_PREFIX."commandedet as pd";
+} elseif ($mode == 'propal') {
+	$textforqty = 'NbOfQtyInProposals';
+	$sql .= " FROM ".MAIN_DB_PREFIX."propaldet as pd";
+}
  $sql .= ", ".MAIN_DB_PREFIX."product as p";
  $sql .= ", ".MAIN_DB_PREFIX."categorie_product as cp";
  $sql .= ' WHERE p.entity IN ('.getEntity('product').') AND p.rowid = cp.fk_product AND cp.fk_categorie = '.((int) getDolGlobalString('MARKETPLACE_ROOT_CATEGORY_ID'));
  $sql .= " AND p.rowid = pd.fk_product";
- if ($type !== '') {
-	 $sql .= " AND fk_product_type = ".((int) $type);
- }
- if ($search_ref) {
- 	$sql .= natural_search("p.ref", $search_ref);
- }
- if ($search_label) {
- 	$sql .= natural_search("p.label", $search_label);
- }
+if ($type !== '') {
+	$sql .= " AND fk_product_type = ".((int) $type);
+}
+if ($search_ref) {
+	$sql .= natural_search("p.ref", $search_ref);
+}
+if ($search_label) {
+	$sql .= natural_search("p.label", $search_label);
+}
  $sql .= " GROUP BY p.rowid, p.label, p.ref, p.fk_product_type, p.tobuy, p.tosell, p.tobatch, p.barcode";
 
  $num = 0;
  $totalnboflines = 0;
 
- if (!empty($mode) && $mode != '-1') {
-	 $result = $db->query($sql);
-	 if ($result) {
-		 $totalnboflines = $db->num_rows($result);
-	 }
+if (!empty($mode) && $mode != '-1') {
+	$result = $db->query($sql);
+	if ($result) {
+		$totalnboflines = $db->num_rows($result);
+	}
 
-	 $sql .= $db->order($sortfield, $sortorder);
-	 $sql .= $db->plimit($limit + 1, $offset);
+	$sql .= $db->order($sortfield, $sortorder);
+	$sql .= $db->plimit($limit + 1, $offset);
 
-	 $resql = $db->query($sql);
-	 if ($resql) {
-		 $num = $db->num_rows($resql);
-		 $i = 0;
+	$resql = $db->query($sql);
+	if ($resql) {
+		$num = $db->num_rows($resql);
+		$i = 0;
 
-		 while ($i < $num) {
-			 $objp = $db->fetch_object($resql);
+		while ($i < $num) {
+			$objp = $db->fetch_object($resql);
 
-			 $infoprod[$objp->rowid] = array('type' => $objp->type, 'ref' => $objp->ref, 'label' => $objp->label, 'tobuy' => $objp->tobuy, 'tosell' => $objp->tosell, 'tobatch' => $objp->tobatch, 'barcode' => $objp->barcode);
-			 $infoprod[$objp->rowid]['nbline'] = $objp->c;
+			$infoprod[$objp->rowid] = array('type' => $objp->type, 'ref' => $objp->ref, 'label' => $objp->label, 'tobuy' => $objp->tobuy, 'tosell' => $objp->tosell, 'tobatch' => $objp->tobatch, 'barcode' => $objp->barcode);
+			$infoprod[$objp->rowid]['nbline'] = $objp->c;
 
-			 $i++;
-		 }
-		 $db->free($resql);
-	 } else {
-		 dol_print_error($db);
-	 }
- }
+			$i++;
+		}
+		$db->free($resql);
+	} else {
+		dol_print_error($db);
+	}
+}
  //var_dump($infoprod);
 
 
@@ -250,12 +259,12 @@ $h++;
  print '<input type="hidden" name="mode" value="'.$mode.'">';
  print '<input type="hidden" name="type" value="'.$type.'">';
  print '<input type="hidden" name="action" value="add">';
- if ($backtopage) {
-	 print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
- }
- if ($backtopageforcancel) {
-	 print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
- }
+if ($backtopage) {
+	print '<input type="hidden" name="backtopage" value="'.$backtopage.'">';
+}
+if ($backtopageforcancel) {
+	print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
+}
 
 
 print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, "", $num, $totalnboflines, '', 0, '', '', -1, 0, 0, 1);
@@ -292,54 +301,54 @@ if (!$conf->main_checkbox_left_column) {
 print "</tr>\n";
 
 if ($mode && $mode != '-1') {
-	 foreach ($infoprod as $prodid => $vals) {
-		 // Multilangs
-		 if (getDolGlobalInt('MAIN_MULTILANGS')) { // si l'option est active
-			 $sql = "SELECT label";
-			 $sql .= " FROM ".MAIN_DB_PREFIX."product_lang";
-			 $sql .= " WHERE fk_product = ".((int) $prodid);
-			 $sql .= " AND lang = '".$db->escape($langs->getDefaultLang())."'";
-			 $sql .= " LIMIT 1";
+	foreach ($infoprod as $prodid => $vals) {
+		// Multilangs
+		if (getDolGlobalInt('MAIN_MULTILANGS')) { // si l'option est active
+			$sql = "SELECT label";
+			$sql .= " FROM ".MAIN_DB_PREFIX."product_lang";
+			$sql .= " WHERE fk_product = ".((int) $prodid);
+			$sql .= " AND lang = '".$db->escape($langs->getDefaultLang())."'";
+			$sql .= " LIMIT 1";
 
-			 $resultp = $db->query($sql);
-			 if ($resultp) {
-				 $objtp = $db->fetch_object($resultp);
-				 if (!empty($objtp->label)) {
-					 $vals['label'] = $objtp->label;
-				 }
-			 }
-		 }
+			$resultp = $db->query($sql);
+			if ($resultp) {
+				$objtp = $db->fetch_object($resultp);
+				if (!empty($objtp->label)) {
+					$vals['label'] = $objtp->label;
+				}
+			}
+		}
 
-		 $tmpproduct->id = $prodid;
-		 $tmpproduct->ref = $vals['ref'];
-		 $tmpproduct->label = $vals['label'];
-		 $tmpproduct->type = $vals['type'];
-		 $tmpproduct->status = $vals['tosell'];
-		 $tmpproduct->status_buy = $vals['tobuy'];
-		 $tmpproduct->status_batch = $vals['tobatch'];
-		 $tmpproduct->barcode = $vals['barcode'];
+		$tmpproduct->id = $prodid;
+		$tmpproduct->ref = $vals['ref'];
+		$tmpproduct->label = $vals['label'];
+		$tmpproduct->type = $vals['type'];
+		$tmpproduct->status = $vals['tosell'];
+		$tmpproduct->status_buy = $vals['tobuy'];
+		$tmpproduct->status_batch = $vals['tobatch'];
+		$tmpproduct->barcode = $vals['barcode'];
 
-		 print "<tr>";
+		print "<tr>";
 		print '<td></td>';		// Checkbox
-		 print '<td>';
-		 print $tmpproduct->getNomUrl(1);
-		 print '</td>';
-		 print '<td class="center">';
-		 $s = '';
-		 if ($vals['type'] == 1) {
-			 $s .= img_picto($langs->trans("Service"), 'service', 'class="paddingleftonly paddingrightonly colorgrey"');
-		 } else {
-			 $s .= img_picto($langs->trans("Product"), 'product', 'class="paddingleftonly paddingrightonly colorgrey"');
-		 }
-		 print $s;
-		 print '</td>';
-		 print '<td>'.dolPrintHTML($vals['label']).'</td>';
-		 print '<td class="right">'.((int) $vals['nbline']).'</td>';
-		 print "</tr>\n";
-	 }
- } else {
-	 print '<tr><td colspan="5"><span class="opacitymedium">'.$langs->trans("SelectTheTypeOfObjectToAnalyze").'</span></td></tr>';
- }
+		print '<td>';
+		print $tmpproduct->getNomUrl(1);
+		print '</td>';
+		print '<td class="center">';
+		$s = '';
+		if ($vals['type'] == 1) {
+			$s .= img_picto($langs->trans("Service"), 'service', 'class="paddingleftonly paddingrightonly colorgrey"');
+		} else {
+			$s .= img_picto($langs->trans("Product"), 'product', 'class="paddingleftonly paddingrightonly colorgrey"');
+		}
+		print $s;
+		print '</td>';
+		print '<td>'.dolPrintHTML($vals['label']).'</td>';
+		print '<td class="right">'.((int) $vals['nbline']).'</td>';
+		print "</tr>\n";
+	}
+} else {
+	print '<tr><td colspan="5"><span class="opacitymedium">'.$langs->trans("SelectTheTypeOfObjectToAnalyze").'</span></td></tr>';
+}
  print "</table>";
 
  print '</form>';
