@@ -468,19 +468,19 @@ foreach ($supplierList as $supplier) {
 		$resql = $db->query($sum_all_validated_sells_orders);
 		$sells_done_validated_orders = $db->fetch_object($resql);
 
-		$sum_all_validated_sells_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.datef >= '2025-01-01' AND f.datef < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		$sum_all_validated_sells_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and fd.total_ht > 0 and f.type = 0 and f.paye = 1 and f.module_source = 'marketplace' and f.datef >= '2025-01-01' AND f.datef < DATE_SUB(NOW(), INTERVAL 1 MONTH)";
 		if (!empty($filterInvoices)) {
 			$sum_all_validated_sells_invoices .=  $filterInvoices;
 		}
 		$resql = $db->query($sum_all_validated_sells_invoices);
 		$sells_done_validated_invoices = $db->fetch_object($resql);
 
-		$sum_all_refunds_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef >= '2025-01-01'";
-		$sum_all_refunds_invoices .= " AND EXISTS (SELECT rowid FROM ".MAIN_DB_PREFIX."facture as fs WHERE fs.rowid = f.fk_facture_source and fs.module_source = 'marketplace') ";
+		$sql_sum_all_refunds_invoices = "SELECT SUM(fd.total_ht) as total FROM ".MAIN_DB_PREFIX."facture as f, ".MAIN_DB_PREFIX."facturedet as fd WHERE f.rowid = fd.fk_facture and fd.fk_product IN (" . $products_ids_str . ") and f.type = 2 and f.paye = 1 and f.datef >= '2025-01-01'";
+		$sql_sum_all_refunds_invoices .= " AND EXISTS (SELECT rowid FROM ".MAIN_DB_PREFIX."facture as fs WHERE fs.rowid = f.fk_facture_source and fs.module_source = 'marketplace') ";
 		if (!empty($filterInvoices)) {
-			$sum_all_refunds_invoices .=  $filterInvoices;
+			$sql_sum_all_refunds_invoices .=  $filterInvoices;
 		}
-		$resql = $db->query($sum_all_refunds_invoices);
+		$resql = $db->query($sql_sum_all_refunds_invoices);
 		$sum_all_refunds_invoices = $db->fetch_object($resql);
 
 		$sells_done_validated = $sells_done_validated_orders->total + $sells_done_validated_invoices->total + $sum_all_refunds_invoices->total;
@@ -499,7 +499,9 @@ foreach ($supplierList as $supplier) {
 		}
 		$resql = $db->query($sum_all_discounts);
 		$sells_discounts = $db->fetch_object($resql);
-		$TOTAL_DISCOUNTS = $sells_discounts->total;
+		if ($sells_discounts) {
+			$TOTAL_DISCOUNTS = $sells_discounts->total;
+		}
 
 		// Payment History
 		$payment_history = "SELECT f.rowid, f.ref, f.fk_statut, f.fk_soc, f.datec, f.datef, f.date_closing, f.total_ht, f.total_ttc FROM ".MAIN_DB_PREFIX."facture_fourn as f WHERE f.fk_statut = 2 AND f.paye = 1";
