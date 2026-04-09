@@ -214,6 +214,16 @@ if (!empty($search_totalPaymentsDone)) {
 if (!empty($search_numberOfSupplierInvoices)) {
 	$param .= "&search_numberOfSupplierInvoices=" . ((int) $search_numberOfSupplierInvoices);
 }
+if (!empty($datestart)) {
+	$param .= "&datestartyear=" . ((int) dol_print_date($datestart, '%Y'));
+	$param .= "&datestartmonth=" . ((int) dol_print_date($datestart, '%m'));
+	$param .= "&datestartday=" . ((int) dol_print_date($datestart, '%d'));
+}
+if (!empty($dateend)) {
+	$param .= "&dateendyear=" . ((int) dol_print_date($dateend, '%Y'));
+	$param .= "&dateendmonth=" . ((int) dol_print_date($dateend, '%m'));
+	$param .= "&dateendday=" . ((int) dol_print_date($dateend, '%d'));
+}
 
 print load_fiche_titre($langs->trans("MarketplaceArea"), '', 'fa-store');
 
