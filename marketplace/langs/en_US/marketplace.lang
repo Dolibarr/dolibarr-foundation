@@ -41,6 +41,7 @@ MarketplaceSetupPaymentPage1Cons=The payment public pages of your backoffice app
 MarketplaceSetupPaymentPage2=When using the payment into a frame, the payment page of you backoffice is called using an url of your markeplace shop. A setup of your web server will make the request to be redirected from server side to your backoffice payment public pages.
 MarketplaceSetupPaymentPage2Pro=Need to add proxy rules on the payment URL to reach your Dolibarr application
 MarketplaceSetupPaymentPage2Cons=The payment public pages of your backoffice application are not visible and can be blocked from any externall access.
+marketplacePaymentInFrameNotSupported=Not supported for %s
 
 
 About = About
@@ -327,6 +328,7 @@ NoValidityDuration=(<b>0</b> means <b>Lifetime validity</b>)
 lifeTimeAccess=Lifetime access
 previewPage=Preview Page
 MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT=Auto close orders on successful payment
+MARKETPLACE_MAIN_PAYMENT_METHOD=Select the payment method to use
 MARKETPLACE_USER_MANAGE_WEBSITE=User with permissions to perform website operations
 MARKETPLACE_USER_MANAGE_WEBSITE_HELP=This user can execute website actions such as adding products, managing third parties, and placing orders.
 ThisModuleOrVersionIsNoMoreAvailable=This module or version is no more available. It may have been discontinued by the author or replaced by another module or version.
