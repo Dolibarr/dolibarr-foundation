@@ -171,10 +171,15 @@ if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
 	}
 }
 
+$iframeSupportedPaymentMethods = array('stripe'); // List of payment methods that support being displayed inside an iframe
 if (preg_match('/setMARKETPLACE_MAIN_PAYMENT_METHOD/i', $action, $reg)) {
 	$mainpaymentmethod = GETPOST('MARKETPLACE_MAIN_PAYMENT_METHOD', 'alpha');
 	$mainpaymentmethod = $mainpaymentmethod === '-1' ? '' : $mainpaymentmethod;
 	if (dolibarr_set_const($db, 'MARKETPLACE_MAIN_PAYMENT_METHOD', $mainpaymentmethod, 'chaine', 0, '', $conf->entity) > 0) {
+		if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME') && !in_array($mainpaymentmethod, $iframeSupportedPaymentMethods)) {
+			// If selected main payment method does not support being displayed inside an iframe, we disable the option to use payment in frame
+			dolibarr_del_const($db, 'MARKETPLACE_PAYMENT_IN_FRAME', $conf->entity);
+		}
 		header("Location: ".$_SERVER["PHP_SELF"]);
 		exit;
 	} else {
@@ -278,7 +283,6 @@ print '</form>';
 if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
 
 	// Check if selected main payment method support being displayed inside an iframe
-	$iframeSupportedPaymentMethods = array('stripe'); // List of payment methods that support being displayed inside an iframe
 	$canUseIframe = in_array(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'), $iframeSupportedPaymentMethods);
 
 	print $langs->trans("UseFrameDesc")." ";
