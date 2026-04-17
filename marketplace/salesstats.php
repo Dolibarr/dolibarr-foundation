@@ -59,6 +59,8 @@ if (!$res) {
  * @var Translate $langs
  * @var DoliDB $db
  * @var Conf $conf
+ * @var HookManager	$hookmanager
+ * @var Societe $mysoc
  * @var User $user
  */
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
@@ -362,7 +364,7 @@ $labelbyzone = $langs->trans("Country" . $mysoc->country_code) . ', ' . $langs->
 // Output page
 // --------------------------------------------------------------------
 
-llxHeader("", $langs->trans("MarketplaceArea"), '', '', 0, 0, '', '', '', 'mod-marketplace page-index');
+llxHeader("", $langs->trans("MarketplaceArea"), $help_url, '', 0, 0, '', '', '', 'mod-marketplace page-index');
 
 print load_fiche_titre($langs->trans("MarketplaceArea"), '', 'fa-store');
 
@@ -401,7 +403,7 @@ if (! empty($contextpage) && $contextpage != $_SERVER["PHP_SELF"]) $param .= '&c
 if ($limit > 0 && $limit != $conf->liste_limit) $param .= '&limit=' . urlencode($limit);
 if ($optioncss != '')    $param .= '&optioncss=' . urlencode($optioncss);
 if ($search_orderid)     $param .= '&search_orderid=' . urlencode($search_orderid);
-if ($search_orderlineid)     $param .= '&search_orderid=' . urlencode($search_orderlineid);
+if ($search_orderlineid) $param .= '&search_orderid=' . urlencode($search_orderlineid);
 if ($search_customer)    $param .= '&search_customer=' . urlencode($search_customer);
 if ($search_email)       $param .= '&search_email=' . urlencode($search_email);
 if ($search_country)     $param .= '&search_country=' . urlencode($search_country);
@@ -439,12 +441,14 @@ if ($mode == 'groupbyzoneandvatrate') {
 }
 $massactionbutton = '';
 
-if ($mode) $param .= '&mode=' . urlencode($mode);
+if ($mode) {
+	$param .= '&mode=' . urlencode($mode);
+}
 
 if ($mode == 'groupbyzoneandvatrate') {
-	print_barre_liste($title . ' (' . $labelbyzone . ')', $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, -1 * $num, '', 'title_companies', 0, $newcardbutton, '', -1, 1, 1);
+	print_barre_liste($title . ' (' . $labelbyzone . ')', $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, -1 * $num, '', '', 0, $newcardbutton, '', -1, 1, 1);
 } else {
-	print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'title_companies', 0, $newcardbutton, '', $limit, 0, 0, 1);
+	print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, '', 0, $newcardbutton, '', $limit, 0, 0, 1);
 }
 
 $moreforfilter = '';
