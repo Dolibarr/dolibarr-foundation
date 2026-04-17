@@ -59,13 +59,14 @@ global $langs, $user;
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/marketplace.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/payments.lib.php';
 //require_once "../class/myclass.class.php";
 
 // Translations
 $langs->loadLangs(array("admin", "marketplace@marketplace"));
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
-$hookmanager->initHooks(array('marketplacesetup', 'globalsetup'));
+$hookmanager->initHooks(array('marketplacesetup', 'globalsetup', 'newpayment'));
 
 // Access control
 if (!$user->admin) {
@@ -170,6 +171,22 @@ if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
 	}
 }
 
+$iframeSupportedPaymentMethods = array('stripe'); // List of payment methods that support being displayed inside an iframe
+if (preg_match('/setMARKETPLACE_MAIN_PAYMENT_METHOD/i', $action, $reg)) {
+	$mainpaymentmethod = GETPOST('MARKETPLACE_MAIN_PAYMENT_METHOD', 'alpha');
+	$mainpaymentmethod = $mainpaymentmethod === '-1' ? '' : $mainpaymentmethod;
+	if (dolibarr_set_const($db, 'MARKETPLACE_MAIN_PAYMENT_METHOD', $mainpaymentmethod, 'chaine', 0, '', $conf->entity) > 0) {
+		if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME') && !in_array($mainpaymentmethod, $iframeSupportedPaymentMethods)) {
+			// If selected main payment method does not support being displayed inside an iframe, we disable the option to use payment in frame
+			dolibarr_del_const($db, 'MARKETPLACE_PAYMENT_IN_FRAME', $conf->entity);
+		}
+		header("Location: ".$_SERVER["PHP_SELF"]);
+		exit;
+	} else {
+		dol_print_error($db);
+	}
+}
+
 
 
 /*
@@ -200,7 +217,7 @@ $urlwithouturlroot = preg_replace('/'.preg_quote(DOL_URL_ROOT, '/').'$/i', '', t
 $urlwithroot = $urlwithouturlroot.DOL_URL_ROOT; // This is to use external domain name found into config file
 //$urlwithroot=DOL_MAIN_URL_ROOT;					// This is to use same domain name than current
 
-print '<br>';
+
 
 print $langs->trans("MARKETPLACE_BLOCK_SALES")." ";
 $enabledisablehtml = '';
@@ -236,65 +253,99 @@ if (!getDolGlobalString('MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT')) {
 print $enabledisablehtml;
 print '<input type="hidden" id="MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT" name="MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT" value="'.(!getDolGlobalString('MARKETPLACE_CLOSE_ORDER_AFTER_PAYMENT') ? 0 : 1).'">';
 
-print '<br><hr><br>';
+print '<hr>';
 
-print $langs->trans("UseFrameDesc")." ";
-$enabledisablehtml = '';
-if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
-	// Button off, click to enable
-	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_PAYMENT_IN_FRAME&token='.newToken().$param.'">';
-	$enabledisablehtml .= img_picto($langs->trans("Disabled"), 'switch_off');
-	$enabledisablehtml .= '</a>';
-} else {
-	// Button on, click to disable
-	$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_PAYMENT_IN_FRAME&token='.newToken().$param.'">';
-	$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on', '');
-	$enabledisablehtml .= '</a>';
+// Setup to select main payment method
+$validpaymentmethod = getValidOnlinePaymentMethods('', 1);
+$validpaymentmethodarray = array();
+foreach ($validpaymentmethod as $key => $paymentmethod) {
+	$validpaymentmethodarray[$key] = !empty($paymentmethod['label']) ? $paymentmethod['label'] : $key;
 }
-print $enabledisablehtml;
-print '<input type="hidden" id="MARKETPLACE_PAYMENT_IN_FRAME" name="MARKETPLACE_PAYMENT_IN_FRAME" value="'.(!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME') ? 0 : 1).'">';
+print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_MAIN_PAYMENT_METHOD&token='.newToken().$param.'">';
+print $langs->trans("MARKETPLACE_MAIN_PAYMENT_METHOD")." ";
+print $form->selectarray(
+	'MARKETPLACE_MAIN_PAYMENT_METHOD',
+	$validpaymentmethodarray,
+	getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'),
+	1,
+	0,
+	0,
+	'onchange="this.form.submit()"',
+	0,
+	0,
+	0,
+	'',
+	'minwidth300'
+);
+print '<hr>';
+print '</form>';
 
-print '<br>';
+if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
 
-// Setup page goes here
-print '<span class="opacitymedium">'."<br>\n";
-print $langs->trans("MarketplaceSetupPaymentPage1")."<br>\n";
-print "* ".$langs->trans("MarketplaceSetupPaymentPage1Pro")."<br>\n";
-print "* ".$langs->trans("MarketplaceSetupPaymentPage1Cons")."<br>\n";
-print "<br>\n";
-print $langs->trans("MarketplaceSetupPaymentPage2")."<br>\n";
-print "* ".$langs->trans("MarketplaceSetupPaymentPage2Pro")."<br>\n";
-print "* ".$langs->trans("MarketplaceSetupPaymentPage2Cons")."<br>\n";
-print '</span>'."<br>\n";
-print '<br>';
+	// Check if selected main payment method support being displayed inside an iframe
+	$canUseIframe = in_array(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'), $iframeSupportedPaymentMethods);
 
+	print $langs->trans("UseFrameDesc")." ";
+	$enabledisablehtml = '';
+	if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
+		// Button off, click to enable
+		$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_PAYMENT_IN_FRAME&token='.newToken().$param.'"'.($canUseIframe ? '' : ' onclick="return false;" style="opacity:0.5; cursor:not-allowed;"').'>';
+		$enabledisablehtml .= img_picto($langs->trans("Disabled"), 'switch_off');
+		$enabledisablehtml .= '</a>';
+	} else {
+		// Button on, click to disable
+		$enabledisablehtml .= '<a class="reposition valignmiddle" href="'.$_SERVER["PHP_SELF"].'?action=delMARKETPLACE_PAYMENT_IN_FRAME&token='.newToken().$param.'" '.($canUseIframe ? '' : ' onclick="return false;" style="opacity:0.5; cursor:not-allowed;"').'>';
+		$enabledisablehtml .= img_picto($langs->trans("Activated"), 'switch_on', '');
+		$enabledisablehtml .= '</a>';
+	}
+	if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD')) && !$canUseIframe) {
+		$enabledisablehtml .= '<span class="error"> ('.$langs->trans("marketplacePaymentInFrameNotSupported", getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD')).')</span>';
+	}
+	print $enabledisablehtml;
+	print '<input type="hidden" id="MARKETPLACE_PAYMENT_IN_FRAME" name="MARKETPLACE_PAYMENT_IN_FRAME" value="'.(!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME') ? 0 : 1).'">';
 
-if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
-	print "You are using the payment outside of a frame, no particular setup is required for this module.\n";
+	print '<br>';
+
+	// Setup page goes here
+	print '<span class="opacitymedium">'."<br>\n";
+	print $langs->trans("MarketplaceSetupPaymentPage1")."<br>\n";
+	print "* ".$langs->trans("MarketplaceSetupPaymentPage1Pro")."<br>\n";
+	print "* ".$langs->trans("MarketplaceSetupPaymentPage1Cons")."<br>\n";
 	print "<br>\n";
-	print '<span class="info">In this mode, you can create a page called "htmlheaderpayment" with the type "banner" to define a header to add to the payment page.</span><br>'."\n";
-}
+	print $langs->trans("MarketplaceSetupPaymentPage2")."<br>\n";
+	print "* ".$langs->trans("MarketplaceSetupPaymentPage2Pro")."<br>\n";
+	print "* ".$langs->trans("MarketplaceSetupPaymentPage2Cons")."<br>\n";
+	print '</span>'."<br>\n";
+	print '<br>';
 
-if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
-	print "<small>You are using the payment inside a frame, you must modify the virtual host of you marketplace web server to
-	include a proxy of the payment URLs to the URLs of your Dolibarr backend server.</small><br>\n";
-	print '<textarea class="quatrevingtpercent" rows=20>';
-	print "# If you need include the payment page into a frame of the marketplace website,\n";
-	print "# you need to make a proxy redirection of URLs required for the payment to your backoffice public payment pages\n";
-	print "#SSLProxyEngine On\n";
-	print "#SSLProxyVerify none\n";
-	print "#SSLProxyCheckPeerCN off\n";
-	print "#SSLProxyCheckPeerName off\n";
-	print "#ProxyPreserveHost Off\n";
-	print '#ProxyPass "/public/payment/" "'.$urlwithroot.'/public/payment/'."\n";
-	print '#ProxyPassReverse "/public/payment/" "'.$urlwithroot.'/public/payment/'."\n";
-	print '#ProxyPass "/includes/" "'.$urlwithroot.'/includes/'."\n";
-	print '#ProxyPassReverse "/includes/" "'.$urlwithroot.'/includes/'."\n";
-	print '#ProxyPass "/theme/" "'.$urlwithroot.'/theme/'."\n";
-	print '#ProxyPassReverse "/theme/" "'.$urlwithroot.'/theme/'."\n";
-	print '#ProxyPass "/core/js/" "'.$urlwithroot.'/core/js/'."\n";
-	print '#ProxyPassReverse "/core/js/" "'.$urlwithroot.'/core/js/'."\n";
-	print "</textarea><br>\n";
+
+	if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
+		print "You are using the payment outside of a frame, no particular setup is required for this module.\n";
+		print "<br>\n";
+		print '<span class="info">In this mode, you can create a page called "htmlheaderpayment" with the type "banner" to define a header to add to the payment page.</span><br>'."\n";
+	}
+
+	if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
+		print "<small>You are using the payment inside a frame, you must modify the virtual host of you marketplace web server to
+		include a proxy of the payment URLs to the URLs of your Dolibarr backend server.</small><br>\n";
+		print '<textarea class="quatrevingtpercent" rows=20>';
+		print "# If you need include the payment page into a frame of the marketplace website,\n";
+		print "# you need to make a proxy redirection of URLs required for the payment to your backoffice public payment pages\n";
+		print "#SSLProxyEngine On\n";
+		print "#SSLProxyVerify none\n";
+		print "#SSLProxyCheckPeerCN off\n";
+		print "#SSLProxyCheckPeerName off\n";
+		print "#ProxyPreserveHost Off\n";
+		print '#ProxyPass "/public/payment/" "'.$urlwithroot.'/public/payment/'."\n";
+		print '#ProxyPassReverse "/public/payment/" "'.$urlwithroot.'/public/payment/'."\n";
+		print '#ProxyPass "/includes/" "'.$urlwithroot.'/includes/'."\n";
+		print '#ProxyPassReverse "/includes/" "'.$urlwithroot.'/includes/'."\n";
+		print '#ProxyPass "/theme/" "'.$urlwithroot.'/theme/'."\n";
+		print '#ProxyPassReverse "/theme/" "'.$urlwithroot.'/theme/'."\n";
+		print '#ProxyPass "/core/js/" "'.$urlwithroot.'/core/js/'."\n";
+		print '#ProxyPassReverse "/core/js/" "'.$urlwithroot.'/core/js/'."\n";
+		print "</textarea><br>\n";
+	}
 }
 
 print "<br>\n";

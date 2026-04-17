@@ -70,7 +70,7 @@ require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
 include_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 
 // Load translation files required by the page
-$langs->loadLangs(array('commande', 'propal', 'bills', 'other', 'products', 'marketplace@marketplace'));
+$langs->loadLangs(array('commande', 'companies', 'propal', 'bills', 'other', 'products', 'marketplace@marketplace'));
 
 $backtopage = GETPOST('backtopage', 'alpha');
 $backtopageforcancel = GETPOST('backtopageforcancel', 'alpha');
@@ -799,7 +799,7 @@ print '</tr>';
 print '<tr class="liste_titre">';
 print_liste_field_titre('');
 //print_liste_field_titre($langs->trans('TechnicalID'), $_SERVER["PHP_SELF"], 's.rowid', '', $param, '', $sortfield, $sortorder);
-print_liste_field_titre($langs->trans('ThirdPartyName'), $_SERVER["PHP_SELF"], 's.nom', '', $param, '', $sortfield, $sortorder);
+print_liste_field_titre($langs->trans('ThirdPartySuppliers'), $_SERVER["PHP_SELF"], 's.nom', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('AliasNameShort'), $_SERVER["PHP_SELF"], 's.name_alias', '', $param, '', $sortfield, $sortorder);
 //print_liste_field_titre($langs->trans('WebSiteAccounts'), $_SERVER["PHP_SELF"], '', '', $param, '', $sortfield, $sortorder);
 print_liste_field_titre($langs->trans('DateCreation'), $_SERVER["PHP_SELF"], 's.datec', '', $param, '', $sortfield, $sortorder);
