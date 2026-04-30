@@ -172,7 +172,7 @@ $books_category_id = 7;
 
 $marketplaceDiscountExcludeCategoryId = getDolGlobalInt("MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID");
 
-// Check not elegible for discount products category if defined 
+// Check not elegible for discount products category if defined
 $categorie = new Categorie($db);
 $result = $categorie->fetch($marketplaceDiscountExcludeCategoryId);
 if ($result <= 0) {
@@ -240,9 +240,9 @@ if ($limit != 0) {
 }
 
 $duplicated_references_query = "
-SELECT 
+SELECT
 	pp.reference
-FROM ps_product pp 
+FROM ps_product pp
 WHERE pp.reference IN (
     SELECT reference
     FROM ps_product
@@ -336,7 +336,7 @@ if ($result_products = $conn->query($products_query)) {
 		if (in_array($obj->reference, $duplicated_references)) {
 			$product->ref = $obj->reference.'r'.$obj->id_product;
 		}
-		
+
 		$product->label = $obj->name;
 		$product->description = $obj->description_short;
 		$product->other = $obj->description;
@@ -470,7 +470,7 @@ if ($result_products = $conn->query($products_query)) {
 				$error++;
 			}
 
-			// Add  categories and verions
+			// Add  categories and versions
 			$categries_and_versions_list = array();
 
 			$root_category = getDolGlobalInt("MARKETPLACE_ROOT_CATEGORY_ID");
@@ -516,13 +516,13 @@ if ($result_products = $conn->query($products_query)) {
 			GROUP BY t.name
 			ORDER BY t.name  ASC
 			";
-			if ($result_product_verions = $conn->query($products_versions_query)) {
-				while ($objverions = $result_product_verions->fetch_object()) {
-					if ($objverions->name) {	// Some tags are empty
+			if ($result_product_versions = $conn->query($products_versions_query)) {
+				while ($objversions = $result_product_versions->fetch_object()) {
+					if ($objversions->name) {	// Some tags are empty
 						$get_version = new Categorie($db);
-						$resget = $get_version->fetch('', $objverions->name, Categorie::TYPE_PRODUCT);
+						$resget = $get_version->fetch('', $objversions->name, Categorie::TYPE_PRODUCT);
 						if ($resget <= 0 || empty($get_version->id)) {
-							//print ' - Product category "'.$objverions->name.'" not found in Dolibarr, we discard it.';
+							//print ' - Product category "'.$objversions->name.'" not found in Dolibarr, we discard it.';
 						} else {
 							$categries_and_versions_list[$get_version->id] = $get_version->id;
 						}
