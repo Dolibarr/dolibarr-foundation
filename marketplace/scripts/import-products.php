@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 /* Copyright (C) 2007-2023 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) ---Put here your own copyright and developer email---
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -162,7 +161,7 @@ $db_user = $argv[3];
 $db_password = $argv[4];
 $db_port = $argv[5];
 $limit = 20;
-if(isset($argv[6])){
+if (isset($argv[6])) {
 	$limit = $argv[6] == 0 ? 0 : $argv[6];
 }
 $clean_all_before_import = isset($argv[7])?$argv[7] : false;
@@ -172,7 +171,7 @@ $books_category_id = 7;
 
 $marketplaceDiscountExcludeCategoryId = getDolGlobalInt("MARKETPLACE_DISCOUNT_EXCLUDE_PRODUCTS_CATEGORY_ID");
 
-// Check not elegible for discount products category if defined
+// Check not eligible for discount products category if defined
 $categorie = new Categorie($db);
 $result = $categorie->fetch($marketplaceDiscountExcludeCategoryId);
 if ($result <= 0) {
@@ -298,7 +297,7 @@ if ($result_duplicated_references = $conn->query($duplicated_references_query)) 
 }
 
 
-// We enable recursive category assignement (we use it for search and filter purposes)
+// We enable recursive category assignment (we use it for search and filter purposes)
 $conf->global->CATEGORIE_RECURSIV_ADD = 1;
 
 
@@ -401,7 +400,6 @@ if ($result_products = $conn->query($products_query)) {
 
 		// Add langs, categories, versions and photos
 		if (!$error && 1) {
-
 			// Add alternative languages
 			$products_lang_query = "
 			SELECT
@@ -425,7 +423,6 @@ if ($result_products = $conn->query($products_query)) {
 			";
 
 			if ($result_products_lang = $conn->query($products_lang_query)) {
-
 				while ($objlang = $result_products_lang->fetch_object()) {
 					$product->multilangs[$objlang->dol_lang_code] = array(
 						'label' => $objlang->name,
@@ -464,8 +461,7 @@ if ($result_products = $conn->query($products_query)) {
 
 					print " - Adding supplier prices (id_fourn=".$id_fourn." ref_product_fourn=".$ref_product_fourn.") OK";
 				}
-
-			}else{
+			} else {
 				print " - Error in retrieve owner ID from ref " . $product->ref;
 				$error++;
 			}
@@ -564,7 +560,6 @@ if ($result_products = $conn->query($products_query)) {
 
 			if ($result_product_images = $conn->query($products_images_query)) {
 				while ($objimage = $result_product_images->fetch_object()) {
-
 					$url = "https://www.dolistore.com/" . $objimage->id_image . "-thickbox/" . $objimage->id_image . ".jpg";
 					if (!is_dir($upload_dir)) {
 						mkdir($upload_dir);
