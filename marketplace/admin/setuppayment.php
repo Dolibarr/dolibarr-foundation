@@ -261,7 +261,7 @@ $validpaymentmethodarray = array();
 foreach ($validpaymentmethod as $key => $paymentmethod) {
 	$validpaymentmethodarray[$key] = !empty($paymentmethod['label']) ? $paymentmethod['label'] : $key;
 }
-print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_MAIN_PAYMENT_METHOD&token='.newToken().$param.'">';
+print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?action=setMARKETPLACE_MAIN_PAYMENT_METHOD&token='.newToken().$param.'" spellcheck="false" >';
 print $langs->trans("MARKETPLACE_MAIN_PAYMENT_METHOD")." ";
 print $form->selectarray(
 	'MARKETPLACE_MAIN_PAYMENT_METHOD',
@@ -281,7 +281,6 @@ print '<hr>';
 print '</form>';
 
 if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
-
 	// Check if selected main payment method support being displayed inside an iframe
 	$canUseIframe = in_array(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'), $iframeSupportedPaymentMethods);
 
