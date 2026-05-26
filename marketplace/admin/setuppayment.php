@@ -339,6 +339,8 @@ if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
 		print '#ProxyPassReverse "/public/payment/" "'.$urlwithroot.'/public/payment/'."\n";
 		print '#ProxyPass "/includes/" "'.$urlwithroot.'/includes/'."\n";
 		print '#ProxyPassReverse "/includes/" "'.$urlwithroot.'/includes/'."\n";
+		print '#ProxyPass "/public/includes/" "'.$urlwithroot.'/public/includes/'."\n";
+		print '#ProxyPassReverse "/public/includes/" "'.$urlwithroot.'/public/includes/'."\n";
 		print '#ProxyPass "/theme/" "'.$urlwithroot.'/theme/'."\n";
 		print '#ProxyPassReverse "/theme/" "'.$urlwithroot.'/theme/'."\n";
 		print '#ProxyPass "/core/js/" "'.$urlwithroot.'/core/js/'."\n";
