@@ -306,7 +306,7 @@ if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
 	print '<br>';
 
 	// Setup page goes here
-	print '<span class="opacitymedium">'."<br>\n";
+	print '<div class="info">'."\n";
 	print $langs->trans("MarketplaceSetupPaymentPage1")."<br>\n";
 	print "* ".$langs->trans("MarketplaceSetupPaymentPage1Pro")."<br>\n";
 	print "* ".$langs->trans("MarketplaceSetupPaymentPage1Cons")."<br>\n";
@@ -314,18 +314,18 @@ if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
 	print $langs->trans("MarketplaceSetupPaymentPage2")."<br>\n";
 	print "* ".$langs->trans("MarketplaceSetupPaymentPage2Pro")."<br>\n";
 	print "* ".$langs->trans("MarketplaceSetupPaymentPage2Cons")."<br>\n";
-	print '</span>'."<br>\n";
+	print '</div>'."<br>\n";
 	print '<br>';
 
 
 	if (!getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
-		print "You are using the payment outside of a frame, no particular setup is required for this module.\n";
+		print "=> You are using the payment outside of a frame, no particular setup is required for this module.\n";
 		print "<br>\n";
 		print '<span class="info">In this mode, you can create a page called "htmlheaderpayment" with the type "banner" to define a header to add to the payment page.</span><br>'."\n";
 	}
 
 	if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
-		print "<small>You are using the payment inside a frame, you must modify the virtual host of you marketplace web server to
+		print "<small>=> You are using the payment inside a frame, you must modify the virtual host of you marketplace web server to
 		include a proxy of the payment URLs to the URLs of your Dolibarr backend server.</small><br>\n";
 		print '<textarea class="quatrevingtpercent" rows=20 spellcheck="false">';
 		print "# If you need include the payment page into a frame of the marketplace website,\n";
