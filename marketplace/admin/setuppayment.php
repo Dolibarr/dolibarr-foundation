@@ -327,7 +327,7 @@ if (!empty(getDolGlobalString('MARKETPLACE_MAIN_PAYMENT_METHOD'))) {
 	if (getDolGlobalString('MARKETPLACE_PAYMENT_IN_FRAME')) {
 		print "<small>You are using the payment inside a frame, you must modify the virtual host of you marketplace web server to
 		include a proxy of the payment URLs to the URLs of your Dolibarr backend server.</small><br>\n";
-		print '<textarea class="quatrevingtpercent" rows=20>';
+		print '<textarea class="quatrevingtpercent" rows=20 spellcheck="false">';
 		print "# If you need include the payment page into a frame of the marketplace website,\n";
 		print "# you need to make a proxy redirection of URLs required for the payment to your backoffice public payment pages\n";
 		print "#SSLProxyEngine On\n";
