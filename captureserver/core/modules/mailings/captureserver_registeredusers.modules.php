@@ -103,7 +103,6 @@ class mailing_captureserver_registeredusers extends MailingTargets
 		// phpcs:enable
 
 		$cibles = array();
-		$j = 0;
 
 		$sql = " SELECT s.rowid as id, s.registeremail as email, s.registername as fullname, s.registerprofid as profid, s.country_code";
 		$sql .= " FROM ".MAIN_DB_PREFIX."captureserver_captureserver as s";
@@ -120,7 +119,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 		}
 		*/
 		if (GETPOST('country_code') && GETPOST('country_code') != 'none' && GETPOST('country_code') != '-1') {
-			$sql.= " AND country_code IN ('".$this->db->sanitize(GETPOST('country_code', 'intcomma'), 1)."')";
+			$sql.= " AND country_code IN ('".$this->db->sanitize(GETPOST('country_code', 'az09'), 1)."')";
 		}
 
 		$sql.= " ORDER BY registeremail";
