@@ -133,6 +133,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 		if ($result) {
 			$num = $this->db->num_rows($result);
 			$i = 0;
+			$j = 0;
 
 			dol_syslog("resellers_sellyoursaas.modules.php: mailing $num target found");
 
