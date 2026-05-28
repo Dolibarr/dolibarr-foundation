@@ -78,7 +78,7 @@ class modCaptureServer extends DolibarrModules
 		// Name of image file used for this module.
 		// If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png, use this->picto='pictovalue@module'
-		$this->picto='generic';
+		$this->picto='fa-server';
 
 		// Defined all module parts (triggers, login, substitutions, menus, css, etc...)
 		// for default path (eg: /captureserver/core/xxxxx) (0=disable, 1=enable)
@@ -253,14 +253,14 @@ class modCaptureServer extends DolibarrModules
 		$this->menu[$r++]=array('fk_menu'=>'fk_mainmenu=tools',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 								'type'=>'left',			                // This is a Left menu entry
 								'titre'=>'ListOfCapturedEvents',
-								'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth valignmiddle"'),
+								'prefix' => 'fa-server',
 								'mainmenu'=>'tools',
 								'leftmenu'=>'captureserver_list',
 								'url'=>'/captureserver/captureserver_list.php',
 								'langs'=>'captureserver@captureserver',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 								'position'=>1000+$r,
-								'enabled'=>'$conf->captureserver->enabled',  // Define condition to show or hide menu entry. Use '$conf->captureserver->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-								'perms'=>'$user->rights->captureserver->read',			                // Use 'perms'=>'$user->rights->captureserver->level1->level2' if you want your menu with a permission rules
+								'enabled'=>'isModEnabled("captureserver")',  // Define condition to show or hide menu entry. Use '$conf->captureserver->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+								'perms'=>'$user->hasRights("captureserver", "read")',			                // Use 'perms'=>'$user->rights->captureserver->level1->level2' if you want your menu with a permission rules
 								'target'=>'',
 								'user'=>2);				                // 0=Menu for internal users, 1=external users, 2=both
 		/*$this->menu[$r++]=array(	'fk_menu'=>'fk_mainmenu=captureserver,fk_leftmenu=captureserver',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
