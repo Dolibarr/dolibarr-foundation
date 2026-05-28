@@ -54,7 +54,7 @@ class CaptureServer extends CommonObject
 	/**
 	 * @var string String with name of icon for captureserver. Must be the part after the 'object_' into object_captureserver.png
 	 */
-	public $picto = 'captureserver@captureserver';
+	public $picto = 'fa-server';
 
 
 	const STATUS_DRAFT = 0;
