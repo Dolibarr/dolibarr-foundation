@@ -101,6 +101,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 	public function add_to_target($mailing_id, $filtersarray = array())
 	{
 		// phpcs:enable
+		global $conf;
 
 		$cibles = array();
 
@@ -120,6 +121,9 @@ class mailing_captureserver_registeredusers extends MailingTargets
 		*/
 		if (GETPOST('country_code') && GETPOST('country_code') != 'none' && GETPOST('country_code') != '-1') {
 			$sql.= " AND country_code IN ('".$this->db->sanitize(GETPOST('country_code', 'aZ09'), 1)."')";
+		}
+		if (empty($this->evenunsubscribe)) {
+			$sql .= " AND NOT EXISTS (SELECT rowid FROM ".MAIN_DB_PREFIX."mailing_unsubscribe as mu WHERE mu.email = a.email and mu.entity = ".((int) $conf->entity).")";
 		}
 
 		$sql.= " ORDER BY registeremail";
