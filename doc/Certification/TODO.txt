@@ -1,0 +1,25 @@
+
+
+
+* Algo pour une signatrue backward en plus de forward.
+
+Forward_n =
+H(
+    Data_n
+    || Forward_{n-1}
+    || Backward_{n-1}
+)
+
+et
+
+Backward_{n-1} =
+H(
+    Data_n
+    || Data_{n-1}
+)
+
+
+* Utilisation d'une Ancre externe stockée chiffré dans llx_const avec date + dernier rowid et signature.
+
+
+* Usage rigoureux du push si pas de suppression.
