@@ -25,4 +25,31 @@ H(
 
 
 
+----- TODO
+
+Add column type_code in llx_blockedlog (for perf + filter on type_code)
+
+
+
 ----- Modif doc
+
+[x] Ajouter un lien vers les sources des documents vers les graphiques
+[x] Ajouter un tag sur git pour LNE
+* Schématisé les niveaux de validation CI (Intégration Continue), RM (Release Manager), RQC (Responsable Qualité Conformité) - Il faudra surement séparer les 2 validations des Issues et Réalisation des releases (Probleme de francais)
+[*] Revoir la page 50 dossier organisationnel, erreur association
+* Pas envoyé mais mis à disposition pour les nouvelles versions de Dolibarr
+* Guide utilisateur définition qui est l'utilisateur (Intégrateur ou utilisateur du Dolibarr)
+* Dossier exploitation page 17 droits
+* Virer les NF525, attributions roles et droit permissions d'accès
+* Prendre les memes informations nom
+* Données cumulatives Total perpetuel
+* Mention sur les tickets pour la partie logiciel de caisse certifiée
+* Issues perte des elements inscrit sur htdocs/blockedlog/admin/registration.php
+[x] Issues SIREN cela devrait etre le SIRET htdocs/blockedlog/admin/registration.php
+[x] On peut changer le Pays dans Société ou organisationnel
+* Recherche les TODO dans les documents (Cloture de caisse)
+* page 24 - Dossier de maintenance manque un "O" Mdule
+* Ajoute de l'information système outils log inaltérable
+* Changement des régions pour la TVA
+* Page 22 - 2- Fonctionnelle manque LNE6 - et explication une fois log fait on ne plus modifier, on ne parle pas de facture mais de vente à corriger
+* Dans un CSV on peut mettre le JSON ?
