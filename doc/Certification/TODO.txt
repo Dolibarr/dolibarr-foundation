@@ -1,7 +1,8 @@
 
 
+----- Suppression dernière ligne
 
-* Algo pour une signatrue backward en plus de forward.
+* Algo pour une signature backward en plus de forward.
 
 Forward_n =
 H(
@@ -18,8 +19,10 @@ H(
     || Data_{n-1}
 )
 
-
 * Utilisation d'une Ancre externe stockée chiffré dans llx_const avec date + dernier rowid et signature.
 
-
 * Usage rigoureux du push si pas de suppression.
+
+
+
+----- Modif doc
