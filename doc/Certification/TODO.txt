@@ -31,7 +31,17 @@ Add column type_code in llx_blockedlog (for perf + filter on type_code)
 
 
 
------ Modif doc
+----- Modif
+
+
+
+Jour 1 - Documentaire
+=====================
+
+Chaque changement du périmètre fiscal nécessite 1 audit si cela doit être Version majeure : 2.
+Version mineure : 2.x.y
+
+A corriger:
 
 [x] Ajouter un lien vers les sources des documents vers les graphiques
 [x] Ajouter un tag sur git pour LNE
@@ -49,7 +59,176 @@ Add column type_code in llx_blockedlog (for perf + filter on type_code)
 [x] page 24 - Dossier de maintenance manque un "O" Mdule
 * Ajout de l'information système outils log inaltérable  ????
 [x] Page 22 - 2- Fonctionnelle manque LNE6 - et explication une fois log fait on ne plus modifier, on ne parle pas de facture mais de vente à corriger
+[x] Ajouter le RQC dans le github action sur les fichiers du périmètre
 
 
-Remarques pb référentiel:
-* Changement des régions pour la TVA  ????
+
+NC1 - Définition de mise à jour du Dolibarr
+-------------------------------------------
+
+    * Amélioration de la description du process de mise à Jour
+        * Réponse possible :la mise a jour est expliqué dans le dossier d'exploitation
+    * Qui est responsable des sauvegardes dans concernant les données de la Loi de finance - Bien spécifié que c'est de la responsabilité des intégrateur et pourquoi pas avoir un document controle
+    * Manque un lien vers la gestion des droits utilisateurs (dossier d'exploitation vers Guide utilisateur)
+    * Manque le pointeur vers les fonctions d'administrateurs (Vise le 2-dossier de spécifité Fonctionnel
+    * Améliorations visuels des explications des montants réalisés avec les liens vers les champs, la méthode en mode facile à comprendre pour un controle fiscal (en over ou pop-up)
+    * Erreur dans la documentation il y a semaine alors que l'on ne peut pas cloturé sur la semaine mais jour, mois, année
+    * Fonction d'envoi est en fait "fonction d'envoie d'email et en fait une fonction qui génère le contenu" page 56/15 dossier conception générale
+
+
+NC2 - Module journaux inaltérables
+----------------------------------
+
+    * le nom n'est pas identique entre les libellés du champs qui apparait dans l'archive n'est pas le meme que le libellés de l'écran (Inclure un fichier readme dans l'archive qui explique le fonctionnement)
+
+
+Jour 2 - Fonctionnel
+====================
+
+Présentation de Dolibarr,
+
+-   Interface
+-   Version
+-   Montant Perpetuel CA - Relévés - 146,70 € TTC
+-   Montant Perpetuel ENCAISSE - Relévés - 121.90 € TTC
+-   Simulation de transaction
+    -   Vente de produit divers
+    -   Méthode de paiement
+-   Simulation de transactions - 3/06/2026 - 121,90 € TTC
+    -   Avec remise 100%
+    -   Double paiement chèque et espèce
+-   Passage dans le future au 01/07/2026
+    -   Remboursement de l’avoir
+    -   Cloture Juin 2026
+
+
+A corriger:
+
+* Génération d’une facture d’acompte automatique si encaissement ?
+* Mettre version LNE, adresse du LNE, logo
+* Génération ticket 006 avec blocage de la gestion de stock avec numeros de séries
+* Ajouter une option sur le compteur de Duplicata possible ?
+* Module Source ajouter une source pour le backoffice (actuellement c’est blanc Sinon le préciser dans la documentation) - https://github.com/Dolibarr/dolibarr/issues/38611
+* Information sur les clotures affichage des dates dans les messages afficher la date de cloture et le fait que la caisse ne puisse pas être réouverte.
+* Manque les traductions dans l’export en CSV pour les francais
+* Améliorer l’affichage des traductions journaux inaltérables et la traductions (Séparer il reste 1232344432 transaction en 1 200 345 transaction en gras etc…)
+* Amélioration la ligne KO dans le fichier en mettant l’export et sur une période incomplete
+* Fractionner la vente n’est pas le bon terme
+* Modification de la ligne complete et génération du SHA256 de la ligne qui devrait être vert
+* Séparation des SHA un pour la ligne, un pour la suite
+* C’est un choix de conception de Dolibarr : la clôture de caisse n’a pas de droit séparé. Quiconque peut utiliser le Point de Vente peut aussi ouvrir et clôturer la caisse. Si tu veux restreindre la clôture à certains utilisateurs (ex: uniquement les managers), il faudrait ajouter une nouvelle permission dans modTakePos.class.php.
+
+NC3 - Permettre de réecrite sur une période de cloture
+------------------------------------------------------
+
+    * Message afin de limiter la cloture facilement (bloquer totalement) avec un message d'avertissement
+
+
+NC4 - Simplification des interfaces et séparation complete des flux
+-------------------------------------------------------------------
+
+    * Ajouter un filtre sur blocklog_list.php (Et séparer les clotures par Point de vente)
+        * Vide = FactureElectronique
+        * TakePOS = toutes les factures, avoirs de caisse et les encaissements/decaissement
+    * Montant perpetuel pour tous les Terminal - Point de Vente (TPV)
+    * Renommer les AVOIRS en TA1 pour l'avoir sur le 1 et les encaissement et décaissement idem (PAY1 et REMB1)
+    * Terminal = Terminal Point de Vente
+    * Faires les clotures pas terminal de point de vente
+        * à Noter on n'a pas de TPE en liaison direct
+
+
+NC5 - Le ticket Provisoire est considéré comme un premier ticket on aura toujours un ticket en Duplicata
+--------------------------------------------------------------------------------------------------------
+
+    * Marqué Provisoire - Compteur
+    * Marque Duplicata - Compteur (Affichage sur le ticket)
+
+
+NC5bis - A noter avec les NC Robustesse
+---------------------------------------
+
+    * Suppression de la derniere ligne des log inaltérable possible
+
+
+
+Jour 3 - SMC
+============
+
+Question desactivation
+
+-   Ligne dans le module
+
+
+
+A corriger:
+
+* Formations à faire et améliorer le Wiki
+* Savoir qui a été formé
+* DigiQuali génère les activités etc (Dossier organisationnel page 36 etc…)
+* Amélioration du nombre d’issue pour la documentation mettre en lien vers les issues sur git directement
+* Mettre en place la gestion des activités, des risque, opportunités et KPI liens etc..
+* Question 144 - Modifier les questions de DigiQuali avec OK/KO au lieu du nombre il faut inverser et surtout conserver le OK/KO et la quantité d’issue
+* Dossier organisation “Description …” page 50/60, il faut mieux expliquer les responsabilités sont uniquement du coté utilisateur final, l’intégrateur ne peut rien configuré et ne peut pas être responsable des mauvaises informaitons saisie tel que SIRET ou mauvais Pays
+* Manque l’activation automatique des log sur takePOS
+* Remplacer RQ par RQC
+* Mettre en place un lien visible pour la version 2.0.0
+* Dans “a propos” mettre en place le logo
+* Le lien vers la LNE
+* Respecter la charte graphiques
+* Le numero de certificat
+* Dossier organisationnel doublon page 53
+* Dossier organisationnel Voir page 59 “enrichier”
+* Page 62 améliorer la création des issues imbriqués doc->code ou code->doc Fait un schéma ! Avec le PDCA
+
+    * RQC fait les spéc fonctionnelles,
+    * Sessions de formations
+        * Wiki
+        * Formations -
+
+
+NC6 - Activité de controle de package est réalisé avant chaque release alors qu’il indiqué 1 fois pas an c’est pas cohérent
+---------------------------------------------------------------------------------------------------------------------------
+
+NC7 - Manque message dans le module blockedlog/admin/documentation.php
+----------------------------------------------------------------------
+
+    * https://github.com/Dolibarr/dolibarr/issues/38618
+
+
+Réunion de Cloture
+==================
+
+* Conclusion
+* Excellente
+* DigiQuali OK - SMC Opérationnel
+* Volet Fonctionnelle - OK
+* Louis - Non conformité Audit de Robustesse
+Point Fort : Maturité de la documentation
+
+
+* N°R26-1
+Cles Disponible sur la configuration,
+Loi finance, l’usage de la fonction point de vente du fait de cette exigence sont usage serait hors la loi
+Exclure du périmètre d’audit l’auto-hébergement. Ne pas avoir les même SIRET Hebergeur et Utilisateur. Changer doc sur périmètre pour limiter aux instances hébergées.
+Ajouter la demande au controle fiscal de vérifier que l’assuteti n’a pas l’accès à clés HMAC, l’informer dans la documentation et dans du blocage sur la documentation pour le controleur fiscal
+SIRET hebergeur Dolibarr intégrateur solution
+Information du système Ouvert envoyer le texte de lois
+Le SHA de départ est généré sur le SIRET Donc unique infalcifiable
+
+* N°R26-2
+    * à lire
+* N°R26-3
+    * à lire
+* N°R26-4
+    * à lire
+* N°R26-5
+    * Déjà levée est testé avec Audit Fonctionnel
+* N°R26-6
+
+* N°1-2026
+    * Vu
+* N°2-2026
+* N°3-2026
+* N°4-2026
+* N°5-2026
+* N°6-2026
