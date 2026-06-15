@@ -142,8 +142,9 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 				$tmparray = json_decode($contenttoinsert, true, 2);
 
 				if ($tmparray['company_idprof1'] != $captureserver->registerprofid) {
-					dol_syslog('The professional ID is not the same than the one registered or was never registered. Go to the setup page of module BlockedLog to register your instance.', LOG_DEBUG, 0, '_captureserver');
-					print "\n".'The professional ID is not the same than the one registered or was never registered. Go to the setup page of module BlockedLog to register your instance.';
+					$message = 'The professional ID received ('.$tmparray['company_idprof1'].') is not the same than the one registered ('.$captureserver->registerprofid.') for registration number '.$hash_unique_id.' or was never registered. Go to the setup page of module BlockedLog to register your instance.';
+					dol_syslog($message, LOG_DEBUG, 0, '_captureserver');
+					print "\n".$message;
 					http_response_code(500);
 
 					$db->close();
