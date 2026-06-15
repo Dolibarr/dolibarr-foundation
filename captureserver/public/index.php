@@ -107,7 +107,7 @@ dol_syslog('----- Capture server was called with action='.$action, LOG_NOTICE, 0
 
 print '----- Capture server was called with action='.$action;
 
-if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter') {
+if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter' || $action == 'dolibarrgetkeyobfuscation') {
 	$hash_algo = GETPOST('hash_algo', 'aZ09');
 	$hash_unique_id = GETPOST('hash_unique_id', 'aZ09');
 	$version = GETPOST('version', 'aZ09');
@@ -115,7 +115,7 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 	if (empty($hash_algo) || empty($hash_unique_id)) {
 		print "\n".'<br>Bad value for parameter hash_algo or hash_unique_id';
 	} else {
-		$maxsize = getDolGlobalInt('CAPTURE_SERVER_MAX_SIZE_OF_CAPTURED_CONTENT', 4096);
+		$maxsize = getDolGlobalInt('CAPTURE_SERVER_MAX_SIZE_OF_CAPTURED_CONTENT', 8192);
 		if (is_array($_POST) && strlen(join('', $_POST)) > $maxsize) {
 			$contenttoinsert = 'Content larger than limit of '.$maxsize;
 		} else {
@@ -133,12 +133,29 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 			http_response_code(500);
 
 			$db->close();
-
 			exit;
 		}
 
 		if ($result > 0) {
 			dol_syslog('Record already found for key '.$action.'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
+
+			if ($action == 'dolibarrgetkeyobfuscation') {
+				$tmparray = json_decode($contenttoinsert, true, 2);
+
+				if ($tmparray['company_idprof1'] != $captureserver->registerprofid) {
+					print "\n".'The professional ID is not the same than the one registered or was never registered. Go to the setup page of module BlockedLog to register your instance.';
+					http_response_code(500);
+
+					$db->close();
+					exit;
+				}
+
+				// Return the obfuscation key
+				print 'dolobfuscatev1:'.hash('sha256', $tmparray['company_idprof1'].getDolGlobalString('CAPTURESERVER_SALT_FOR_OBFUSCATIONKEY'))."\n";
+
+				exit;
+			}
+
 
 			// Update fields
 			$captureserver->comment = 'Message received for update at '.dol_print_date(dol_now(), 'dayhourlog').' - from hash '.$hash_unique_id.' - version '.$version;

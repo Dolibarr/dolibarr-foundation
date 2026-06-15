@@ -144,6 +144,7 @@ class CaptureServer extends CommonObject
 	public $registerid;
 	public $registername;
 	public $registeremail;
+	public $registerprofid;
 
 	public $previousrowid;
 	public $previoussignature;
