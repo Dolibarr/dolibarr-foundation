@@ -88,6 +88,10 @@ if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")
 	accessforbidden("ERROR Access not allowed. Bad value of securekey parameter");
 }
 
+$hash_algo = GETPOST('hash_algo', 'aZ09');
+$hash_unique_id = GETPOST('hash_unique_id', 'aZ09');
+$version = GETPOST('version', 'aZ09');
+
 
 /*
  * Actions
@@ -103,15 +107,10 @@ if ($SECUREKEY && $SECUREKEY != getDolGlobalString("CAPTURESERVER_SECURITY_KEY")
 header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
 header("Access-Control-Allow-Origin: *");
 
-dol_syslog('----- Capture server was called with action='.$action, LOG_NOTICE, 0, '_captureserver');
-
-print '----- Capture server was called with action='.$action;
+dol_syslog('----- Capture server was called with action_hash='.$action.'_'.$hash_unique_id, LOG_NOTICE, 0, '_captureserver');
+print '----- Capture server was called with action_hash='.$action.'_'.$hash_unique_id;
 
 if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter' || $action == 'dolibarrgetkeyobfuscation') {
-	$hash_algo = GETPOST('hash_algo', 'aZ09');
-	$hash_unique_id = GETPOST('hash_unique_id', 'aZ09');
-	$version = GETPOST('version', 'aZ09');
-
 	if (empty($hash_algo) || empty($hash_unique_id)) {
 		print "\n".'<br>Bad value for parameter hash_algo or hash_unique_id';
 	} else {
