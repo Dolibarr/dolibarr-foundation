@@ -107,8 +107,8 @@ $version = GETPOST('version', 'aZ09');
 header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
 header("Access-Control-Allow-Origin: *");
 
-dol_syslog('----- Capture server was called with action_hash='.$action.'_'.$hash_unique_id, LOG_NOTICE, 0, '_captureserver');
-print '----- Capture server was called with action_hash='.$action.'_'.$hash_unique_id;
+dol_syslog('----- Capture server was called with action='.$action.' hash='.$hash_unique_id, LOG_NOTICE, 0, '_captureserver');
+print '----- Capture server was called with action='.$action.' hash='.$hash_unique_id."\n";
 
 if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter' || $action == 'dolibarrgetkeyobfuscation') {
 	if (empty($hash_algo) || empty($hash_unique_id)) {
