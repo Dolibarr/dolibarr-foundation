@@ -110,7 +110,10 @@ header("Access-Control-Allow-Origin: *");
 dol_syslog('----- Capture server was called with action='.$action.' hash='.$hash_unique_id, LOG_NOTICE, 0, '_captureserver');
 print '----- Capture server was called with action='.$action.' hash='.$hash_unique_id."\n";
 
-if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action == 'dolibarrpushcounter' || $action == 'dolibarrgetkeyobfuscation') {
+if ($action == 'dolibarrping'
+	|| $action == 'dolibarrregistration'
+	// || $action == 'dolibarrpushcounter'
+	|| $action == 'dolibarrgetkeyobfuscation') {
 	if (empty($hash_algo) || empty($hash_unique_id)) {
 		print "\n".'<br>Bad value for parameter hash_algo or hash_unique_id';
 	} else {
