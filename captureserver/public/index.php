@@ -125,9 +125,9 @@ if ($action == 'dolibarrping' || $action == 'dolibarrregistration' || $action ==
 
 		// Insert into database using implicit Transactions
 		$captureserver = new CaptureServer($db);
-		$result = $captureserver->fetch(0, $action.'_'.$hash_unique_id);	// Unique key is on $action.'_'.$hash_unique_id
+		$result = $captureserver->fetch(0, ($action == 'dolibarrgetkeyobfuscation' ? 'dolibarrregistration' : $action).'_'.$hash_unique_id);	// Unique key is on $action.'_'.$hash_unique_id
 
-		if ($result < 0) {
+		if ($result < 0 || ($result == 0 && $action == 'dolibarrgetkeyobfuscation')) {
 			print "<br>\n".'Error during try to fetch record';
 			http_response_code(500);
 
