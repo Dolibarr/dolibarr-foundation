@@ -155,6 +155,7 @@ if ($action == 'dolibarrping'
 			if ($action == 'dolibarrgetkeyobfuscation') {
 				$tmparray = json_decode($contenttoinsert, true, 2);
 
+				/*
 				if ($tmparray['company_idprof1'] != $captureserver->registerprofid) {
 					$message = 'The professional ID received ('.$tmparray['company_idprof1'].') is not the same than the one registered ('.$captureserver->registerprofid.') for registration number '.$hash_unique_id.' or was never registered. Go to the setup page of module BlockedLog to (re)register your instance for this professional ID.';
 					dol_syslog($message, LOG_DEBUG, 0, '_captureserver');
@@ -164,6 +165,7 @@ if ($action == 'dolibarrping'
 					$db->close();
 					exit;
 				}
+				*/
 
 				// Return the obfuscation key
 				print 'DOLOBFUSCKEYV1'.hash('sha256', $tmparray['company_idprof1'].getDolGlobalString('CAPTURESERVER_SALT_FOR_OBFUSCATIONKEY'))."\n";
