@@ -138,17 +138,18 @@ if ($action == 'dolibarrping'
 
 			$db->close();
 			exit;
-		} elseif ($result == 0 && $action == 'dolibarrgetkeyobfuscation') {
-			/*
+		}
+		/*
+		elseif ($result == 0 && $action == 'dolibarrgetkeyobfuscation') {
 			print "<br>\n".'Error failed to find the record for action = dolibarrregistration and hash = '.$hash_unique_id;
 			http_response_code(500);
 
 			$db->close();
 			exit;
-			*/
 		}
+		*/
 
-		if ($result > 0) {
+		if ($result > 0 || ($result == 0 && $action == 'dolibarrgetkeyobfuscation')) {
 			dol_syslog('Record already found for key '.($action == 'dolibarrgetkeyobfuscation' ? 'dolibarrregistration' : $action).'_'.$hash_unique_id, LOG_DEBUG, 0, '_captureserver');
 
 			if ($action == 'dolibarrgetkeyobfuscation') {
