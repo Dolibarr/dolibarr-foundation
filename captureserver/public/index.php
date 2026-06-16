@@ -130,8 +130,14 @@ if ($action == 'dolibarrping'
 		$captureserver = new CaptureServer($db);
 		$result = $captureserver->fetch(0, ($action == 'dolibarrgetkeyobfuscation' ? 'dolibarrregistration' : $action).'_'.$hash_unique_id);	// Unique key is on $action.'_'.$hash_unique_id
 
-		if ($result < 0 || ($result == 0 && $action == 'dolibarrgetkeyobfuscation')) {
-			print "<br>\n".'Error during try to fetch record';
+		if ($result < 0) {
+			print "<br>\n".'Error during try to fetch record '.$captureserver->error;
+			http_response_code(500);
+
+			$db->close();
+			exit;
+		} elseif ($result == 0 && $action == 'dolibarrgetkeyobfuscation') {
+			print "<br>\n".'Error failed to find the record for action = dolibarrregistration and hash = '.$hash_unique_id;
 			http_response_code(500);
 
 			$db->close();
