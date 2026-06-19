@@ -171,7 +171,7 @@ if (preg_match('/setMARKETPLACE_PAYMENT_IN_FRAME/i', $action, $reg)) {
 	}
 }
 
-$iframeSupportedPaymentMethods = array('stripe'); // List of payment methods that support being displayed inside an iframe
+$iframeSupportedPaymentMethods = array('stripe', 'stancerdolicloud'); // List of payment methods that support being displayed inside an iframe
 if (preg_match('/setMARKETPLACE_MAIN_PAYMENT_METHOD/i', $action, $reg)) {
 	$mainpaymentmethod = GETPOST('MARKETPLACE_MAIN_PAYMENT_METHOD', 'alpha');
 	$mainpaymentmethod = $mainpaymentmethod === '-1' ? '' : $mainpaymentmethod;
