@@ -168,7 +168,7 @@ if ($action == 'dolibarrping'
 				*/
 
 				// Return the obfuscation key
-				print 'DOLOBFUSCKEYV1'.hash('sha256', $tmparray['company_idprof1'].getDolGlobalString('CAPTURESERVER_SALT_FOR_OBFUSCATIONKEY'))."\n";
+				print 'DOLOBFUSCKEYV1'.hash('sha256', $tmparray['company_idprof1'].getDolGlobalString('CAPTURESERVER_SALT_FOR_OBFUSCATIONKEY'))."-".getDolGlobalString('CAPTURESERVER_DATE_FOR_OBFUSCATIONKEY')."\n";
 
 				exit;
 			}
