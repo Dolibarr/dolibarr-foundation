@@ -368,13 +368,22 @@ if ($action == 'dolibarrping'
 						$captureserver->registername = $tmparray['company_name'] ?? 'unknown';
 						$captureserver->registeremail = $tmparray['company_email'] ?? 'unknown';
 						$captureserver->registerprofid = $tmparray['company_idprof1'] ?? 'unknown';
+
+						$captureserver->versiondolibarr = $tmparray['version_full'] ?? 'unknown';
+						$captureserver->versionblockedlog = $tmparray['versionblockedlog_full'] ?? 'unknown';
+						$captureserver->country_code = $tmparray['country_code'] ?? '';
 					}
 
 					if ($action == 'dolibarrpushcounter') {
 						$captureserver->lastrowid = $tmparray['lastrowid'] ?? null;
 						$captureserver->lastsignature = $tmparray['lastsignature'] ?? null;
+						$captureserver->lastdatecreation = $tmparray['lastdatecreation'] ?? null;
+
 						$captureserver->previousrowid = $tmparray['previousrowid'] ?? null;
 						$captureserver->previoussignature = $tmparray['previoussignature'] ?? null;
+						$captureserver->previousdatecreation = $tmparray['previousdatecreation'] ?? null;
+
+						$captureserver->datesys = $tmparray['datesys'] ?? null;
 					}
 				}
 			}
