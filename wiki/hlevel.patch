@@ -1,11 +1,11 @@
-Edit file includes/Linker.php to replace 
+Edit file includes/Linker.php to replace
 
 				return "<h$level$attribs"
                         . "$fallback<span class=\"mw-headline\" id=\"$anchorEscaped\">$html</span>"
                         . $link
                         . "</h$level>";
-                        
-with                        
+
+with
 
 				// CHANGE LDR
                 return "<h".($level+1)."$attribs"

@@ -2,13 +2,13 @@ Replace into file extensions/MetaMaster/MetaMasterHooks.php
 
         public static function onOutputPageParserOutput( OutputPage &$out, ParserOutput $parseroutput ) {
                 for ( $i = 0; $i < self::$num; $i++ ) {
-	                $meta = $parseroutput->getExtensionData( 'metaMaster-' . $i ); 
+	                $meta = $parseroutput->getExtensionData( 'metaMaster-' . $i );
                     $out->addMeta( $meta['name'], $meta['content'] );
                 }
         }
 
-with    
-        
+with
+
         public static function onOutputPageParserOutput( OutputPage &$out, ParserOutput $parseroutput ) {
                 // LDR Change function
                 $i = 0;
