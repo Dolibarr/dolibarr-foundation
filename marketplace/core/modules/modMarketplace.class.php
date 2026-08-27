@@ -514,7 +514,7 @@ class modMarketplace extends DolibarrModules
 		$result15=$extrafields->addExtraField('marketplace_submitted',           "DateRequestToBeOnline", 'datetime', 110140,    0, 'product',   0, 0, '', '', 1, '', -1, '', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 		$result16=$extrafields->addExtraField('marketplace_complementary_price', "ComplementaryPriceHT", 'varchar', 110150,    64, 'product',   0, 0, '', '', 1, '', -1, 'ComplementaryPriceHTDesc', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")');
 
-		$param=array('options'=>array('Product:product/class/product.class.php' => null));
+		$param = array('options'=>array('Product:product/class/product.class.php' => null));
 		$result17=$extrafields->addExtraField('marketplace_duplicate_of', "DuplicateOf", 'link', 110155, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsACopyOfOriginal', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 		$result18=$extrafields->addExtraField('marketplace_fork_of', "ForkOf", 'link', 110160, '', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleIsAForkOfAnother', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
 		$result19=$extrafields->addExtraField('marketplace_law_violation', "LawViolation", 'varchar', 110165, '255', 'product', 0, 0, '', $param, 1, '', 1, 'WhenModuleViolatesRules', '', '', 'marketplace@marketplace', 'isModEnabled("marketplace")', 0, 0, array('csslist'=>'tdoverflowmax100'));
