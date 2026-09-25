@@ -294,6 +294,9 @@ if (method_exists($itemminprice, 'setAsPrice')) {
 }
 $itemMinimumAmountForPayment->defaultFieldValue = '50';
 
+// Setup conf for the product to use on supplier invoices of commission requests
+$formSetup->newItem('MARKETPLACE_COMMISSION_REQUEST_SUPPLIER_INVOICE_PRODUCT_ID')->setAsProduct();
+
 /*
 // Setup conf MARKETPLACE_MYPARAM10
 $item = $formSetup->newItem('MARKETPLACE_MYPARAM10');
