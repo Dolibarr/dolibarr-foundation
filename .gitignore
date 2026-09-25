@@ -4,3 +4,5 @@
 .DS_Store
 /.buildpath
 /.phpunit.result.cache
+/.vibe
+/.vibeignore
