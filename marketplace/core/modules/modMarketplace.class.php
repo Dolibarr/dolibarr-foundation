@@ -285,13 +285,20 @@ class modMarketplace extends DolibarrModules
 		$r = 0;
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
-		/*
 		$o = 1;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of Marketplace'; // Permission label
-		$this->rights[$r][4] = 'myobject';
+		$this->rights[$r][1] = 'Read modules of Marketplace'; // Permission label
+		$this->rights[$r][4] = 'module';
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->hasRight('marketplace', 'myobject', 'read'))
 		$r++;
+
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', ($o * 10) + 1);
+		$this->rights[$r][1] = 'Validate modules (publish / refuse / unpublish)';
+		$this->rights[$r][4] = 'module';
+		$this->rights[$r][5] = 'validate';
+		$r++;
+
+		/*
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 2); // Permission id (must not be already used)
 		$this->rights[$r][1] = 'Create/Update objects of Marketplace'; // Permission label
 		$this->rights[$r][4] = 'myobject';
@@ -371,6 +378,36 @@ class modMarketplace extends DolibarrModules
 			'perms'=>'$user->hasRight("invoice", "read")',
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
+		$this->menu[$r++]=array(
+			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'type'=>'left',			                // This is a Left menu entry
+			'titre'=>'MarketPlaceModuleValidation',
+			'prefix' => img_picto('', 'puzzle-piece', 'class="pictofixedwidth valignmiddle paddingright"'),
+			'mainmenu'=>'marketplace',
+			'leftmenu'=>'marketplace_module_validation',
+			'url'=>'marketplace/module_validation.php',
+			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			'position'=>1000+$r,
+			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
+			'perms'=>'$user->hasRight("marketplace", "module", "read")',
+			'target'=>'',
+			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
+		);
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=marketplace',
+			'type' => 'left',
+			'titre' => 'ModulesPendingValidation',
+			'prefix' => img_picto('', 'fa-hourglass-half', 'class="pictofixedwidth valignmiddle paddingright"'),
+			'mainmenu' => 'marketplace',
+			'leftmenu' => 'marketplace_pending',
+			'url' => '/marketplace/module_validation.php?mode=pending',
+			'langs' => 'marketplace@marketplace',
+			'position' => 1001 + $r,
+			'enabled' => 'isModEnabled("marketplace")',
+			'perms' => '$user->hasRight("marketplace", "module", "read")',
+			'target' => '',
+			'user' => 2,
 		);
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
