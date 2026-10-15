@@ -16,9 +16,19 @@
  */
 
 /**
- *	\file       marketplace/module_validation.php
- *	\ingroup    marketplace
- *	\brief      Home page of marketplace top menu
+ * \file    marketplace/module_validation_card.php
+ * \ingroup marketplace
+ * \brief   Validation card of a marketplace module (service): all the information on a
+ *          single page, automatic checks, and actions (publish, refuse, unpublish).
+ *
+ * Parameters:
+ * - id   : ID of the service
+ * - mode : list used for the previous/next navigation (pending | refused | online)
+ *
+ * Actions (POST + CSRF token, permission marketplace->module->validate):
+ * - validate  : sets the service on sale (blocked if a check is in error)
+ * - refuse    : keeps the service off sale and stores the reason
+ * - unpublish : sets an online service off sale and stores the reason
  */
 
 // Load Dolibarr environment
@@ -64,17 +74,21 @@ if (!$res) {
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 dol_include_once('/marketplace/lib/marketplace.lib.php');
 
+// Translations
 $langs->loadLangs(array("marketplace@marketplace", "products", "other"));
 
+// Access control
 if (!$user->hasRight('marketplace', 'module', 'read')) {
 	accessforbidden();
 }
 
+// Parameters
 $id = GETPOSTINT('id');
 $action = GETPOST('action', 'aZ09');
 $reason = GETPOST('reason', 'alphanohtml');
 $mode = GETPOST('mode', 'aZ09') ? GETPOST('mode', 'aZ09') : 'pending';
 
+// Load the service with its extrafields and translations
 $object = new Product($db);
 if ($object->fetch($id) <= 0 || $object->type != Product::TYPE_SERVICE) {
 	accessforbidden('Service not found');
@@ -87,7 +101,7 @@ if (getDolGlobalInt('MAIN_MULTILANGS') && empty($object->multilangs)) {
 $canValidate = $user->hasRight('marketplace', 'module', 'validate');
 $reasonKey = 'options_'.marketplaceValidationKeys()['reason'];
 
-// Navigation dans la liste courante
+// Navigation within the current list (previous / next module)
 $ids = marketplaceGetListIds($db, $mode);
 $pos = array_search((int) $object->id, $ids, true);
 $prevId = ($pos !== false && $pos > 0) ? $ids[$pos - 1] : 0;
@@ -108,11 +122,13 @@ if (in_array($action, array('validate', 'refuse', 'unpublish')) && $_SERVER['REQ
 	$error = 0;
 
 	if ($action == 'validate') {
+		// Publication is refused by the server if a blocking check fails
 		$checks = marketplaceValidationChecks($db, $object);
 		if (!marketplaceChecksAreValid($checks)) {
 			setEventMessages($langs->trans("ValidationBlockedByErrors"), null, 'errors');
 			$error++;
 		} else {
+			// Clear the previous reason, then put the service on sale
 			$object->array_options[$reasonKey] = '';
 			$object->insertExtraFields();
 			$object->setStatut(1, null, 'product', 'PRODUCT_MODIFY', 'tosell');
@@ -120,10 +136,12 @@ if (in_array($action, array('validate', 'refuse', 'unpublish')) && $_SERVER['REQ
 			setEventMessages($langs->trans("ModulePublished"), null, 'mesgs');
 		}
 	} else {
+		// Refuse or unpublish: a reason is mandatory
 		if (dol_strlen(trim($reason)) < 5) {
 			setEventMessages($langs->trans("ReasonRequired"), null, 'errors');
 			$error++;
 		} else {
+			// The extrafield is limited to 255 characters, the email keeps the full text
 			$object->array_options[$reasonKey] = dol_trunc($reason, 255, 'right', 'UTF-8', 1);
 			$object->insertExtraFields();
 			if ($object->status) {
@@ -142,6 +160,7 @@ if (in_array($action, array('validate', 'refuse', 'unpublish')) && $_SERVER['REQ
 		}
 	}
 	if (!$error) {
+		// Go to the next module of the list (or the previous one, or back to the list)
 		$target = $nextId ? $nextId : $prevId;
 		header("Location: ".($target ? $urlCard.$target : $urlList));
 		exit;
@@ -159,6 +178,8 @@ $checks = marketplaceValidationChecks($db, $object);
 $valid = marketplaceChecksAreValid($checks);
 $files = marketplaceGetFiles($object);
 $sellers = marketplaceGetSellers($db, $object->id);
+
+// Counters and texts used by the "set the reason" buttons
 $nbErr = 0;
 $nbWarn = 0;
 $reasonsErr = array();
@@ -176,9 +197,24 @@ foreach ($checks as $c) {
 		}
 	}
 }
+
+/**
+ * Get the escaped value of a marketplace extrafield of the current service.
+ *
+ * @param  string $alias Alias defined in marketplaceValidationKeys()
+ * @return string        HTML-escaped value
+ */
 $e = function ($alias) use ($object) {
 	return dol_escape_htmltag(marketplaceExtra($object, $alias));
 };
+
+/**
+ * Build a row "label / value" of an information table.
+ *
+ * @param  string $label Label (already escaped)
+ * @param  string $value Value (already escaped)
+ * @return string        HTML of the row
+ */
 $row = function ($label, $value) {
 	return '<tr class="oddeven"><td class="titlefield">'.$label.'</td><td>'.$value.'</td></tr>';
 };
@@ -201,7 +237,7 @@ print '<style>
 .mkt-reasonbtn{margin:2px}
 </style>';
 
-// Barre de navigation
+// Navigation bar: back to list, previous / next, anchors, counters
 print '<div id="mkt-nav">';
 print '<a class="button smallpaddingimp" href="'.$urlList.'">'.img_picto('', 'back', 'class="pictofixedwidth"').$langs->trans("BackToList").'</a>';
 print '<span class="sep"></span>';
@@ -219,7 +255,7 @@ print '</div>';
 
 print '<div class="mkt-cols">';
 
-// ---- Colonne gauche
+// Left column: information and descriptions
 print '<div style="flex:3 1 560px">';
 
 print '<table class="noborder centpercent"><tr class="liste_titre"><th colspan="2" id="mkt-infos" class="mkt-anchor">'.$langs->trans("Infos").'</th></tr>';
@@ -242,6 +278,7 @@ print $row($langs->trans("ComplementaryPriceHT"), $e('compprice'));
 print $row($langs->trans("MarketplaceValidityDuration"), $e('duration'));
 print $row($langs->trans("DisclaimerMessage"), $e('disclaimer'));
 print $row($langs->trans("WantToIncludeSourceInCore"), yn((int) marketplaceExtra($object, 'coresource')));
+// Original module when the service is declared as a copy or a fork
 foreach (array('duplicateof' => 'DuplicateOf', 'forkof' => 'ForkOf') as $alias => $lab) {
 	$val = marketplaceExtra($object, $alias);
 	if ($val !== '' && $val > 0) {
@@ -254,6 +291,7 @@ print $row($langs->trans("LawViolation"), $e('law'));
 print $row($langs->trans("LastReasonDisabled"), $e('reason'));
 print '</table><br>';
 
+// Label, description and note in each language
 print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-desc" class="mkt-anchor">'.$langs->trans("Language").'</th><th>'.$langs->trans("Label").'</th><th>'.$langs->trans("Description").'</th><th>Note</th></tr>';
 print '<tr class="oddeven"><td>Default</td><td>'.dol_escape_htmltag($object->label).'</td><td>'.dolPrintHTML($object->description).'</td><td>'.dolPrintHTML($object->note_public).'</td></tr>';
 foreach (array('fr_FR', 'en_US', 'de_DE', 'it_IT', 'es_ES') as $code) {
@@ -264,13 +302,16 @@ foreach (array('fr_FR', 'en_US', 'de_DE', 'it_IT', 'es_ES') as $code) {
 print '</table>';
 print '</div>';
 
-// ---- Colonne droite
+// Right column: files, checks and actions
 print '<div style="flex:2 1 380px">';
 
+// Actions: reason, quick buttons, publish / refuse / unpublish
 if ($canValidate) {
 	print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&mode='.$mode.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-actions" class="mkt-anchor">'.$langs->trans("Actions").'</th></tr>';
+
+	// Buttons that fill the reason (from the checks or from predefined texts)
 	print '<tr class="oddeven"><td>';
 	print '<div class="opacitymedium">'.$langs->trans("ReasonQuickFill").'</div>';
 	print '<button type="button" class="button smallpaddingimp mkt-fill" data-mode="replace" data-text="'.dol_escape_htmltag(implode("\n", $reasonsErr)).'">'.$langs->trans("FillFromErrors").' ('.count($reasonsErr).')</button> ';
@@ -280,11 +321,15 @@ if ($canValidate) {
 		print '<button type="button" class="button smallpaddingimp mkt-reasonbtn mkt-fill" data-mode="append" data-text="'.dol_escape_htmltag('- '.$txt).'">+ '.$langs->trans($lab).'</button>';
 	}
 	print '</td></tr>';
+
+	// Reason (stored in an extrafield limited to 255 characters) and email option
 	print '<tr class="oddeven"><td>';
 	print '<textarea id="mkt-reason" name="reason" class="centpercent" rows="6" maxlength="255" placeholder="'.dol_escape_htmltag($langs->trans("ReasonPlaceholder")).'">'.dol_escape_htmltag($reason ? $reason : marketplaceExtra($object, 'reason')).'</textarea>';
 	print '<div class="opacitymedium right"><span id="mkt-count">0</span>/255</div>';
 	print '<label><input type="checkbox" name="sendmail" value="1" checked> '.$langs->trans("SendEmailToSeller").'</label>';
 	print '</td></tr>';
+
+	// Submit buttons: publish is disabled while a check is in error
 	print '<tr class="oddeven"><td class="center">';
 	if (!$object->status) {
 		print '<button type="submit" name="action" value="validate" class="butAction"'.($valid ? '' : ' disabled title="'.dol_escape_htmltag($langs->trans("ValidationBlockedByErrors")).'"').'>'.$langs->trans("PublishModule").'</button> ';
@@ -294,6 +339,7 @@ if ($canValidate) {
 	}
 	print '</td></tr></table></form>';
 
+	// Reason helpers: fill / append text and character counter
 	print '<script>
 (function(){
 	var ta = document.getElementById("mkt-reason");
@@ -310,8 +356,13 @@ if ($canValidate) {
 	});
 })();
 </script>';
+}  else {
+	// The user can see the card but is not allowed to act
+	print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-actions" class="mkt-anchor">'.$langs->trans("ModuleActions").'</th></tr>';
+	print '<tr class="oddeven"><td class="opacitymedium">'.$langs->trans("NoRightToValidate").'</td></tr></table>';
 }
 
+// Validation checks
 print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-checks" class="mkt-anchor">'.$langs->trans("ValidationChecks").'</th><th class="right">'.$langs->trans("Detail").'</th></tr>';
 $icons = array('ok' => img_picto('', 'tick', 'class="pictofixedwidth"'), 'warning' => img_picto('', 'warning', 'class="pictofixedwidth"'), 'error' => img_picto('', 'error', 'class="pictofixedwidth"'));
 foreach ($checks as $c) {
@@ -319,6 +370,7 @@ foreach ($checks as $c) {
 }
 print '</table>';
 
+// Files attached to the service
 print '<table class="noborder centpercent"><tr class="liste_titre"><th colspan="3" id="mkt-files" class="mkt-anchor">'.$langs->trans("Files").'</th></tr>';
 $urlDoc = DOL_URL_ROOT.'/document.php?modulepart=produit&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
 $urlImg = DOL_URL_ROOT.'/viewimage.php?modulepart=product&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';

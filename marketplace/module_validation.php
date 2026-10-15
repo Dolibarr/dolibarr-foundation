@@ -16,9 +16,16 @@
  */
 
 /**
- *	\file       marketplace/module_validation.php
- *	\ingroup    marketplace
- *	\brief      Home page of marketplace top menu
+ * \file    marketplace/module_validation.php
+ * \ingroup marketplace
+ * \brief   Dashboard of the module validation: KPI, statistics and list of modules
+ *          (pending, refused/unpublished or online) submitted to the marketplace.
+ *
+ * A module is a service (fk_product_type = 1) stored in the marketplace root category
+ * (or one of its sub-categories). Its state is deduced from:
+ * - llx_product.tosell = 1                               => online
+ * - tosell = 0 and "reason disabled" extrafield empty    => pending validation
+ * - tosell = 0 and "reason disabled" extrafield filled   => refused or unpublished
  */
 
 // Load Dolibarr environment
@@ -65,26 +72,33 @@ require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 dol_include_once('/marketplace/lib/marketplace.lib.php');
 
+// Translations
 $langs->loadLangs(array("marketplace@marketplace", "products"));
 
+// Access control
 if (!$user->hasRight('marketplace', 'module', 'read')) {
 	accessforbidden();
 }
 
-$mode = GETPOST('mode', 'aZ09'); // pending | refused | online | (vide = dashboard + attente)
+// Parameters
+$mode = GETPOST('mode', 'aZ09'); // pending | refused | online (default: pending)
 $k = marketplaceValidationKeys();
+
+// SQL columns of the extrafields (alias "ef")
 $efSub = marketplaceCol('submitted');
 $efReason = marketplaceCol('reason');
 $efMin = marketplaceCol('dolmin');
 $efDup = marketplaceCol('duplicateof');
 $efFork = marketplaceCol('forkof');
 
+// Categories that contain the marketplace modules
 $catIds = marketplaceGetCategoryIds($db);
 if (empty($catIds)) {
 	setEventMessages('MARKETPLACE_ROOT_CATEGORY_ID is not defined', null, 'errors');
 	$catIds = array(0);
 }
 
+// Common parts of the SQL queries
 $from = " FROM ".MAIN_DB_PREFIX."product as p";
 $from .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
 $base = " WHERE p.fk_product_type = 1 AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
@@ -92,7 +106,11 @@ $condPending = "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '')";
 $condRefused = "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''";
 $condOnline = "p.tosell = 1";
 
-/* ---------- KPI ---------- */
+/*
+ * KPI
+ */
+
+// Counters by state, declared duplicates and forks, oldest pending module
 $kpi = array('pending' => 0, 'refused' => 0, 'online' => 0, 'dups' => 0, 'forks' => 0, 'oldest' => null);
 $sql = "SELECT SUM(CASE WHEN ".$condPending." THEN 1 ELSE 0 END) as pending,";
 $sql .= " SUM(CASE WHEN ".$condRefused." THEN 1 ELSE 0 END) as refused,";
@@ -107,7 +125,7 @@ if ($resql && ($obj = $db->fetch_object($resql))) {
 		'dups' => (int) $obj->dups, 'forks' => (int) $obj->forks, 'oldest' => $obj->oldest ? $db->jdate($obj->oldest) : null);
 }
 
-// Actions tracees (30 jours) et delai moyen de traitement
+// Tracked actions (last 30 days) and average processing time (submission -> decision)
 $since = dol_now() - 30 * 86400;
 $counts = array('MKT_VALIDATE' => 0, 'MKT_REFUSE' => 0, 'MKT_UNPUBLISH' => 0);
 $delays = array();
@@ -129,7 +147,7 @@ if ($resql) {
 }
 $avgDelayDays = count($delays) ? round(array_sum($delays) / count($delays) / 86400, 1) : null;
 
-// Top motifs
+// Top reasons of refusal / unpublication
 $reasons = array();
 $sql = "SELECT ".$efReason." as reason, COUNT(p.rowid) as nb ".$from.$base." AND ".$efReason." <> '' GROUP BY ".$efReason." ORDER BY nb DESC LIMIT 5";
 $resql = $db->query($sql);
@@ -137,7 +155,7 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 	$reasons[] = $obj;
 }
 
-// Top vendeurs (modules soumis)
+// Top sellers (by number of submitted modules)
 $sellersTop = array();
 $sql = "SELECT s.rowid, s.nom, COUNT(DISTINCT p.rowid) as nb ".$from;
 $sql .= " INNER JOIN ".MAIN_DB_PREFIX."product_fournisseur_price as pfp ON pfp.fk_product = p.rowid";
@@ -148,7 +166,7 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 	$sellersTop[] = $obj;
 }
 
-// Repartition par version Dolibarr min
+// Breakdown by minimum Dolibarr version
 $byVersion = array();
 $sql = "SELECT ".$efMin." as v, COUNT(p.rowid) as nb ".$from.$base." GROUP BY ".$efMin." ORDER BY nb DESC";
 $resql = $db->query($sql);
@@ -156,7 +174,9 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 	$byVersion[] = $obj;
 }
 
-/* ---------- Liste ---------- */
+/*
+ * List of modules for the selected state
+ */
 $listMode = ($mode ? $mode : 'pending');
 $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => $condOnline)[$listMode] ?? $condPending;
 $sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted, ".$efMin." as dolmin, ".marketplaceCol('version')." as version,";
@@ -172,6 +192,7 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 /*
  * View
  */
+
 $help_url = '';
 $page_name = "MarketPlaceModuleValidation";
 
@@ -179,6 +200,15 @@ llxHeader('', $langs->trans($page_name), '', '', 0, 0, '', '', '', 'mod-marketpl
 
 print load_fiche_titre($langs->trans($page_name), '', 'fa-puzzle-piece');
 
+/**
+ * Build the HTML of a KPI tile.
+ *
+ * @param  string $label Label of the KPI
+ * @param  mixed  $value Value to display
+ * @param  string $url   Optional link on the value
+ * @param  string $color Optional color of the left border
+ * @return string        HTML of the tile
+ */
 $tile = function ($label, $value, $url = '', $color = '') {
 	$html = '<div style="flex:1 1 170px;border:1px solid #ccc;border-radius:6px;padding:12px;text-align:center;'.($color ? 'border-left:5px solid '.$color.';' : '').'">';
 	$html .= '<div class="opacitymedium">'.dol_escape_htmltag($label).'</div>';
@@ -186,6 +216,8 @@ $tile = function ($label, $value, $url = '', $color = '') {
 	return $html;
 };
 $self = $_SERVER['PHP_SELF'];
+
+// KPI tiles
 print '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px">';
 print $tile($langs->trans("KpiPending"), $kpi['pending'], $self.'?mode=pending', '#e67e22');
 print $tile($langs->trans("KpiOldestPending"), $kpi['oldest'] ? floor((dol_now() - $kpi['oldest']) / 86400).' j' : '-');
@@ -199,6 +231,7 @@ print $tile($langs->trans("KpiDuplicates"), $kpi['dups']);
 print $tile($langs->trans("KpiForks"), $kpi['forks']);
 print '</div>';
 
+// Statistics tables
 print '<div style="display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px">';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopReasons").'</th><th class="right">#</th></tr>';
 foreach ($reasons as $r) {
@@ -216,6 +249,7 @@ foreach ($byVersion as $v) {
 }
 print '</table></div></div>';
 
+// List of modules
 print load_fiche_titre($langs->trans("ModuleList").' : '.$langs->trans('Filter_'.$listMode), '', '');
 print '<table class="noborder centpercent"><tr class="liste_titre">';
 foreach (array('Ref', 'Label', 'Seller', 'ModuleVersion', 'DolibarrMin', 'DateRequestToBeOnline', 'Age') as $c) {
@@ -241,5 +275,6 @@ foreach ($list as $o) {
 }
 print '</table>';
 
+// End of page
 llxFooter();
 $db->close();
