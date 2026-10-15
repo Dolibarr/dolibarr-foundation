@@ -62,7 +62,6 @@ if (!$res) {
  * @var Societe $mysoc
  */
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php';
 dol_include_once('/marketplace/lib/marketplace.lib.php');
 
 $langs->loadLangs(array("marketplace@marketplace", "products", "other"));
@@ -74,6 +73,7 @@ if (!$user->hasRight('marketplace', 'module', 'read')) {
 $id = GETPOSTINT('id');
 $action = GETPOST('action', 'aZ09');
 $reason = GETPOST('reason', 'alphanohtml');
+$mode = GETPOST('mode', 'aZ09') ? GETPOST('mode', 'aZ09') : 'pending';
 
 $object = new Product($db);
 if ($object->fetch($id) <= 0 || $object->type != Product::TYPE_SERVICE) {
@@ -86,9 +86,18 @@ if (getDolGlobalInt('MAIN_MULTILANGS') && empty($object->multilangs)) {
 
 $canValidate = $user->hasRight('marketplace', 'module', 'validate');
 $reasonKey = 'options_'.marketplaceValidationKeys()['reason'];
-$backurl = $_SERVER['PHP_SELF'].'?id='.$object->id;
 
-/* ---------- Actions ---------- */
+// Navigation dans la liste courante
+$ids = marketplaceGetListIds($db, $mode);
+$pos = array_search((int) $object->id, $ids, true);
+$prevId = ($pos !== false && $pos > 0) ? $ids[$pos - 1] : 0;
+$nextId = ($pos !== false && isset($ids[$pos + 1])) ? $ids[$pos + 1] : 0;
+$urlList = dol_buildpath('/marketplace/module_validation.php', 1).'?mode='.$mode;
+$urlCard = dol_buildpath('/marketplace/module_validation_card.php', 1).'?mode='.$mode.'&id=';
+
+/*
+ *  Actions
+ */
 if (in_array($action, array('validate', 'refuse', 'unpublish')) && $_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (!$canValidate) {
 		accessforbidden();
@@ -133,7 +142,8 @@ if (in_array($action, array('validate', 'refuse', 'unpublish')) && $_SERVER['REQ
 		}
 	}
 	if (!$error) {
-		header("Location: ".dol_buildpath('/marketplace/module_validation.php', 1));
+		$target = $nextId ? $nextId : $prevId;
+		header("Location: ".($target ? $urlCard.$target : $urlList));
 		exit;
 	}
 	$action = '';
@@ -145,6 +155,34 @@ if (in_array($action, array('validate', 'refuse', 'unpublish')) && $_SERVER['REQ
 $help_url = '';
 $page_name = "ModuleValidation";
 
+$checks = marketplaceValidationChecks($db, $object);
+$valid = marketplaceChecksAreValid($checks);
+$files = marketplaceGetFiles($object);
+$sellers = marketplaceGetSellers($db, $object->id);
+$nbErr = 0;
+$nbWarn = 0;
+$reasonsErr = array();
+$reasonsAll = array();
+foreach ($checks as $c) {
+	if ($c['level'] == 'error') {
+		$nbErr++;
+	} elseif ($c['level'] == 'warning') {
+		$nbWarn++;
+	}
+	if ($c['level'] != 'ok' && $c['reason'] !== '') {
+		$reasonsAll[] = '- '.$c['reason'];
+		if ($c['level'] == 'error') {
+			$reasonsErr[] = '- '.$c['reason'];
+		}
+	}
+}
+$e = function ($alias) use ($object) {
+	return dol_escape_htmltag(marketplaceExtra($object, $alias));
+};
+$row = function ($label, $value) {
+	return '<tr class="oddeven"><td class="titlefield">'.$label.'</td><td>'.$value.'</td></tr>';
+};
+
 llxHeader('', $langs->trans($page_name).' '.$object->ref, '', '', 0, 0, '', '', '', 'mod-marketplace page-validation-card');
 
 // Subheader
@@ -152,103 +190,153 @@ $linkback = '<a href="'.dol_buildpath('/marketplace/module_validation.php', 1).'
 
 print load_fiche_titre($langs->trans($page_name).' : '.$object->ref, $linkback, 'fa-puzzle-piece');
 
-$checks = marketplaceValidationChecks($db, $object);
-$valid = marketplaceChecksAreValid($checks);
-$files = marketplaceGetFiles($object);
-$sellers = marketplaceGetSellers($db, $object->id);
-$e = function ($alias) use ($object) {
-	return dol_escape_htmltag(marketplaceExtra($object, $alias));
-};
+print '<style>
+#mkt-nav{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 10px;margin-bottom:12px;background:var(--colorbacktitle1,#e9eaed);border:1px solid var(--colorbordertitle,#ccc);border-radius:4px}
+#mkt-nav .sep{border-left:1px solid #bbb;height:20px}
+.mkt-anchor{scroll-margin-top:60px}
+.mkt-cols{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.mkt-cols > div{min-width:0}
+.mkt-lvl-error td{background:#fde8e8 !important}
+.mkt-lvl-warning td{background:#fff4e0 !important}
+.mkt-reasonbtn{margin:2px}
+</style>';
 
-print '<div style="display:flex;flex-wrap:wrap;gap:20px">';
-
-// Colonne gauche : informations
-print '<div style="flex:2 1 500px">';
-print '<table class="border centpercent tableforfield">';
-print '<tr><td class="titlefield">'.$langs->trans("Ref").'</td><td>'.$object->getNomUrl(1).'</td></tr>';
-print '<tr><td>'.$langs->trans("Label").'</td><td>'.dol_escape_htmltag($object->label).'</td></tr>';
-print '<tr><td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(5, 0).'</td></tr>';
-print '<tr><td>'.$langs->trans("Seller").'</td><td>';
-foreach ($sellers as $s) {
-	print $s->getNomUrl(1, 'supplier').' '.dol_print_email($s->email, 0, $s->id, 1).'<br>';
+// Barre de navigation
+print '<div id="mkt-nav">';
+print '<a class="button smallpaddingimp" href="'.$urlList.'">'.img_picto('', 'back', 'class="pictofixedwidth"').$langs->trans("BackToList").'</a>';
+print '<span class="sep"></span>';
+print $prevId ? '<a class="button smallpaddingimp" href="'.$urlCard.$prevId.'">&laquo; '.$langs->trans("Previous").'</a>' : '<span class="button smallpaddingimp opacitymedium">&laquo; '.$langs->trans("Previous").'</span>';
+print '<b>'.($pos !== false ? ($pos + 1).' / '.count($ids) : '-').'</b>';
+print $nextId ? '<a class="button smallpaddingimp" href="'.$urlCard.$nextId.'">'.$langs->trans("Next").' &raquo;</a>' : '<span class="button smallpaddingimp opacitymedium">'.$langs->trans("Next").' &raquo;</span>';
+print '<span class="sep"></span>';
+foreach (array('mkt-infos' => 'Infos', 'mkt-desc' => 'Description', 'mkt-files' => 'Files', 'mkt-checks' => 'ValidationChecks', 'mkt-actions' => 'Actions') as $anchor => $lab) {
+	print '<a href="#'.$anchor.'">'.$langs->trans($lab).'</a>';
 }
-print '</td></tr>';
-print '<tr><td>'.$langs->trans("DateRequestToBeOnline").'</td><td>'.dol_print_date(marketplaceExtra($object, 'submitted'), 'dayhour').'</td></tr>';
-print '<tr><td>'.$langs->trans("ModuleVersion").'</td><td>'.$e('version').'</td></tr>';
-print '<tr><td>Dolibarr min / max</td><td>'.$e('dolmin').' / '.$e('dolmax').'</td></tr>';
-print '<tr><td>PHP min / max</td><td>'.$e('phpmin').' / '.$e('phpmax').'</td></tr>';
-print '<tr><td>'.$langs->trans("ModuleKeywords").'</td><td>'.$e('keywords').'</td></tr>';
-print '<tr><td>'.$langs->trans("HowtoContactSupport").'</td><td>'.$e('support').'</td></tr>';
-print '<tr><td>'.$langs->trans("Price").'</td><td>'.price($object->price, 0, $langs, 1, -1, -1, $conf->currency).' '.$e('pricecomment').'</td></tr>';
-print '<tr><td>'.$langs->trans("ComplementaryPriceHT").'</td><td>'.$e('compprice').'</td></tr>';
-print '<tr><td>'.$langs->trans("MarketplaceValidityDuration").'</td><td>'.$e('duration').'</td></tr>';
-print '<tr><td>'.$langs->trans("DisclaimerMessage").'</td><td>'.$e('disclaimer').'</td></tr>';
-print '<tr><td>'.$langs->trans("WantToIncludeSourceInCore").'</td><td>'.yn((int) marketplaceExtra($object, 'coresource')).'</td></tr>';
+print '<span class="sep"></span>';
+print '<span><span class="badge badge-status8">'.$nbErr.' '.$langs->trans("Errors").'</span> <span class="badge badge-status1">'.$nbWarn.' '.$langs->trans("Warnings").'</span></span>';
+print '<span style="margin-left:auto"><b>'.dol_escape_htmltag($object->ref).'</b> - '.dol_escape_htmltag(dol_trunc($object->label, 40)).'</span>';
+print '</div>';
+
+print '<div class="mkt-cols">';
+
+// ---- Colonne gauche
+print '<div style="flex:3 1 560px">';
+
+print '<table class="noborder centpercent"><tr class="liste_titre"><th colspan="2" id="mkt-infos" class="mkt-anchor">'.$langs->trans("Infos").'</th></tr>';
+print $row($langs->trans("Ref"), $object->getNomUrl(1));
+print $row($langs->trans("Label"), dol_escape_htmltag($object->label));
+print $row($langs->trans("Status"), $object->getLibStatut(5, 0));
+$sellerHtml = '';
+foreach ($sellers as $s) {
+	$sellerHtml .= $s->getNomUrl(1, 'supplier').' '.dol_print_email($s->email, 0, $s->id, 1).'<br>';
+}
+print $row($langs->trans("Seller"), $sellerHtml);
+print $row($langs->trans("DateRequestToBeOnline"), dol_print_date(marketplaceExtra($object, 'submitted'), 'dayhour'));
+print $row($langs->trans("ModuleVersion"), $e('version'));
+print $row('Dolibarr min / max', $e('dolmin').' / '.$e('dolmax'));
+print $row('PHP min / max', $e('phpmin').' / '.$e('phpmax'));
+print $row($langs->trans("ModuleKeywords"), $e('keywords'));
+print $row($langs->trans("HowtoContactSupport"), $e('support'));
+print $row($langs->trans("Price"), price($object->price, 0, $langs, 1, -1, -1, $conf->currency).' '.$e('pricecomment'));
+print $row($langs->trans("ComplementaryPriceHT"), $e('compprice'));
+print $row($langs->trans("MarketplaceValidityDuration"), $e('duration'));
+print $row($langs->trans("DisclaimerMessage"), $e('disclaimer'));
+print $row($langs->trans("WantToIncludeSourceInCore"), yn((int) marketplaceExtra($object, 'coresource')));
 foreach (array('duplicateof' => 'DuplicateOf', 'forkof' => 'ForkOf') as $alias => $lab) {
 	$val = marketplaceExtra($object, $alias);
 	if ($val !== '' && $val > 0) {
 		$other = new Product($db);
 		$other->fetch((int) $val);
-		print '<tr><td>'.$langs->trans($lab).'</td><td class="warning">'.$other->getNomUrl(1).'</td></tr>';
+		print $row($langs->trans($lab), $other->getNomUrl(1));
 	}
 }
-print '<tr><td>'.$langs->trans("LawViolation").'</td><td>'.$e('law').'</td></tr>';
-print '<tr><td>'.$langs->trans("LastReasonDisabled").'</td><td>'.$e('reason').'</td></tr>';
+print $row($langs->trans("LawViolation"), $e('law'));
+print $row($langs->trans("LastReasonDisabled"), $e('reason'));
 print '</table><br>';
 
-// Descriptions par langue
-print load_fiche_titre($langs->trans("Description"), '', '');
-print '<table class="border centpercent tableforfield">';
-print '<tr><td class="titlefield">Default</td><td>'.dolPrintHTML($object->description).'</td></tr>';
+print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-desc" class="mkt-anchor">'.$langs->trans("Language").'</th><th>'.$langs->trans("Label").'</th><th>'.$langs->trans("Description").'</th><th>Note</th></tr>';
+print '<tr class="oddeven"><td>Default</td><td>'.dol_escape_htmltag($object->label).'</td><td>'.dolPrintHTML($object->description).'</td><td>'.dolPrintHTML($object->note_public).'</td></tr>';
 foreach (array('fr_FR', 'en_US', 'de_DE', 'it_IT', 'es_ES') as $code) {
 	$ml = isset($object->multilangs[$code]) ? $object->multilangs[$code] : array();
-	$note = $ml['note'] ?? ($ml['other'] ?? '');
-	print '<tr><td>'.$code.'</td><td><b>'.dol_escape_htmltag($ml['label'] ?? '').'</b><br>'.dolPrintHTML($ml['description'] ?? '');
-	if ($note) {
-		print '<br><span class="opacitymedium">Note : '.dolPrintHTML($note).'</span>';
-	}
-	print '</td></tr>';
+	$note = isset($ml['note']) ? $ml['note'] : (isset($ml['other']) ? $ml['other'] : '');
+	print '<tr class="oddeven"><td>'.$code.'</td><td>'.dol_escape_htmltag(isset($ml['label']) ? $ml['label'] : '').'</td><td>'.dolPrintHTML(isset($ml['description']) ? $ml['description'] : '').'</td><td>'.dolPrintHTML($note).'</td></tr>';
 }
 print '</table>';
 print '</div>';
 
-// Colonne droite : controles, fichiers, actions
-print '<div style="flex:1 1 320px">';
-print load_fiche_titre($langs->trans("ValidationChecks"), '', '');
-print '<table class="noborder centpercent">';
-$icons = array('ok' => img_picto('', 'tick', 'class="pictofixedwidth"'), 'warning' => img_picto('', 'warning', 'class="pictofixedwidth"'), 'error' => img_picto('', 'error', 'class="pictofixedwidth"'));
-$bg = array('ok' => '', 'warning' => 'background:#fff4e0', 'error' => 'background:#fde8e8');
-foreach ($checks as $c) {
-	print '<tr style="'.$bg[$c['level']].'"><td>'.$icons[$c['level']].dol_escape_htmltag($c['label']).'</td><td class="right opacitymedium">'.dol_escape_htmltag($c['detail']).'</td></tr>';
-}
-print '</table><br>';
-
-print load_fiche_titre($langs->trans("Files"), '', '');
-$urlfile = DOL_URL_ROOT.'/document.php?modulepart=produit&file=';
-foreach ($files['zips'] as $f) {
-	print img_mime($f['name']).' <a href="'.$urlfile.urlencode(dol_sanitizeFileName($object->ref).'/'.$f['name']).'&entity='.((int) $object->entity).'">'.dol_escape_htmltag($f['name']).'</a> ('.dol_print_size($f['size'], 1, 1).')<br>';
-}
-print '<br><div style="display:flex;flex-wrap:wrap;gap:8px">';
-foreach ($files['images'] as $f) {
-	$u = DOL_URL_ROOT.'/viewimage.php?modulepart=product&entity='.((int) $object->entity).'&file='.urlencode(dol_sanitizeFileName($object->ref).'/'.$f['name']);
-	print '<a href="'.$u.'" target="_blank"><img src="'.$u.'" style="max-width:150px;max-height:110px;border:1px solid #ddd"></a>';
-}
-print '</div><br>';
+// ---- Colonne droite
+print '<div style="flex:2 1 380px">';
 
 if ($canValidate) {
-	print load_fiche_titre($langs->trans("Actions"), '', '');
-	print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
+	print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&mode='.$mode.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<textarea name="reason" class="centpercent" rows="4" placeholder="'.dol_escape_htmltag($langs->trans("ReasonPlaceholder")).'">'.dol_escape_htmltag($reason).'</textarea>';
-	print '<br><label><input type="checkbox" name="sendmail" value="1" checked> '.$langs->trans("SendEmailToSeller").'</label><br><br>';
+	print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-actions" class="mkt-anchor">'.$langs->trans("Actions").'</th></tr>';
+	print '<tr class="oddeven"><td>';
+	print '<div class="opacitymedium">'.$langs->trans("ReasonQuickFill").'</div>';
+	print '<button type="button" class="button smallpaddingimp mkt-fill" data-mode="replace" data-text="'.dol_escape_htmltag(implode("\n", $reasonsErr)).'">'.$langs->trans("FillFromErrors").' ('.count($reasonsErr).')</button> ';
+	print '<button type="button" class="button smallpaddingimp mkt-fill" data-mode="replace" data-text="'.dol_escape_htmltag(implode("\n", $reasonsAll)).'">'.$langs->trans("FillFromAllIssues").' ('.count($reasonsAll).')</button> ';
+	print '<button type="button" class="button smallpaddingimp mkt-fill" data-mode="replace" data-text="">'.$langs->trans("Clear").'</button><br>';
+	foreach (marketplaceGetQuickReasons() as $lab => $txt) {
+		print '<button type="button" class="button smallpaddingimp mkt-reasonbtn mkt-fill" data-mode="append" data-text="'.dol_escape_htmltag('- '.$txt).'">+ '.$langs->trans($lab).'</button>';
+	}
+	print '</td></tr>';
+	print '<tr class="oddeven"><td>';
+	print '<textarea id="mkt-reason" name="reason" class="centpercent" rows="6" maxlength="255" placeholder="'.dol_escape_htmltag($langs->trans("ReasonPlaceholder")).'">'.dol_escape_htmltag($reason ? $reason : marketplaceExtra($object, 'reason')).'</textarea>';
+	print '<div class="opacitymedium right"><span id="mkt-count">0</span>/255</div>';
+	print '<label><input type="checkbox" name="sendmail" value="1" checked> '.$langs->trans("SendEmailToSeller").'</label>';
+	print '</td></tr>';
+	print '<tr class="oddeven"><td class="center">';
 	if (!$object->status) {
 		print '<button type="submit" name="action" value="validate" class="butAction"'.($valid ? '' : ' disabled title="'.dol_escape_htmltag($langs->trans("ValidationBlockedByErrors")).'"').'>'.$langs->trans("PublishModule").'</button> ';
 		print '<button type="submit" name="action" value="refuse" class="butActionDelete">'.$langs->trans("RefuseModule").'</button>';
 	} else {
 		print '<button type="submit" name="action" value="unpublish" class="butActionDelete">'.$langs->trans("UnpublishModule").'</button>';
 	}
-	print '</form>';
+	print '</td></tr></table></form>';
+
+	print '<script>
+(function(){
+	var ta = document.getElementById("mkt-reason");
+	var cnt = document.getElementById("mkt-count");
+	function upd(){ cnt.textContent = ta.value.length; }
+	ta.addEventListener("input", upd); upd();
+	document.querySelectorAll(".mkt-fill").forEach(function(b){
+		b.addEventListener("click", function(){
+			var t = b.getAttribute("data-text");
+			if (b.getAttribute("data-mode") === "append" && ta.value.trim() !== "") { ta.value = ta.value.replace(/\s+$/, "") + "\n" + t; }
+			else { ta.value = t; }
+			ta.focus(); upd();
+		});
+	});
+})();
+</script>';
 }
+
+print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-checks" class="mkt-anchor">'.$langs->trans("ValidationChecks").'</th><th class="right">'.$langs->trans("Detail").'</th></tr>';
+$icons = array('ok' => img_picto('', 'tick', 'class="pictofixedwidth"'), 'warning' => img_picto('', 'warning', 'class="pictofixedwidth"'), 'error' => img_picto('', 'error', 'class="pictofixedwidth"'));
+foreach ($checks as $c) {
+	print '<tr class="oddeven mkt-lvl-'.$c['level'].'"><td>'.$icons[$c['level']].dol_escape_htmltag($c['label']).'</td><td class="right opacitymedium">'.dol_escape_htmltag($c['detail']).'</td></tr>';
+}
+print '</table>';
+
+print '<table class="noborder centpercent"><tr class="liste_titre"><th colspan="3" id="mkt-files" class="mkt-anchor">'.$langs->trans("Files").'</th></tr>';
+$urlDoc = DOL_URL_ROOT.'/document.php?modulepart=produit&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
+$urlImg = DOL_URL_ROOT.'/viewimage.php?modulepart=product&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
+if (empty($files['zips']) && empty($files['images']) && empty($files['others'])) {
+	print '<tr><td colspan="3" class="opacitymedium">'.$langs->trans("None").'</td></tr>';
+}
+foreach ($files['zips'] as $f) {
+	print '<tr class="oddeven"><td>ZIP</td><td><a href="'.$urlDoc.urlencode($f['rel']).'">'.img_mime($f['name']).' '.dol_escape_htmltag($f['name']).'</a></td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
+}
+foreach ($files['images'] as $f) {
+	$u = $urlImg.urlencode($f['rel']);
+	print '<tr class="oddeven"><td>IMG</td><td>'.dol_escape_htmltag($f['name']).'</td><td class="right"><a href="'.$u.'" target="_blank"><img src="'.$u.'" style="max-width:120px;max-height:80px"></a></td></tr>';
+}
+foreach ($files['others'] as $f) {
+	print '<tr class="oddeven"><td>-</td><td>'.dol_escape_htmltag($f['name']).'</td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
+}
+print '</table>';
+
 print '</div></div>';
 
 llxFooter();

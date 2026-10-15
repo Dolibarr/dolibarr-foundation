@@ -292,7 +292,7 @@ class modMarketplace extends DolibarrModules
 		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->hasRight('marketplace', 'myobject', 'read'))
 		$r++;
 
-		$this->rights[$r][0] = $this->numero . sprintf('%02d', ($o * 10) + 1);
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', ($o * 10) + 4);
 		$this->rights[$r][1] = 'Validate modules (publish / refuse / unpublish)';
 		$this->rights[$r][4] = 'module';
 		$this->rights[$r][5] = 'validate';

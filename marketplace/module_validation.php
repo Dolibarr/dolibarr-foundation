@@ -73,15 +73,21 @@ if (!$user->hasRight('marketplace', 'module', 'read')) {
 
 $mode = GETPOST('mode', 'aZ09'); // pending | refused | online | (vide = dashboard + attente)
 $k = marketplaceValidationKeys();
-$efSub = 'ef.options_'.$k['submitted'];
-$efReason = 'ef.options_'.$k['reason'];
-$efMin = 'ef.options_'.$k['dolmin'];
-$efDup = 'ef.options_'.$k['duplicateof'];
-$efFork = 'ef.options_'.$k['forkof'];
+$efSub = marketplaceCol('submitted');
+$efReason = marketplaceCol('reason');
+$efMin = marketplaceCol('dolmin');
+$efDup = marketplaceCol('duplicateof');
+$efFork = marketplaceCol('forkof');
+
+$catIds = marketplaceGetCategoryIds($db);
+if (empty($catIds)) {
+	setEventMessages('MARKETPLACE_ROOT_CATEGORY_ID is not defined', null, 'errors');
+	$catIds = array(0);
+}
 
 $from = " FROM ".MAIN_DB_PREFIX."product as p";
-$from .= " INNER JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
-$base = " WHERE p.fk_product_type = 1 AND ".$efSub." IS NOT NULL";
+$from .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
+$base = " WHERE p.fk_product_type = 1 AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
 $condPending = "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '')";
 $condRefused = "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''";
 $condOnline = "p.tosell = 1";
@@ -93,7 +99,7 @@ $sql .= " SUM(CASE WHEN ".$condRefused." THEN 1 ELSE 0 END) as refused,";
 $sql .= " SUM(CASE WHEN ".$condOnline." THEN 1 ELSE 0 END) as online,";
 $sql .= " SUM(CASE WHEN ".$efDup." IS NOT NULL AND ".$efDup." <> '' THEN 1 ELSE 0 END) as dups,";
 $sql .= " SUM(CASE WHEN ".$efFork." IS NOT NULL AND ".$efFork." <> '' THEN 1 ELSE 0 END) as forks,";
-$sql .= " MIN(CASE WHEN ".$condPending." THEN ".$efSub." ELSE NULL END) as oldest";
+$sql .= " MIN(CASE WHEN ".$condPending." THEN COALESCE(".$efSub.", p.datec) ELSE NULL END) as oldest";
 $sql .= $from.$base;
 $resql = $db->query($sql);
 if ($resql && ($obj = $db->fetch_object($resql))) {
@@ -153,7 +159,7 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 /* ---------- Liste ---------- */
 $listMode = ($mode ? $mode : 'pending');
 $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => $condOnline)[$listMode] ?? $condPending;
-$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted, ".$efMin." as dolmin, ef.options_".$k['version']." as version,";
+$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted, ".$efMin." as dolmin, ".marketplaceCol('version')." as version,";
 $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller";
 $sql .= $from.$base." AND ".$cond." ORDER BY ".$efSub." ASC LIMIT 200";

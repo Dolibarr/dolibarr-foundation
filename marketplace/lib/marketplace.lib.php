@@ -126,7 +126,7 @@ function marketplaceValidationKeys()
 		'keywords' => 'marketplace_module_keywords',
 		'support' => 'marketplace_contact_support',
 		'duration' => 'marketplace_validity_duration',
-		'pricecomment' => 'marketplace_price_comment',
+		'pricecomment' => 'marketplace_pricecomment',
 		'compprice' => 'marketplace_complementary_price',
 		'disclaimer' => 'marketplace_disclaimer_message',
 		'submitted' => 'marketplace_submitted',
@@ -137,6 +137,38 @@ function marketplaceValidationKeys()
 		'stopearning' => 'marketplace_date_stop_earning',
 		'coresource' => 'marketplace_allow_source_in_core',
 	);
+}
+
+/** Colonne SQL d'un extrafield (sans le prefixe options_) */
+function marketplaceCol($alias)
+{
+	$keys = marketplaceValidationKeys();
+	return 'ef.'.$keys[$alias];
+}
+
+/** IDs de la categorie racine marketplace et de toutes ses sous-categories */
+function marketplaceGetCategoryIds($db)
+{
+	$root = getDolGlobalInt('MARKETPLACE_ROOT_CATEGORY_ID');
+	if (!$root) {
+		return array();
+	}
+	$ids = array($root);
+	$toScan = array($root);
+	while (!empty($toScan)) {
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."categorie WHERE type = 0 AND fk_parent IN (".implode(',', array_map('intval', $toScan)).")";
+		$toScan = array();
+		$resql = $db->query($sql);
+		while ($resql && ($obj = $db->fetch_object($resql))) {
+			if (!in_array((int) $obj->rowid, $ids)) {
+				$ids[] = (int) $obj->rowid;
+				$toScan[] = (int) $obj->rowid;
+			}
+		}
+	}
+	// On exclut la categorie des versions
+	$versions = getDolGlobalInt('MARKETPLACE_VERSIONS_CATEGORY_ID');
+	return array_values(array_diff($ids, array($versions)));
 }
 
 /** Retourne la valeur d'un extrafield par son alias */
@@ -183,105 +215,180 @@ function marketplaceGetUploadDir($product)
 	return $base.'/'.get_exdir(0, 0, 0, 0, $product, 'product').dol_sanitizeFileName($product->ref);
 }
 
-/** Liste zip et images du service */
+/** Cherche les fichiers du service dans plusieurs emplacements possibles */
 function marketplaceGetFiles($product)
 {
-	$dir = marketplaceGetUploadDir($product);
-	$res = array('dir' => $dir, 'zips' => array(), 'images' => array());
-	$files = dol_dir_list($dir, 'files', 0, '', '(\.meta|_preview.*\.png)$', 'name', SORT_ASC, 0);
-	foreach ($files as $f) {
-		if (preg_match('/\.zip$/i', $f['name'])) {
-			$res['zips'][] = $f;
-		} elseif (image_format_supported($f['name']) > 0) {
-			$res['images'][] = $f;
+	global $conf;
+	$entity = empty($product->entity) ? 1 : (int) $product->entity;
+	$ref = dol_sanitizeFileName($product->ref);
+
+	$bases = array();
+	foreach (array('service', 'product') as $m) {
+		if (isset($conf->$m->multidir_output[$entity])) {
+			$bases[] = $conf->$m->multidir_output[$entity];
+		} elseif (isset($conf->$m->dir_output)) {
+			$bases[] = $conf->$m->dir_output;
 		}
+	}
+	$bases[] = DOL_DATA_ROOT.'/produit';
+	$bases = array_values(array_unique($bases));
+
+	$candidates = array();
+	foreach ($bases as $b) {
+		$candidates[] = array($b, $ref);
+		$candidates[] = array($b, get_exdir(0, 0, 0, 0, $product, 'product').$ref);
+		$candidates[] = array($b, get_exdir($product->id, 2, 0, 0, $product, 'product').$product->id.'/photos');
+	}
+
+	$res = array('dir' => '', 'tried' => array(), 'zips' => array(), 'images' => array(), 'others' => array());
+	foreach ($candidates as $cand) {
+		$dir = rtrim($cand[0].'/'.ltrim($cand[1], '/'), '/');
+		if (in_array($dir, $res['tried'])) {
+			continue;
+		}
+		$res['tried'][] = $dir;
+		$files = dol_dir_list($dir, 'files', 0, '', '(\.meta|_preview.*\.png)$', 'name', SORT_ASC, 0);
+		if (empty($files)) {
+			continue;
+		}
+		$res['dir'] = $dir;
+		foreach ($files as $f) {
+			$f['rel'] = ltrim(substr($dir, strlen($cand[0])), '/').'/'.$f['name'];
+			$f['rel'] = ltrim($f['rel'], '/');
+			if (preg_match('/\.zip$/i', $f['name'])) {
+				$res['zips'][] = $f;
+			} elseif (image_format_supported($f['name']) > 0) {
+				$res['images'][] = $f;
+			} else {
+				$res['others'][] = $f;
+			}
+		}
+		break;
 	}
 	return $res;
 }
 
 /**
  * Controles de validation.
- * @return array list of array('label'=>, 'level'=>'ok|warning|error', 'detail'=>)
+ * @return array list of array('label','level' ok|warning|error,'detail','reason' texte anglais pour le vendeur)
  */
 function marketplaceValidationChecks($db, $product)
 {
 	global $langs;
 	$checks = array();
-	$add = function ($label, $level, $detail = '') use (&$checks, $langs) {
-		$checks[] = array('label' => $langs->trans($label), 'level' => $level, 'detail' => $detail);
+	$add = function ($label, $level, $detail = '', $reason = '') use (&$checks) {
+		$checks[] = array('label' => $label, 'level' => $level, 'detail' => $detail, 'reason' => $reason);
 	};
 
-	// Images (obligatoire) et zip (obligatoire)
 	$files = marketplaceGetFiles($product);
-	$add('CheckImage', count($files['images']) > 0 ? 'ok' : 'error', count($files['images']).' image(s)');
-	if (count($files['zips']) == 1) {
-		$add('CheckZip', 'ok', $files['zips'][0]['name']);
-	} elseif (count($files['zips']) > 1) {
-		$add('CheckZip', 'warning', count($files['zips']).' zip');
+	$nbi = count($files['images']);
+	$add($langs->trans('CheckImage'), $nbi > 0 ? 'ok' : 'error', $nbi.' image(s)', 'No image provided. Please add at least one image (logo or screenshot).');
+	$nbz = count($files['zips']);
+	if ($nbz == 1) {
+		$add($langs->trans('CheckZip'), 'ok', $files['zips'][0]['name']);
+	} elseif ($nbz > 1) {
+		$add($langs->trans('CheckZip'), 'warning', $nbz.' zip', 'Several zip files were uploaded. Please keep only one zip file.');
 	} else {
-		$add('CheckZip', 'error', '');
+		$add($langs->trans('CheckZip'), 'error', '', 'The module zip file is missing.');
 	}
 
-	// Description par defaut
-	$add('CheckDescription', dol_strlen(trim(strip_tags($product->description))) >= 30 ? 'ok' : 'error');
+	$descOk = dol_strlen(trim(strip_tags($product->description))) >= 30;
+	$add($langs->trans('CheckDescription'), $descOk ? 'ok' : 'error', '', 'The description is missing or too short.');
 
-	// Traductions
-	foreach (array('fr', 'en', 'de', 'it', 'es') as $l) {
-		$code = $l.'_'.strtoupper($l);
+	foreach (array('fr_FR', 'en_US', 'de_DE', 'it_IT', 'es_ES') as $code) {
 		$ml = isset($product->multilangs[$code]) ? $product->multilangs[$code] : array();
 		$has = !empty($ml['label']) && !empty($ml['description']);
-		$add($langs->trans('CheckTranslation').' '.$code, $has ? 'ok' : 'warning');
+		$add($langs->trans('CheckTranslation').' '.$code, $has ? 'ok' : 'warning', '', 'Missing translation: '.$code.'.');
 	}
 
-	// Champs obligatoires
 	$required = array('version' => 'ModuleVersion', 'dolmin' => 'DolibarrMin', 'support' => 'HowtoContactSupport', 'keywords' => 'ModuleKeywords');
 	foreach ($required as $alias => $lab) {
-		$add($langs->trans('CheckRequired').' '.$langs->trans($lab), marketplaceExtra($product, $alias) !== '' ? 'ok' : 'error');
+		$add($langs->trans('CheckRequired').' '.$langs->trans($lab), marketplaceExtra($product, $alias) !== '' ? 'ok' : 'error', '', 'Required field missing: '.$langs->transnoentitiesnoconv($lab).'.');
 	}
 
-	// Coherence des versions
 	$dmin = marketplaceExtra($product, 'dolmin');
 	$dmax = marketplaceExtra($product, 'dolmax');
 	if ($dmin !== '' && $dmax !== '') {
-		$add('CheckDolVersions', versioncompare(explode('.', $dmin), explode('.', $dmax)) <= 0 ? 'ok' : 'error', $dmin.' -> '.$dmax);
+		$ok = versioncompare(explode('.', preg_replace('/[^0-9.]/', '', $dmin)), explode('.', preg_replace('/[^0-9.]/', '', $dmax))) <= 0;
+		$add($langs->trans('CheckDolVersions'), $ok ? 'ok' : 'error', $dmin.' -> '.$dmax, 'The Dolibarr min/max versions are inconsistent.');
 	}
 	$pmin = marketplaceExtra($product, 'phpmin');
 	$pmax = marketplaceExtra($product, 'phpmax');
 	if ($pmin !== '' && $pmax !== '') {
-		$add('CheckPhpVersions', versioncompare(explode('.', $pmin), explode('.', $pmax)) <= 0 ? 'ok' : 'error', $pmin.' -> '.$pmax);
+		$ok = versioncompare(explode('.', $pmin), explode('.', $pmax)) <= 0;
+		$add($langs->trans('CheckPhpVersions'), $ok ? 'ok' : 'error', $pmin.' -> '.$pmax, 'The PHP min/max versions are inconsistent.');
 	}
 
-	// Prix et duree
-	$add('CheckPrice', ($product->price > 0 || marketplaceExtra($product, 'compprice') !== '') ? 'ok' : 'warning', price($product->price));
-	$add('CheckValidity', marketplaceExtra($product, 'duration') !== '' ? 'ok' : 'warning');
+	$add($langs->trans('CheckPrice'), ($product->price > 0 || marketplaceExtra($product, 'compprice') !== '') ? 'ok' : 'warning', price($product->price), 'The price is missing.');
+	$add($langs->trans('CheckValidity'), marketplaceExtra($product, 'duration') !== '' ? 'ok' : 'warning', '', 'The validity duration is missing.');
 
-	// Vendeur
 	$sellers = marketplaceGetSellers($db, $product->id);
-	$add('CheckSeller', count($sellers) == 1 ? 'ok' : (count($sellers) > 1 ? 'warning' : 'error'), count($sellers).' vendeur(s)');
+	$add($langs->trans('CheckSeller'), count($sellers) == 1 ? 'ok' : (count($sellers) > 1 ? 'warning' : 'error'), count($sellers).' vendeur(s)');
 	if (count($sellers) >= 1 && empty($sellers[0]->email)) {
-		$add('CheckSellerEmail', 'error');
+		$add($langs->trans('CheckSellerEmail'), 'error');
 	}
 
-	// Doublons / forks / violation
 	if (marketplaceExtra($product, 'duplicateof') !== '') {
-		$add('CheckDuplicate', 'warning');
+		$add($langs->trans('CheckDuplicate'), 'warning', '', 'This module is declared as a copy of another module.');
 	}
 	if (marketplaceExtra($product, 'forkof') !== '') {
-		$add('CheckFork', 'warning');
+		$add($langs->trans('CheckFork'), 'warning', '', 'This module is declared as a fork of another module.');
 	}
 	if (marketplaceExtra($product, 'law') !== '') {
-		$add('CheckLaw', 'error', marketplaceExtra($product, 'law'));
+		$add($langs->trans('CheckLaw'), 'error', marketplaceExtra($product, 'law'), 'The module violates the marketplace rules or the law.');
 	}
 
-	// Ref deja utilisee par un autre service au label proche
 	$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX."product WHERE rowid <> ".((int) $product->id);
 	$sql .= " AND fk_product_type = 1 AND label = '".$db->escape($product->label)."'";
 	$resql = $db->query($sql);
 	if ($resql && ($obj = $db->fetch_object($resql)) && $obj->nb > 0) {
-		$add('CheckSameLabel', 'warning', $obj->nb);
+		$add($langs->trans('CheckSameLabel'), 'warning', $obj->nb, 'Another module already uses the same name.');
 	}
 
 	return $checks;
+}
+
+/** Motifs rapides (libelle de traduction => texte anglais envoye au vendeur) */
+function marketplaceGetQuickReasons()
+{
+	return array(
+		'QuickReason_Image' => 'No image provided. Please add at least one image.',
+		'QuickReason_Zip' => 'The module zip file is missing or invalid.',
+		'QuickReason_Desc' => 'The description is missing or too short.',
+		'QuickReason_Translations' => 'Translations are incomplete (FR, EN, DE, IT, ES).',
+		'QuickReason_Versions' => 'The Dolibarr/PHP version information is missing or inconsistent.',
+		'QuickReason_Duplicate' => 'This module is a copy of an existing module.',
+		'QuickReason_Quality' => 'The module does not meet our quality requirements.',
+		'QuickReason_Legal' => 'The module violates the marketplace rules or the law.',
+	);
+}
+
+/** IDs des modules d'une liste (pending|refused|online), du plus ancien au plus recent */
+function marketplaceGetListIds($db, $mode)
+{
+	$efSub = marketplaceCol('submitted');
+	$efReason = marketplaceCol('reason');
+	$catIds = marketplaceGetCategoryIds($db);
+	if (empty($catIds)) {
+		return array();
+	}
+	$conds = array(
+		'pending' => "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '')",
+		'refused' => "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''",
+		'online' => "p.tosell = 1",
+	);
+	$cond = isset($conds[$mode]) ? $conds[$mode] : $conds['pending'];
+	$sql = "SELECT p.rowid FROM ".MAIN_DB_PREFIX."product as p";
+	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
+	$sql .= " WHERE p.fk_product_type = 1 AND ".$cond;
+	$sql .= " AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
+	$sql .= " ORDER BY COALESCE(".$efSub.", p.datec) ASC, p.rowid ASC";
+	$ids = array();
+	$resql = $db->query($sql);
+	while ($resql && ($obj = $db->fetch_object($resql))) {
+		$ids[] = (int) $obj->rowid;
+	}
+	return $ids;
 }
 
 /** @return bool true si aucune erreur bloquante */
