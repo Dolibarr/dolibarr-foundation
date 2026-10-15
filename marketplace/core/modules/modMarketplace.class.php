@@ -394,21 +394,6 @@ class modMarketplace extends DolibarrModules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
-		$this->menu[$r++] = array(
-			'fk_menu' => 'fk_mainmenu=marketplace',
-			'type' => 'left',
-			'titre' => 'ModulesPendingValidation',
-			'prefix' => img_picto('', 'fa-hourglass-half', 'class="pictofixedwidth valignmiddle paddingright"'),
-			'mainmenu' => 'marketplace',
-			'leftmenu' => 'marketplace_pending',
-			'url' => '/marketplace/module_validation.php?mode=pending',
-			'langs' => 'marketplace@marketplace',
-			'position' => 1001 + $r,
-			'enabled' => 'isModEnabled("marketplace")',
-			'perms' => '$user->hasRight("marketplace", "module", "read")',
-			'target' => '',
-			'user' => 2,
-		);
 		$this->menu[$r++]=array(
 			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
