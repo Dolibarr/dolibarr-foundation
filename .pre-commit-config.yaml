@@ -223,7 +223,7 @@ repos:
           - -x
           - dev/tools/codespell/codespell-lines-ignore.txt
         exclude_types: [image]
-        exclude: (?x)^(.phan/stubs/.*|phpstan\.neon.*)$
+        exclude: (?x)^(.phan/stubs/.*|phpstan\.neon.*|(.*/)?doctemplates/.*)$
         additional_dependencies: [tomli]
       - alias: codespell-lang-en_US
         # Only for translations with specialised exceptions
@@ -261,6 +261,7 @@ repos:
     hooks:
       - id: sqlfluff-lint
         stages: [pre-commit, manual]  # manual needed for ci
+        args: [--dialect, mysql]
         exclude: (?x)^
           (dev/initdemo/mysqldump_.*\.sql
           |htdocs/core/menus/init_menu_auguria\.sql
