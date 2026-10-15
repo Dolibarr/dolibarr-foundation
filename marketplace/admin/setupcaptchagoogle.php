@@ -57,6 +57,7 @@ global $langs, $user;
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
+require_once DOL_DOCUMENT_ROOT."/core/lib/security2.lib.php"; // For showEyeForField()
 require_once '../lib/marketplace.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
 //require_once "../class/myclass.class.php";
@@ -174,6 +175,9 @@ $item->cssClass = 'minwidth500';
 $item = $formSetup->newItem('MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY');
 $item->helpText = $langs->trans("MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY_HELP");
 $item->cssClass = 'minwidth500';
+// Override the input to get a password field, and add the eye picto to show/hide the key
+$item->fieldInputOverride = '<input type="password" class="flat minwidth500" id="MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY" name="MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY" value="'.dol_escape_htmltag(GETPOST('MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY', 'alpha') ? GETPOST('MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY', 'alpha') : getDolGlobalString('MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY')).'">';
+$item->fieldInputOverride .= showEyeForField('eyeMARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY', 'MARKETPLACE_GOOGLE_RECAPTCHA_SECRET_KEY');
 
 $setupnotempty += count($formSetup->items);
 
