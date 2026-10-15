@@ -114,7 +114,15 @@ require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 
-/** Noms des extrafields (colonne options_xxx). A ADAPTER si besoin. */
+/**
+ * Map of aliases to extrafield names of the marketplace services.
+ *
+ * Values are the extrafield codes as stored in llx_product_extrafields (column name).
+ * To read a value from a Product object, prefix the code with "options_" (see marketplaceExtra()).
+ * Adapt this list if an extrafield is renamed: it is the only place to change.
+ *
+ * @return array<string,string> Alias => extrafield code
+ */
 function marketplaceValidationKeys()
 {
 	return array(
@@ -139,14 +147,42 @@ function marketplaceValidationKeys()
 	);
 }
 
-/** Colonne SQL d'un extrafield (sans le prefixe options_) */
+/**
+ * Get the SQL column of an extrafield, for queries using the alias "ef"
+ * (llx_product_extrafields). The column has no "options_" prefix in the database.
+ *
+ * @param  string $alias Alias defined in marketplaceValidationKeys()
+ * @return string        SQL column, for example "ef.marketplace_submitted"
+ */
 function marketplaceCol($alias)
 {
 	$keys = marketplaceValidationKeys();
 	return 'ef.'.$keys[$alias];
 }
 
-/** IDs de la categorie racine marketplace et de toutes ses sous-categories */
+/**
+ * Get the value of a marketplace extrafield from a loaded product.
+ * The product must have been loaded with fetch() (which loads the extrafields).
+ *
+ * @param  Product $product Product (service) object
+ * @param  string  $alias   Alias defined in marketplaceValidationKeys()
+ * @return mixed            Extrafield value, or '' if not set
+ */
+function marketplaceExtra($product, $alias)
+{
+	$keys = marketplaceValidationKeys();
+	$k = 'options_'.$keys[$alias];
+	return isset($product->array_options[$k]) ? $product->array_options[$k] : '';
+}
+
+/**
+ * Get the IDs of the product categories that contain marketplace modules.
+ * Starts from the root category (MARKETPLACE_ROOT_CATEGORY_ID), adds all its
+ * sub-categories recursively, and removes the "versions" category.
+ *
+ * @param  DoliDB $db Database handler
+ * @return int[]      Category IDs (empty array if the root category is not configured)
+ */
 function marketplaceGetCategoryIds($db)
 {
 	$root = getDolGlobalInt('MARKETPLACE_ROOT_CATEGORY_ID');
@@ -166,20 +202,19 @@ function marketplaceGetCategoryIds($db)
 			}
 		}
 	}
-	// On exclut la categorie des versions
+	// Services of the "versions" category are not modules to validate
 	$versions = getDolGlobalInt('MARKETPLACE_VERSIONS_CATEGORY_ID');
 	return array_values(array_diff($ids, array($versions)));
 }
 
-/** Retourne la valeur d'un extrafield par son alias */
-function marketplaceExtra($product, $alias)
-{
-	$keys = marketplaceValidationKeys();
-	$k = 'options_'.$keys[$alias];
-	return isset($product->array_options[$k]) ? $product->array_options[$k] : '';
-}
-
-/** Vendeurs (fournisseurs) rattaches au service via les prix d'achat */
+/**
+ * Get the sellers linked to a service.
+ * The link is made through the supplier prices (llx_product_fournisseur_price).
+ *
+ * @param  DoliDB    $db        Database handler
+ * @param  int       $productid ID of the service
+ * @return Societe[]            Loaded third parties (empty array if none)
+ */
 function marketplaceGetSellers($db, $productid)
 {
 	$sellers = array();
@@ -199,29 +234,31 @@ function marketplaceGetSellers($db, $productid)
 	return $sellers;
 }
 
-/** Repertoire des fichiers d'un service (meme logique que product/document.php) */
-function marketplaceGetUploadDir($product)
-{
-	global $conf;
-	$entity = empty($product->entity) ? 1 : $product->entity;
-	if ($product->type == Product::TYPE_SERVICE) {
-		$base = $conf->service->multidir_output[$entity];
-	} else {
-		$base = $conf->product->multidir_output[$entity];
-	}
-	if (getDolGlobalInt('PRODUCT_USE_OLD_PATH_FOR_PHOTO')) {
-		return $base.'/'.get_exdir($product->id, 2, 0, 0, $product, 'product').$product->id.'/photos';
-	}
-	return $base.'/'.get_exdir(0, 0, 0, 0, $product, 'product').dol_sanitizeFileName($product->ref);
-}
-
-/** Cherche les fichiers du service dans plusieurs emplacements possibles */
+/**
+ * Find and classify the files attached to a service (module zip, images, others).
+ *
+ * The storage folder depends on the Dolibarr configuration (service or product
+ * output dir, with or without sub-directories, old photo path). Several candidate
+ * folders are tested and the first one that contains files is used.
+ *
+ * @param  Product $product Product (service) object
+ * @return array            Array with keys:
+ *                          - 'dir'    (string)  folder where files were found ('' if none)
+ *                          - 'tried'  (array)   all the folders tested (useful for debug)
+ *                          - 'zips'   (array)   zip files
+ *                          - 'images' (array)   image files supported by Dolibarr
+ *                          - 'others' (array)   any other file
+ *                          Each file is an array from dol_dir_list() plus the key 'rel',
+ *                          the path relative to the base folder (for document.php / viewimage.php).
+ */
 function marketplaceGetFiles($product)
 {
 	global $conf;
+
 	$entity = empty($product->entity) ? 1 : (int) $product->entity;
 	$ref = dol_sanitizeFileName($product->ref);
 
+	// Base folders: service module, product module, then default data folder
 	$bases = array();
 	foreach (array('service', 'product') as $m) {
 		if (isset($conf->$m->multidir_output[$entity])) {
@@ -233,6 +270,7 @@ function marketplaceGetFiles($product)
 	$bases[] = DOL_DATA_ROOT.'/produit';
 	$bases = array_values(array_unique($bases));
 
+	// Candidate sub-folders for each base folder
 	$candidates = array();
 	foreach ($bases as $b) {
 		$candidates[] = array($b, $ref);
@@ -247,14 +285,16 @@ function marketplaceGetFiles($product)
 			continue;
 		}
 		$res['tried'][] = $dir;
+
+		// Ignore .meta files and generated previews
 		$files = dol_dir_list($dir, 'files', 0, '', '(\.meta|_preview.*\.png)$', 'name', SORT_ASC, 0);
 		if (empty($files)) {
 			continue;
 		}
+
 		$res['dir'] = $dir;
 		foreach ($files as $f) {
-			$f['rel'] = ltrim(substr($dir, strlen($cand[0])), '/').'/'.$f['name'];
-			$f['rel'] = ltrim($f['rel'], '/');
+			$f['rel'] = ltrim(ltrim(substr($dir, strlen($cand[0])), '/').'/'.$f['name'], '/');
 			if (preg_match('/\.zip$/i', $f['name'])) {
 				$res['zips'][] = $f;
 			} elseif (image_format_supported($f['name']) > 0) {
@@ -269,8 +309,20 @@ function marketplaceGetFiles($product)
 }
 
 /**
- * Controles de validation.
- * @return array list of array('label','level' ok|warning|error,'detail','reason' texte anglais pour le vendeur)
+ * Run all the validation checks of a module (service).
+ *
+ * Levels:
+ * - 'error'   : blocking, the module cannot be published
+ * - 'warning' : to review, does not block the publication
+ * - 'ok'      : check passed
+ *
+ * @param  DoliDB  $db      Database handler
+ * @param  Product $product Product (service) loaded with fetch() and fetch_optionals()
+ *                          (and getMultiLangs() for the translations check)
+ * @return array            List of checks, each one is an array with keys:
+ *                          'label' (translated), 'level' (ok|warning|error),
+ *                          'detail' (short info shown on the right),
+ *                          'reason' (English text proposed to the seller when the check fails)
  */
 function marketplaceValidationChecks($db, $product)
 {
@@ -295,23 +347,28 @@ function marketplaceValidationChecks($db, $product)
 	$descOk = dol_strlen(trim(strip_tags($product->description))) >= 30;
 	$add($langs->trans('CheckDescription'), $descOk ? 'ok' : 'error', '', 'The description is missing or too short.');
 
+	// Translations: label and description are expected in each language
 	foreach (array('fr_FR', 'en_US', 'de_DE', 'it_IT', 'es_ES') as $code) {
 		$ml = isset($product->multilangs[$code]) ? $product->multilangs[$code] : array();
 		$has = !empty($ml['label']) && !empty($ml['description']);
 		$add($langs->trans('CheckTranslation').' '.$code, $has ? 'ok' : 'warning', '', 'Missing translation: '.$code.'.');
 	}
 
+	// Required extrafields
 	$required = array('version' => 'ModuleVersion', 'dolmin' => 'DolibarrMin', 'support' => 'HowtoContactSupport', 'keywords' => 'ModuleKeywords');
 	foreach ($required as $alias => $lab) {
 		$add($langs->trans('CheckRequired').' '.$langs->trans($lab), marketplaceExtra($product, $alias) !== '' ? 'ok' : 'error', '', 'Required field missing: '.$langs->transnoentitiesnoconv($lab).'.');
 	}
 
+	// Dolibarr versions: min must not be greater than max (letters like "V" are ignored)
 	$dmin = marketplaceExtra($product, 'dolmin');
 	$dmax = marketplaceExtra($product, 'dolmax');
 	if ($dmin !== '' && $dmax !== '') {
 		$ok = versioncompare(explode('.', preg_replace('/[^0-9.]/', '', $dmin)), explode('.', preg_replace('/[^0-9.]/', '', $dmax))) <= 0;
 		$add($langs->trans('CheckDolVersions'), $ok ? 'ok' : 'error', $dmin.' -> '.$dmax, 'The Dolibarr min/max versions are inconsistent.');
 	}
+
+	// PHP versions: min must not be greater than max
 	$pmin = marketplaceExtra($product, 'phpmin');
 	$pmax = marketplaceExtra($product, 'phpmax');
 	if ($pmin !== '' && $pmax !== '') {
@@ -319,6 +376,7 @@ function marketplaceValidationChecks($db, $product)
 		$add($langs->trans('CheckPhpVersions'), $ok ? 'ok' : 'error', $pmin.' -> '.$pmax, 'The PHP min/max versions are inconsistent.');
 	}
 
+	// Price and validity duration
 	$add($langs->trans('CheckPrice'), ($product->price > 0 || marketplaceExtra($product, 'compprice') !== '') ? 'ok' : 'warning', price($product->price), 'The price is missing.');
 	$add($langs->trans('CheckValidity'), marketplaceExtra($product, 'duration') !== '' ? 'ok' : 'warning', '', 'The validity duration is missing.');
 
@@ -328,6 +386,7 @@ function marketplaceValidationChecks($db, $product)
 		$add($langs->trans('CheckSellerEmail'), 'error');
 	}
 
+	// Seller: exactly one is expected, with an email to contact him
 	if (marketplaceExtra($product, 'duplicateof') !== '') {
 		$add($langs->trans('CheckDuplicate'), 'warning', '', 'This module is declared as a copy of another module.');
 	}
@@ -338,6 +397,7 @@ function marketplaceValidationChecks($db, $product)
 		$add($langs->trans('CheckLaw'), 'error', marketplaceExtra($product, 'law'), 'The module violates the marketplace rules or the law.');
 	}
 
+	// Another service with exactly the same label (possible duplicate)
 	$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX."product WHERE rowid <> ".((int) $product->id);
 	$sql .= " AND fk_product_type = 1 AND label = '".$db->escape($product->label)."'";
 	$resql = $db->query($sql);
@@ -348,7 +408,28 @@ function marketplaceValidationChecks($db, $product)
 	return $checks;
 }
 
-/** Motifs rapides (libelle de traduction => texte anglais envoye au vendeur) */
+/**
+ * Tell if a list of checks has no blocking error.
+ *
+ * @param  array $checks List returned by marketplaceValidationChecks()
+ * @return bool          True if no check is at the 'error' level (module can be published)
+ */
+function marketplaceChecksAreValid($checks)
+{
+	foreach ($checks as $c) {
+		if ($c['level'] == 'error') {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * Tell if a list of checks has no blocking error.
+ *
+ * @param  array $checks List returned by marketplaceValidationChecks()
+ * @return bool          True if no check is at the 'error' level (module can be published)
+ */
 function marketplaceGetQuickReasons()
 {
 	return array(
@@ -363,7 +444,19 @@ function marketplaceGetQuickReasons()
 	);
 }
 
-/** IDs des modules d'une liste (pending|refused|online), du plus ancien au plus recent */
+/**
+ * Get the IDs of the modules of a given list, from the oldest to the newest.
+ * Used for the previous/next navigation of the validation card.
+ *
+ * Lists:
+ * - pending : not on sale and no reason set (waiting for validation)
+ * - refused : not on sale and a reason is set (refused or unpublished)
+ * - online  : on sale
+ *
+ * @param  DoliDB $db   Database handler
+ * @param  string $mode 'pending', 'refused' or 'online' (any other value means 'pending')
+ * @return int[]        Service IDs sorted by submission date (creation date if not set)
+ */
 function marketplaceGetListIds($db, $mode)
 {
 	$efSub = marketplaceCol('submitted');
@@ -391,18 +484,16 @@ function marketplaceGetListIds($db, $mode)
 	return $ids;
 }
 
-/** @return bool true si aucune erreur bloquante */
-function marketplaceChecksAreValid($checks)
-{
-	foreach ($checks as $c) {
-		if ($c['level'] == 'error') {
-			return false;
-		}
-	}
-	return true;
-}
-
-/** Modeles d'e-mail (type: refuse|unpublish), valeurs par defaut en anglais */
+/**
+ * Get the email template (subject and body) sent to the seller.
+ * Values come from the module setup (tab "Validation"), with English defaults.
+ *
+ * Substitution keys available in subject and body:
+ * __SELLER_NAME__, __MODULE_REF__, __MODULE_LABEL__, __REASON__
+ *
+ * @param  string $type 'refuse' (non-publication) or 'unpublish'
+ * @return array        Array with keys 'subject' and 'body'
+ */
 function marketplaceGetMailTemplate($type)
 {
 	$defaults = array(
@@ -422,7 +513,16 @@ function marketplaceGetMailTemplate($type)
 	);
 }
 
-/** Envoie l'e-mail au vendeur. @return string '' si OK, sinon message d'erreur */
+/**
+ * Send the non-publication or unpublication email to the seller of a module.
+ * The recipient is the first seller linked to the service. The email is sent in plain text.
+ *
+ * @param  DoliDB  $db      Database handler
+ * @param  Product $product Product (service) object
+ * @param  string  $type    'refuse' or 'unpublish' (selects the template)
+ * @param  string  $reason  Reason inserted in the email (replaces __REASON__)
+ * @return string           Empty string if the email was sent, error message otherwise
+ */
 function marketplaceSendValidationMail($db, $product, $type, $reason)
 {
 	require_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
@@ -449,7 +549,17 @@ function marketplaceSendValidationMail($db, $product, $type, $reason)
 	return '';
 }
 
-/** Trace l'action dans l'agenda du service (sert aux KPI) */
+/**
+ * Record a validation action in the agenda of the service.
+ * These events are used by the dashboard KPI (actions per period, average processing time).
+ *
+ * @param  DoliDB  $db      Database handler
+ * @param  User    $user    User who performs the action
+ * @param  Product $product Product (service) concerned
+ * @param  string  $code    Event code: MKT_VALIDATE, MKT_REFUSE or MKT_UNPUBLISH
+ * @param  string  $label   Event label
+ * @return int              ID of the created event if > 0, <= 0 on error
+ */
 function marketplaceLogValidationAction($db, $user, $product, $code, $label)
 {
 	require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
