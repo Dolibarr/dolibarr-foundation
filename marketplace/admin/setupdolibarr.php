@@ -52,14 +52,19 @@ if (!$res && file_exists("../../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
-global $langs, $user;
+/**
+ * @var Conf $conf
+ * @var DoliDB $db
+ * @var HookManager $hookmanager
+ * @var Societe $mysoc
+ * @var Translate $langs
+ * @var User $user
+ */
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/marketplace.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
-//require_once "../class/myclass.class.php";
 
 // Translations
 $langs->loadLangs(array("admin", "marketplace@marketplace"));
@@ -146,7 +151,7 @@ if (preg_match('/setMARKETPLACE_ENABLE_DOLIBARR_FEATURES/i', $action, $reg)) {
 $form = new Form($db);
 
 $help_url = '';
-$page_name = "DolibarrFeatureSetup";
+$page_name = "MarketplaceSetup";
 
 llxHeader('', $langs->trans($page_name), $help_url, '', 0, 0, '', '', '', 'mod-marketplace page-admin');
 

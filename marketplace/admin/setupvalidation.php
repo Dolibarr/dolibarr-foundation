@@ -52,7 +52,6 @@ if (!$res && file_exists("../../../../main.inc.php")) {
 if (!$res) {
 	die("Include of main fails");
 }
-
 /**
  * @var Conf $conf
  * @var DoliDB $db
@@ -94,17 +93,17 @@ if ($action == 'save' && GETPOST('token') == newToken()) {
  * View
  */
 $help_url = '';
-$page_name = "MarketplaceSetupValidation";
+$page_name = "MarketplaceSetup";
 
 llxHeader('', $langs->trans($page_name), $help_url, '', 0, 0, '', '', '', 'mod-marketplace page-adminvalidation');
 
 // Subheader
 $linkback = '<a href="'.DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_values=1">'.img_picto($langs->trans("BackToModuleList"), 'back', 'class="pictofixedwidth"').$langs->trans("BackToModuleList").'</a>';
 
-print load_fiche_titre($langs->trans("MarketPlaceSetupValidation"), $linkback, 'title_setup');
+print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 $head = marketplaceAdminPrepareHead();
-print dol_get_fiche_head($head, 'setupvalidation', $langs->trans($page_name), -1, "fa-puzzle-piece");
+print dol_get_fiche_head($head, 'setupvalidation', $langs->trans($page_name), -1, "fa-store");
 
 print '<span class="opacitymedium">'.$langs->trans("MarketPlaceValidationMailHelp").'</span><br><br>';
 print '<b>__SELLER_NAME__, __MODULE_REF__, __MODULE_LABEL__, __REASON__</b><br><br>';

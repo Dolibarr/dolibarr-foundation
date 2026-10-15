@@ -85,10 +85,12 @@ function marketplaceAdminPrepareHead()
 	$head[$h][2] = 'setupvalidation';
 	$h++;
 
-	$head[$h][0] = dol_buildpath("/marketplace/admin/importtip.php", 1);
-	$head[$h][1] = $langs->trans("ImportTip");
-	$head[$h][2] = 'importtip';
-	$h++;
+	if (getDolGlobalString('MARKETPLACE_SHOW_MIGRATION_FROM_PRESTASHOP')) {
+		$head[$h][0] = dol_buildpath("/marketplace/admin/importtip.php", 1);
+		$head[$h][1] = $langs->trans("ImportTip");
+		$head[$h][2] = 'importtip';
+		$h++;
+	}
 
 	$head[$h][0] = dol_buildpath("/marketplace/admin/about.php", 1);
 	$head[$h][1] = $langs->trans("About");
@@ -427,7 +429,6 @@ function marketplaceChecksAreValid($checks)
 /**
  * Tell if a list of checks has no blocking error.
  *
- * @param  array $checks List returned by marketplaceValidationChecks()
  * @return bool          True if no check is at the 'error' level (module can be published)
  */
 function marketplaceGetQuickReasons()
