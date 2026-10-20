@@ -44,9 +44,9 @@ Les frais directs correspondent aux factures et à la facture proforma émises p
 | --- | --- | --- | ---: | ---: | ---: |
 | F-26-020489 (SI2602-4640) | 24/02/2026 | Système de caisse Dolibarr – Diagnostic 2512 | 5 076,00 € | 1 015,20 € | 6 091,20 € |
 | F-26-020524 (SI2602-4641) | 27/02/2026 | Système de caisse Dolibarr – ATR 2512 | 1 811,00 € | 362,20 € | 2 173,20 € |
-| F-26-060694 (SI2606-4730) | 11/06/2026 | Frais de déplacement de l'auditeur | 529,75 € | 105,95 € | 635,70 € |
+| F-26-060694 (SI2606-4730) | 11/06/2026 | Frais de déplacement (BYCYB 161,00 € + auditeur 529,75 €) | 690,75 € | 138,15 € | 828,90 € |
 | DEV2611361-V1 (proforma) | 24/09/2026 | Audit supplémentaire à distance (1 jour) – vérification des mesures correctives sur les non-conformités 1-2026 à 5-2026 et R26-1 à R26-6 | 2 615,00 € | 523,00 € | 3 138,00 € |
-| **Total frais directs** | | | **10 031,75 €** | **2 006,35 €** | **12 038,10 €** |
+| **Total frais directs** | | | **10 192,75 €** | **2 038,55 €** | **12 231,30 €** |
 
 > **Note :** la prestation « Audit initial » de la facture F-26-060694 (12 110,00 € HT) a été intégralement compensée par l'acompte déjà versé (devis DEV2510400) ; elle n'apparaît donc pas dans les frais directs. Les acomptes des devis DEV2510393 et DEV2510397 ont également été repris sur les factures F-26-020524 et F-26-020489. La facture proforma DEV2611361-V1 (audit supplémentaire suite à la décision du comité de lecture du 24/09/2026) est un engagement à régler à la commande, offre valable jusqu'au 24/12/2026.
 
@@ -87,15 +87,15 @@ Les frais indirects correspondent au temps investi par les membres de l'associat
 
 | Catégorie | Montant HT | Part |
 | --- | ---: | ---: |
-| Frais directs (certification BYCYB/LNE) | 10 031,75 € | 13,4 % |
-| Frais indirects (charge de travail interne) | 64 666,00 € | 86,6 % |
-| **Coût total du projet** | **74 697,75 €** | **100 %** |
+| Frais directs (certification BYCYB/LNE) | 10 192,75 € | 13,6 % |
+| Frais indirects (charge de travail interne) | 64 666,00 € | 86,4 % |
+| **Coût total du projet** | **74 858,75 €** | **100 %** |
 
-**TTC, les frais directs représentent 12 038,10 €**, soit un coût total TTC de 76 704,10 €.
+**TTC, les frais directs représentent 12 231,30 €**, soit un coût total TTC de 76 897,30 €.
 
 ### Conclusion
 
-Le coût total du projet de certification Loi Finance s'élève à environ **74 700 € HT**, dont près de 86 % correspondent à la charge de travail interne bénévole ou salariée de l'association. Ce chiffre illustre l'ampleur de l'effort de conformité (développement, documentation, qualité, audits) au-delà des seuls honoraires de l'organisme certificateur. Il pourra servir de référence pour les futures démarches de conformité (renouvellements, évolutions du référentiel LNE).
+Le coût total du projet de certification Loi Finance s'élève à environ **74 860 € HT**, dont près de 86 % correspondent à la charge de travail interne bénévole ou salariée de l'association. Ce chiffre illustre l'ampleur de l'effort de conformité (développement, documentation, qualité, audits) au-delà des seuls honoraires de l'organisme certificateur. Il pourra servir de référence pour les futures démarches de conformité (renouvellements, évolutions du référentiel LNE).
 
 ---
 
