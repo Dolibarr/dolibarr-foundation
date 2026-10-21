@@ -138,7 +138,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 			$i = 0;
 			$j = 0;
 
-			dol_syslog("resellers_sellyoursaas.modules.php: mailing $num target found");
+			dol_syslog("resellers_sellyoursaas.modules.php: mailing $num target found", LOG_INFO, 0, '_captureserver');
 
 			$old = '';
 			while ($i < $num) {
@@ -161,7 +161,7 @@ class mailing_captureserver_registeredusers extends MailingTargets
 				$i++;
 			}
 		} else {
-			dol_syslog($this->db->error());
+			dol_syslog($this->db->error(), LOG_INFO, 0, '_captureserver');
 			$this->error=$this->db->error();
 			return -1;
 		}

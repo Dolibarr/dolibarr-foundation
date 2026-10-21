@@ -254,7 +254,7 @@ class CaptureServer extends CommonObject
 		global $langs, $extrafields;
 		$error = 0;
 
-		dol_syslog(__METHOD__, LOG_DEBUG);
+		dol_syslog(__METHOD__, LOG_DEBUG, 0, '_captureserver');
 
 		$object = new self($this->db);
 
@@ -370,7 +370,7 @@ class CaptureServer extends CommonObject
 	{
 		global $conf;
 
-		dol_syslog(__METHOD__, LOG_DEBUG);
+		dol_syslog(__METHOD__, LOG_DEBUG, 0, '_captureserver');
 
 		$records=array();
 
@@ -385,7 +385,7 @@ class CaptureServer extends CommonObject
 		$sql .= forgeSQLFromUniversalSearchCriteria($filter, $errormessage);
 		if ($errormessage) {
 			$this->errors[] = $errormessage;
-			dol_syslog(__METHOD__.' '.implode(',', $this->errors), LOG_ERR);
+			dol_syslog(__METHOD__.' '.implode(',', $this->errors), LOG_ERR, 0, '_captureserver');
 			return -1;
 		}
 
@@ -415,7 +415,7 @@ class CaptureServer extends CommonObject
 			return $records;
 		} else {
 			$this->errors[] = 'Error ' . $this->db->lasterror();
-			dol_syslog(__METHOD__ . ' ' . join(',', $this->errors), LOG_ERR);
+			dol_syslog(__METHOD__ . ' ' . join(',', $this->errors), LOG_ERR, 0, '_captureserver');
 
 			return -1;
 		}
@@ -691,7 +691,7 @@ class CaptureServer extends CommonObject
 		$this->output = '';
 		$this->error='';
 
-		dol_syslog(__METHOD__, LOG_DEBUG);
+		dol_syslog(__METHOD__, LOG_DEBUG, 0, '_captureserver');
 
 		$now = dol_now();
 
