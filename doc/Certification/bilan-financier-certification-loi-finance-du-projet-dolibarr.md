@@ -31,10 +31,11 @@ Le présent document constitue le bilan financier du projet de certification « 
 
 **Principales étapes du projet :** préparation du dossier de recevabilité, mise en place des outils qualité (DigiQuali), développements sur le module Journaux Inaltérables (blockedlog, archivage, clôture de caisse, signature à distance), audits à blanc (février 2026), audit initial LNE (juin 2026) et traitement des non-conformités.
 
-Les coûts du projet se décomposent en deux catégories :
+Les coûts du projet se décomposent en trois catégories :
 
 1. **Frais directs** : prestations facturées par l'organisme certificateur (diagnostic, ATR et frais de déplacement) ;
-2. **Frais indirects** : charge de travail interne (temps consacré par les membres de l'association), valorisée à partir du suivi des temps (fichier `timespent_20261019170621.csv`).
+2. **Frais indirects** : charge de travail interne (temps consacré par les membres de l'association), valorisée à partir du suivi des temps (fichier `timespent_20261019170621.csv`) ;
+3. **Prestations externes** : prestations externalisées hors organisme certificateur (rédaction de la documentation LNE).
 
 ## 1. Frais directs
 
@@ -83,20 +84,30 @@ Les frais indirects correspondent au temps investi par les membres de l'associat
 - **Mai – juin 2026** : audit initial LNE (1–5 juin 2026) et traitement des non-conformités (15–19 juin 2026) ;
 - **Septembre – octobre 2026** : suivi de la certification et rédaction du présent bilan.
 
-## 3. Total général
+## 3. Prestations externes
+
+Les prestations externes correspondent aux travaux externalisés par l'association auprès de prestataires tiers, hors organisme certificateur.
+
+| Facture | Date | Prestataire | Description | Montant HT | TVA 20 % | Montant TTC |
+| --- | --- | --- | --- | ---: | ---: | ---: |
+| FA2512-74870 (SI2512-4476) | 08/12/2025 | DoliCloud / NLTechno | Forfait rédaction documentation LNE (du 01/07/2024 au 31/12/2024) | 5 000,00 € | 1 000,00 € | 6 000,00 € |
+| **Total prestations externes** | | | | **5 000,00 €** | **1 000,00 €** | **6 000,00 €** |
+
+## 4. Total général
 
 | Catégorie | Montant HT | Part |
 | --- | ---: | ---: |
-| Frais directs (certification BYCYB/LNE) | 10 192,75 € | 13,6 % |
-| Frais indirects (charge de travail interne) | 64 666,00 € | 86,4 % |
-| **Coût total du projet** | **74 858,75 €** | **100 %** |
+| Frais directs (certification BYCYB/LNE) | 10 192,75 € | 12,8 % |
+| Frais indirects (charge de travail interne) | 64 666,00 € | 81,0 % |
+| Prestations externes | 5 000,00 € | 6,3 % |
+| **Coût total du projet** | **79 858,75 €** | **100 %** |
 
-**TTC, les frais directs représentent 12 231,30 €**, soit un coût total TTC de 76 897,30 €.
+**TTC, le total se décompose en 12 231,30 € de frais directs et 6 000,00 € de prestations externes**, soit un coût total TTC de 82 897,30 €.
 
 ### Conclusion
 
-Le coût total du projet de certification Loi Finance s'élève à environ **74 860 € HT**, dont près de 86 % correspondent à la charge de travail interne bénévole ou salariée de l'association. Ce chiffre illustre l'ampleur de l'effort de conformité (développement, documentation, qualité, audits) au-delà des seuls honoraires de l'organisme certificateur. Il pourra servir de référence pour les futures démarches de conformité (renouvellements, évolutions du référentiel LNE).
+Le coût total du projet de certification Loi Finance s'élève à environ **79 860 € HT** (dont 5 000 € de prestations externes), dont près de 81 % correspondent à la charge de travail interne bénévole ou salariée de l'association. Ce chiffre illustre l'ampleur de l'effort de conformité (développement, documentation, qualité, audits) au-delà des seuls honoraires de l'organisme certificateur. Il pourra servir de référence pour les futures démarches de conformité (renouvellements, évolutions du référentiel LNE).
 
 ---
 
-*Sources : factures BYCYB F-26-020489, F-26-020524 et F-26-060694 ; facture proforma DEV2611361-V1 ; fichier de suivi des temps `timespent_20261019170621.csv` ; dossier LNE21-QU2507-0131.*
+*Sources : factures BYCYB F-26-020489, F-26-020524 et F-26-060694 ; facture proforma DEV2611361-V1 ; facture DoliCloud/NLTechno FA2512-74870 ; fichier de suivi des temps `timespent_20261019170621.csv` ; dossier LNE21-QU2507-0131.*
