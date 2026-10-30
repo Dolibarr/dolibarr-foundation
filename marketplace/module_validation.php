@@ -132,16 +132,16 @@ $efFork = marketplaceCol('forkof');
 
 // Definition of array of fields for columns
 $arrayfields = array(
-	'p.rowid' => array('label' => 'TechnicalID', 'checked' => 1, 'position' => 1),
+	'p.rowid' => array('label' => 'TechnicalID', 'checked' => 0, 'position' => 1),
 	'p.ref' => array('label' => 'Ref', 'checked' => 1, 'position' => 10),
 	'p.label' => array('label' => 'Label', 'checked' => 1, 'position' => 20),
 	'seller' => array('label' => 'Seller', 'checked' => 1, 'position' => 30),
-	'version' => array('label' => 'ModuleVersion', 'checked' => 1, 'position' => 40),
+	'version' => array('label' => 'ModuleVersion', 'checked' => 0, 'position' => 40),
 	'dolmin' => array('label' => 'DolibarrMin', 'checked' => 1, 'position' => 50),
-	'dolmax' => array('label' => 'DolibarrMax', 'checked' => 1, 'position' => 51),
+	'dolmax' => array('label' => 'DolibarrMax', 'checked' => 0, 'position' => 51),
 	'fork' => array('label' => 'Fork', 'checked' => 1, 'position' => 60),
 	'duplicate' => array('label' => 'Duplicate', 'checked' => 1, 'position' => 61),
-	'reason' => array('label' => 'Reason', 'checked' => 0, 'position' => 62),
+	'reason' => array('label' => 'Reason', 'checked' => 1, 'position' => 62),
 	'submitted' => array('label' => 'DateRequestToBeOnline', 'checked' => 1, 'position' => 70),
 	'age' => array('label' => 'Age', 'checked' => 1, 'position' => 80),
 	'tosell' => array('label' => 'OnSale', 'checked' => 0, 'position' => 90),
