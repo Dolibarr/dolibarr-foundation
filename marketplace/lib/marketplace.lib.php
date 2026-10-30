@@ -21,6 +21,8 @@
  * \brief   Library files with common functions for Marketplace
  */
 
+require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php'; // For versioncompare() used by marketplaceValidationChecks()
+
 /**
  * Prepare admin pages header
  *

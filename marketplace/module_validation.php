@@ -118,6 +118,7 @@ $search_dolmin = trim(GETPOST('search_dolmin', 'alphanohtml'));
 $search_dolmax = trim(GETPOST('search_dolmax', 'alphanohtml'));
 $search_fork = GETPOST('search_fork', 'aZ09');
 $search_duplicate = GETPOST('search_duplicate', 'aZ09');
+$search_reason = trim(GETPOST('search_reason', 'alphanohtml'));
 $search_submitted_dtstart = dol_mktime(0, 0, 0, GETPOSTINT('search_submitted_dtstartmonth'), GETPOSTINT('search_submitted_dtstartday'), GETPOSTINT('search_submitted_dtstartyear'));
 $search_submitted_dtend = dol_mktime(23, 59, 59, GETPOSTINT('search_submitted_dtendmonth'), GETPOSTINT('search_submitted_dtendday'), GETPOSTINT('search_submitted_dtendyear'));
 
@@ -140,6 +141,7 @@ $arrayfields = array(
 	'dolmax' => array('label' => 'DolibarrMax', 'checked' => 1, 'position' => 51),
 	'fork' => array('label' => 'Fork', 'checked' => 1, 'position' => 60),
 	'duplicate' => array('label' => 'Duplicate', 'checked' => 1, 'position' => 61),
+	'reason' => array('label' => 'Reason', 'checked' => 0, 'position' => 62),
 	'submitted' => array('label' => 'DateRequestToBeOnline', 'checked' => 1, 'position' => 70),
 	'age' => array('label' => 'Age', 'checked' => 1, 'position' => 80),
 	'tosell' => array('label' => 'OnSale', 'checked' => 0, 'position' => 90),
@@ -197,6 +199,7 @@ if (empty($reshook)) {
 		$search_dolmax = '';
 		$search_fork = '';
 		$search_duplicate = '';
+		$search_reason = '';
 		$search_submitted_dtstart = '';
 		$search_submitted_dtend = '';
 		$toselect = array();
@@ -369,6 +372,9 @@ if ($search_duplicate === '1') {
 } elseif ($search_duplicate === '0') {
 	$sqlWhereFilter .= " AND (".$efDup." IS NULL OR ".$efDup." = '')";
 }
+if ($search_reason !== '') {
+	$sqlWhereFilter .= natural_search(array($efReason), $search_reason);
+}
 if ($search_submitted_dtstart) {
 	$sqlWhereFilter .= " AND COALESCE(".$efSub.", p.datec) >= '".$db->idate($search_submitted_dtstart)."'";
 }
@@ -387,6 +393,7 @@ $sortmap = array(
 	'dolmax' => 'dolmax',
 	'fork' => 'forkof',
 	'duplicate' => 'duplicateof',
+	'reason' => 'reason',
 	'submitted' => 'submitted',
 	'tosell' => 'p.tosell',
 );
@@ -408,6 +415,7 @@ if ($resql && ($obj = $db->fetch_object($resql))) {
 $sql = "SELECT p.rowid, p.ref, p.label, p.tosell, COALESCE(".$efSub.", p.datec) as submitted,";
 $sql .= " ".$efMin." as dolmin, ".$efMax." as dolmax, ".marketplaceCol('version')." as version,";
 $sql .= " ".$efFork." as forkof, ".$efDup." as duplicateof,";
+$sql .= " ".$efReason." as reason,";
 $sql .= " (SELECT s.rowid FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller_id,";
 $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
@@ -543,6 +551,9 @@ if ($search_fork !== '') {
 if ($search_duplicate !== '') {
 	$param .= '&search_duplicate='.urlencode($search_duplicate);
 }
+if ($search_reason !== '') {
+	$param .= '&search_reason='.urlencode($search_reason);
+}
 if ($search_submitted_dtstart) {
 	$param .= '&search_submitted_dtstartmonth='.GETPOSTINT('search_submitted_dtstartmonth');
 	$param .= '&search_submitted_dtstartday='.GETPOSTINT('search_submitted_dtstartday');
@@ -620,6 +631,9 @@ if (!empty($arrayfields['fork']['checked'])) {
 if (!empty($arrayfields['duplicate']['checked'])) {
 	print '<td class="liste_titre center">'.$form->selectarray('search_duplicate', array('1' => $langs->trans("Yes"), '0' => $langs->trans("No")), $search_duplicate, 1, 0, 0, '', 0, 0, 0, '', 'maxwidth100', 1).'</td>';
 }
+if (!empty($arrayfields['reason']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_reason" value="'.dol_escape_htmltag($search_reason).'"></td>';
+}
 if (!empty($arrayfields['submitted']['checked'])) {
 	print '<td class="liste_titre nowrap">';
 	print '<div class="nowrap">';
@@ -687,6 +701,10 @@ if (!empty($arrayfields['duplicate']['checked'])) {
 	print_liste_field_titre($arrayfields['duplicate']['label'], $_SERVER["PHP_SELF"], "duplicate", "", $param, "", $sortfield, $sortorder, 'center ');
 	$totalarray['nbfield']++;
 }
+if (!empty($arrayfields['reason']['checked'])) {
+	print_liste_field_titre($arrayfields['reason']['label'], $_SERVER["PHP_SELF"], "reason", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
 if (!empty($arrayfields['submitted']['checked'])) {
 	print_liste_field_titre($arrayfields['submitted']['label'], $_SERVER["PHP_SELF"], "submitted", "", $param, "", $sortfield, $sortorder);
 	$totalarray['nbfield']++;
@@ -738,7 +756,7 @@ foreach ($list as $o) {
 		print '<td class="tdoverflowmax250"><a href="'.dol_buildpath('/marketplace/module_validation_card.php', 1).'?id='.$o->rowid.'">'.img_picto('', 'service', 'class="pictofixedwidth"').dol_escape_htmltag($o->ref).'</a></td>';
 	}
 	if (!empty($arrayfields['p.label']['checked'])) {
-		print '<td class="tdoverflowmax300">'.dol_escape_htmltag($o->label).'</td>';
+		print '<td class="tdoverflowmax300"><div class="twolinesmax-normallineheight minwidth200onall"><span class="spantitle">'.dol_escape_htmltag($o->label).'</span></div></td>';
 	}
 	if (!empty($arrayfields['seller']['checked'])) {
 		// Assign the properties of the reused object instead of instantiating a Societe for each row
@@ -760,6 +778,9 @@ foreach ($list as $o) {
 	}
 	if (!empty($arrayfields['duplicate']['checked'])) {
 		print '<td class="center">'.($o->duplicateof ? $langs->trans("Yes") : '&nbsp;').'</td>';
+	}
+	if (!empty($arrayfields['reason']['checked'])) {
+		print '<td class="tdoverflowmax200" title="'.dolPrintHTMLForAttribute($o->reason).'">'.dol_escape_htmltag($o->reason).'</td>';
 	}
 	if (!empty($arrayfields['submitted']['checked'])) {
 		print '<td>'.dol_print_date($sub, 'dayhour').'</td>';
