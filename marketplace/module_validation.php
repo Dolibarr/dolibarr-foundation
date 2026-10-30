@@ -70,6 +70,7 @@ if (!$res) {
  */
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 dol_include_once('/marketplace/lib/marketplace.lib.php');
 
 // Translations
@@ -82,14 +83,54 @@ if (!$user->hasRight('marketplace', 'module', 'read')) {
 
 // Parameters
 $mode = GETPOST('mode', 'aZ09'); // pending | refused | online (default: pending)
+$action = GETPOST('action', 'aZ09');
+$massaction = GETPOST('massaction', 'alpha');
+$toselect = GETPOST('toselect', 'array:int');
 $k = marketplaceValidationKeys();
+
+// Load variable for pagination
+$limit = GETPOSTINT('limit') ? GETPOSTINT('limit') : $conf->liste_limit;
+$sortfield = GETPOST('sortfield', 'aZ09comma');
+$sortorder = GETPOST('sortorder', 'aZ09comma');
+$page = GETPOSTISSET('pageplusone') ? (GETPOSTINT('pageplusone') - 1) : GETPOSTINT('page');
+if (empty($page) || $page < 0 || GETPOST('button_search', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
+	// If $page is not defined, or '' or -1 or if we click on clear filters
+	$page = 0;
+}
+$offset = $limit * $page;
+if (!$sortfield) {
+	$sortfield = 'p.ref';
+}
+if (!$sortorder) {
+	$sortorder = 'ASC';
+}
+
+$contextpage = 'modulevalidationlist'; // Identifier of the page, used to store the setup of visible columns
+
+$canValidate = $user->hasRight('marketplace', 'module', 'validate');
 
 // SQL columns of the extrafields (alias "ef")
 $efSub = marketplaceCol('submitted');
 $efReason = marketplaceCol('reason');
 $efMin = marketplaceCol('dolmin');
+$efMax = marketplaceCol('dolmax');
 $efDup = marketplaceCol('duplicateof');
 $efFork = marketplaceCol('forkof');
+
+// Definition of array of fields for columns
+$arrayfields = array(
+	'p.rowid' => array('label' => 'TechnicalID', 'checked' => 1, 'position' => 1),
+	'p.ref' => array('label' => 'Ref', 'checked' => 1, 'position' => 10),
+	'p.label' => array('label' => 'Label', 'checked' => 1, 'position' => 20),
+	'seller' => array('label' => 'Seller', 'checked' => 1, 'position' => 30),
+	'version' => array('label' => 'ModuleVersion', 'checked' => 1, 'position' => 40),
+	'dolmin' => array('label' => 'DolibarrMin', 'checked' => 1, 'position' => 50),
+	'dolmax' => array('label' => 'DolibarrMax', 'checked' => 1, 'position' => 51),
+	'fork' => array('label' => 'Fork', 'checked' => 1, 'position' => 60),
+	'duplicate' => array('label' => 'Duplicate', 'checked' => 1, 'position' => 61),
+	'submitted' => array('label' => 'DateRequestToBeOnline', 'checked' => 1, 'position' => 70),
+	'age' => array('label' => 'Age', 'checked' => 1, 'position' => 80),
+);
 
 // Categories that contain the marketplace modules
 $catIds = marketplaceGetCategoryIds($db);
@@ -105,6 +146,91 @@ $base = " WHERE p.fk_product_type = 1 AND p.rowid IN (SELECT cp.fk_product FROM 
 $condPending = "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '')";
 $condRefused = "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''";
 $condOnline = "p.tosell = 1";
+
+/*
+ * Actions
+ */
+
+$reasonKey = 'options_'.$k['reason'];
+$massreason = trim(GETPOST('massreason', 'alphanohtml'));
+
+if (GETPOST('cancel', 'alpha')) {
+	$massaction = '';
+}
+if (!GETPOST('confirmmassaction', 'alpha')) {
+	// A mass action is processed only when its confirmation button was pressed
+	$massaction = '';
+}
+
+$object = new Product($db);
+
+$parameters = array('arrayfields' => &$arrayfields);
+$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action);
+if ($reshook < 0) {
+	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+}
+
+if (empty($reshook)) {
+	// Selection of new fields
+	include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
+
+	// Mass action: publish the selected modules
+	if ($massaction == 'massvalidate' && $canValidate) {
+		$nbok = 0;
+		$nbko = 0;
+		$productstatic = new Product($db);
+		foreach (marketplaceFilterModuleIds($db, $catIds, $toselect) as $toselectid) {
+			$result = $productstatic->fetch($toselectid);
+			if ($result <= 0) {
+				$nbko++;
+				continue;
+			}
+			// Publication is refused by the server if a blocking check fails
+			$checks = marketplaceValidationChecks($db, $productstatic);
+			if (!marketplaceChecksAreValid($checks)) {
+				$nbko++;
+				continue;
+			}
+			// Clear the previous reason, then put the service on sale
+			$productstatic->array_options[$reasonKey] = '';
+			$productstatic->insertExtraFields();
+			$productstatic->setStatut(1, null, 'product', 'PRODUCT_MODIFY', 'tosell');
+			marketplaceLogValidationAction($db, $user, $productstatic, 'MKT_VALIDATE', 'Module published: '.$productstatic->ref);
+			$nbok++;
+		}
+		setEventMessages($langs->trans("ModulesPublished", $nbok), null, 'mesgs');
+		if ($nbko) {
+			setEventMessages($langs->trans("ModulesNotPublished", $nbko), null, 'warnings');
+		}
+	}
+
+	// Mass action: refuse or unpublish the selected modules (a reason is required)
+	if (in_array($massaction, array('confirm_massrefuse', 'confirm_massunpublish')) && $canValidate) {
+		if (dol_strlen($massreason) < 5) {
+			setEventMessages($langs->trans("ReasonRequired"), null, 'errors');
+		} else {
+			$isrefuse = ($massaction == 'confirm_massrefuse');
+			$code = $isrefuse ? 'MKT_REFUSE' : 'MKT_UNPUBLISH';
+			$nbok = 0;
+			$productstatic = new Product($db);
+			foreach (marketplaceFilterModuleIds($db, $catIds, $toselect) as $toselectid) {
+				$result = $productstatic->fetch($toselectid);
+				if ($result <= 0) {
+					continue;
+				}
+				// The extrafield is limited to 255 characters
+				$productstatic->array_options[$reasonKey] = dol_trunc($massreason, 255, 'right', 'UTF-8', 1);
+				$productstatic->insertExtraFields();
+				if ($productstatic->status) {
+					$productstatic->setStatut(0, null, 'product', 'PRODUCT_MODIFY', 'tosell');
+				}
+				marketplaceLogValidationAction($db, $user, $productstatic, $code, ucfirst($isrefuse ? 'refuse' : 'unpublish').': '.$productstatic->ref.' - '.$massreason);
+				$nbok++;
+			}
+			setEventMessages($langs->trans($isrefuse ? "ModulesRefused" : "ModulesUnpublished", $nbok), null, 'mesgs');
+		}
+	}
+}
 
 /*
  * KPI
@@ -160,7 +286,7 @@ $sellersTop = array();
 $sql = "SELECT s.rowid, s.nom, COUNT(DISTINCT p.rowid) as nb ".$from;
 $sql .= " INNER JOIN ".MAIN_DB_PREFIX."product_fournisseur_price as pfp ON pfp.fk_product = p.rowid";
 $sql .= " INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
-$sql .= $base." GROUP BY s.rowid, s.nom ORDER BY nb DESC LIMIT 10";
+$sql .= $base." GROUP BY s.rowid, s.nom ORDER BY nb DESC";
 $resql = $db->query($sql);
 while ($resql && ($obj = $db->fetch_object($resql))) {
 	$sellersTop[] = $obj;
@@ -179,10 +305,45 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
  */
 $listMode = ($mode ? $mode : 'pending');
 $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => $condOnline)[$listMode] ?? $condPending;
-$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, COALESCE(".$efSub.", p.datec) as submitted, ".$efMin." as dolmin, ".marketplaceCol('version')." as version,";
+
+// Whitelist of the columns allowed in the ORDER BY clause
+$sortmap = array(
+	'p.rowid' => 'p.rowid',
+	'p.ref' => 'p.ref',
+	'p.label' => 'p.label',
+	'seller' => 'seller',
+	'version' => 'version',
+	'dolmin' => 'dolmin',
+	'dolmax' => 'dolmax',
+	'fork' => 'forkof',
+	'duplicate' => 'duplicateof',
+	'submitted' => 'submitted',
+);
+if (!isset($sortmap[$sortfield])) {
+	$sortfield = 'p.ref';
+}
+if ($sortorder != 'DESC') {
+	$sortorder = 'ASC';
+}
+
+// Total number of records for the pagination bar
+$nbtotalofrecords = 0;
+$sql = "SELECT COUNT(p.rowid) as nb".$from.$base." AND ".$cond;
+$resql = $db->query($sql);
+if ($resql && ($obj = $db->fetch_object($resql))) {
+	$nbtotalofrecords = (int) $obj->nb;
+}
+
+$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, COALESCE(".$efSub.", p.datec) as submitted,";
+$sql .= " ".$efMin." as dolmin, ".$efMax." as dolmax, ".marketplaceCol('version')." as version,";
+$sql .= " ".$efFork." as forkof, ".$efDup." as duplicateof,";
+$sql .= " (SELECT s.rowid FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
+$sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller_id,";
 $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller";
-$sql .= $from.$base." AND ".$cond." ORDER BY ".$efSub." ASC LIMIT 200";
+$sql .= $from.$base." AND ".$cond;
+$sql .= $db->order($sortmap[$sortfield], $sortorder);
+$sql .= $db->plimit($limit, $offset);
 $list = array();
 $resql = $db->query($sql);
 while ($resql && ($obj = $db->fetch_object($resql))) {
@@ -231,7 +392,10 @@ print $tile($langs->trans("KpiDuplicates"), $kpi['dups']);
 print $tile($langs->trans("KpiForks"), $kpi['forks']);
 print '</div>';
 
-// Statistics tables
+// Statistics tables: only the first rows are shown, the remaining ones
+// are revealed with the "More ..." toggle
+$maxshown = 10;
+
 print '<div style="display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px">';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopReasons").'</th><th class="right">#</th></tr>';
 foreach ($reasons as $r) {
@@ -239,41 +403,217 @@ foreach ($reasons as $r) {
 }
 print '</table></div>';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopSellers").'</th><th class="right">#</th></tr>';
-foreach ($sellersTop as $s) {
+foreach (array_slice($sellersTop, 0, $maxshown) as $s) {
 	print '<tr class="oddeven"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
 }
-print '</table></div>';
+print '</table>';
+if (count($sellersTop) > $maxshown) {
+	print '<details><summary class="opacitymedium cursorpointer">'.$langs->trans("More").' ...</summary>';
+	print '<table class="noborder centpercent">';
+	foreach (array_slice($sellersTop, $maxshown) as $s) {
+		print '<tr class="oddeven"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
+	}
+	print '</table></details>';
+}
+print '</div>';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiByDolVersion").'</th><th class="right">#</th></tr>';
-foreach ($byVersion as $v) {
+foreach (array_slice($byVersion, 0, $maxshown) as $v) {
 	print '<tr class="oddeven"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
 }
-print '</table></div></div>';
+print '</table>';
+if (count($byVersion) > $maxshown) {
+	print '<details><summary class="opacitymedium cursorpointer">'.$langs->trans("More").' ...</summary>';
+	print '<table class="noborder centpercent">';
+	foreach (array_slice($byVersion, $maxshown) as $v) {
+		print '<tr class="oddeven"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
+	}
+	print '</table></details>';
+}
+print '</div></div>';
 
 // List of modules
-print load_fiche_titre($langs->trans("ModuleList").' : '.$langs->trans('Filter_'.$listMode), '', '');
-print '<table class="noborder centpercent"><tr class="liste_titre">';
-foreach (array('Ref', 'Label', 'Seller', 'ModuleVersion', 'DolibarrMin', 'DateRequestToBeOnline', 'Age') as $c) {
-	print '<th>'.$langs->trans($c).'</th>';
+$form = new Form($db);
+
+$varpage = $contextpage;
+$htmlofselectarray = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage, $conf->main_checkbox_left_column); // This also change content of $arrayfields with user setup
+
+// List of mass actions available
+$arrayofmassactions = array();
+if ($canValidate) {
+	$arrayofmassactions = array(
+		'massvalidate' => img_picto('', 'check', 'class="pictofixedwidth"').$langs->trans("PublishModule"),
+		'massrefuse' => img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("RefuseModule"),
+		'massunpublish' => img_picto('', 'stop-circle', 'class="pictofixedwidth"').$langs->trans("UnpublishModule"),
+	);
 }
-print '</tr>';
+$massactionbutton = $form->selectMassAction('', $arrayofmassactions);
+
+$selectedfields = $htmlofselectarray;
+$selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
+
+$param = '&mode='.$listMode;
+
+print '<form id="searchFormList" action="'.$_SERVER["PHP_SELF"].'" method="POST" name="formulaire">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
+print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
+print '<input type="hidden" name="action" value="list">';
+print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
+print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
+print '<input type="hidden" name="mode" value="'.$listMode.'">';
+print '<input type="hidden" name="page_y" value="">';
+
+print_barre_liste($langs->trans("ModuleList").' : '.$langs->trans('Filter_'.$listMode), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, count($list), $nbtotalofrecords, 'service', 0, '', '', $limit, 0, 0, 1);
+
+// Confirmation box for the mass actions that require a reason
+if ($massaction == 'massrefuse' || $massaction == 'massunpublish') {
+	print '<input type="hidden" name="massaction" value="confirm_'.$massaction.'">';
+	print load_fiche_titre($langs->trans($massaction == 'massrefuse' ? "RefuseModule" : "UnpublishModule"), '', '');
+	print '<table class="noborder centpercent">';
+	print '<tr class="oddeven"><td class="titlefield">'.$langs->trans("ReasonQuickFill").'</td><td>';
+	print '<textarea class="flat minwidth500 maxwidthonsmartphone" name="massreason" rows="3" placeholder="'.dolPrintHTMLForAttribute($langs->trans("ReasonPlaceholder")).'"></textarea>';
+	print '</td></tr>';
+	print '<tr class="oddeven"><td></td><td>';
+	print '<input type="submit" name="confirmmassaction" class="button" value="'.$langs->trans("Confirm").'">';
+	print '<input type="submit" name="cancel" class="button" value="'.$langs->trans("Cancel").'">';
+	print '</td></tr>';
+	print '</table>';
+}
+
+$totalarray = array('nbfield' => 0);
+
+print '<div class="div-table-responsive">';
+print '<table class="tagtable nobottomiftotal liste">'."\n";
+
+// Fields title label
+print '<tr class="liste_titre">';
+// Action column
+if ($conf->main_checkbox_left_column) {
+	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ');
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['p.rowid']['checked'])) {
+	print_liste_field_titre($arrayfields['p.rowid']['label'], $_SERVER["PHP_SELF"], "p.rowid", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['p.ref']['checked'])) {
+	print_liste_field_titre($arrayfields['p.ref']['label'], $_SERVER["PHP_SELF"], "p.ref", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['p.label']['checked'])) {
+	print_liste_field_titre($arrayfields['p.label']['label'], $_SERVER["PHP_SELF"], "p.label", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['seller']['checked'])) {
+	print_liste_field_titre($arrayfields['seller']['label'], $_SERVER["PHP_SELF"], "seller", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['version']['checked'])) {
+	print_liste_field_titre($arrayfields['version']['label'], $_SERVER["PHP_SELF"], "version", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['dolmin']['checked'])) {
+	print_liste_field_titre($arrayfields['dolmin']['label'], $_SERVER["PHP_SELF"], "dolmin", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['dolmax']['checked'])) {
+	print_liste_field_titre($arrayfields['dolmax']['label'], $_SERVER["PHP_SELF"], "dolmax", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['fork']['checked'])) {
+	print_liste_field_titre($arrayfields['fork']['label'], $_SERVER["PHP_SELF"], "fork", "", $param, "", $sortfield, $sortorder, 'center ');
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['duplicate']['checked'])) {
+	print_liste_field_titre($arrayfields['duplicate']['label'], $_SERVER["PHP_SELF"], "duplicate", "", $param, "", $sortfield, $sortorder, 'center ');
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['submitted']['checked'])) {
+	print_liste_field_titre($arrayfields['submitted']['label'], $_SERVER["PHP_SELF"], "submitted", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['age']['checked'])) {
+	print_liste_field_titre($arrayfields['age']['label'], $_SERVER["PHP_SELF"], "", "", $param, '', $sortfield, $sortorder, 'center ');
+	$totalarray['nbfield']++;
+}
+// Action column
+if (!$conf->main_checkbox_left_column) {
+	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ');
+	$totalarray['nbfield']++;
+}
+print '</tr>'."\n";
+
+$arrayofselected = is_array($toselect) ? $toselect : array();
+
+// Single Societe instance reused for all rows to render the seller link
+$moduleseller = new Societe($db);
+
 if (empty($list)) {
-	print '<tr><td colspan="7" class="opacitymedium">'.$langs->trans("None").'</td></tr>';
+	print '<tr class="oddeven"><td colspan="'.$totalarray['nbfield'].'" class="opacitymedium">'.$langs->trans("NoRecordFound").'</td></tr>';
 }
-$product = new Product($db);
 foreach ($list as $o) {
 	$sub = $db->jdate($o->submitted);
-	$age = floor((dol_now() - $sub) / 86400);
-	$cls = $age > 14 ? 'error' : ($age > 7 ? 'warning' : '');
+	$age = $sub ? floor((dol_now() - $sub) / 86400) : '';
+	$cls = $age === '' ? '' : ($age > 14 ? 'error' : ($age > 7 ? 'warning' : ''));
 	print '<tr class="oddeven">';
-	print '<td><a href="'.dol_buildpath('/marketplace/module_validation_card.php', 1).'?id='.$o->rowid.'">'.img_picto('', 'service', 'class="pictofixedwidth"').dol_escape_htmltag($o->ref).'</a></td>';
-	print '<td class="tdoverflowmax300">'.dol_escape_htmltag($o->label).'</td>';
-	print '<td>'.dol_escape_htmltag($o->seller).'</td>';
-	print '<td>'.dol_escape_htmltag($o->version).'</td>';
-	print '<td>'.dol_escape_htmltag($o->dolmin).'</td>';
-	print '<td>'.dol_print_date($sub, 'dayhour').'</td>';
-	print '<td class="'.$cls.'">'.$age.' j</td></tr>';
+	// Action column
+	if ($conf->main_checkbox_left_column) {
+		print '<td class="nowrap center">';
+		if ($massactionbutton || $massaction) {
+			$selected = in_array($o->rowid, $arrayofselected);
+			print '<input id="cb'.$o->rowid.'" class="flat checkforselect" type="checkbox" name="toselect[]" value="'.$o->rowid.'"'.($selected ? ' checked="checked"' : '').'>';
+		}
+		print '</td>';
+	}
+	if (!empty($arrayfields['p.rowid']['checked'])) {
+		print '<td>'.$o->rowid.'</td>';
+	}
+	if (!empty($arrayfields['p.ref']['checked'])) {
+		print '<td class="tdoverflowmax250"><a href="'.dol_buildpath('/marketplace/module_validation_card.php', 1).'?id='.$o->rowid.'">'.img_picto('', 'service', 'class="pictofixedwidth"').dol_escape_htmltag($o->ref).'</a></td>';
+	}
+	if (!empty($arrayfields['p.label']['checked'])) {
+		print '<td class="tdoverflowmax300">'.dol_escape_htmltag($o->label).'</td>';
+	}
+	if (!empty($arrayfields['seller']['checked'])) {
+		// Assign the properties of the reused object instead of instantiating a Societe for each row
+		$moduleseller->id = (int) $o->seller_id;
+		$moduleseller->nom = $o->seller;
+		print '<td class="tdoverflowmax150">'.($o->seller_id ? $moduleseller->getNomUrl(1) : '&nbsp;').'</td>';
+	}
+	if (!empty($arrayfields['version']['checked'])) {
+		print '<td>'.dol_escape_htmltag($o->version).'</td>';
+	}
+	if (!empty($arrayfields['dolmin']['checked'])) {
+		print '<td>'.dol_escape_htmltag($o->dolmin).'</td>';
+	}
+	if (!empty($arrayfields['dolmax']['checked'])) {
+		print '<td>'.dol_escape_htmltag($o->dolmax).'</td>';
+	}
+	if (!empty($arrayfields['fork']['checked'])) {
+		print '<td class="center">'.($o->forkof ? $langs->trans("Yes") : '&nbsp;').'</td>';
+	}
+	if (!empty($arrayfields['duplicate']['checked'])) {
+		print '<td class="center">'.($o->duplicateof ? $langs->trans("Yes") : '&nbsp;').'</td>';
+	}
+	if (!empty($arrayfields['submitted']['checked'])) {
+		print '<td>'.dol_print_date($sub, 'dayhour').'</td>';
+	}
+	if (!empty($arrayfields['age']['checked'])) {
+		print '<td class="'.$cls.'">'.($age === '' ? '&nbsp;' : $age.' j').'</td>';
+	}
+	// Action column
+	if (!$conf->main_checkbox_left_column) {
+		print '<td class="nowrap center">';
+		if ($massactionbutton || $massaction) {
+			$selected = in_array($o->rowid, $arrayofselected);
+			print '<input id="cb'.$o->rowid.'" class="flat checkforselect" type="checkbox" name="toselect[]" value="'.$o->rowid.'"'.($selected ? ' checked="checked"' : '').'>';
+		}
+		print '</td>';
+	}
+	print '</tr>';
 }
-print '</table>';
+print '</table>'."\n";
+print '</div>'."\n";
+print '</form>'."\n";
 
 // End of page
 llxFooter();

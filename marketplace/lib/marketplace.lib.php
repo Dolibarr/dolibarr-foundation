@@ -210,6 +210,31 @@ function marketplaceGetCategoryIds($db)
 }
 
 /**
+ * Filter a list of product IDs to keep only the marketplace modules
+ * (services that belong to a marketplace category).
+ *
+ * @param  DoliDB $db     Database handler
+ * @param  int[]  $catIds Category IDs from marketplaceGetCategoryIds()
+ * @param  int[]  $ids    Product IDs to filter
+ * @return int[]          Filtered product IDs
+ */
+function marketplaceFilterModuleIds($db, $catIds, $ids)
+{
+	if (empty($ids) || empty($catIds)) {
+		return array();
+	}
+	$sql = "SELECT p.rowid FROM ".MAIN_DB_PREFIX."product as p";
+	$sql .= " WHERE p.fk_product_type = 1 AND p.rowid IN (".implode(',', array_map('intval', $ids)).")";
+	$sql .= " AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', array_map('intval', $catIds))."))";
+	$filtered = array();
+	$resql = $db->query($sql);
+	while ($resql && ($obj = $db->fetch_object($resql))) {
+		$filtered[] = (int) $obj->rowid;
+	}
+	return $filtered;
+}
+
+/**
  * Get the sellers linked to a service.
  * The link is made through the supplier prices (llx_product_fournisseur_price).
  *
