@@ -179,7 +179,7 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
  */
 $listMode = ($mode ? $mode : 'pending');
 $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => $condOnline)[$listMode] ?? $condPending;
-$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted, ".$efMin." as dolmin, ".marketplaceCol('version')." as version,";
+$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, COALESCE(".$efSub.", p.datec) as submitted, ".$efMin." as dolmin, ".marketplaceCol('version')." as version,";
 $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller";
 $sql .= $from.$base." AND ".$cond." ORDER BY ".$efSub." ASC LIMIT 200";
