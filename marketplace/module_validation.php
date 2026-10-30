@@ -109,6 +109,18 @@ $contextpage = 'modulevalidationlist'; // Identifier of the page, used to store 
 
 $canValidate = $user->hasRight('marketplace', 'module', 'validate');
 
+// Search criteria
+$search_ref = trim(GETPOST('search_ref', 'alphanohtml'));
+$search_label = trim(GETPOST('search_label', 'alphanohtml'));
+$search_seller = trim(GETPOST('search_seller', 'alphanohtml'));
+$search_version = trim(GETPOST('search_version', 'alphanohtml'));
+$search_dolmin = trim(GETPOST('search_dolmin', 'alphanohtml'));
+$search_dolmax = trim(GETPOST('search_dolmax', 'alphanohtml'));
+$search_fork = GETPOST('search_fork', 'aZ09');
+$search_duplicate = GETPOST('search_duplicate', 'aZ09');
+$search_submitted_dtstart = dol_mktime(0, 0, 0, GETPOSTINT('search_submitted_dtstartmonth'), GETPOSTINT('search_submitted_dtstartday'), GETPOSTINT('search_submitted_dtstartyear'));
+$search_submitted_dtend = dol_mktime(23, 59, 59, GETPOSTINT('search_submitted_dtendmonth'), GETPOSTINT('search_submitted_dtendday'), GETPOSTINT('search_submitted_dtendyear'));
+
 // SQL columns of the extrafields (alias "ef")
 $efSub = marketplaceCol('submitted');
 $efReason = marketplaceCol('reason');
@@ -130,6 +142,7 @@ $arrayfields = array(
 	'duplicate' => array('label' => 'Duplicate', 'checked' => 1, 'position' => 61),
 	'submitted' => array('label' => 'DateRequestToBeOnline', 'checked' => 1, 'position' => 70),
 	'age' => array('label' => 'Age', 'checked' => 1, 'position' => 80),
+	'tosell' => array('label' => 'OnSale', 'checked' => 0, 'position' => 90),
 );
 
 // Categories that contain the marketplace modules
@@ -173,6 +186,25 @@ if ($reshook < 0) {
 if (empty($reshook)) {
 	// Selection of new fields
 	include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
+
+	// Purge of the search criteria
+	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
+		$search_ref = '';
+		$search_label = '';
+		$search_seller = '';
+		$search_version = '';
+		$search_dolmin = '';
+		$search_dolmax = '';
+		$search_fork = '';
+		$search_duplicate = '';
+		$search_submitted_dtstart = '';
+		$search_submitted_dtend = '';
+		$toselect = array();
+	}
+	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')
+		|| GETPOST('button_search_x', 'alpha') || GETPOST('button_search.x', 'alpha') || GETPOST('button_search', 'alpha')) {
+		$massaction = ''; // Protection to avoid mass action if we force a new search during a mass action confirmation
+	}
 
 	// Mass action: publish the selected modules
 	if ($massaction == 'massvalidate' && $canValidate) {
@@ -306,6 +338,44 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 $listMode = ($mode ? $mode : 'pending');
 $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => $condOnline)[$listMode] ?? $condPending;
 
+// Add the search criteria to the SQL condition
+$sqlWhereFilter = '';
+if ($search_ref !== '') {
+	$sqlWhereFilter .= natural_search(array('p.ref'), $search_ref);
+}
+if ($search_label !== '') {
+	$sqlWhereFilter .= natural_search(array('p.label'), $search_label);
+}
+if ($search_seller !== '') {
+	$sqlWhereFilter .= " AND EXISTS (SELECT s2.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp2 INNER JOIN ".MAIN_DB_PREFIX."societe as s2 ON s2.rowid = pfp2.fk_soc";
+	$sqlWhereFilter .= " WHERE pfp2.fk_product = p.rowid".natural_search(array('s2.nom'), $search_seller).")";
+}
+if ($search_version !== '') {
+	$sqlWhereFilter .= natural_search(array(marketplaceCol('version')), $search_version);
+}
+if ($search_dolmin !== '') {
+	$sqlWhereFilter .= natural_search(array($efMin), $search_dolmin);
+}
+if ($search_dolmax !== '') {
+	$sqlWhereFilter .= natural_search(array($efMax), $search_dolmax);
+}
+if ($search_fork === '1') {
+	$sqlWhereFilter .= " AND (".$efFork." IS NOT NULL AND ".$efFork." <> '')";
+} elseif ($search_fork === '0') {
+	$sqlWhereFilter .= " AND (".$efFork." IS NULL OR ".$efFork." = '')";
+}
+if ($search_duplicate === '1') {
+	$sqlWhereFilter .= " AND (".$efDup." IS NOT NULL AND ".$efDup." <> '')";
+} elseif ($search_duplicate === '0') {
+	$sqlWhereFilter .= " AND (".$efDup." IS NULL OR ".$efDup." = '')";
+}
+if ($search_submitted_dtstart) {
+	$sqlWhereFilter .= " AND COALESCE(".$efSub.", p.datec) >= '".$db->idate($search_submitted_dtstart)."'";
+}
+if ($search_submitted_dtend) {
+	$sqlWhereFilter .= " AND COALESCE(".$efSub.", p.datec) <= '".$db->idate($search_submitted_dtend)."'";
+}
+
 // Whitelist of the columns allowed in the ORDER BY clause
 $sortmap = array(
 	'p.rowid' => 'p.rowid',
@@ -318,6 +388,7 @@ $sortmap = array(
 	'fork' => 'forkof',
 	'duplicate' => 'duplicateof',
 	'submitted' => 'submitted',
+	'tosell' => 'p.tosell',
 );
 if (!isset($sortmap[$sortfield])) {
 	$sortfield = 'p.ref';
@@ -328,7 +399,7 @@ if ($sortorder != 'DESC') {
 
 // Total number of records for the pagination bar
 $nbtotalofrecords = 0;
-$sql = "SELECT COUNT(p.rowid) as nb".$from.$base." AND ".$cond;
+$sql = "SELECT COUNT(p.rowid) as nb".$from.$base." AND ".$cond.$sqlWhereFilter;
 $resql = $db->query($sql);
 if ($resql && ($obj = $db->fetch_object($resql))) {
 	$nbtotalofrecords = (int) $obj->nb;
@@ -341,7 +412,7 @@ $sql .= " (SELECT s.rowid FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pf
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller_id,";
 $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller";
-$sql .= $from.$base." AND ".$cond;
+$sql .= $from.$base." AND ".$cond.$sqlWhereFilter;
 $sql .= $db->order($sortmap[$sortfield], $sortorder);
 $sql .= $db->plimit($limit, $offset);
 $list = array();
@@ -406,30 +477,26 @@ print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class
 foreach (array_slice($sellersTop, 0, $maxshown) as $s) {
 	print '<tr class="oddeven"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
 }
-print '</table>';
 if (count($sellersTop) > $maxshown) {
-	print '<details><summary class="opacitymedium cursorpointer">'.$langs->trans("More").' ...</summary>';
-	print '<table class="noborder centpercent">';
+	// The "More ..." line is the last element of the table and disappears once clicked
+	print '<tr class="oddeven" id="sellersmorerow"><td colspan="2" class="center"><a href="javascript:void(0)" onclick="jQuery(\'tr.sellersextra\').show(); jQuery(this).closest(\'tr\').remove(); return false;">'.$langs->trans("More").' ...</a></td></tr>';
 	foreach (array_slice($sellersTop, $maxshown) as $s) {
-		print '<tr class="oddeven"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
+		print '<tr class="oddeven sellersextra" style="display:none"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
 	}
-	print '</table></details>';
 }
-print '</div>';
+print '</table></div>';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiByDolVersion").'</th><th class="right">#</th></tr>';
 foreach (array_slice($byVersion, 0, $maxshown) as $v) {
 	print '<tr class="oddeven"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
 }
-print '</table>';
 if (count($byVersion) > $maxshown) {
-	print '<details><summary class="opacitymedium cursorpointer">'.$langs->trans("More").' ...</summary>';
-	print '<table class="noborder centpercent">';
+	// The "More ..." line is the last element of the table and disappears once clicked
+	print '<tr class="oddeven" id="versionsmorerow"><td colspan="2" class="center"><a href="javascript:void(0)" onclick="jQuery(\'tr.versionsextra\').show(); jQuery(this).closest(\'tr\').remove(); return false;">'.$langs->trans("More").' ...</a></td></tr>';
 	foreach (array_slice($byVersion, $maxshown) as $v) {
-		print '<tr class="oddeven"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
+		print '<tr class="oddeven versionsextra" style="display:none"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
 	}
-	print '</table></details>';
 }
-print '</div></div>';
+print '</table></div></div>';
 
 // List of modules
 $form = new Form($db);
@@ -452,6 +519,40 @@ $selectedfields = $htmlofselectarray;
 $selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
 
 $param = '&mode='.$listMode;
+if ($search_ref !== '') {
+	$param .= '&search_ref='.urlencode($search_ref);
+}
+if ($search_label !== '') {
+	$param .= '&search_label='.urlencode($search_label);
+}
+if ($search_seller !== '') {
+	$param .= '&search_seller='.urlencode($search_seller);
+}
+if ($search_version !== '') {
+	$param .= '&search_version='.urlencode($search_version);
+}
+if ($search_dolmin !== '') {
+	$param .= '&search_dolmin='.urlencode($search_dolmin);
+}
+if ($search_dolmax !== '') {
+	$param .= '&search_dolmax='.urlencode($search_dolmax);
+}
+if ($search_fork !== '') {
+	$param .= '&search_fork='.urlencode($search_fork);
+}
+if ($search_duplicate !== '') {
+	$param .= '&search_duplicate='.urlencode($search_duplicate);
+}
+if ($search_submitted_dtstart) {
+	$param .= '&search_submitted_dtstartmonth='.GETPOSTINT('search_submitted_dtstartmonth');
+	$param .= '&search_submitted_dtstartday='.GETPOSTINT('search_submitted_dtstartday');
+	$param .= '&search_submitted_dtstartyear='.GETPOSTINT('search_submitted_dtstartyear');
+}
+if ($search_submitted_dtend) {
+	$param .= '&search_submitted_dtendmonth='.GETPOSTINT('search_submitted_dtendmonth');
+	$param .= '&search_submitted_dtendday='.GETPOSTINT('search_submitted_dtendday');
+	$param .= '&search_submitted_dtendyear='.GETPOSTINT('search_submitted_dtendyear');
+}
 
 print '<form id="searchFormList" action="'.$_SERVER["PHP_SELF"].'" method="POST" name="formulaire">';
 print '<input type="hidden" name="token" value="'.newToken().'">';
@@ -483,6 +584,65 @@ $totalarray = array('nbfield' => 0);
 
 print '<div class="div-table-responsive">';
 print '<table class="tagtable nobottomiftotal liste">'."\n";
+
+// Fields title search
+print '<tr class="liste_titre_filter">';
+// Action column
+if ($conf->main_checkbox_left_column) {
+	print '<td class="liste_titre center maxwidthsearch">';
+	print $form->showFilterButtons('left');
+	print '</td>';
+}
+if (!empty($arrayfields['p.rowid']['checked'])) {
+	print '<td class="liste_titre"></td>';
+}
+if (!empty($arrayfields['p.ref']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_ref" value="'.dol_escape_htmltag($search_ref).'"></td>';
+}
+if (!empty($arrayfields['p.label']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_label" value="'.dol_escape_htmltag($search_label).'"></td>';
+}
+if (!empty($arrayfields['seller']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_seller" value="'.dol_escape_htmltag($search_seller).'"></td>';
+}
+if (!empty($arrayfields['version']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_version" value="'.dol_escape_htmltag($search_version).'"></td>';
+}
+if (!empty($arrayfields['dolmin']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_dolmin" value="'.dol_escape_htmltag($search_dolmin).'"></td>';
+}
+if (!empty($arrayfields['dolmax']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth50" name="search_dolmax" value="'.dol_escape_htmltag($search_dolmax).'"></td>';
+}
+if (!empty($arrayfields['fork']['checked'])) {
+	print '<td class="liste_titre center">'.$form->selectarray('search_fork', array('1' => $langs->trans("Yes"), '0' => $langs->trans("No")), $search_fork, 1, 0, 0, '', 0, 0, 0, '', 'maxwidth100', 1).'</td>';
+}
+if (!empty($arrayfields['duplicate']['checked'])) {
+	print '<td class="liste_titre center">'.$form->selectarray('search_duplicate', array('1' => $langs->trans("Yes"), '0' => $langs->trans("No")), $search_duplicate, 1, 0, 0, '', 0, 0, 0, '', 'maxwidth100', 1).'</td>';
+}
+if (!empty($arrayfields['submitted']['checked'])) {
+	print '<td class="liste_titre nowrap">';
+	print '<div class="nowrap">';
+	print $form->selectDate($search_submitted_dtstart, 'search_submitted_dtstart', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('From'));
+	print '</div>';
+	print '<div class="nowrap">';
+	print $form->selectDate($search_submitted_dtend, 'search_submitted_dtend', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans('to'));
+	print '</div>';
+	print '</td>';
+}
+if (!empty($arrayfields['age']['checked'])) {
+	print '<td class="liste_titre"></td>';
+}
+if (!empty($arrayfields['tosell']['checked'])) {
+	print '<td class="liste_titre"></td>';
+}
+// Action column
+if (!$conf->main_checkbox_left_column) {
+	print '<td class="liste_titre center maxwidthsearch">';
+	print $form->showFilterButtons();
+	print '</td>';
+}
+print '</tr>'."\n";
 
 // Fields title label
 print '<tr class="liste_titre">';
@@ -535,6 +695,10 @@ if (!empty($arrayfields['age']['checked'])) {
 	print_liste_field_titre($arrayfields['age']['label'], $_SERVER["PHP_SELF"], "", "", $param, '', $sortfield, $sortorder, 'center ');
 	$totalarray['nbfield']++;
 }
+if (!empty($arrayfields['tosell']['checked'])) {
+	print_liste_field_titre($arrayfields['tosell']['label'], $_SERVER["PHP_SELF"], "tosell", "", $param, "", $sortfield, $sortorder, 'center ');
+	$totalarray['nbfield']++;
+}
 // Action column
 if (!$conf->main_checkbox_left_column) {
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ');
@@ -546,6 +710,9 @@ $arrayofselected = is_array($toselect) ? $toselect : array();
 
 // Single Societe instance reused for all rows to render the seller link
 $moduleseller = new Societe($db);
+
+// Single Product instance reused for all rows to render the on-sale status
+$moduleproduct = new Product($db);
 
 if (empty($list)) {
 	print '<tr class="oddeven"><td colspan="'.$totalarray['nbfield'].'" class="opacitymedium">'.$langs->trans("NoRecordFound").'</td></tr>';
@@ -599,6 +766,9 @@ foreach ($list as $o) {
 	}
 	if (!empty($arrayfields['age']['checked'])) {
 		print '<td class="'.$cls.'">'.($age === '' ? '&nbsp;' : $age.' j').'</td>';
+	}
+	if (!empty($arrayfields['tosell']['checked'])) {
+		print '<td class="center nowrap">'.$moduleproduct->LibStatut($o->tosell, 5, 0).'</td>';
 	}
 	// Action column
 	if (!$conf->main_checkbox_left_column) {
