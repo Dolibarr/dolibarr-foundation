@@ -448,10 +448,11 @@ print load_fiche_titre($langs->trans($page_name), '', 'fa-puzzle-piece');
  * @param  mixed  $value Value to display
  * @param  string $url   Optional link on the value
  * @param  string $color Optional color of the left border
+ * @param  string $morecss Optional CSS class (for example "hideonsmartphone")
  * @return string        HTML of the tile
  */
-$tile = function ($label, $value, $url = '', $color = '') {
-	$html = '<div style="flex:1 1 170px;border:1px solid #ccc;border-radius:6px;padding:12px;text-align:center;'.($color ? 'border-left:5px solid '.$color.';' : '').'">';
+$tile = function ($label, $value, $url = '', $color = '', $morecss = '') {
+	$html = '<div'.($morecss ? ' class="'.dol_escape_htmltag($morecss).'"' : '').' style="flex:1 1 170px;border:1px solid #ccc;border-radius:6px;padding:12px;text-align:center;'.($color ? 'border-left:5px solid '.$color.';' : '').'">';
 	$html .= '<div class="opacitymedium">'.dol_escape_htmltag($label).'</div>';
 	$html .= '<div style="font-size:2em;font-weight:bold">'.($url ? '<a href="'.$url.'">'.$value.'</a>' : $value).'</div></div>';
 	return $html;
@@ -464,13 +465,13 @@ print $tile($langs->trans("KpiOnline"), $kpi['online'], $self.'?mode=online', '#
 print $tile($langs->trans("KpiPending"), $kpi['pending'], $self.'?mode=pending', '#e67e22');
 $oldestDays = $kpi['oldest'] ? floor((dol_now() - $kpi['oldest']) / 86400) : 0;
 print $tile($langs->trans("KpiOldestPending"), $oldestDays ? $oldestDays.' j' : '-', '', $oldestDays > 15 ? '#e67e22' : '');
-print $tile($langs->trans("KpiRefused"), $kpi['refused'], $self.'?mode=refused', '#c0392b');
-print $tile($langs->trans("KpiValidated30d"), $counts['MKT_VALIDATE']);
-print $tile($langs->trans("KpiRefused30d"), $counts['MKT_REFUSE']);
-print $tile($langs->trans("KpiUnpublished30d"), $counts['MKT_UNPUBLISH']);
-print $tile($langs->trans("KpiAvgDelay"), $avgDelayDays === null ? '-' : $avgDelayDays.' j');
-print $tile($langs->trans("KpiDuplicates"), $kpi['dups']);
-print $tile($langs->trans("KpiForks"), $kpi['forks']);
+print $tile($langs->trans("KpiRefused"), $kpi['refused'], $self.'?mode=refused', '#c0392b', 'hideonsmartphone');
+print $tile($langs->trans("KpiValidated30d"), $counts['MKT_VALIDATE'], '', '', 'hideonsmartphone');
+print $tile($langs->trans("KpiRefused30d"), $counts['MKT_REFUSE'], '', '', 'hideonsmartphone');
+print $tile($langs->trans("KpiUnpublished30d"), $counts['MKT_UNPUBLISH'], '', '', 'hideonsmartphone');
+print $tile($langs->trans("KpiAvgDelay"), $avgDelayDays === null ? '-' : $avgDelayDays.' j', '', '', 'hideonsmartphone');
+print $tile($langs->trans("KpiDuplicates"), $kpi['dups'], '', '', 'hideonsmartphone');
+print $tile($langs->trans("KpiForks"), $kpi['forks'], '', '', 'hideonsmartphone');
 print '</div>';
 
 // Statistics tables: only the first rows are shown, the remaining ones
