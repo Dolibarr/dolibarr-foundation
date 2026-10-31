@@ -416,11 +416,23 @@ function marketplaceValidationChecks($db, $product)
 	}
 
 	// Seller: exactly one is expected, with an email to contact him
-	if (marketplaceExtra($product, 'duplicateof') !== '') {
-		$add($langs->trans('CheckDuplicate'), 'warning', '', 'This module is declared as a copy of another module.');
+	// Original module when the service is declared as a copy or a fork
+	$dupid = (int) marketplaceExtra($product, 'duplicateof');
+	$forkid = (int) marketplaceExtra($product, 'forkof');
+	if ($dupid > 0 || $forkid > 0) {
+		require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 	}
-	if (marketplaceExtra($product, 'forkof') !== '') {
-		$add($langs->trans('CheckFork'), 'warning', '', 'This module is declared as a fork of another module.');
+	if ($dupid > 0) {
+		$other = new Product($db);
+		if ($other->fetch($dupid) > 0) {
+			$add($langs->trans('CheckDuplicate'), 'warning', $other->getNomUrl(1), 'This module is declared as a copy of another module.');
+		}
+	}
+	if ($forkid > 0) {
+		$other = new Product($db);
+		if ($other->fetch($forkid) > 0) {
+			$add($langs->trans('CheckFork'), 'warning', $other->getNomUrl(1), 'This module is declared as a fork of another module.');
+		}
 	}
 	if (marketplaceExtra($product, 'law') !== '') {
 		$add($langs->trans('CheckLaw'), 'error', marketplaceExtra($product, 'law'), 'The module violates the marketplace rules or the law.');
