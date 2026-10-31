@@ -99,7 +99,7 @@ if (empty($page) || $page < 0 || GETPOST('button_search', 'alpha') || GETPOST('b
 }
 $offset = $limit * $page;
 if (!$sortfield) {
-	$sortfield = 'p.ref';
+	$sortfield = 'submitted';
 }
 if (!$sortorder) {
 	$sortorder = 'ASC';
@@ -460,9 +460,10 @@ $self = $_SERVER['PHP_SELF'];
 
 // KPI tiles
 print '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px">';
-print $tile($langs->trans("KpiPending"), $kpi['pending'], $self.'?mode=pending', '#e67e22');
-print $tile($langs->trans("KpiOldestPending"), $kpi['oldest'] ? floor((dol_now() - $kpi['oldest']) / 86400).' j' : '-');
 print $tile($langs->trans("KpiOnline"), $kpi['online'], $self.'?mode=online', '#27ae60');
+print $tile($langs->trans("KpiPending"), $kpi['pending'], $self.'?mode=pending', '#e67e22');
+$oldestDays = $kpi['oldest'] ? floor((dol_now() - $kpi['oldest']) / 86400) : 0;
+print $tile($langs->trans("KpiOldestPending"), $oldestDays ? $oldestDays.' j' : '-', '', $oldestDays > 15 ? '#e67e22' : '');
 print $tile($langs->trans("KpiRefused"), $kpi['refused'], $self.'?mode=refused', '#c0392b');
 print $tile($langs->trans("KpiValidated30d"), $counts['MKT_VALIDATE']);
 print $tile($langs->trans("KpiRefused30d"), $counts['MKT_REFUSE']);
@@ -474,7 +475,7 @@ print '</div>';
 
 // Statistics tables: only the first rows are shown, the remaining ones
 // are revealed with the "More ..." toggle
-$maxshown = 10;
+$maxshown = 5;
 
 print '<div style="display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px">';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopReasons").'</th><th class="right">#</th></tr>';
