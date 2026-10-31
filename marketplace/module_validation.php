@@ -789,7 +789,7 @@ foreach ($list as $o) {
 		print '<td>'.dol_print_date($sub, 'dayhour').'</td>';
 	}
 	if (!empty($arrayfields['age']['checked'])) {
-		print '<td class="'.$cls.'">'.($age === '' ? '&nbsp;' : $age.' j').'</td>';
+		print '<td class="'.$cls.'">'.($age === '' ? '&nbsp;' : '<span class="nowraponall">'.$age.' j</span>').'</td>';
 	}
 	if (!empty($arrayfields['tosell']['checked'])) {
 		print '<td class="center nowrap">'.$moduleproduct->LibStatut($o->tosell, 5, 0).'</td>';
