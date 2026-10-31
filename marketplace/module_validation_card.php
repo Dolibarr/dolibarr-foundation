@@ -368,7 +368,7 @@ if ($canValidate) {
 print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-checks" class="mkt-anchor">'.$langs->trans("ValidationChecks").'</th><th class="right">'.$langs->trans("Detail").'</th></tr>';
 $icons = array('ok' => img_picto('', 'tick', 'class="pictofixedwidth"'), 'warning' => img_picto('', 'warning', 'class="pictofixedwidth"'), 'error' => img_picto('', 'error', 'class="pictofixedwidth"'));
 foreach ($checks as $c) {
-	print '<tr class="oddeven mkt-lvl-'.$c['level'].'"><td>'.$icons[$c['level']].dol_escape_htmltag($c['label']).'</td><td class="right opacitymedium">'.dolPrintHTML($c['detail']).'</td></tr>';
+	print '<tr class="oddeven mkt-lvl-'.$c['level'].'"><td class="minwidth200">'.$icons[$c['level']].dol_escape_htmltag($c['label']).'</td><td class="right opacitymedium wordbreakall">'.dolPrintHTML($c['detail']).'</td></tr>';
 }
 print '</table>';
 
