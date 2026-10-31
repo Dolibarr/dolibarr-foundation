@@ -294,11 +294,11 @@ print '</table><br>';
 // Label, description and note in each language
 $urlTrad = DOL_URL_ROOT.'/product/traduction.php?action=edit&token='.newToken().'&id='.$object->id;
 print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-desc" class="mkt-anchor">'.$langs->trans("Language").'</th><th>'.$langs->trans("Label").'</th><th>'.$langs->trans("DescriptionAndNote").'</th><th class="right"><a href="'.$urlTrad.'">'.img_picto($langs->trans("Modify"), 'edit').'</a></th></tr>';
-print '<tr class="oddeven"><td>Default</td><td>'.dol_escape_htmltag($object->label).'</td><td>'.dolPrintHTML($object->description).(!empty($object->note_public) ? '<hr>'.dolPrintHTML($object->note_public) : '').'</td><td></td></tr>';
+print '<tr class="oddeven"><td class="tdtop">Default</td><td class="tdtop">'.dol_escape_htmltag($object->label).'</td><td>'.dolPrintHTML($object->description).(!empty($object->note_public) ? '<hr>'.dolPrintHTML($object->note_public) : '').'</td><td></td></tr>';
 foreach (array('fr_FR', 'en_US', 'de_DE', 'it_IT', 'es_ES') as $code) {
 	$ml = isset($object->multilangs[$code]) ? $object->multilangs[$code] : array();
 	$note = isset($ml['note']) ? $ml['note'] : (isset($ml['other']) ? $ml['other'] : '');
-	print '<tr class="oddeven"><td>'.$code.'</td><td>'.dol_escape_htmltag(isset($ml['label']) ? $ml['label'] : '').'</td><td>'.dolPrintHTML(isset($ml['description']) ? $ml['description'] : '').(!empty($note) ? '<hr>'.dolPrintHTML($note) : '').'</td><td></td></tr>';
+	print '<tr class="oddeven"><td class="tdtop">'.$code.'</td><td class="tdtop">'.dol_escape_htmltag(isset($ml['label']) ? $ml['label'] : '').'</td><td>'.dolPrintHTML(isset($ml['description']) ? $ml['description'] : '').(!empty($note) ? '<hr>'.dolPrintHTML($note) : '').'</td><td></td></tr>';
 }
 print '</table>';
 print '</div>';
