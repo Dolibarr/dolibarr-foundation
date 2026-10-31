@@ -216,7 +216,7 @@ $e = function ($alias) use ($object) {
  * @return string        HTML of the row
  */
 $row = function ($label, $value) {
-	return '<tr class="oddeven"><td>'.$label.'</td><td>'.$value.'</td></tr>';
+	return '<tr class="oddeven"><td class="titlefieldmiddle">'.$label.'</td><td>'.$value.'</td></tr>';
 };
 
 llxHeader('', $langs->trans($page_name).' '.$object->ref, '', '', 0, 0, '', '', '', 'mod-marketplace page-validation-card');
