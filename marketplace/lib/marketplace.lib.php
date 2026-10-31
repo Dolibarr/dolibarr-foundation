@@ -515,7 +515,7 @@ function marketplaceGetListIds($db, $mode)
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
 	$sql .= " WHERE p.fk_product_type = 1 AND ".$cond;
 	$sql .= " AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
-	$sql .= " ORDER BY COALESCE(".$efSub.", p.datec) ASC, p.rowid ASC";
+	$sql .= " ORDER BY ".$efSub." ASC, p.rowid ASC";
 	$ids = array();
 	$resql = $db->query($sql);
 	while ($resql && ($obj = $db->fetch_object($resql))) {

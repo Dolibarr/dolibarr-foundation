@@ -278,7 +278,7 @@ $sql .= " SUM(CASE WHEN ".$condRefused." THEN 1 ELSE 0 END) as refused,";
 $sql .= " SUM(CASE WHEN ".$condOnline." THEN 1 ELSE 0 END) as online,";
 $sql .= " SUM(CASE WHEN ".$efDup." IS NOT NULL AND ".$efDup." <> '' THEN 1 ELSE 0 END) as dups,";
 $sql .= " SUM(CASE WHEN ".$efFork." IS NOT NULL AND ".$efFork." <> '' THEN 1 ELSE 0 END) as forks,";
-$sql .= " MIN(CASE WHEN ".$condPending." THEN COALESCE(".$efSub.", p.datec) ELSE NULL END) as oldest";
+$sql .= " MIN(CASE WHEN ".$condPending." THEN ".$efSub." ELSE NULL END) as oldest";
 $sql .= $from.$base;
 $resql = $db->query($sql);
 if ($resql && ($obj = $db->fetch_object($resql))) {
@@ -376,10 +376,10 @@ if ($search_reason !== '') {
 	$sqlWhereFilter .= natural_search(array($efReason), $search_reason);
 }
 if ($search_submitted_dtstart) {
-	$sqlWhereFilter .= " AND COALESCE(".$efSub.", p.datec) >= '".$db->idate($search_submitted_dtstart)."'";
+	$sqlWhereFilter .= " AND ".$efSub." >= '".$db->idate($search_submitted_dtstart)."'";
 }
 if ($search_submitted_dtend) {
-	$sqlWhereFilter .= " AND COALESCE(".$efSub.", p.datec) <= '".$db->idate($search_submitted_dtend)."'";
+	$sqlWhereFilter .= " AND ".$efSub." <= '".$db->idate($search_submitted_dtend)."'";
 }
 
 // Whitelist of the columns allowed in the ORDER BY clause
@@ -413,7 +413,7 @@ if ($resql && ($obj = $db->fetch_object($resql))) {
 	$nbtotalofrecords = (int) $obj->nb;
 }
 
-$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, COALESCE(".$efSub.", p.datec) as submitted,";
+$sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted,";
 $sql .= " ".$efMin." as dolmin, ".$efMax." as dolmax, ".marketplaceCol('version')." as version,";
 $sql .= " ".$efFork." as forkof, ".$efDup." as duplicateof,";
 $sql .= " ".$efReason." as reason,";
