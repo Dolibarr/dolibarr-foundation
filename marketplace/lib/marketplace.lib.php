@@ -495,7 +495,7 @@ function marketplaceGetQuickReasons()
  *
  * @param  DoliDB $db   Database handler
  * @param  string $mode 'pending', 'refused' or 'online' (any other value means 'pending')
- * @return int[]        Service IDs sorted by submission date (creation date if not set)
+ * @return int[]        Service IDs sorted by submission date (only modules with a request date are 'pending')
  */
 function marketplaceGetListIds($db, $mode)
 {
@@ -506,7 +506,7 @@ function marketplaceGetListIds($db, $mode)
 		return array();
 	}
 	$conds = array(
-		'pending' => "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '')",
+		'pending' => "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '') AND ".$efSub." IS NOT NULL",
 		'refused' => "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''",
 		'online' => "p.tosell = 1",
 	);

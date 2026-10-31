@@ -158,7 +158,7 @@ if (empty($catIds)) {
 $from = " FROM ".MAIN_DB_PREFIX."product as p";
 $from .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
 $base = " WHERE p.fk_product_type = 1 AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
-$condPending = "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '')";
+$condPending = "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '') AND ".$efSub." IS NOT NULL";
 $condRefused = "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''";
 $condOnline = "p.tosell = 1";
 
