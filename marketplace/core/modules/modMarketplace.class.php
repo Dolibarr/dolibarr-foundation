@@ -398,7 +398,7 @@ class modMarketplace extends DolibarrModules
 			'fk_menu'=>'fk_mainmenu=marketplace',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
 			'titre'=>'Compare',
-			'prefix' => img_picto('', 'bill', 'class="pictofixedwidth valignmiddle paddingright"'),
+			'prefix' => img_picto('', 'puzzle-piece', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_compare_tool',
 			'url'=>'/marketplace/compare.php',

@@ -489,7 +489,7 @@ $maxshown = 5;
 print '<div style="display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px">';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopReasons").'</th><th class="right">#</th></tr>';
 foreach ($reasons as $r) {
-	print '<tr class="oddeven"><td>'.dol_escape_htmltag($r->reason).'</td><td class="right">'.$r->nb.'</td></tr>';
+	print '<tr class="oddeven"><td><div class="twolinesmax-normallineheight minwidth200onall">'.dol_escape_htmltag($r->reason).'</div></td><td class="right">'.$r->nb.'</td></tr>';
 }
 print '</table></div>';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopSellers").'</th><th class="right">#</th></tr>';
