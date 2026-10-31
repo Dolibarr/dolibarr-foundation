@@ -405,8 +405,8 @@ function marketplaceValidationChecks($db, $product)
 		$add($langs->trans('CheckPhpVersions'), $ok ? 'ok' : 'error', $pmin.' -> '.$pmax, 'The PHP min/max versions are inconsistent.');
 	}
 
-	// Price and validity duration
-	$add($langs->trans('CheckPrice'), ($product->price > 0 || marketplaceExtra($product, 'compprice') !== '') ? 'ok' : 'warning', price($product->price), 'The price is missing.');
+	// Price and validity duration (a free module with a price of 0 is allowed)
+	$add($langs->trans('CheckPrice'), (!is_null($product->price) || marketplaceExtra($product, 'compprice') !== '') ? 'ok' : 'warning', price($product->price), 'The price is missing.');
 	$add($langs->trans('CheckValidity'), marketplaceExtra($product, 'duration') !== '' ? 'ok' : 'warning', '', 'The validity duration is missing.');
 
 	$sellers = marketplaceGetSellers($db, $product->id);

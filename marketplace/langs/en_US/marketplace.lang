@@ -70,6 +70,7 @@ newModuleProduct=Add or update a module or addon
 submitANewModuleProduct=Submit a new module or addon
 shortDescription=Short description
 largeDescription=Long description
+DescriptionAndNote=Description and Note
 keywords=Keywords
 moduleProductName=Module/product name
 checkRulesBeforeSubmit=Before submitting a module, make sure it complies with <a href="%s" target="_blank">validation rules</a>
