@@ -407,7 +407,9 @@ function marketplaceValidationChecks($db, $product)
 
 	// Price and validity duration (a free module with a price of 0 is allowed)
 	$add($langs->trans('CheckPrice'), (!is_null($product->price) || marketplaceExtra($product, 'compprice') !== '') ? 'ok' : 'warning', price($product->price), 'The price is missing.');
-	$add($langs->trans('CheckValidity'), marketplaceExtra($product, 'duration') !== '' ? 'ok' : 'warning', '', 'The validity duration is missing.');
+	$duration = marketplaceExtra($product, 'duration');
+	$hasDuration = !is_null($duration) && $duration !== '';
+	$add($langs->trans('CheckValidity'), $hasDuration ? 'ok' : 'error', $hasDuration ? ((int) $duration === 0 ? $langs->trans('lifeTimeAccess') : (string) $duration) : '', 'The validity duration is missing.');
 
 	$sellers = marketplaceGetSellers($db, $product->id);
 	$add($langs->trans('CheckSeller'), count($sellers) == 1 ? 'ok' : (count($sellers) > 1 ? 'warning' : 'error'), count($sellers).' vendeur(s)');

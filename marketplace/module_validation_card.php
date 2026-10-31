@@ -275,7 +275,8 @@ print $row($langs->trans("ModuleKeywords"), $e('keywords'));
 print $row($langs->trans("HowtoContactSupport"), $e('support'));
 print $row($langs->trans("Price"), price($object->price, 0, $langs, 1, -1, -1, $conf->currency).' '.$e('pricecomment'));
 print $row($langs->trans("ComplementaryPriceHT"), $e('compprice'));
-print $row($langs->trans("MarketplaceValidityDuration"), $e('duration'));
+$duration = marketplaceExtra($object, 'duration');
+print $row($langs->trans("MarketplaceValidityDuration"), (!is_null($duration) && $duration !== '' && (int) $duration === 0) ? $langs->trans("lifeTimeAccess") : $e('duration'));
 print $row($langs->trans("DisclaimerMessage"), $e('disclaimer'));
 print $row($langs->trans("WantToIncludeSourceInCore"), yn((int) marketplaceExtra($object, 'coresource')));
 // Original module when the service is declared as a copy or a fork
