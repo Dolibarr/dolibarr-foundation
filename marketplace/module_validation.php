@@ -119,6 +119,7 @@ $search_dolmax = trim(GETPOST('search_dolmax', 'alphanohtml'));
 $search_fork = GETPOST('search_fork', 'aZ09');
 $search_duplicate = GETPOST('search_duplicate', 'aZ09');
 $search_reason = trim(GETPOST('search_reason', 'alphanohtml'));
+$search_law = trim(GETPOST('search_law', 'alphanohtml'));
 $search_submitted_dtstart = dol_mktime(0, 0, 0, GETPOSTINT('search_submitted_dtstartmonth'), GETPOSTINT('search_submitted_dtstartday'), GETPOSTINT('search_submitted_dtstartyear'));
 $search_submitted_dtend = dol_mktime(23, 59, 59, GETPOSTINT('search_submitted_dtendmonth'), GETPOSTINT('search_submitted_dtendday'), GETPOSTINT('search_submitted_dtendyear'));
 
@@ -129,6 +130,7 @@ $efMin = marketplaceCol('dolmin');
 $efMax = marketplaceCol('dolmax');
 $efDup = marketplaceCol('duplicateof');
 $efFork = marketplaceCol('forkof');
+$efLaw = marketplaceCol('law');
 
 // Definition of array of fields for columns
 $arrayfields = array(
@@ -142,6 +144,7 @@ $arrayfields = array(
 	'fork' => array('label' => 'Fork', 'checked' => 1, 'position' => 60),
 	'duplicate' => array('label' => 'Duplicate', 'checked' => 1, 'position' => 61),
 	'reason' => array('label' => 'Reason', 'checked' => 1, 'position' => 62),
+	'law' => array('label' => 'LawViolation', 'checked' => 1, 'position' => 63),
 	'submitted' => array('label' => 'DateRequestToBeOnline', 'checked' => 1, 'position' => 70),
 	'age' => array('label' => 'Age', 'checked' => 1, 'position' => 80),
 	'tosell' => array('label' => 'OnSale', 'checked' => 0, 'position' => 90),
@@ -200,6 +203,7 @@ if (empty($reshook)) {
 		$search_fork = '';
 		$search_duplicate = '';
 		$search_reason = '';
+		$search_law = '';
 		$search_submitted_dtstart = '';
 		$search_submitted_dtend = '';
 		$toselect = array();
@@ -375,6 +379,9 @@ if ($search_duplicate === '1') {
 if ($search_reason !== '') {
 	$sqlWhereFilter .= natural_search(array($efReason), $search_reason);
 }
+if ($search_law !== '') {
+	$sqlWhereFilter .= natural_search(array($efLaw), $search_law);
+}
 if ($search_submitted_dtstart) {
 	$sqlWhereFilter .= " AND ".$efSub." >= '".$db->idate($search_submitted_dtstart)."'";
 }
@@ -394,6 +401,7 @@ $sortmap = array(
 	'fork' => 'forkof',
 	'duplicate' => 'duplicateof',
 	'reason' => 'reason',
+	'law' => 'law',
 	'submitted' => 'submitted',
 	'tosell' => 'p.tosell',
 );
@@ -416,7 +424,7 @@ if ($resql && ($obj = $db->fetch_object($resql))) {
 $sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted,";
 $sql .= " ".$efMin." as dolmin, ".$efMax." as dolmax, ".marketplaceCol('version')." as version,";
 $sql .= " ".$efFork." as forkof, ".$efDup." as duplicateof,";
-$sql .= " ".$efReason." as reason,";
+$sql .= " ".$efReason." as reason, ".$efLaw." as law,";
 $sql .= " (SELECT s.rowid FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller_id,";
 $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp INNER JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = pfp.fk_soc";
@@ -557,6 +565,9 @@ if ($search_duplicate !== '') {
 if ($search_reason !== '') {
 	$param .= '&search_reason='.urlencode($search_reason);
 }
+if ($search_law !== '') {
+	$param .= '&search_law='.urlencode($search_law);
+}
 if ($search_submitted_dtstart) {
 	$param .= '&search_submitted_dtstartmonth='.GETPOSTINT('search_submitted_dtstartmonth');
 	$param .= '&search_submitted_dtstartday='.GETPOSTINT('search_submitted_dtstartday');
@@ -637,6 +648,9 @@ if (!empty($arrayfields['duplicate']['checked'])) {
 if (!empty($arrayfields['reason']['checked'])) {
 	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_reason" value="'.dol_escape_htmltag($search_reason).'"></td>';
 }
+if (!empty($arrayfields['law']['checked'])) {
+	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_law" value="'.dol_escape_htmltag($search_law).'"></td>';
+}
 if (!empty($arrayfields['submitted']['checked'])) {
 	print '<td class="liste_titre nowrap">';
 	print '<div class="nowrap">';
@@ -706,6 +720,10 @@ if (!empty($arrayfields['duplicate']['checked'])) {
 }
 if (!empty($arrayfields['reason']['checked'])) {
 	print_liste_field_titre($arrayfields['reason']['label'], $_SERVER["PHP_SELF"], "reason", "", $param, "", $sortfield, $sortorder);
+	$totalarray['nbfield']++;
+}
+if (!empty($arrayfields['law']['checked'])) {
+	print_liste_field_titre($arrayfields['law']['label'], $_SERVER["PHP_SELF"], "law", "", $param, "", $sortfield, $sortorder);
 	$totalarray['nbfield']++;
 }
 if (!empty($arrayfields['submitted']['checked'])) {
@@ -784,6 +802,9 @@ foreach ($list as $o) {
 	}
 	if (!empty($arrayfields['reason']['checked'])) {
 		print '<td class="tdoverflowmax200" title="'.dolPrintHTMLForAttribute($o->reason).'">'.dol_escape_htmltag($o->reason).'</td>';
+	}
+	if (!empty($arrayfields['law']['checked'])) {
+		print '<td class="tdoverflowmax100" title="'.dolPrintHTMLForAttribute($o->law).'">'.dol_escape_htmltag($o->law).'</td>';
 	}
 	if (!empty($arrayfields['submitted']['checked'])) {
 		print '<td>'.dol_print_date($sub, 'dayhour').'</td>';
