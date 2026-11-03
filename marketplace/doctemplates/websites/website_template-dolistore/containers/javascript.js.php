@@ -1,12 +1,3 @@
-<?php // BEGIN PHP
-$websitekey=basename(__DIR__);
-if (! defined('USEDOLIBARRSERVER') && ! defined('USEDOLIBARREDITOR')) { require_once __DIR__.'/master.inc.php'; } // Load env if not already loaded
-require_once DOL_DOCUMENT_ROOT.'/core/lib/website.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/website.inc.php';
-ob_start();
-header('Cache-Control: max-age=3600, public, must-revalidate');
-header('Content-type: application/javascript');
-// END PHP ?>
 /* JS content (all pages) */
 var responsiveflag = false;
 
@@ -14,7 +5,7 @@ $(document).ready(function() {
     highdpiInit();
     responsiveResize();
     $(window).resize(responsiveResize);
-    
+
     /*
     if (navigator.userAgent.match(/Android/i)) {
         var viewport = document.querySelector('meta[name="viewport"]');
@@ -22,19 +13,19 @@ $(document).ready(function() {
         window.scrollTo(0, 1);
     }
     */
-    
+
     blockHover();
     if (typeof quickView !== 'undefined' && quickView) {
         quick_view();
     }
     dropDown();
-    
+
     if (typeof page_name != 'undefined' && !in_array(page_name, ['index', 'product'])) {
         bindGrid();
 
         $(document).on('change', '.selectProductSort', function(e) {
             console.log("change .selectProductSort");
-            
+
             if (typeof request != 'undefined' && request)
                 var requestSortProducts = request;
             var splitData = $(this).val().split(':');
@@ -46,30 +37,30 @@ $(document).ready(function() {
                 //document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
             }
         });
-        
+
         $(document).on('change', 'select[name="n"]', function() {
             console.log("change .selectn");
-            
+
             var urlToPaginate = request;
             urlToPaginate = new URL(urlToPaginate);
             urlToPaginate.searchParams.set('n', $(this).val());
             document.location.href = urlToPaginate;
             //$(this.form).submit();
         });
-        
+
         $(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function() {
             console.log("change .selectmansup");
-            
+
             if (this.value != '')
                 location.href = this.value;
         });
-        
+
         $(document).on('change', 'select[name="currency_payement"]', function() {
             console.log("change .selectcurr");
-            
+
             setCurrency($(this).val());
         });
-        
+
         /*$(document).on('click', 'ul.pagination li a', function() {
             console.log($(this).text());
             var urlPagination = request;
@@ -80,7 +71,7 @@ $(document).ready(function() {
             window.location.href = newUrl;
             return false;
         });*/
-        
+
         $(document).on('click', 'ul.pagination li a', function(e) {
             console.log("click ulpaginationlia");
 
@@ -99,7 +90,7 @@ $(document).ready(function() {
                     var urlParams = new URLSearchParams(href);
                     pageNo = urlParams.get('p');
                 }
-            } 
+            }
 
             else if ($this.parent().hasClass('pagination_next')) {
                 var href = $this.attr('href');
@@ -107,25 +98,25 @@ $(document).ready(function() {
                     var urlParams = new URLSearchParams(href);
                     pageNo = urlParams.get('p');
                 }
-            } 
+            }
 
             else {
                 pageNo = $this.text();
             }
-        
+
             if (pageNo) {
                 var urlPagination = request;
                 var newUrl = new URL(urlPagination);
                 newUrl.searchParams.set('p', pageNo);
                 window.location.href = newUrl;
             }
-        
+
             return false;
         });
-        
+
         $(document).on('submit', '.showall', function() {
             console.log("submit showall");
-            
+
             var urlPagination = request;
             var newUrl = new URL(urlPagination);
             var n_value = $(".showall #nb_item").val();
@@ -136,16 +127,16 @@ $(document).ready(function() {
     }
     $(document).on('click', '.back', function(e) {
         console.log("click back");
-        
+
         e.preventDefault();
         history.back();
     });
-    
+
     jQuery.curCSS = jQuery.css;
-    
+
     if (!!$.prototype.cluetip) {
         console.log("prototype cluetip");
-        
+
         $('a.cluetip').cluetip({
             local: true,
             cursor: 'pointer',
@@ -161,10 +152,10 @@ $(document).ready(function() {
             }
         }).css('opacity', 0.8);
     }
-    
+
     if (!!$.prototype.fancybox) {
         console.log("prototype fancybox");
-        
+
         $.extend($.fancybox.defaults.tpl, {
             closeBtn: '<a title="' + FancyboxI18nClose + '" class="fancybox-item fancybox-close" href="javascript:;"></a>',
             next: '<a title="' + FancyboxI18nNext + '" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
@@ -230,7 +221,7 @@ function responsiveResize() {
 function blockHover(status) {
     $(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e) {
         console.log("mouseenter product_list");
-        
+
         if ($('body').find('.container').width() == 1170) {
             var pcHeight = $(this).parent().outerHeight();
             var pcPHeight = $(this).parent().find('.button-container').outerHeight()/* + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight()*/;
@@ -242,10 +233,10 @@ function blockHover(status) {
             });
         }
     });
-    
+
     $(document).off('mouseleave').on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e) {
         console.log("click mouseleave");
-        
+
         if ($('body').find('.container').width() == 1170)
             $(this).parent().removeClass('hovered').css({
                 'height': 'auto',
@@ -258,7 +249,7 @@ function blockHover(status) {
 function quick_view() {
     $(document).on('click', '.quick-view:visible, .quick-view-mobile:visible', function(e) {
         console.log("click quick view");
-        
+
         e.preventDefault();
         var url = this.rel;
         if (url.indexOf('?') != -1)
@@ -284,7 +275,7 @@ function bindGrid() {
         Display(view);
     else
         $('.display').find('li#grid').addClass('selected');
-    
+
     // Unbind and re-bind events to avoid duplicate listeners
     $('.display').off('click', '#grid').on('click', '#grid', function(e) {
         console.log("click grid");
@@ -381,10 +372,10 @@ function dropDown() {
     elementClick = '#header .current';
     elementSlide = 'ul.toogle_content';
     activeClass = 'active';
-    
+
     $(elementClick).on('click', function(e) {
         console.log("click dropDown");
-        
+
         e.stopPropagation();
         var subUl = $(this).next(elementSlide);
         if (subUl.is(':hidden')) {
@@ -398,16 +389,16 @@ function dropDown() {
         $(elementClick).not(this).removeClass(activeClass);
         e.preventDefault();
     });
-    
+
     $(elementSlide).on('click', function(e) {
         console.log("click elementSlide");
         e.stopPropagation();
     });
-    
+
     $(document).on('click', function(e) {
         console.log("click document");
         e.stopPropagation();
-        
+
         var elementHide = $(elementClick).next(elementSlide);
         $(elementHide).slideUp();
         $(elementClick).removeClass('active');
@@ -454,43 +445,43 @@ function resizeCatimg() {
 }
 
 /*jQuery(document).ready(function($) {
-	
+
 	$('.lightbox_trigger').click(function(e) {
-		
+
 		//prevent default action (hyperlink)
 		e.preventDefault();
-		
+
 		//Get clicked link href
 		var image_href = $(this).attr("src");
 
         console.log('cc');
-		
+
 		if ($('#lightbox').length > 0) { // #lightbox exists
-			
+
 			//place href as img src value
 			$('#content').html('<img src="' + image_href + '" />');
-		   	
+
 			//show lightbox window - you could use .show('fast') for a transition
 			$('#lightbox').show();
 		}
-		
+
 		else { //#lightbox does not exist - create and insert (runs 1st time only)
-			
+
 			//create HTML markup for lightbox window
-			var lightbox = 
+			var lightbox =
 			'<div id="lightbox">' +
 				'<p>Click to close</p>' +
 				'<div id="content">' + //insert clicked link's href into img src
 					'<img src="' + image_href +'" />' +
-				'</div>' +	
+				'</div>' +
 			'</div>';
-				
+
 			//insert lightbox HTML into page
 			$('body').append(lightbox);
 		}
-		
+
 	});
-	
+
 	//Click anywhere on the page to get rid of lightbox window
 	$('body').on('click', '#lightbox', function() { //must use on, as the lightbox element is inserted into the DOM
 		$('#lightbox').hide();
@@ -501,7 +492,7 @@ function resizeCatimg() {
 /*jQuery(document).ready(function($) {
     $('#thumbs_list_frame li a').on('mouseenter', function() {
         var url = $(this).find('img').attr('src');
-        
+
         $('#bigpic').attr('src', url);
         $('#view_large_button').attr('href', url);
         $('#view_large_button').attr('src', url);
@@ -531,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function switchTab(tab) {
         console.log("switch tab after click event");
-        
+
         // Supprime les classes 'active' et 'fade-in' de tous les onglets et panneaux
         tabs.forEach(t => t.classList.remove('active'));
         panes.forEach(p => p.classList.remove('active', 'fade-in'));
@@ -1011,13 +1002,13 @@ function getStorageAvailable() {
 $(document).ready(function() {
     $('form').submit(function() {
         console.log("submit form");
-        
+
         $(this).find('.hideOnSubmit').hide();
     });
-    
+
     $.fn.checkboxChange = function(fnChecked, fnUnchecked) {
         console.log("checkboxChange");
-        
+
         if ($(this).prop('checked') && fnChecked)
             fnChecked.call(this);
         else if (fnUnchecked)
@@ -1043,14 +1034,14 @@ $(document).ready(function(){
     if ('ontouchstart' in document.documentElement) {
         $('.shopping_cart > a:first').on('click', function(e) {
             console.log("click shopping_cart");
-            
+
             e.preventDefault();
         });
     }
-    
+
     $(document).on('touchstart', '#header .shopping_cart a:first', function(e) {
         console.log("touchstart header");
-        
+
         if ($(this).next('.cart_block:visible').length)
             $("#header .cart_block").stop(true, true).slideUp(100);
         else
@@ -1058,7 +1049,7 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
     });
-    
+
     $("#header .shopping_cart a:first").hover(function() {
         $("#header .cart_block").stop(true, true).slideDown(100);
     }, function() {
@@ -1067,29 +1058,29 @@ $(document).ready(function(){
                 $("#header .cart_block").stop(true, true).slideUp(100);
         }, 200);
     });
-    
+
     $("#header .cart_block").hover(function() {}, function() {
         setTimeout(function() {
             if (!shopping_cart.isHoveringOver())
                 $("#header .cart_block").stop(true, true).slideUp(100);
         }, 200);
     });
-    
+
     $(document).on('click', '#layer_cart .cross, #layer_cart .continue, .layer_cart_overlay', function(e) {
         console.log("click document layer_cart...");
         e.preventDefault();
         $('.layer_cart_overlay').hide();
         $('#layer_cart').fadeOut('fast');
     });
-    
+
 
     $(document).on('click', '.product_quantity_up', function(e) {
         console.log("click product_quantity_up");
-        
+
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-        
+
         if (!isNaN(currentVal)){
             $('input[name=' + fieldName + ']').val(currentVal + 1).trigger('keyup');
             var qtyProduct = currentVal + 1;
@@ -1108,18 +1099,18 @@ $(document).ready(function(){
                 product_price_orig: priceProductOrig,
                 product_price: priceProduct,
             };
-            
+
             updateOrderTable(formData);
         }
     });
 
     $(document).on('click', '.product_quantity_down', function(e) {
         console.log("click product_quantity_down");
-        
+
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-        
+
         if (!isNaN(currentVal) && currentVal > 1){
             $('input[name=' + fieldName + ']').val(currentVal - 1).trigger('keyup');
             var qtyProduct = currentVal - 1;
@@ -1142,7 +1133,7 @@ $(document).ready(function(){
                 product_thumb: thumbProduct,
                 product_price: priceProduct
             };
-            
+
             updateOrderTable(formData);
         }
     });
@@ -1151,14 +1142,14 @@ $(document).ready(function(){
     //$('.addtocart').submit(function(e){
     $(document).on('submit', '.addtocart', function(e) {
         console.log("submit addtocart");
-        
+
         var form_data = $(this).serialize();
         var button_content = $(this).find('button[type=submit]');
 
         if (!button_content.data('original-text')) {
             button_content.data('original-text', button_content.html());
         }
-        
+
         button_content.html('<span>' + (button_content.data('loading-text') || 'Loading...') + '</span>');
 
         $.ajax({ //make ajax request
@@ -1209,7 +1200,7 @@ $(document).ready(function(){
             $("#layer_cart").css("display", "block");
 
             button_content.html(button_content.data('original-text'));
-            
+
             if($('.shopping-cart-box').css('display') == 'block'){ //if cart box is still visible
                 $('.cart-box').trigger( 'click' ); //trigger click to update the cart box.
             }
@@ -1224,7 +1215,7 @@ $(document).ready(function(){
     // Remove items from cart
     $('body').on('click', '.ajax_cart_block_remove_link', function(e) {
         console.log("click ajax_cart_block_remove_link");
-        
+
         e.preventDefault();
         var pcode = $(this).attr('data-code'); //get product code
         $(this).parent().fadeOut(); //remove item element from box
@@ -1242,7 +1233,7 @@ $(document).ready(function(){
             $('.cart_block_list').load( shopping_cart_url, { load_cart : 1});
 
             $('#product_'+ pcode).remove();
-            
+
             calc_total();   /* This update also additional line */
 
         });
@@ -1253,7 +1244,7 @@ $(document).ready(function(){
 
 function updateOrderTable(formData) {
     $(".cart_quantity").css("pointer-events","none");
-    
+
     $.ajax({ //make ajax request
         url: shopping_cart_url,
         type: "POST",
@@ -1299,7 +1290,7 @@ function calc_total() {
                 sumbrut += val;
             }
         }
-    });    
+    });
     console.log("calc_total sumbrut="+sumbrut);
 
     var sum = 0;
@@ -1320,12 +1311,12 @@ function calc_total() {
         });
         return;
     }
-    
+
     var percent = parseFloat($('#total_additional_line').data('percent')) || 0;
     var qty = parseFloat($('#additionalProductQty').val()) || 0;
     var unitPriceOfAdditionalProduct = sumbrut * (percent / 100);
     var additional = unitPriceOfAdditionalProduct * qty;
-    
+
     var shippingFees = parseFloat($('#total_shipping_fees_line').data('shipping-fees')) || 0;
 
     $('#total_additional_line').text(additional.toFixed(2));
@@ -1364,7 +1355,7 @@ $(document).ready(function() {
     // Open lightbox when clicking on a thumbnail
     $('.lightbox_trigger').click(function(e) {
         console.log("click lightbox trigger");
-        
+
         console.log(thumbnails);
         e.preventDefault();
         //currentIndex = thumbnails.indexOf($(this).find('img').attr('src'));
@@ -1378,10 +1369,10 @@ $(document).ready(function() {
     // Close lightbox when clicking outside content
     $('#lightbox').click(function(e) {
         console.log("click lightbox");
-        
+
         if (!$(e.target).is('#lightbox-prev, #lightbox-next, #content img')) {
             console.log("we are outside content");
-            
+
             $('#lightbox').hide();
             $('body').css('overflow', 'auto'); // Re-enable scrolling when lightbox is closed
         }
@@ -1390,7 +1381,7 @@ $(document).ready(function() {
     // Navigate through lightbox
     $('#lightbox-prev, #lightbox-next').click(function(e) {
         console.log("click lightbox prev next");
-        
+
         e.stopPropagation();
         navigateLightbox($(this).attr('id') === 'lightbox-next' ? 1 : -1);
     });
@@ -1423,25 +1414,22 @@ $(document).ready(function() {
     // Open the image in a new tab when clicked
     $('#content').on('click', 'img', function() {
         console.log("click img");
-        
+
         var imageUrl = $(this).attr('src');
-        
+
         /* window.open(imageUrl, '_blank'); */
         $('#lightbox').hide();
         $('body').css('overflow', 'auto'); // Re-enable scrolling when lightbox is closed
     });
-    
+
     $('#thumbs_list_frame li a').on('mouseenter', function() {
         console.log("mouseenter thumbs");
-        
+
         var url = $(this).find('img').attr('src');
-        
+
         $('#bigpic').attr('src', url);
         $('#view_large_button').attr('href', url);
         $('#view_large_button').attr('src', url);
     });
-    
+
 });
-<?php // BEGIN PHP
-$tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "js");
-// END PHP

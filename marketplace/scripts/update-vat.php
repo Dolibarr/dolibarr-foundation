@@ -177,7 +177,7 @@ if ($resultSql = $db->query($sql)) {
 		$vatSql .= "CASE WHEN postcode = '" . $db->escape($obj->zip) . "' THEN 1 ELSE 0 END + ";
 		$vatSql .= "CASE WHEN city = '" . $db->escape($obj->town) . "' THEN 1 ELSE 0 END) AS match_score ";
 		$vatSql .= "FROM ps_address ";
-		$vatSql .= "WHERE id_customer = " . (int)$obj->id_customer . " ";
+		$vatSql .= "WHERE id_customer = " . (int) $obj->id_customer . " ";
 		$vatSql .= "AND active = 1 ";
 		$vatSql .= "AND deleted = 0 ";
 		$vatSql .= "AND vat_number IS NOT NULL ";
@@ -201,7 +201,6 @@ if ($resultSql = $db->query($sql)) {
 				$error_messages[] = "Error updating VAT for company: " . $obj->company . " - " . $db->lasterror();
 			}
 		}
-
 	}
 } else {
 	$error++;

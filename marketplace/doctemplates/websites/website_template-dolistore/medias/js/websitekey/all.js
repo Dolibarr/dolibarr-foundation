@@ -12,7 +12,7 @@ $(document).ready(function() {
     if (typeof quickView !== 'undefined' && quickView)
         quick_view();
     dropDown();
-    
+
     if (typeof page_name != 'undefined' && !in_array(page_name, ['index', 'product'])) {
         bindGrid();
         $(document).on('change', '.selectProductSort', function(e) {
@@ -67,7 +67,7 @@ $(document).ready(function() {
                     var urlParams = new URLSearchParams(href);
                     pageNo = urlParams.get('p');
                 }
-            } 
+            }
 
             else if ($this.parent().hasClass('pagination_next')) {
                 var href = $this.attr('href');
@@ -75,21 +75,21 @@ $(document).ready(function() {
                     var urlParams = new URLSearchParams(href);
                     pageNo = urlParams.get('p');
                 }
-            } 
+            }
 
             else {
                 pageNo = $this.text();
             }
-        
+
             if (pageNo) {
                 var urlPagination = request;
                 var newUrl = new URL(urlPagination);
                 newUrl.searchParams.set('p', pageNo);
                 window.location.href = newUrl;
             }
-        
+
             return false;
-        });        
+        });
         $(document).on('submit', '.showall', function() {
             var urlPagination = request;
             var newUrl = new URL(urlPagination);
@@ -226,7 +226,7 @@ function bindGrid() {
         Display(view);
     else
         $('.display').find('li#grid').addClass('selected');
-    
+
     // Unbind and re-bind events to avoid duplicate listeners
     $('.display').off('click', '#grid').on('click', '#grid', function(e) {
         e.preventDefault();
@@ -386,43 +386,43 @@ function resizeCatimg() {
 }
 
 /*jQuery(document).ready(function($) {
-	
+
 	$('.lightbox_trigger').click(function(e) {
-		
+
 		//prevent default action (hyperlink)
 		e.preventDefault();
-		
+
 		//Get clicked link href
 		var image_href = $(this).attr("src");
 
         console.log('cc');
-		
+
 		if ($('#lightbox').length > 0) { // #lightbox exists
-			
+
 			//place href as img src value
 			$('#content').html('<img src="' + image_href + '" />');
-		   	
+
 			//show lightbox window - you could use .show('fast') for a transition
 			$('#lightbox').show();
 		}
-		
+
 		else { //#lightbox does not exist - create and insert (runs 1st time only)
-			
+
 			//create HTML markup for lightbox window
-			var lightbox = 
+			var lightbox =
 			'<div id="lightbox">' +
 				'<p>Click to close</p>' +
 				'<div id="content">' + //insert clicked link's href into img src
 					'<img src="' + image_href +'" />' +
-				'</div>' +	
+				'</div>' +
 			'</div>';
-				
+
 			//insert lightbox HTML into page
 			$('body').append(lightbox);
 		}
-		
+
 	});
-	
+
 	//Click anywhere on the page to get rid of lightbox window
 	$('body').on('click', '#lightbox', function() { //must use on, as the lightbox element is inserted into the DOM
 		$('#lightbox').hide();
@@ -433,7 +433,7 @@ function resizeCatimg() {
 jQuery(document).ready(function($) {
     $('#thumbs_list_frame li a').on('mouseenter', function() {
         var url = $(this).find('img').attr('src');
-        
+
         $('#bigpic').attr('src', url);
         $('#view_large_button').attr('href', url);
         $('#view_large_button').attr('src', url);
@@ -1012,14 +1012,14 @@ $(document).ready(function(){
         $('.layer_cart_overlay').hide();
         $('#layer_cart').fadeOut('fast');
     });
-    
+
 
 
     $(document).on('click', '.product_quantity_up', function(e) {
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-        
+
         if (!isNaN(currentVal)){
             $('input[name=' + fieldName + ']').val(currentVal + 1).trigger('keyup');
             var qtyProduct = currentVal + 1;
@@ -1043,7 +1043,7 @@ $(document).ready(function(){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-        
+
         if (!isNaN(currentVal) && currentVal > 1){
             $('input[name=' + fieldName + ']').val(currentVal - 1).trigger('keyup');
             var qtyProduct = currentVal - 1;
@@ -1257,4 +1257,3 @@ $(document).ready(function() {
         window.open(imageUrl, '_blank');
     });
 });
-

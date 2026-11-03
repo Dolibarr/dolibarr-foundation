@@ -163,7 +163,7 @@ $products_query = "
 SELECT
 	ppd.id_product,
 	ppd.filename,
-	ppd.display_filename 
+	ppd.display_filename
 FROM ps_product_download ppd ";
 
 $importkey = dol_print_date(dol_now(), 'dayhourlog');
@@ -197,7 +197,6 @@ if ($result_products = $conn->query($products_query)) {
 			$error_messages[] = " - Error in fetch product with ref_ext => " . $obj->id_product . " result code = " . $result . " - " . $product->errorsToString();
 			$error++;
 		} else {
-
 			$upload_dir = $conf->product->multidir_output[1] . '/' . get_exdir(0, 0, 0, 1, $product, 'product');
 
 			$url = $source_dir.$obj->filename;
@@ -215,7 +214,7 @@ if ($result_products = $conn->query($products_query)) {
 
 			$package = $upload_dir . '/' . basename($obj->display_filename);
 
-			if (copy($url, $package) != true){
+			if (copy($url, $package) != true) {
 				$error_messages[] = " - Error in copy package file with ref_ext => " . $obj->id_product;
 				$error++;
 			} else {
@@ -241,7 +240,6 @@ if ($result_products = $conn->query($products_query)) {
 					$count_imported++;
 				}
 			}
-
 		}
 
 		print "\n";

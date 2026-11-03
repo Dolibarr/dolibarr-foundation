@@ -156,7 +156,7 @@ $marketplace_preferred_third_parties_category = getDolGlobalInt("MARKETPLACE_PRO
 // Check id_website if exist
 $id_website = 0;
 $result_website = 0;
-if (!empty($codeorid_website)){
+if (!empty($codeorid_website)) {
 	$website = new Website($db);
 	if (is_numeric($codeorid_website)) {
 		$result_website = $website->fetch($codeorid_website);
@@ -262,7 +262,7 @@ $sql_request_for_customers = "SELECT
 		ps_customer
 	GROUP BY
 		email
-	) AS max_ids ON pc.id_customer = max_ids.id_customer 
+	) AS max_ids ON pc.id_customer = max_ids.id_customer
 	ORDER BY
 	pc.date_add ASC ";
 
@@ -335,7 +335,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			ps_country pc
 		WHERE
 			pa.id_country = pc.id_country AND
-			pa.id_customer = " . $obj->id_customer . " 
+			pa.id_customer = " . $obj->id_customer . "
 		order by pa.date_add desc
 		limit 1
 		";
@@ -343,7 +343,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 		if ($result_customer_address = $conn->query($customer_address_query)) {
 			while ($objaddr = $result_customer_address->fetch_object()) {
 				$get_country_id = getCountry($objaddr->iso_code, '3');
-				if ($get_country_id != "NotDefined"){
+				if ($get_country_id != "NotDefined") {
 					$customer->country_id = $get_country_id;
 				}
 				$customer->address = $objaddr->address1 . "\n" . $objaddr->address2;
@@ -476,11 +476,11 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				$rowid_soc = $result;
 			}
 
-			if ($action == "updated"){
+			if ($action == "updated") {
 				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET ref_ext = '".$db->escape($obj->id_customer)."' , import_key = '" . $db->escape($importkey) . "' WHERE rowid = " . ((int) $objsqlr->rowid);
 			}
 
-			if ($action == "imported"){
+			if ($action == "imported") {
 				$sql = 'UPDATE ' . MAIN_DB_PREFIX . "societe SET ref_ext = '".$db->escape($obj->id_customer)."' , import_key = '" . $db->escape($importkey) . "', datec = '" . $obj->date_add . "' WHERE rowid = " . ((int) $result);
 			}
 
@@ -506,7 +506,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 				// if action is updated keep the old tags
 				$old_customer_tags = $categorie->containing($customer->id, 'customer', 'id');
 				if (!empty($old_customer_tags)) {
-					$customer_tags = array_merge($customer_tags , $old_customer_tags); // Add $old_customer_tags;
+					$customer_tags = array_merge($customer_tags, $old_customer_tags); // Add $old_customer_tags;
 				}
 
 				// Add preferred Customer category
@@ -530,7 +530,7 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 			if ($customer->fournisseur > 0) {
 				$supplier_tags = array();
 				$supplier_tags[] = $marketplace_third_parties_category_vendor;
-				
+
 				// if action is updated keep the old tags
 				$old_supplier_tags = $categorie->containing($customer->id, 'supplier', 'id');
 				if (!empty($old_supplier_tags)) {
@@ -662,13 +662,13 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 
 					$ret_addresse = $objectcontact->create($user);
 					if ($ret_addresse < 0) {
-						$error_message = " - Error in set adresse result code = " . $ret_addresse . " - " . $customer->errorsToString();
+						$error_message = " - Error in set address result code = " . $ret_addresse . " - " . $customer->errorsToString();
 						print $error_message;
 						$error_messages[] = $obj->id_customer . ' : ' . $error_message;
 						//$error++;
 						//exit();
 					} else {
-						print " - set adresse OK";
+						print " - set address OK";
 					}
 				}
 			}
@@ -715,8 +715,6 @@ if ($result_customers = $conn->query($sql_request_for_customers)) {
 					}
 				}
 			}
-
-
 		}
 		print "\n";
 	}

@@ -173,8 +173,7 @@ $count_updated = 0;
 
 if ($resultSql = $db->query($sql)) {
 	while ($obj = $resultSql->fetch_object()) {
-
-		$checkSql = "SELECT newsletter FROM ps_customer WHERE id_customer = " . (int)$obj->id_customer;
+		$checkSql = "SELECT newsletter FROM ps_customer WHERE id_customer = " . (int) $obj->id_customer;
 		if ($resultCheck = $conn->query($checkSql)) {
 			if ($resultCheck->num_rows > 0) {
 				$row = $resultCheck->fetch_object();

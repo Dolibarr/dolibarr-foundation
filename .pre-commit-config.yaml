@@ -28,6 +28,8 @@ repos:
         args: [--unsafe]
       # This checks that json files are correct
       - id: check-json
+        exclude: |
+          (?x)^((.*/)?doctemplates/websites/.*)$
       # Fixes Fix files that have DOS end of line endings
       - id: mixed-line-ending
         # alternative for dev/tools/fixdosfiles.sh
@@ -137,11 +139,15 @@ repos:
     rev: v1.6.8
     hooks:
       - id: php-cbf
+        exclude: |
+          (?x)^((.*/)?doctemplates/websites/.*)$
         files: \.(php)$
         args: [--standard=dev/setup/codesniffer/ruleset.xml]
       - id: php-cs
         exclude: |
-          (?x)^(htdocs/includes/.*)$
+          (?x)^(htdocs/includes/.*
+               |(.*/)?doctemplates/websites/.*
+               )$
         files: \.(php)$
         args:
           [

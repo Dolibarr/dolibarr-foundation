@@ -191,9 +191,9 @@ $dolibarrPaymentMethods = array();
 $sql = "SELECT id, code FROM " . $db->prefix() . "c_paiement WHERE entity IN (" . getEntity('c_paiement') . ")";
 $resql = $db->query($sql);
 if ($resql && $db->num_rows($resql) > 0) {
-    while ($obj = $db->fetch_object($resql)) {
-        $dolibarrPaymentMethods[$obj->code] = $obj->id;
-    }
+	while ($obj = $db->fetch_object($resql)) {
+		$dolibarrPaymentMethods[$obj->code] = $obj->id;
+	}
 }
 
 $orders_querry = "
@@ -240,8 +240,8 @@ $orders_querry = "
 		ps_country_lang cl ON a.id_country = cl.id_country AND cl.id_lang = 1
 	LEFT JOIN
 		ps_order_state_lang osl ON o.current_state = osl.id_order_state AND osl.id_lang = 1
-	WHERE 
-		(osl.name IN ('Payment accepted', 'Delivered', 'Stripe partial refund') OR osl.name IS NULL) and o.id_order != 0 
+	WHERE
+		(osl.name IN ('Payment accepted', 'Delivered', 'Stripe partial refund') OR osl.name IS NULL) and o.id_order != 0
 	ORDER BY
 		o.id_order DESC;
 ";
@@ -281,7 +281,7 @@ if ($result_orders = $conn->query($orders_querry)) {
 		if (isset($obj->payment_module) && array_key_exists($obj->payment_module, $dolibarrPaymentMethods)) {
 			$com->mode_reglement_id = $dolibarrPaymentMethods[$obj->payment_module];
 		}
-		
+
 		$com->import_key = dol_print_date($now, 'dayhourlog');
 
 		$result = $com->create($user);
@@ -296,11 +296,11 @@ if ($result_orders = $conn->query($orders_querry)) {
 			print " - #" . $i . " Order id=" . $com->id . ", Id ext = " . $com->ref_ext . " created successfully";
 
 			$orderLinesQuerry = "
-			SELECT 
+			SELECT
 				od.id_order_detail,
-				od.id_order, 
+				od.id_order,
 				od.product_id,
-				od.product_name, 
+				od.product_name,
 				od.product_quantity_refunded,
 				od.product_price,
 				od.unit_price_tax_incl,
@@ -314,14 +314,13 @@ if ($result_orders = $conn->query($orders_querry)) {
 				p.reference
 			FROM ps_order_detail od
 			JOIN ps_product p ON od.product_id = p.id_product
-			WHERE 
+			WHERE
 				(od.product_quantity - od.product_quantity_refunded) > 0 AND
-				od.id_order = " . $obj->id_order . " 
+				od.id_order = " . $obj->id_order . "
 			";
 
 			if ($result_order_lines = $conn->query($orderLinesQuerry)) {
 				while ($line = $result_order_lines->fetch_object()) {
-
 					// Get  product
 					$product = new Product($db);
 					$result = $product->fetch('', '', $line->product_id);
@@ -334,8 +333,8 @@ if ($result_orders = $conn->query($orders_querry)) {
 					}
 
 					// Get seller
-					$sql_get_seller_id = "select lpfp.fk_soc 
-					from " . MAIN_DB_PREFIX . "product_fournisseur_price lpfp 
+					$sql_get_seller_id = "select lpfp.fk_soc
+					from " . MAIN_DB_PREFIX . "product_fournisseur_price lpfp
 					where lpfp.fk_product =" . $product->id . " LIMIT 1";
 					$resql = $db->query($sql_get_seller_id);
 					$objsql = $db->fetch_object($resql);
@@ -352,7 +351,7 @@ if ($result_orders = $conn->query($orders_querry)) {
 							exit;
 						}
 					} else {
-						// No seller found, error message 
+						// No seller found, error message
 						print ' - No seller found for product with ID : ' . $product->id  . "\n";;
 						$error++;
 						$db->rollback();

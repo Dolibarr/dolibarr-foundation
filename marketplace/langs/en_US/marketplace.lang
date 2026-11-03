@@ -96,6 +96,7 @@ agreeTermsWebsite=I've read and I agree with terms and conditions of use availab
 suggestToAddWikiPage=I am aware that dolibarr foundation recommendation to me is to add a page dedicated to my module on the wiki.dolibarr.org visible on <a href="https://wiki.dolibarr.org/index.php/Category:Complementary_modules" target="_blank">https://wiki.dolibarr.org/index.php/Category:Complementary_modules</a>, This increases visibility of my module and may increase sales numbers and profit
 englishFieldsRequired=All English fields are required.
 fieldTooLong=The field %s (%s) is too long: %s chars max (current count %s).
+fieldWithHttpLink=The field %s (%s) contains an insecure link starting with http://. Please use https:// links only.
 requiredCategory=You must choose a category.
 fileNameLengthError=name of file must not be longer than 48 characters, including the prefix ("module_", "theme_" or "website_"), the version suffix and the extension (".zip" for example)!
 fileSizeHigherServerLimit=File size is higher than server limit!

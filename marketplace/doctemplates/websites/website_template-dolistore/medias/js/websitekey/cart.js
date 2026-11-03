@@ -36,14 +36,14 @@ $(document).ready(function(){
         $('.layer_cart_overlay').hide();
         $('#layer_cart').fadeOut('fast');
     });
-    
+
 
 
     $(document).on('click', '.product_quantity_up', function(e) {
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-        
+
         if (!isNaN(currentVal)){
             $('input[name=' + fieldName + ']').val(currentVal + 1).trigger('keyup');
             var qtyProduct = currentVal + 1;
@@ -67,7 +67,7 @@ $(document).ready(function(){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name=' + fieldName + ']').val());
-        
+
         if (!isNaN(currentVal) && currentVal > 1){
             $('input[name=' + fieldName + ']').val(currentVal - 1).trigger('keyup');
             var qtyProduct = currentVal - 1;
@@ -218,4 +218,3 @@ function HoverWatcher(selector) {
         self.hovering = false;
     })
 }
-

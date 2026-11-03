@@ -70,7 +70,7 @@ $(document).ready(function() {
           ui.item.removeClass('dragging');
         },
     });
-    
+
     document.getElementById('image_cover').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -83,7 +83,7 @@ $(document).ready(function() {
             reader.readAsDataURL(file);
         }
     });
-    
+
     document.getElementById('virtual_product_file').addEventListener('change', function(event) {
         var fileInfoDiv = document.getElementById('field-info-virtual_product_file');
         var fileName = event.target.files[0] ? event.target.files[0].name : "Aucun fichier sélectionné";
@@ -100,7 +100,7 @@ $(document).ready(function() {
         handle: 'td:first-child',
         update: function(event, ui) {
             updateEditRowNumbers();
-    
+
             var order = getOrder();
             $.ajax({
                 url: edit_product_url,
@@ -151,7 +151,7 @@ $(document).ready(function() {
         formData.append('action', 'add_product_image');
         formData.append('position', position_for_new_photo);
         formData.append('file', this.files[0]);
-        
+
         $.ajax({
             url: edit_product_url,
             type: 'POST',
@@ -169,7 +169,7 @@ $(document).ready(function() {
         });
     });
 
-    
+
     $('.deleteBtn').on('click', function(e) {
         e.preventDefault();
         var id_image = $(this).data('id');
@@ -230,5 +230,3 @@ $(document).ready(function() {
 
 
 });
-
-

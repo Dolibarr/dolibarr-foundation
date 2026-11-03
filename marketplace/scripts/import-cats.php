@@ -203,7 +203,6 @@ if (!empty($clean_all_before_import)) {
 	print "Clean existing subcategories of MARKETPLACE_ROOT_CATEGORY";
 
 	if ($resultc_to_clean = $db->query($categories_to_clean_query)) {
-
 		while ($objc_to_clean = $resultc_to_clean->fetch_object()) {
 			if ($objc_to_clean->rowid == $root_category) {
 				continue;
@@ -229,7 +228,6 @@ if (!empty($clean_all_before_import)) {
 	print "Clean existing subcategories of MARKETPLACE_VERSIONS_CATEGORY";
 
 	if ($resultv_to_clean = $db->query($versions_to_clean_query)) {
-
 		while ($objv_to_clean = $resultv_to_clean->fetch_object()) {
 			if ($objv_to_clean->rowid == $root_version) {
 				continue;
@@ -334,7 +332,6 @@ if ($result_cats = $conn->query($categories_query)) {
 			";
 
 			if ($result_cats_lang = $conn->query($categories_lang_query)) {
-
 				while ($objlang = $result_cats_lang->fetch_object()) {
 					$categorie->multilangs[$objlang->dol_lang_code] = array(
 						'label' => $objlang->name,
@@ -405,7 +402,6 @@ ORDER BY t.name  ASC
 ";
 if ($result_versions = $conn->query($versions_query)) {
 	while ($objv = $result_versions->fetch_object()) {
-
 		$version_category = new Categorie($db);
 
 		$version_category->label = strtoupper($objv->name);
