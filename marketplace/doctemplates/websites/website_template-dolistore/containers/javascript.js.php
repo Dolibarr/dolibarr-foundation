@@ -516,7 +516,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 */
 
-document.addEventListener('DOMContentLoaded', () => {
+// Use $(document).ready() and not DOMContentLoaded: this file is loaded async so DOMContentLoaded may already be fired (ex: after CTRL+F5)
+$(document).ready(() => {
     const tabs = document.querySelectorAll('.nav-link');
     const panes = document.querySelectorAll('.tab-pane');
 
