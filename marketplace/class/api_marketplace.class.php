@@ -194,7 +194,7 @@ class Marketplace extends DolibarrApi
 
         switch ($orderby) {
             case 'price':
-                $sortfield = 'price';
+                $sortfield = 'price_ht';    // Alias of o.price. "price" alone is ambiguous with pfp.price (SQL error, empty list)
                 break;
             case 'name':
                 $sortfield = 'label';
@@ -242,7 +242,7 @@ class Marketplace extends DolibarrApi
 
 
         // PRODUCT SQL
-        $sql = "SELECT c.fk_product as id, o.ref, o.datec, o.price as price_ht, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version ";
+        $sql = "SELECT c.fk_product as id, o.ref, o.datec, o.price as price_ht, o.price_ttc, ol.label, ol.description, o.tms, pe.marketplace_min_version as dolibarr_min, pe.marketplace_max_version as dolibarr_max, pe.marketplace_module_version as module_version, s.nom as editor ";
         $sql .= "FROM llx_product as o ";
         $sql .= "INNER JOIN llx_categorie_product as c ON c.fk_product = o.rowid ";
         $sql .= "INNER JOIN llx_product_lang as ol ON ol.fk_product = o.rowid ";
