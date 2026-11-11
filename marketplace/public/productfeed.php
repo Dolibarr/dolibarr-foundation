@@ -88,6 +88,7 @@ if (!$res) {
  * @var DoliDB $db
  * @var Translate $langs
  */
+require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/website/class/website.class.php';
 
 $langs->loadLangs(array('errors'));
@@ -100,6 +101,9 @@ $arrayoflangs = array('en' => 'en_US', 'fr' => 'fr_FR', 'es' => 'es_ES', 'it' =>
 
 // Max number of modules in the feed (safety limit)
 $maxnbofmodules = getDolGlobalInt('MARKETPLACE_FEED_MAX_ITEMS', 10000);
+
+// Delay in seconds of the server cache of the feed (24h by default, 0 to disable the cache)
+$cachedelay = getDolGlobalInt('MARKETPLACE_FEED_CACHE_DELAY', 86400);
 
 // Security check
 if (!isModEnabled('marketplace') || !isModEnabled('website')) {
@@ -122,6 +126,9 @@ if (!array_key_exists($lang, $arrayoflangs)) {
 $productlang = $arrayoflangs[$lang];
 $baseurl = preg_replace('/\/+$/', '', $website->virtualhost);
 
+// One cache file per language, into DOL_DATA_ROOT/marketplace (or DOL_DATA_ROOT/entity/marketplace with multicompany)
+$cachefile = $conf->marketplace->dir_output.'/productfeed-'.$lang.'.cache';
+
 
 /*
  * Actions
@@ -133,6 +140,15 @@ $baseurl = preg_replace('/\/+$/', '', $website->virtualhost);
 /*
  * View
  */
+
+// Return the cached feed if it is not older than the cache delay
+if ($cachedelay > 0 && dol_filemtime($cachefile) > (dol_now() - $cachedelay)) {
+	top_httphead('application/xml; charset=UTF-8');
+	header('Cache-Control: public, max-age=3600');
+	readfile(dol_osencode($cachefile));
+	$db->close();
+	exit(0);
+}
 
 // Load modules visible on the marketplace (same filters than the product list of the website). Free modules are excluded as Google Shopping rejects a price of 0.
 $modules = array();
@@ -188,15 +204,12 @@ if (count($modules)) {
 	}
 }
 
-top_httphead('application/xml; charset=UTF-8');
-header('Cache-Control: public, max-age=3600');
-
-print '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-print '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">'."\n";
-print '<channel>'."\n";
-print '<title>'.dol_escape_xml(getDolGlobalString('MARKETPLACE_NAME', $website->ref)).'</title>'."\n";
-print '<link>'.dol_escape_xml($baseurl).'</link>'."\n";
-print '<description>'.dol_escape_xml((string) $website->description).'</description>'."\n";
+$out = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+$out .= '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">'."\n";
+$out .= '<channel>'."\n";
+$out .= '<title>'.dol_escape_xml(getDolGlobalString('MARKETPLACE_NAME', $website->ref)).'</title>'."\n";
+$out .= '<link>'.dol_escape_xml($baseurl).'</link>'."\n";
+$out .= '<description>'.dol_escape_xml((string) $website->description).'</description>'."\n";
 
 foreach ($modules as $module) {
 	$label = ((string) $module->label !== '' ? (string) $module->label : (string) $module->ref);
@@ -206,27 +219,50 @@ foreach ($modules as $module) {
 	}
 	$link = $baseurl.'/product.php?id='.((int) $module->rowid).'&title='.dolSlugify($label).'&l='.$lang;
 
-	print '<item>'."\n";
-	print '<g:id>'.((int) $module->rowid).'</g:id>'."\n";
-	print '<g:title>'.dol_escape_xml(dol_trunc($label, 150, 'right', 'UTF-8', 1)).'</g:title>'."\n";
-	print '<g:description>'.dol_escape_xml(dol_trunc($description, 5000, 'right', 'UTF-8', 1)).'</g:description>'."\n";
-	print '<g:link>'.dol_escape_xml($link).'</g:link>'."\n";
+	$out .= '<item>'."\n";
+	$out .= '<g:id>'.((int) $module->rowid).'</g:id>'."\n";
+	$out .= '<g:title>'.dol_escape_xml(dol_trunc($label, 150, 'right', 'UTF-8', 1)).'</g:title>'."\n";
+	$out .= '<g:description>'.dol_escape_xml(dol_trunc($description, 5000, 'right', 'UTF-8', 1)).'</g:description>'."\n";
+	$out .= '<g:link>'.dol_escape_xml($link).'</g:link>'."\n";
 	foreach ($module->images as $key => $imageurl) {
 		$tagname = ($key == 0 ? 'g:image_link' : 'g:additional_image_link');
-		print '<'.$tagname.'>'.dol_escape_xml($imageurl).'</'.$tagname.'>'."\n";
+		$out .= '<'.$tagname.'>'.dol_escape_xml($imageurl).'</'.$tagname.'>'."\n";
 	}
-	print '<g:availability>in_stock</g:availability>'."\n";
+	$out .= '<g:availability>in_stock</g:availability>'."\n";
 	// Machine format expected by Google (dot as decimal separator, 2 decimals), so price() can't be used
-	print '<g:price>'.sprintf('%.2F', (float) $module->price_ttc).' '.dol_escape_xml($conf->currency).'</g:price>'."\n";
-	print '<g:condition>new</g:condition>'."\n";
+	$out .= '<g:price>'.sprintf('%.2F', (float) $module->price_ttc).' '.dol_escape_xml($conf->currency).'</g:price>'."\n";
+	$out .= '<g:condition>new</g:condition>'."\n";
 	if (!empty($module->brand)) {
-		print '<g:brand>'.dol_escape_xml($module->brand).'</g:brand>'."\n";
+		$out .= '<g:brand>'.dol_escape_xml($module->brand).'</g:brand>'."\n";
 	}
-	print '<g:identifier_exists>no</g:identifier_exists>'."\n";
-	print '</item>'."\n";
+	$out .= '<g:identifier_exists>no</g:identifier_exists>'."\n";
+	$out .= '</item>'."\n";
 }
 
-print '</channel>'."\n";
-print '</rss>'."\n";
+$out .= '</channel>'."\n";
+$out .= '</rss>'."\n";
+
+// Save the feed into the cache file. A temporary file is renamed so a concurrent call never reads a partial file.
+if ($cachedelay > 0) {
+	dol_mkdir($conf->marketplace->dir_output);
+	$cachefiletmp = tempnam($conf->marketplace->dir_output, 'productfeed');
+	if ($cachefiletmp && file_put_contents($cachefiletmp, $out) !== false) {
+		dolChmod($cachefiletmp);
+		if (!dol_move($cachefiletmp, $cachefile, '0', 1, 0, 0)) {
+			dol_syslog("productfeed.php Failed to rename ".$cachefiletmp." into ".$cachefile, LOG_ERR);
+			dol_delete_file($cachefiletmp, 0, 1);
+		}
+	} else {
+		dol_syslog("productfeed.php Failed to write the cache file into ".$conf->marketplace->dir_output, LOG_ERR);
+		if ($cachefiletmp) {
+			dol_delete_file($cachefiletmp, 0, 1);
+		}
+	}
+}
+
+top_httphead('application/xml; charset=UTF-8');
+header('Cache-Control: public, max-age=3600');
+
+print $out;
 
 $db->close();
