@@ -355,7 +355,7 @@ function marketplaceGetFiles($product)
  */
 function marketplaceValidationChecks($db, $product)
 {
-	global $langs;
+	global $conf, $langs;
 	$checks = array();
 	$add = function ($label, $level, $detail = '', $reason = '') use (&$checks) {
 		$checks[] = array('label' => $label, 'level' => $level, 'detail' => $detail, 'reason' => $reason);
@@ -384,9 +384,16 @@ function marketplaceValidationChecks($db, $product)
 	}
 
 	// Required extrafields
+	// The reason is an English text for the seller, so the field name must be in English too
+	$langsEn = $langs;
+	if ($langs->defaultlang != 'en_US') {
+		$langsEn = new Translate('', $conf);
+		$langsEn->setDefaultLang('en_US');
+		$langsEn->loadLangs(array('marketplace@marketplace'));
+	}
 	$required = array('version' => 'ModuleVersion', 'dolmin' => 'DolibarrMin', 'support' => 'HowtoContactSupport', 'keywords' => 'ModuleKeywords');
 	foreach ($required as $alias => $lab) {
-		$add($langs->trans('CheckRequired').' '.$langs->trans($lab), marketplaceExtra($product, $alias) !== '' ? 'ok' : 'error', '', 'Required field missing: '.$langs->transnoentitiesnoconv($lab).'.');
+		$add($langs->trans('CheckRequired').' '.$langs->trans($lab), marketplaceExtra($product, $alias) !== '' ? 'ok' : 'error', '', 'Required field missing: '.$langsEn->transnoentitiesnoconv($lab).'.');
 	}
 
 	// Dolibarr versions: min must not be greater than max (letters like "V" are ignored)
