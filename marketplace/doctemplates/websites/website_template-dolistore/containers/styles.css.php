@@ -4,9 +4,9 @@ if (! defined('USEDOLIBARRSERVER') && ! defined('USEDOLIBARREDITOR')) { require_
 require_once DOL_DOCUMENT_ROOT.'/core/lib/website.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/website.inc.php';
 ob_start();
-if (! headers_sent()) {	/* because file is included inline when in edit mode and we don't want warning */
-	header('Cache-Control: max-age=3600, public, must-revalidate');
-	header('Content-type: text/css');
+if (! headers_sent()) {	/* because file is included inline when in edit mode and we don't want warning */ 
+header('Cache-Control: max-age=3600, public, must-revalidate');
+header('Content-type: text/css');
 }
 // END PHP ?>
 @charset "UTF-8";
@@ -6092,6 +6092,87 @@ body.bodywebsite .page-product-box {
 }
 .bodywebsite .text-secondary {
 	color: #a45931;
+}
+
+/* ===== Badges and filtres ===== */
+.bodywebsite .page-heading .filter-label {
+  display: inline-block;
+  margin-right: 10px;
+  font: 700 13px/30px Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #777;
+  vertical-align: middle;
+}
+
+.bodywebsite .page-heading .filter-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  text-transform: none;
+  vertical-align: middle;
+}
+.bodywebsite .filter-badge {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid #d6d4d4;
+  border-left: 3px solid #a45931;
+  border-radius: 3px;
+  background: #f6f6f6;
+  color: #333;
+  font: 700 13px/1 Arial, Helvetica, sans-serif;
+  transition: border-color .15s, background-color .15s;
+}
+.bodywebsite .filter-badge:hover { border-color: #b8b6b6; border-left-color: inherit; background: #fff; }
+
+.bodywebsite .filter-badge-label {
+  padding: 6px 10px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bodywebsite .filter-badge-category { border-left-color: #a45931; }
+.bodywebsite .filter-badge-version  { border-left-color: #333; }
+.bodywebsite .filter-badge-search   { border-left-color: #999; }
+.bodywebsite .filter-badge-new      { border-left-color: #43b754; }
+.bodywebsite .filter-badge-special  { border-left-color: #f13340; }
+
+/* Bouton de suppression : vraie zone cliquable de 28 px */
+.bodywebsite .filter-badge .filter-badge-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  border-left: 1px solid #e4e2e2;
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none !important;
+  color: #999;
+  transition: background-color .15s, color .15s;
+}
+.bodywebsite .filter-badge .filter-badge-remove:hover,
+.bodywebsite .filter-badge .filter-badge-remove:focus-visible {
+  color: #fff;
+  background: #a45931;
+  text-decoration: none;
+}
+.bodywebsite .filter-badge .filter-badge-remove:focus-visible {
+  outline: 2px solid #a45931;
+  outline-offset: -2px;
+}
+
+/* Compteur aligné sur la ligne des badges */
+.bodywebsite .page-heading.product-listing span.heading-counter {
+  margin-bottom: 0;
+  line-height: 34px;
+}
+
+@media (max-width: 480px) {
+  .bodywebsite .filter-badge-label { max-width: 140px; }
 }
 <?php // BEGIN PHP
 $tmp = ob_get_contents(); ob_end_clean(); dolWebsiteOutput($tmp, "css");
