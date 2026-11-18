@@ -341,7 +341,7 @@ class modMarketplace extends DolibarrModules
 			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_statistics',
-			'url'=>'/marketplace/marketplaceindex.php',
+			'url'=>'/marketplace/marketplaceindex.php?mainmenu=marketplace&leftmenu=marketplace_statistics',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
@@ -356,7 +356,7 @@ class modMarketplace extends DolibarrModules
 			'prefix' => img_picto('', 'order', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_order_list',
-			'url'=>'/commande/list.php?search_module_source=marketplace',
+			'url'=>'/commande/list.php?search_module_source=marketplace&mainmenu=marketplace&leftmenu=marketplace_order_list',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
@@ -371,7 +371,7 @@ class modMarketplace extends DolibarrModules
 			'prefix' => img_picto('', 'bill', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_invoice_list',
-			'url'=>'/compta/facture/list.php?search_module_source=marketplace',
+			'url'=>'/compta/facture/list.php?search_module_source=marketplace&mainmenu=marketplace&leftmenu=marketplace_invoice_list',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
@@ -386,7 +386,7 @@ class modMarketplace extends DolibarrModules
 			'prefix' => img_picto('', 'puzzle-piece', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_module_validation',
-			'url'=>'marketplace/module_validation.php',
+			'url'=>'marketplace/module_validation.php?mainmenu=marketplace&leftmenu=marketplace_module_validation',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
@@ -401,7 +401,7 @@ class modMarketplace extends DolibarrModules
 			'prefix' => img_picto('', 'puzzle-piece', 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu'=>'marketplace',
 			'leftmenu'=>'marketplace_compare_tool',
-			'url'=>'/marketplace/compare.php',
+			'url'=>'/marketplace/compare.php?mainmenu=marketplace&leftmenu=marketplace_compare_tool',
 			'langs'=>'marketplace@marketplace',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
 			'enabled'=>'isModEnabled("marketplace") && getDolGlobalString("MARKETPLACE_ENABLE_DOLIBARR_FEATURES")', // Define condition to show or hide menu entry. Use 'isModEnabled("marketplace")' if entry must be visible if module is enabled.
