@@ -122,6 +122,7 @@ class modMarketplace extends DolibarrModules
 				//       'hookcontext2',
 				//   ),
 				//   'entity' => '0',
+				'all',
 			),
 			// Set this to 1 if features of module are opened to external users
 			'moduleforexternal' => 0,
@@ -1015,7 +1016,7 @@ class modMarketplace extends DolibarrModules
 		$result = $this->_init($sql, $options);
 
 		if (! empty($result)) {
-			$messageontemplatecopy = $langs->trans("WebsiteTemplateWasCopied", 'dolistore');
+			$messageontemplatecopy = $langs->trans("WebsiteTemplateWasCopied", 'dolistore').'<br>';
 
 			if ($doImportTemplate == 1 && !empty($website_id)) {
 				$website = new Website($this->db);

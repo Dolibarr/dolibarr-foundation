@@ -422,6 +422,7 @@ Filter_pending=Pending
 Filter_refused=Refused / unpublished
 Filter_online=Online
 ModuleValidation=Module validation
+ModuleActions=Actions
 ValidationChecks=Checks
 ValidationBlockedByErrors=Some blocking checks are in error
 CheckImage=At least one image

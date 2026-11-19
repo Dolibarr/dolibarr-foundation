@@ -18,17 +18,17 @@
 /**
  * \file    marketplace/module_validation_card.php
  * \ingroup marketplace
- * \brief   Validation card of a marketplace module (service): all the information on a
+ * \brief   Validation card of a marketplace module: all the information on a
  *          single page, automatic checks, and actions (publish, refuse, unpublish).
  *
  * Parameters:
- * - id   : ID of the service
+ * - id   : ID of the product
  * - mode : list used for the previous/next navigation (pending | refused | online)
  *
  * Actions (POST + CSRF token, permission marketplace->module->validate):
- * - validate  : sets the service on sale (blocked if a check is in error)
- * - refuse    : keeps the service off sale and stores the reason
- * - unpublish : sets an online service off sale and stores the reason
+ * - validate  : sets the product on sale (blocked if a check is in error)
+ * - refuse    : keeps the product off sale and stores the reason
+ * - unpublish : sets an online product off sale and stores the reason
  */
 
 // Load Dolibarr environment
@@ -88,10 +88,10 @@ $action = GETPOST('action', 'aZ09');
 $reason = GETPOST('reason', 'alphanohtml');
 $mode = GETPOST('mode', 'aZ09') ? GETPOST('mode', 'aZ09') : 'pending';
 
-// Load the service with its extrafields and translations
+// Load the product with its extrafields and translations
 $object = new Product($db);
-if ($object->fetch($id) <= 0 || $object->type != Product::TYPE_SERVICE) {
-	accessforbidden('Service not found');
+if ($object->fetch($id) <= 0) {
+	accessforbidden('Product not found');
 }
 $object->fetch_optionals();
 if (getDolGlobalInt('MAIN_MULTILANGS') && empty($object->multilangs)) {
@@ -245,7 +245,7 @@ print $prevId ? '<a class="button smallpaddingimp" href="'.$urlCard.$prevId.'">&
 print '<b>'.($pos !== false ? ($pos + 1).' / '.count($ids) : '-').'</b>';
 print $nextId ? '<a class="button smallpaddingimp" href="'.$urlCard.$nextId.'">'.$langs->trans("Next").' &raquo;</a>' : '<span class="button smallpaddingimp opacitymedium">'.$langs->trans("Next").' &raquo;</span>';
 print '<span class="sep"></span>';
-foreach (array('mkt-infos' => 'Infos', 'mkt-desc' => 'Description', 'mkt-files' => 'Files', 'mkt-checks' => 'ValidationChecks', 'mkt-actions' => 'Actions') as $anchor => $lab) {
+foreach (array('mkt-infos' => 'Infos', 'mkt-files' => 'Files', 'mkt-desc' => 'Description', 'mkt-actions' => 'ModuleActions', 'mkt-checks' => 'ValidationChecks') as $anchor => $lab) {
 	print '<a href="#'.$anchor.'">'.$langs->trans($lab).'</a>';
 }
 print '<span class="sep"></span>';
@@ -292,6 +292,30 @@ print $row($langs->trans("LawViolation"), $e('law'));
 print $row($langs->trans("LastReasonDisabled"), $e('reason'));
 print '</table><br>';
 
+// Files attached to the service
+print '<table class="noborder centpercent"><tr class="liste_titre"><th colspan="3" id="mkt-files" class="mkt-anchor">'.$langs->trans("Files").'</th></tr>';
+$urlDoc = DOL_URL_ROOT.'/document.php?modulepart=produit&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
+$urlImg = DOL_URL_ROOT.'/viewimage.php?modulepart=product&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
+if (empty($files['zips']) && empty($files['images']) && empty($files['others'])) {
+	print '<tr><td colspan="3" class="opacitymedium">'.$langs->trans("None").'</td></tr>';
+}
+foreach ($files['zips'] as $f) {
+	print '<tr class="oddeven"><td>ZIP</td><td><a href="'.$urlDoc.urlencode($f['rel']).'">'.img_mime($f['name']).' '.dol_escape_htmltag($f['name']).'</a></td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
+}
+// Images are shown as a thumbnail gallery, left aligned and wrapping to next line when full
+if (!empty($files['images'])) {
+	print '<tr class="oddeven"><td colspan="3"><div style="display:flex;flex-wrap:wrap;gap:4px">';
+	foreach ($files['images'] as $f) {
+		$u = $urlImg.urlencode($f['rel']);
+		print '<div style="max-width:120px"><a href="'.$u.'" target="_blank"><img src="'.$u.'" style="max-width:120px;max-height:80px"></a><div class="small opacitymedium wordbreak">'.dol_escape_htmltag($f['name']).' ('.dol_print_size($f['size'], 1, 1).', '.dol_print_date((int) $f['date'], 'dayreduceformat').')</div></div>';
+	}
+	print '</div></td></tr>';
+}
+foreach ($files['others'] as $f) {
+	print '<tr class="oddeven"><td>-</td><td>'.dol_escape_htmltag($f['name']).'</td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
+}
+print '</table><br>';
+
 // Label, description and note in each language
 $urlTrad = DOL_URL_ROOT.'/product/traduction.php?action=edit&token='.newToken().'&id='.$object->id;
 print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-desc" class="mkt-anchor">'.$langs->trans("Language").'</th><th>'.$langs->trans("Label").'</th><th>'.$langs->trans("DescriptionAndNote").'</th><th class="right"><a href="'.$urlTrad.'">'.img_picto($langs->trans("Modify"), 'edit').'</a></th></tr>';
@@ -311,7 +335,7 @@ print '<div style="flex:2 1 380px">';
 if ($canValidate) {
 	print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&mode='.$mode.'">';
 	print '<input type="hidden" name="token" value="'.newToken().'">';
-	print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-actions" class="mkt-anchor">'.$langs->trans("Actions").'</th></tr>';
+	print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-actions" class="mkt-anchor">'.$langs->trans("ModuleActions").'</th></tr>';
 
 	// Buttons that fill the reason (from the checks or from predefined texts)
 	print '<tr class="oddeven"><td>';
@@ -369,25 +393,6 @@ print '<table class="noborder centpercent"><tr class="liste_titre"><th id="mkt-c
 $icons = array('ok' => img_picto('', 'tick', 'class="pictofixedwidth"'), 'warning' => img_picto('', 'warning', 'class="pictofixedwidth"'), 'error' => img_picto('', 'error', 'class="pictofixedwidth"'));
 foreach ($checks as $c) {
 	print '<tr class="oddeven mkt-lvl-'.$c['level'].'"><td class="minwidth200">'.$icons[$c['level']].dol_escape_htmltag($c['label']).'</td><td class="right opacitymedium wordbreakall">'.dolPrintHTML($c['detail']).'</td></tr>';
-}
-print '</table>';
-
-// Files attached to the service
-print '<table class="noborder centpercent"><tr class="liste_titre"><th colspan="3" id="mkt-files" class="mkt-anchor">'.$langs->trans("Files").'</th></tr>';
-$urlDoc = DOL_URL_ROOT.'/document.php?modulepart=produit&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
-$urlImg = DOL_URL_ROOT.'/viewimage.php?modulepart=product&entity='.((int) (empty($object->entity) ? 1 : $object->entity)).'&file=';
-if (empty($files['zips']) && empty($files['images']) && empty($files['others'])) {
-	print '<tr><td colspan="3" class="opacitymedium">'.$langs->trans("None").'</td></tr>';
-}
-foreach ($files['zips'] as $f) {
-	print '<tr class="oddeven"><td>ZIP</td><td><a href="'.$urlDoc.urlencode($f['rel']).'">'.img_mime($f['name']).' '.dol_escape_htmltag($f['name']).'</a></td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
-}
-foreach ($files['images'] as $f) {
-	$u = $urlImg.urlencode($f['rel']);
-	print '<tr class="oddeven"><td>IMG</td><td>'.dol_escape_htmltag($f['name']).'</td><td class="right"><a href="'.$u.'" target="_blank"><img src="'.$u.'" style="max-width:120px;max-height:80px"></a></td></tr>';
-}
-foreach ($files['others'] as $f) {
-	print '<tr class="oddeven"><td>-</td><td>'.dol_escape_htmltag($f['name']).'</td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
 }
 print '</table>';
 

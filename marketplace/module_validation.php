@@ -21,7 +21,7 @@
  * \brief   Dashboard of the module validation: KPI, statistics and list of modules
  *          (pending, refused/unpublished or online) submitted to the marketplace.
  *
- * A module is a service (fk_product_type = 1) stored in the marketplace root category
+ * A module is a product stored in the marketplace root category
  * (or one of its sub-categories). Its state is deduced from:
  * - llx_product.tosell = 1                               => online
  * - tosell = 0 and "reason disabled" extrafield empty    => pending validation
@@ -110,6 +110,7 @@ $contextpage = 'modulevalidationlist'; // Identifier of the page, used to store 
 $canValidate = $user->hasRight('marketplace', 'module', 'validate');
 
 // Search criteria
+$search_rowid = trim(GETPOST('search_rowid', 'alpha')); // Can contains a numeric test like ">10" or "!= 34"
 $search_ref = trim(GETPOST('search_ref', 'alphanohtml'));
 $search_label = trim(GETPOST('search_label', 'alphanohtml'));
 $search_seller = trim(GETPOST('search_seller', 'alphanohtml'));
@@ -160,7 +161,7 @@ if (empty($catIds)) {
 // Common parts of the SQL queries
 $from = " FROM ".MAIN_DB_PREFIX."product as p";
 $from .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
-$base = " WHERE p.fk_product_type = 1 AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
+$base = " WHERE p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
 $condPending = "p.tosell = 0 AND (".$efReason." IS NULL OR ".$efReason." = '') AND ".$efSub." IS NOT NULL";
 $condRefused = "p.tosell = 0 AND ".$efReason." IS NOT NULL AND ".$efReason." <> ''";
 $condOnline = "p.tosell = 1";
@@ -194,6 +195,7 @@ if (empty($reshook)) {
 
 	// Purge of the search criteria
 	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
+		$search_rowid = '';
 		$search_ref = '';
 		$search_label = '';
 		$search_seller = '';
@@ -347,6 +349,9 @@ $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => 
 
 // Add the search criteria to the SQL condition
 $sqlWhereFilter = '';
+if ($search_rowid !== '') {
+	$sqlWhereFilter .= natural_search(array('p.rowid'), $search_rowid, 1);
+}
 if ($search_ref !== '') {
 	$sqlWhereFilter .= natural_search(array('p.ref'), $search_ref);
 }
@@ -538,6 +543,9 @@ $selectedfields = $htmlofselectarray;
 $selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
 
 $param = '&mode='.$listMode;
+if ($search_rowid !== '') {
+	$param .= '&search_rowid='.urlencode($search_rowid);
+}
 if ($search_ref !== '') {
 	$param .= '&search_ref='.urlencode($search_ref);
 }
@@ -619,7 +627,7 @@ if ($conf->main_checkbox_left_column) {
 	print '</td>';
 }
 if (!empty($arrayfields['p.rowid']['checked'])) {
-	print '<td class="liste_titre"></td>';
+	print '<td class="liste_titre center"><input type="text" class="flat maxwidth50" name="search_rowid" value="'.dol_escape_htmltag($search_rowid).'"></td>';
 }
 if (!empty($arrayfields['p.ref']['checked'])) {
 	print '<td class="liste_titre"><input type="text" class="flat maxwidth75" name="search_ref" value="'.dol_escape_htmltag($search_ref).'"></td>';

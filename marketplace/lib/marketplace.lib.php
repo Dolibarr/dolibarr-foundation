@@ -213,7 +213,7 @@ function marketplaceGetCategoryIds($db)
 
 /**
  * Filter a list of product IDs to keep only the marketplace modules
- * (services that belong to a marketplace category).
+ * (products that belong to a marketplace category).
  *
  * @param  DoliDB $db     Database handler
  * @param  int[]  $catIds Category IDs from marketplaceGetCategoryIds()
@@ -226,7 +226,7 @@ function marketplaceFilterModuleIds($db, $catIds, $ids)
 		return array();
 	}
 	$sql = "SELECT p.rowid FROM ".MAIN_DB_PREFIX."product as p";
-	$sql .= " WHERE p.fk_product_type = 1 AND p.rowid IN (".implode(',', array_map('intval', $ids)).")";
+	$sql .= " WHERE p.rowid IN (".implode(',', array_map('intval', $ids)).")";
 	$sql .= " AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', array_map('intval', $catIds))."))";
 	$filtered = array();
 	$resql = $db->query($sql);
@@ -315,8 +315,8 @@ function marketplaceGetFiles($product)
 		}
 		$res['tried'][] = $dir;
 
-		// Ignore .meta files and generated previews
-		$files = dol_dir_list($dir, 'files', 0, '', '(\.meta|_preview.*\.png)$', 'name', SORT_ASC, 0);
+		// Ignore .meta files and generated previews, load date and size of files
+		$files = dol_dir_list($dir, 'files', 0, '', '(\.meta|_preview.*\.png)$', 'name', SORT_ASC, 1);
 		if (empty($files)) {
 			continue;
 		}
@@ -447,12 +447,16 @@ function marketplaceValidationChecks($db, $product)
 		$add($langs->trans('CheckLaw'), 'error', marketplaceExtra($product, 'law'), 'The module violates the marketplace rules or the law.');
 	}
 
-	// Another service with exactly the same label (possible duplicate)
-	$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX."product WHERE rowid <> ".((int) $product->id);
-	$sql .= " AND fk_product_type = 1 AND label = '".$db->escape($product->label)."'";
-	$resql = $db->query($sql);
-	if ($resql && ($obj = $db->fetch_object($resql)) && $obj->nb > 0) {
-		$add($langs->trans('CheckSameLabel'), 'warning', $obj->nb, 'Another module already uses the same name.');
+	// Another marketplace article with exactly the same label (possible duplicate)
+	$catIds = marketplaceGetCategoryIds($db);
+	if (!empty($catIds)) {
+		$sql = "SELECT COUNT(rowid) as nb FROM ".MAIN_DB_PREFIX."product WHERE rowid <> ".((int) $product->id);
+		$sql .= " AND label = '".$db->escape($product->label)."'";
+		$sql .= " AND rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', array_map('intval', $catIds))."))";
+		$resql = $db->query($sql);
+		if ($resql && ($obj = $db->fetch_object($resql)) && $obj->nb > 0) {
+			$add($langs->trans('CheckSameLabel'), 'warning', $obj->nb, 'Another module already uses the same name.');
+		}
 	}
 
 	return $checks;
@@ -504,7 +508,7 @@ function marketplaceGetQuickReasons()
  *
  * @param  DoliDB $db   Database handler
  * @param  string $mode 'pending', 'refused' or 'online' (any other value means 'pending')
- * @return int[]        Service IDs sorted by submission date (only modules with a request date are 'pending')
+ * @return int[]        Product IDs sorted by submission date (only modules with a request date are 'pending')
  */
 function marketplaceGetListIds($db, $mode)
 {
@@ -522,7 +526,7 @@ function marketplaceGetListIds($db, $mode)
 	$cond = isset($conds[$mode]) ? $conds[$mode] : $conds['pending'];
 	$sql = "SELECT p.rowid FROM ".MAIN_DB_PREFIX."product as p";
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields as ef ON ef.fk_object = p.rowid";
-	$sql .= " WHERE p.fk_product_type = 1 AND ".$cond;
+	$sql .= " WHERE ".$cond;
 	$sql .= " AND p.rowid IN (SELECT cp.fk_product FROM ".MAIN_DB_PREFIX."categorie_product as cp WHERE cp.fk_categorie IN (".implode(',', $catIds)."))";
 	$sql .= " ORDER BY ".$efSub." ASC, p.rowid ASC";
 	$ids = array();
