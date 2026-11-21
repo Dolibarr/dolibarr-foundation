@@ -172,6 +172,7 @@ class modMarketplace extends DolibarrModules
 			3 => array('INVOICE_ALLOW_POS_SOURCE_EDIT', 'chaine', '1', 'Force to allow to edit the POS module and source on invoices even if not POS modules are enabled', 1),
 			4 => array('ORDER_ALLOW_POS_SOURCE_EDIT', 'chaine', '1', 'Force to allow to edit the POS module and source on orders even if not POS modules are enabled', 1),
 			5 => array('MAIN_MULTILANGS', 'chaine', '1', 'Enable the multilanguage support', 0),
+			6 => array('MARKETPLACE_TRANSIFEX_PROJECT', 'chaine', 'dolibarr-association/dolibarr-resources-foundation', 'Transifex project of the module used to store translations of module keys', 0, 'allentities', 1)
 		);
 
 		// Some keys to add into the overwriting translation tables
