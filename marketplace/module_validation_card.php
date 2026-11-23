@@ -235,6 +235,19 @@ print '<style>
 .mkt-lvl-error td{background:#fde8e8 !important}
 .mkt-lvl-warning td{background:#fff4e0 !important}
 .mkt-reasonbtn{margin:2px}
+.mkt-thumb{cursor:zoom-in;display:block;border:1px solid #ddd;border-radius:3px;overflow:hidden}
+.mkt-thumb:hover{border-color:var(--colorbacktitle1,#263c5c);opacity:.9}
+#mkt-lb{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.86);display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+#mkt-lb.open{display:flex}
+#mkt-lb-stage{position:relative;display:flex;align-items:center;justify-content:center;width:100%;flex:1;min-height:0}
+#mkt-lb-img{max-width:calc(100vw - 140px);max-height:calc(100vh - 110px);object-fit:contain;background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.6);border-radius:3px}
+#mkt-lb-prev,#mkt-lb-next,#mkt-lb-close{position:fixed;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:4px;cursor:pointer;font-size:24px;line-height:1;padding:12px 16px;user-select:none}
+#mkt-lb-prev:hover,#mkt-lb-next:hover,#mkt-lb-close:hover{background:rgba(255,255,255,.3)}
+#mkt-lb-prev{left:16px;top:50%;transform:translateY(-50%)}
+#mkt-lb-next{right:16px;top:50%;transform:translateY(-50%)}
+#mkt-lb-close{top:16px;right:16px;font-size:20px;padding:8px 13px}
+#mkt-lb-bar{color:#eee;margin-top:10px;text-align:center;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+#mkt-lb-bar a{color:#8ecae6}
 </style>';
 
 // Navigation bar: back to list, previous / next, anchors, counters
@@ -302,12 +315,18 @@ if (empty($files['zips']) && empty($files['images']) && empty($files['others']))
 foreach ($files['zips'] as $f) {
 	print '<tr class="oddeven"><td>ZIP</td><td><a href="'.$urlDoc.urlencode($f['rel']).'">'.img_mime($f['name']).' '.dol_escape_htmltag($f['name']).'</a></td><td class="right">'.dol_print_size($f['size'], 1, 1).'</td></tr>';
 }
-// Images are shown as a thumbnail gallery, left aligned and wrapping to next line when full
+// Images are shown as a thumbnail gallery, opening in an integrated lightbox with prev/next navigation
 if (!empty($files['images'])) {
-	print '<tr class="oddeven"><td colspan="3"><div style="display:flex;flex-wrap:wrap;gap:4px">';
-	foreach ($files['images'] as $f) {
+	print '<tr class="oddeven"><td colspan="3"><div style="display:flex;flex-wrap:wrap;gap:6px">';
+	foreach (array_values($files['images']) as $idx => $f) {
 		$u = $urlImg.urlencode($f['rel']);
-		print '<div style="max-width:120px"><a href="'.$u.'" target="_blank"><img src="'.$u.'" style="max-width:120px;max-height:80px"></a><div class="small opacitymedium wordbreak">'.dol_escape_htmltag($f['name']).' ('.dol_print_size($f['size'], 1, 1).', '.dol_print_date((int) $f['date'], 'dayreduceformat').')</div></div>';
+		$meta = dol_print_size($f['size'], 1, 1).', '.dol_print_date((int) $f['date'], 'dayreduceformat');
+		print '<div style="max-width:120px">';
+		print '<a href="'.$u.'" class="mkt-thumb mkt-lb-item" data-idx="'.$idx.'" data-src="'.dol_escape_htmltag($u).'" data-name="'.dol_escape_htmltag($f['name']).'" data-meta="'.dol_escape_htmltag($meta).'">';
+		print '<img src="'.$u.'" style="max-width:120px;max-height:80px;display:block">';
+		print '</a>';
+		print '<div class="small opacitymedium wordbreak">'.dol_escape_htmltag($f['name']).' ('.$meta.')</div>';
+		print '</div>';
 	}
 	print '</div></td></tr>';
 }
@@ -397,6 +416,75 @@ foreach ($checks as $c) {
 print '</table>';
 
 print '</div></div>';
+
+// Lightbox modal for module screenshots
+if (!empty($files['images'])) {
+	print '<div id="mkt-lb" role="dialog" aria-modal="true">';
+	print '<button type="button" id="mkt-lb-close" title="Fermer (Échap)">&times;</button>';
+	print '<div id="mkt-lb-stage">';
+	print '<button type="button" id="mkt-lb-prev" title="Précédente (&larr;)">&#10094;</button>';
+	print '<img id="mkt-lb-img" src="" alt="">';
+	print '<button type="button" id="mkt-lb-next" title="Suivante (&rarr;)">&#10095;</button>';
+	print '</div>';
+	print '<div id="mkt-lb-bar"><b id="mkt-lb-count"></b><span id="mkt-lb-name"></span><span id="mkt-lb-meta" class="opacitymedium"></span><a id="mkt-lb-open" href="#" target="_blank"><i class="fa fa-external-link-alt"></i></a></div>';
+	print '</div>';
+	print '<script>
+(function(){
+	var items = Array.prototype.slice.call(document.querySelectorAll(".mkt-lb-item"));
+	if (!items.length) return;
+	var lb = document.getElementById("mkt-lb");
+	var img = document.getElementById("mkt-lb-img");
+	var cnt = document.getElementById("mkt-lb-count");
+	var nam = document.getElementById("mkt-lb-name");
+	var met = document.getElementById("mkt-lb-meta");
+	var opn = document.getElementById("mkt-lb-open");
+	var btnPrev = document.getElementById("mkt-lb-prev");
+	var btnNext = document.getElementById("mkt-lb-next");
+	var cur = 0;
+
+	if (items.length < 2) {
+		btnPrev.style.display = "none";
+		btnNext.style.display = "none";
+	}
+
+	function show(i) {
+		cur = (i + items.length) % items.length;
+		var el = items[cur];
+		var src = el.getAttribute("data-src");
+		img.src = src;
+		opn.href = src;
+		cnt.textContent = (cur + 1) + " / " + items.length;
+		nam.textContent = el.getAttribute("data-name");
+		met.textContent = "(" + el.getAttribute("data-meta") + ")";
+		lb.classList.add("open");
+	}
+	function close() {
+		lb.classList.remove("open");
+		img.src = "";
+	}
+
+	items.forEach(function(el, i) {
+		el.addEventListener("click", function(e) {
+			if (e.ctrlKey || e.metaKey || e.button === 1) return;
+			e.preventDefault();
+			show(i);
+		});
+	});
+	btnPrev.addEventListener("click", function(e) { e.stopPropagation(); show(cur - 1); });
+	btnNext.addEventListener("click", function(e) { e.stopPropagation(); show(cur + 1); });
+	document.getElementById("mkt-lb-close").addEventListener("click", close);
+	lb.addEventListener("click", function(e) {
+		if (e.target === lb || e.target.id === "mkt-lb-stage") close();
+	});
+	document.addEventListener("keydown", function(e) {
+		if (!lb.classList.contains("open")) return;
+		if (e.key === "Escape") close();
+		else if (e.key === "ArrowLeft" && items.length > 1) show(cur - 1);
+		else if (e.key === "ArrowRight" && items.length > 1) show(cur + 1);
+	});
+})();
+</script>';
+}
 
 llxFooter();
 $db->close();

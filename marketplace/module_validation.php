@@ -30,12 +30,13 @@
 
 // Load Dolibarr environment
 $res = 0;
-// Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
 if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
 	$res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
 }
-// Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
-$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME']; $tmp2 = realpath(__FILE__); $i = strlen($tmp) - 1; $j = strlen($tmp2) - 1;
+$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME'];
+$tmp2 = realpath(__FILE__);
+$i = strlen($tmp) - 1;
+$j = strlen($tmp2) - 1;
 while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
 	$i--;
 	$j--;
@@ -46,7 +47,6 @@ if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) {
 if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) {
 	$res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
 }
-// Try main.inc.php using relative path
 if (!$res && file_exists("../main.inc.php")) {
 	$res = @include "../main.inc.php";
 }
@@ -60,7 +60,6 @@ if (!$res) {
 	die("Include of main fails");
 }
 /**
- * The main.inc.php has been included so the following variable are now defined:
  * @var Conf $conf
  * @var DoliDB $db
  * @var HookManager $hookmanager
@@ -94,7 +93,6 @@ $sortfield = GETPOST('sortfield', 'aZ09comma');
 $sortorder = GETPOST('sortorder', 'aZ09comma');
 $page = GETPOSTISSET('pageplusone') ? (GETPOSTINT('pageplusone') - 1) : GETPOSTINT('page');
 if (empty($page) || $page < 0 || GETPOST('button_search', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
-	// If $page is not defined, or '' or -1 or if we click on clear filters
 	$page = 0;
 }
 $offset = $limit * $page;
@@ -105,12 +103,12 @@ if (!$sortorder) {
 	$sortorder = 'ASC';
 }
 
-$contextpage = 'modulevalidationlist'; // Identifier of the page, used to store the setup of visible columns
+$contextpage = 'modulevalidationlist';
 
 $canValidate = $user->hasRight('marketplace', 'module', 'validate');
 
 // Search criteria
-$search_rowid = trim(GETPOST('search_rowid', 'alpha')); // Can contains a numeric test like ">10" or "!= 34"
+$search_rowid = trim(GETPOST('search_rowid', 'alpha'));
 $search_ref = trim(GETPOST('search_ref', 'alphanohtml'));
 $search_label = trim(GETPOST('search_label', 'alphanohtml'));
 $search_seller = trim(GETPOST('search_seller', 'alphanohtml'));
@@ -177,7 +175,6 @@ if (GETPOST('cancel', 'alpha')) {
 	$massaction = '';
 }
 if (!GETPOST('confirmmassaction', 'alpha')) {
-	// A mass action is processed only when its confirmation button was pressed
 	$massaction = '';
 }
 
@@ -190,7 +187,6 @@ if ($reshook < 0) {
 }
 
 if (empty($reshook)) {
-	// Selection of new fields
 	include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
 
 	// Purge of the search criteria
@@ -212,7 +208,7 @@ if (empty($reshook)) {
 	}
 	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')
 		|| GETPOST('button_search_x', 'alpha') || GETPOST('button_search.x', 'alpha') || GETPOST('button_search', 'alpha')) {
-		$massaction = ''; // Protection to avoid mass action if we force a new search during a mass action confirmation
+		$massaction = '';
 	}
 
 	// Mass action: publish the selected modules
@@ -226,13 +222,11 @@ if (empty($reshook)) {
 				$nbko++;
 				continue;
 			}
-			// Publication is refused by the server if a blocking check fails
 			$checks = marketplaceValidationChecks($db, $productstatic);
 			if (!marketplaceChecksAreValid($checks)) {
 				$nbko++;
 				continue;
 			}
-			// Clear the previous reason, then put the service on sale
 			$productstatic->array_options[$reasonKey] = '';
 			$productstatic->insertExtraFields();
 			$productstatic->setStatut(1, null, 'product', 'PRODUCT_MODIFY', 'tosell');
@@ -259,7 +253,6 @@ if (empty($reshook)) {
 				if ($result <= 0) {
 					continue;
 				}
-				// The extrafield is limited to 255 characters
 				$productstatic->array_options[$reasonKey] = dol_trunc($massreason, 255, 'right', 'UTF-8', 1);
 				$productstatic->insertExtraFields();
 				if ($productstatic->status) {
@@ -277,7 +270,6 @@ if (empty($reshook)) {
  * KPI
  */
 
-// Counters by state, declared duplicates and forks, oldest pending module
 $kpi = array('pending' => 0, 'refused' => 0, 'online' => 0, 'dups' => 0, 'forks' => 0, 'oldest' => null);
 $sql = "SELECT SUM(CASE WHEN ".$condPending." THEN 1 ELSE 0 END) as pending,";
 $sql .= " SUM(CASE WHEN ".$condRefused." THEN 1 ELSE 0 END) as refused,";
@@ -288,8 +280,14 @@ $sql .= " MIN(CASE WHEN ".$condPending." THEN ".$efSub." ELSE NULL END) as oldes
 $sql .= $from.$base;
 $resql = $db->query($sql);
 if ($resql && ($obj = $db->fetch_object($resql))) {
-	$kpi = array('pending' => (int) $obj->pending, 'refused' => (int) $obj->refused, 'online' => (int) $obj->online,
-		'dups' => (int) $obj->dups, 'forks' => (int) $obj->forks, 'oldest' => $obj->oldest ? $db->jdate($obj->oldest) : null);
+	$kpi = array(
+		'pending' => (int) $obj->pending,
+		'refused' => (int) $obj->refused,
+		'online' => (int) $obj->online,
+		'dups' => (int) $obj->dups,
+		'forks' => (int) $obj->forks,
+		'oldest' => $obj->oldest ? $db->jdate($obj->oldest) : null
+	);
 }
 
 // Tracked actions (last 30 days) and average processing time (submission -> decision)
@@ -347,7 +345,6 @@ while ($resql && ($obj = $db->fetch_object($resql))) {
 $listMode = ($mode ? $mode : 'pending');
 $cond = array('pending' => $condPending, 'refused' => $condRefused, 'online' => $condOnline)[$listMode] ?? $condPending;
 
-// Add the search criteria to the SQL condition
 $sqlWhereFilter = '';
 if ($search_rowid !== '') {
 	$sqlWhereFilter .= natural_search(array('p.rowid'), $search_rowid, 1);
@@ -394,7 +391,6 @@ if ($search_submitted_dtend) {
 	$sqlWhereFilter .= " AND ".$efSub." <= '".$db->idate($search_submitted_dtend)."'";
 }
 
-// Whitelist of the columns allowed in the ORDER BY clause
 $sortmap = array(
 	'p.rowid' => 'p.rowid',
 	'p.ref' => 'p.ref',
@@ -413,7 +409,7 @@ $sortmap = array(
 if (!isset($sortmap[$sortfield])) {
 	$sortfield = 'p.ref';
 }
-$sortorder = dol_strtoupper($sortorder); // Links generated by the core use lowercase asc/desc
+$sortorder = dol_strtoupper($sortorder);
 if ($sortorder != 'DESC') {
 	$sortorder = 'ASC';
 }
@@ -424,6 +420,10 @@ $sql = "SELECT COUNT(p.rowid) as nb".$from.$base." AND ".$cond.$sqlWhereFilter;
 $resql = $db->query($sql);
 if ($resql && ($obj = $db->fetch_object($resql))) {
 	$nbtotalofrecords = (int) $obj->nb;
+}
+if ($limit > 0 && $offset >= $nbtotalofrecords) {
+	$page = 0;
+	$offset = 0;
 }
 
 $sql = "SELECT p.rowid, p.ref, p.label, p.tosell, ".$efSub." as submitted,";
@@ -436,11 +436,19 @@ $sql .= " (SELECT s.nom FROM ".MAIN_DB_PREFIX."product_fournisseur_price as pfp 
 $sql .= "  WHERE pfp.fk_product = p.rowid LIMIT 1) as seller";
 $sql .= $from.$base." AND ".$cond.$sqlWhereFilter;
 $sql .= $db->order($sortmap[$sortfield], $sortorder);
-$sql .= $db->plimit($limit, $offset);
+if ($limit > 0) {
+	$sql .= $db->plimit($limit + 1, $offset);
+}
 $list = array();
+$num = 0;
 $resql = $db->query($sql);
-while ($resql && ($obj = $db->fetch_object($resql))) {
-	$list[] = $obj;
+if ($resql) {
+	$num = $db->num_rows($resql);
+	$i = 0;
+	while (($limit <= 0 || $i < $limit) && ($obj = $db->fetch_object($resql))) {
+		$list[] = $obj;
+		$i++;
+	}
 }
 
 /*
@@ -454,44 +462,155 @@ llxHeader('', $langs->trans($page_name), '', '', 0, 0, '', '', '', 'mod-marketpl
 
 print load_fiche_titre($langs->trans($page_name), '', 'fa-puzzle-piece');
 
-/**
- * Build the HTML of a KPI tile.
- *
- * @param  string $label Label of the KPI
- * @param  mixed  $value Value to display
- * @param  string $url   Optional link on the value
- * @param  string $color Optional color of the left border
- * @param  string $morecss Optional CSS class (for example "hideonsmartphone")
- * @return string        HTML of the tile
- */
-$tile = function ($label, $value, $url = '', $color = '', $morecss = '') {
-	$html = '<div'.($morecss ? ' class="'.dol_escape_htmltag($morecss).'"' : '').' style="flex:1 1 170px;border:1px solid #ccc;border-radius:6px;padding:12px;text-align:center;'.($color ? 'border-left:5px solid '.$color.';' : '').'">';
-	$html .= '<div class="opacitymedium">'.dol_escape_htmltag($label).'</div>';
-	$html .= '<div style="font-size:2em;font-weight:bold">'.($url ? '<a href="'.$url.'">'.$value.'</a>' : $value).'</div></div>';
-	return $html;
-};
-$self = $_SERVER['PHP_SELF'];
+// Navigation tabs (Validation / Audit)
+$head = array();
+$head[0][0] = dol_buildpath('/marketplace/module_validation.php', 1);
+$head[0][1] = $langs->trans("Validation");
+$head[0][2] = 'validation';
 
-// KPI tiles
-print '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px">';
-print $tile($langs->trans("KpiOnline"), $kpi['online'], $self.'?mode=online', '#27ae60');
-print $tile($langs->trans("KpiPending"), $kpi['pending'], $self.'?mode=pending', '#e67e22');
-$oldestDays = $kpi['oldest'] ? floor((dol_now() - $kpi['oldest']) / 86400) : 0;
-print $tile($langs->trans("KpiOldestPending"), $oldestDays ? $oldestDays.' j' : '-', '', $oldestDays > 15 ? '#e67e22' : '');
-print $tile($langs->trans("KpiRefused"), $kpi['refused'], $self.'?mode=refused', '#c0392b', 'hideonsmartphone');
-print $tile($langs->trans("KpiValidated30d"), $counts['MKT_VALIDATE'], '', '', 'hideonsmartphone');
-print $tile($langs->trans("KpiRefused30d"), $counts['MKT_REFUSE'], '', '', 'hideonsmartphone');
-print $tile($langs->trans("KpiUnpublished30d"), $counts['MKT_UNPUBLISH'], '', '', 'hideonsmartphone');
-print $tile($langs->trans("KpiAvgDelay"), $avgDelayDays === null ? '-' : $avgDelayDays.' j', '', '', 'hideonsmartphone');
-print $tile($langs->trans("KpiDuplicates"), $kpi['dups'], '', '', 'hideonsmartphone');
-print $tile($langs->trans("KpiForks"), $kpi['forks'], '', '', 'hideonsmartphone');
+$head[1][0] = dol_buildpath('/marketplace/module_validation_audit.php', 1);
+$head[1][1] = $langs->trans("AuditPublishedModules");
+$head[1][2] = 'audit';
+
+print dol_get_fiche_head($head, 'validation', '', -1);
+
+/**
+ * Render one line inside a native Dolibarr info-box-sm card.
+ *
+ * @param  string $label        Line label
+ * @param  mixed  $value        Primary value
+ * @param  string $url          Optional link URL
+ * @param  string $badgeClass   CSS class for the primary badge
+ * @param  string $warningText  Optional warning badge text
+ * @param  string $warningUrl   Optional warning badge URL
+ * @param  string $warningTitle Optional tooltip for warning badge
+ * @return string               HTML of the line
+ */
+$renderInfoBoxLine = function ($label, $value, $url = '', $badgeClass = 'badge badge-info', $warningText = '', $warningUrl = '', $warningTitle = '') {
+	$out = '<div class="info-box-line spanoverflow nowrap">';
+	if ($url) {
+		$out .= '<a href="'.$url.'" class="info-box-text info-box-text-a">';
+		$out .= '<div class="marginrightonly inline-block valignmiddle info-box-line-text" title="'.dol_escape_htmltag($label).'">'.dol_escape_htmltag($label).'</div>';
+		$out .= '</a>';
+	} else {
+		$out .= '<div class="marginrightonly inline-block valignmiddle info-box-line-text" title="'.dol_escape_htmltag($label).'">'.dol_escape_htmltag($label).'</div>';
+	}
+	$out .= '<div class="inline-block nowraponall">';
+	if ($url) {
+		$out .= '<a href="'.$url.'" class="info-box-text info-box-text-a">';
+	}
+	$out .= '<span class="'.dol_escape_htmltag($badgeClass).'">'.dol_escape_htmltag((string) $value).'</span>';
+	if ($url) {
+		$out .= '</a>';
+	}
+	if ($warningText !== '') {
+		if ($warningUrl) {
+			$out .= '</div> <div class="inline-block"><a href="'.$warningUrl.'" class="info-box-text info-box-text-a paddingleft">';
+		} else {
+			$out .= ' <span class="info-box-text info-box-text-a displaycontents">';
+		}
+		$out .= '<span title="'.dol_escape_htmltag($warningTitle).'" class="classfortooltip badge badge-warning">';
+		$out .= '<i class="fa fa-exclamation-triangle hideonsmartphone"></i> '.dol_escape_htmltag($warningText);
+		$out .= '</span>';
+		if ($warningUrl) {
+			$out .= '</a>';
+		} else {
+			$out .= '</span>';
+		}
+	}
+	$out .= '</div>';
+	$out .= '</div>'."\n";
+	return $out;
+};
+
+/**
+ * Render a native Dolibarr dashboard info-box-sm card.
+ *
+ * @param  string $title       Card uppercase title
+ * @param  string $bgClass     Icon background class (e.g. "bg-infobox-commande")
+ * @param  string $iconClass   FontAwesome icon class (e.g. "fa-puzzle-piece")
+ * @param  string $linesHtml   Pre-rendered info-box-line HTML
+ * @param  string $moreCss     Optional extra CSS on box-flex-item
+ * @return string              HTML of the card
+ */
+$renderInfoBox = function ($title, $bgClass, $iconClass, $linesHtml, $moreCss = '') {
+	$out = '<div class="box-flex-item'.($moreCss ? ' '.dol_escape_htmltag($moreCss) : '').'"><div class="box-flex-item-with-margin">'."\n";
+	$out .= '	<div class="info-box info-box-sm">'."\n";
+	$out .= '		<span class="info-box-icon '.dol_escape_htmltag($bgClass).'"><i class="fa '.dol_escape_htmltag($iconClass).'"></i></span>'."\n";
+	$out .= '		<div class="info-box-content">'."\n";
+	$out .= '			<div class="info-box-title" title="'.dolPrintHTMLForAttribute($title).'">'.$title.'</div>'."\n";
+	$out .= '			<div class="info-box-lines">'."\n";
+	$out .= $linesHtml;
+	$out .= '			</div><!-- /.info-box-lines -->'."\n";
+	$out .= '		</div><!-- /.info-box-content -->'."\n";
+	$out .= '	</div><!-- /.info-box -->'."\n";
+	$out .= '</div></div>'."\n";
+	return $out;
+};
+
+$self = $_SERVER['PHP_SELF'];
+$auditUrl = dol_buildpath('/marketplace/module_validation_audit.php', 1);
+$oldestDays = $kpi['oldest'] ? (int) floor((dol_now() - $kpi['oldest']) / 86400) : 0;
+
+// Native Dolibarr opened-dash-board-wrap cards
+print '<div class="fichecenter">';
+print '<div class="opened-dash-board-wrap"><div class="box-flex-container">';
+
+// Card 1: Module statuses
+$lines = $renderInfoBoxLine($langs->trans("KpiOnline"), $kpi['online'], $self.'?mode=online', $kpi['online'] > 0 ? 'badge badge-info' : 'opacitymedium');
+$lines .= $renderInfoBoxLine(
+	$langs->trans("KpiPending"),
+	$kpi['pending'],
+	$self.'?mode=pending',
+	$kpi['pending'] > 0 ? 'badge badge-info' : 'opacitymedium',
+	$oldestDays > 15 ? $oldestDays.' j' : '',
+	$oldestDays > 15 ? $self.'?mode=pending&sortfield=submitted&sortorder=ASC' : '',
+	$langs->trans("KpiOldestPending").' : '.$oldestDays.' j'
+);
+$lines .= $renderInfoBoxLine($langs->trans("KpiRefused"), $kpi['refused'], $self.'?mode=refused', $kpi['refused'] > 0 ? 'badge badge-info' : 'opacitymedium');
+print $renderInfoBox($langs->trans("Modules"), 'bg-infobox-commande', 'fa-puzzle-piece', $lines);
+
+// Card 2: Last 30 days activity
+$lines = $renderInfoBoxLine($langs->trans("KpiValidated30d"), $counts['MKT_VALIDATE'], '', $counts['MKT_VALIDATE'] > 0 ? 'badge badge-info' : 'opacitymedium');
+$lines .= $renderInfoBoxLine($langs->trans("KpiRefused30d"), $counts['MKT_REFUSE'], '', $counts['MKT_REFUSE'] > 0 ? 'badge badge-info' : 'opacitymedium');
+$lines .= $renderInfoBoxLine($langs->trans("KpiUnpublished30d"), $counts['MKT_UNPUBLISH'], '', $counts['MKT_UNPUBLISH'] > 0 ? 'badge badge-info' : 'opacitymedium');
+print $renderInfoBox($langs->trans("Activity30Days"), 'bg-infobox-propal', 'fa-check-double', $lines, 'hideonsmartphone');
+
+// Card 3: Processing delays
+$lines = $renderInfoBoxLine(
+	$langs->trans("KpiOldestPending"),
+	$oldestDays ? $oldestDays.' j' : '-',
+	$oldestDays > 0 ? $self.'?mode=pending&sortfield=submitted&sortorder=ASC' : '',
+	$oldestDays > 15 ? 'badge badge-warning' : ($oldestDays > 0 ? 'badge badge-info' : 'opacitymedium')
+);
+$lines .= $renderInfoBoxLine(
+	$langs->trans("KpiAvgDelay"),
+	$avgDelayDays === null ? '-' : $avgDelayDays.' j',
+	'',
+	$avgDelayDays !== null ? 'badge badge-info' : 'opacitymedium'
+);
+print $renderInfoBox($langs->trans("ProcessingDelays"), 'bg-infobox-holiday', 'fa-clock', $lines, 'hideonsmartphone');
+
+// Card 4: Compliance & Audit shortcut
+$lines = $renderInfoBoxLine($langs->trans("KpiDuplicates"), $kpi['dups'], $self.'?mode='.$listMode.'&search_duplicate=1', $kpi['dups'] > 0 ? 'badge badge-warning' : 'opacitymedium');
+$lines .= $renderInfoBoxLine($langs->trans("KpiForks"), $kpi['forks'], $self.'?mode='.$listMode.'&search_fork=1', $kpi['forks'] > 0 ? 'badge badge-info' : 'opacitymedium');
+$lines .= $renderInfoBoxLine($langs->trans("AuditPublishedModules"), $kpi['online'], $auditUrl, 'badge badge-info');
+print $renderInfoBox($langs->trans("ComplianceAndAudit"), 'bg-infobox-invoice_supplier', 'fa-shield-alt', $lines, 'hideonsmartphone');
+
+// Fillers to keep cards aligned on 4 columns like standard Dolibarr dashboard
+for ($f = 1; $f <= 10; $f++) {
+	print '<div class="box-flex-item filler"></div>';
+}
+
+print '</div></div>';
 print '</div>';
+print '<div class="clearboth"></div>';
 
 // Statistics tables: only the first rows are shown, the remaining ones
 // are revealed with the "More ..." toggle
 $maxshown = 5;
 
-print '<div style="display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px">';
+print '<div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:10px;margin-bottom:20px">';
 print '<div style="flex:1 1 300px"><table class="noborder centpercent"><tr class="liste_titre"><th>'.$langs->trans("KpiTopReasons").'</th><th class="right">#</th></tr>';
 foreach ($reasons as $r) {
 	print '<tr class="oddeven"><td><div class="twolinesmax-normallineheight minwidth200onall">'.dol_escape_htmltag($r->reason).'</div></td><td class="right">'.$r->nb.'</td></tr>';
@@ -502,7 +621,6 @@ foreach (array_slice($sellersTop, 0, $maxshown) as $s) {
 	print '<tr class="oddeven"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
 }
 if (count($sellersTop) > $maxshown) {
-	// The "More ..." line is the last element of the table and disappears once clicked
 	print '<tr class="oddeven" id="sellersmorerow"><td colspan="2" class="center"><a href="javascript:void(0)" onclick="jQuery(\'tr.sellersextra\').show(); jQuery(this).closest(\'tr\').remove(); return false;">'.$langs->trans("More").' ...</a></td></tr>';
 	foreach (array_slice($sellersTop, $maxshown) as $s) {
 		print '<tr class="oddeven sellersextra" style="display:none"><td><a href="'.DOL_URL_ROOT.'/fourn/card.php?socid='.((int) $s->rowid).'">'.dol_escape_htmltag($s->nom).'</a></td><td class="right">'.$s->nb.'</td></tr>';
@@ -514,7 +632,6 @@ foreach (array_slice($byVersion, 0, $maxshown) as $v) {
 	print '<tr class="oddeven"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
 }
 if (count($byVersion) > $maxshown) {
-	// The "More ..." line is the last element of the table and disappears once clicked
 	print '<tr class="oddeven" id="versionsmorerow"><td colspan="2" class="center"><a href="javascript:void(0)" onclick="jQuery(\'tr.versionsextra\').show(); jQuery(this).closest(\'tr\').remove(); return false;">'.$langs->trans("More").' ...</a></td></tr>';
 	foreach (array_slice($byVersion, $maxshown) as $v) {
 		print '<tr class="oddeven versionsextra" style="display:none"><td>'.dol_escape_htmltag($v->v ? $v->v : '-').'</td><td class="right">'.$v->nb.'</td></tr>';
@@ -526,7 +643,7 @@ print '</table></div></div>';
 $form = new Form($db);
 
 $varpage = $contextpage;
-$htmlofselectarray = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage, $conf->main_checkbox_left_column); // This also change content of $arrayfields with user setup
+$htmlofselectarray = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage, $conf->main_checkbox_left_column);
 
 // List of mass actions available
 $arrayofmassactions = array();
@@ -543,6 +660,9 @@ $selectedfields = $htmlofselectarray;
 $selectedfields .= (count($arrayofmassactions) ? $form->showCheckAddButtons('checkforselect', 1) : '');
 
 $param = '&mode='.$listMode;
+if ($limit > 0 && $limit != $conf->liste_limit) {
+	$param .= '&limit='.((int) $limit);
+}
 if ($search_rowid !== '') {
 	$param .= '&search_rowid='.urlencode($search_rowid);
 }
@@ -593,10 +713,11 @@ print '<input type="hidden" name="formfilteraction" id="formfilteraction" value=
 print '<input type="hidden" name="action" value="list">';
 print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
 print '<input type="hidden" name="sortorder" value="'.$sortorder.'">';
+print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 print '<input type="hidden" name="mode" value="'.$listMode.'">';
 print '<input type="hidden" name="page_y" value="">';
 
-print_barre_liste($langs->trans("ModuleList").' : '.$langs->trans('Filter_'.$listMode), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, count($list), $nbtotalofrecords, 'service', 0, '', '', $limit, 0, 0, 1);
+print_barre_liste($langs->trans("ModuleList").' : '.$langs->trans('Filter_'.$listMode), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'service', 0, '', '', $limit, 0, 0, 1);
 
 // Confirmation box for the mass actions that require a reason
 if ($massaction == 'massrefuse' || $massaction == 'massunpublish') {
@@ -620,7 +741,6 @@ print '<table class="tagtable nobottomiftotal liste">'."\n";
 
 // Fields title search
 print '<tr class="liste_titre_filter">';
-// Action column
 if ($conf->main_checkbox_left_column) {
 	print '<td class="liste_titre center maxwidthsearch">';
 	print $form->showFilterButtons('left');
@@ -675,7 +795,6 @@ if (!empty($arrayfields['age']['checked'])) {
 if (!empty($arrayfields['tosell']['checked'])) {
 	print '<td class="liste_titre"></td>';
 }
-// Action column
 if (!$conf->main_checkbox_left_column) {
 	print '<td class="liste_titre center maxwidthsearch">';
 	print $form->showFilterButtons();
@@ -685,7 +804,6 @@ print '</tr>'."\n";
 
 // Fields title label
 print '<tr class="liste_titre">';
-// Action column
 if ($conf->main_checkbox_left_column) {
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ');
 	$totalarray['nbfield']++;
@@ -746,7 +864,6 @@ if (!empty($arrayfields['tosell']['checked'])) {
 	print_liste_field_titre($arrayfields['tosell']['label'], $_SERVER["PHP_SELF"], "tosell", "", $param, "", $sortfield, $sortorder, 'center ');
 	$totalarray['nbfield']++;
 }
-// Action column
 if (!$conf->main_checkbox_left_column) {
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ');
 	$totalarray['nbfield']++;
@@ -754,11 +871,7 @@ if (!$conf->main_checkbox_left_column) {
 print '</tr>'."\n";
 
 $arrayofselected = is_array($toselect) ? $toselect : array();
-
-// Single Societe instance reused for all rows to render the seller link
 $moduleseller = new Societe($db);
-
-// Single Product instance reused for all rows to render the on-sale status
 $moduleproduct = new Product($db);
 
 if (empty($list)) {
@@ -769,7 +882,6 @@ foreach ($list as $o) {
 	$age = $sub ? floor((dol_now() - $sub) / 86400) : '';
 	$cls = $age === '' ? '' : ($age > 14 ? 'error' : ($age > 7 ? 'warning' : ''));
 	print '<tr class="oddeven">';
-	// Action column
 	if ($conf->main_checkbox_left_column) {
 		print '<td class="nowrap center">';
 		if ($massactionbutton || $massaction) {
@@ -788,7 +900,6 @@ foreach ($list as $o) {
 		print '<td class="tdoverflowmax300"><div class="twolinesmax-normallineheight minwidth200onall"><span class="spantitle">'.dol_escape_htmltag($o->label).'</span></div></td>';
 	}
 	if (!empty($arrayfields['seller']['checked'])) {
-		// Assign the properties of the reused object instead of instantiating a Societe for each row
 		$moduleseller->id = (int) $o->seller_id;
 		$moduleseller->nom = $o->seller;
 		print '<td class="tdoverflowmax150">'.($o->seller_id ? $moduleseller->getNomUrl(1) : '&nbsp;').'</td>';
@@ -823,7 +934,6 @@ foreach ($list as $o) {
 	if (!empty($arrayfields['tosell']['checked'])) {
 		print '<td class="center nowrap">'.$moduleproduct->LibStatut($o->tosell, 5, 0).'</td>';
 	}
-	// Action column
 	if (!$conf->main_checkbox_left_column) {
 		print '<td class="nowrap center">';
 		if ($massactionbutton || $massaction) {
@@ -837,6 +947,8 @@ foreach ($list as $o) {
 print '</table>'."\n";
 print '</div>'."\n";
 print '</form>'."\n";
+
+print dol_get_fiche_end();
 
 // End of page
 llxFooter();
