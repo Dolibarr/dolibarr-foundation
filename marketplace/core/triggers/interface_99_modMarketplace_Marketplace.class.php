@@ -48,7 +48,7 @@ class InterfaceMarketplace extends DolibarrTriggers
 		$this->description = "Marketplace triggers.";
 		// 'development', 'experimental', 'dolibarr' or version
 		$this->version = 1.0;
-		$this->picto = 'marketplace@marketplace';
+		$this->picto = 'store';
 	}
 
 	/**
